@@ -37,9 +37,9 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         { x: 0, y: 800 }, { x: 384, y: 790 }, { x: 768, y: 810 }, { x: 1152, y: 800 }, { x: 1536, y: 820 }, 
         { x: 1920, y: 810 }, { x: 2304, y: 830 }, { x: 2688, y: 820 }, { x: 3072, y: 840 }, { x: 3456, y: 830 }
       ],
-      5: [ // Purple Line - Southern mega-corridor
-        { x: 0, y: 1400 }, { x: 432, y: 1380 }, { x: 864, y: 1390 }, { x: 1296, y: 1400 }, { x: 1728, y: 1410 }, 
-        { x: 2160, y: 1420 }, { x: 2592, y: 1430 }, { x: 3024, y: 1440 }, { x: 3456, y: 1450 }
+      5: [ // Purple Line - Southern mega-corridor (stable)
+        { x: 0, y: 1400 }, { x: 432, y: 1400 }, { x: 864, y: 1400 }, { x: 1296, y: 1400 }, { x: 1728, y: 1400 }, 
+        { x: 2160, y: 1400 }, { x: 2592, y: 1400 }, { x: 3024, y: 1400 }, { x: 3456, y: 1400 }
       ],
       6: [ // Teal Line - Coastal ultra-route
         { x: 0, y: 1800 }, { x: 345, y: 1790 }, { x: 690, y: 1795 }, { x: 1035, y: 1800 }, { x: 1380, y: 1805 }, 
@@ -61,21 +61,21 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         { x: 3456, y: 200 }, { x: 3024, y: 450 }, { x: 2592, y: 700 }, { x: 2160, y: 950 }, { x: 1728, y: 1200 }, 
         { x: 1296, y: 1450 }, { x: 864, y: 1700 }, { x: 432, y: 1950 }, { x: 0, y: 2200 }
       ],
-      11: [ // Lime Line - Continental orbital ring
-        { x: 690, y: 350 }, { x: 1380, y: 200 }, { x: 2070, y: 280 }, { x: 2760, y: 450 }, { x: 3200, y: 700 }, 
-        { x: 3350, y: 1117 }, { x: 3100, y: 1534 }, { x: 2500, y: 1900 }, { x: 1728, y: 2000 }, 
-        { x: 956, y: 1950 }, { x: 400, y: 1650 }, { x: 200, y: 1117 }, { x: 350, y: 700 }
+      11: [ // Lime Line - Continental orbital ring (stable)
+        { x: 600, y: 300 }, { x: 1200, y: 250 }, { x: 1800, y: 300 }, { x: 2400, y: 400 }, { x: 2800, y: 600 }, 
+        { x: 3000, y: 900 }, { x: 2800, y: 1200 }, { x: 2400, y: 1400 }, { x: 1800, y: 1500 }, 
+        { x: 1200, y: 1450 }, { x: 600, y: 1350 }, { x: 400, y: 1050 }, { x: 500, y: 650 }
       ],
       12: [ // Indigo Line - Continental figure-8 pattern
         { x: 864, y: 450 }, { x: 1296, y: 600 }, { x: 1728, y: 750 }, { x: 2160, y: 900 }, { x: 2592, y: 1050 },
         { x: 2160, y: 1200 }, { x: 1728, y: 1350 }, { x: 1296, y: 1500 }, { x: 864, y: 1650 },
         { x: 1296, y: 1800 }, { x: 1728, y: 1950 }, { x: 2160, y: 2100 }, { x: 2592, y: 2234 }
       ],
-      13: [ // Violet Line - Ultra-complex transcontinental curve
-        { x: 200, y: 600 }, { x: 600, y: 450 }, { x: 1000, y: 400 }, { x: 1400, y: 500 }, { x: 1800, y: 650 },
-        { x: 2200, y: 800 }, { x: 2600, y: 1000 }, { x: 3200, y: 1300 }, { x: 3000, y: 1650 },
-        { x: 2600, y: 1900 }, { x: 2200, y: 2050 }, { x: 1800, y: 2000 }, { x: 1400, y: 1850 },
-        { x: 1000, y: 1700 }, { x: 600, y: 1500 }, { x: 300, y: 1200 }, { x: 150, y: 900 }
+      13: [ // Violet Line - Stable curved route
+        { x: 300, y: 600 }, { x: 700, y: 550 }, { x: 1100, y: 520 }, { x: 1500, y: 550 }, { x: 1900, y: 600 },
+        { x: 2300, y: 700 }, { x: 2700, y: 850 }, { x: 3000, y: 1050 }, { x: 2800, y: 1300 },
+        { x: 2400, y: 1500 }, { x: 2000, y: 1600 }, { x: 1600, y: 1550 }, { x: 1200, y: 1450 },
+        { x: 800, y: 1300 }, { x: 500, y: 1100 }, { x: 300, y: 850 }
       ],
       14: [ // Gold Line - Continental mountain range
         { x: 0, y: 350 }, { x: 432, y: 250 }, { x: 864, y: 400 }, { x: 1296, y: 200 }, { x: 1728, y: 450 }, 
@@ -85,9 +85,9 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         { x: 250, y: 1000 }, { x: 650, y: 1050 }, { x: 1050, y: 1150 }, { x: 1450, y: 1200 }, { x: 1850, y: 1250 }, 
         { x: 2250, y: 1350 }, { x: 2650, y: 1400 }, { x: 3050, y: 1500 }, { x: 3400, y: 1550 }
       ],
-      16: [ // Coral Line - Continental wave formation
-        { x: 0, y: 1600 }, { x: 432, y: 1650 }, { x: 864, y: 1700 }, { x: 1296, y: 1750 }, { x: 1728, y: 1800 }, 
-        { x: 2160, y: 1750 }, { x: 2592, y: 1700 }, { x: 3024, y: 1650 }, { x: 3456, y: 1600 }
+      16: [ // Coral Line - Stable wave formation
+        { x: 0, y: 1700 }, { x: 432, y: 1700 }, { x: 864, y: 1700 }, { x: 1296, y: 1700 }, { x: 1728, y: 1700 }, 
+        { x: 2160, y: 1700 }, { x: 2592, y: 1700 }, { x: 3024, y: 1700 }, { x: 3456, y: 1700 }
       ]
     };
     return routePaths[routeId] || [];
@@ -112,6 +112,11 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   };
 
   const renderRouteLine = (route: Route, routeIndex: number) => {
+    // Only render if route is selected or no specific routes are selected
+    if (selectedRoutes.length > 0 && !selectedRoutes.includes(route.id)) {
+      return null;
+    }
+
     const points = getRoutePoints(route.id);
     const isHighlighted = selectedRoutes.includes(route.id);
     
