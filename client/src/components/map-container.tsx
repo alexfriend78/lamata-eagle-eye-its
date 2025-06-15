@@ -228,154 +228,120 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
       >
         {/* Background Map Layer */}
         {showMap && (
-          <svg
-            width="1280"
-            height="720"
+          <div 
             className="absolute inset-0 z-0"
-            viewBox="0 0 1280 720"
-            style={{ opacity: 0.7 }}
+            style={{
+              backgroundColor: theme === 'dark' ? '#1e293b' : '#f1f5f9',
+              backgroundImage: `
+                radial-gradient(circle at 200px 300px, ${theme === 'dark' ? 'rgba(59, 130, 246, 0.1)' : 'rgba(59, 130, 246, 0.05)'} 0%, transparent 50%),
+                radial-gradient(circle at 1000px 400px, ${theme === 'dark' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(34, 197, 94, 0.05)'} 0%, transparent 50%),
+                linear-gradient(135deg, ${theme === 'dark' ? 'rgba(55, 65, 81, 0.8)' : 'rgba(243, 244, 246, 0.8)'} 0%, ${theme === 'dark' ? 'rgba(31, 41, 55, 0.9)' : 'rgba(229, 231, 235, 0.9)'} 100%)
+              `,
+              opacity: 0.6
+            }}
           >
-            <defs>
-              <linearGradient id="water" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style={{ stopColor: "#3b82f6", stopOpacity: 0.4 }} />
-                <stop offset="100%" style={{ stopColor: "#1e40af", stopOpacity: 0.5 }} />
-              </linearGradient>
-              <linearGradient id="land" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style={{ stopColor: theme === 'dark' ? '#374151' : '#f3f4f6', stopOpacity: 0.8 }} />
-                <stop offset="100%" style={{ stopColor: theme === 'dark' ? '#1f2937' : '#e5e7eb', stopOpacity: 0.9 }} />
-              </linearGradient>
-            </defs>
-            
-            {/* Lagos Mainland */}
-            <path 
-              d="M 50 200 Q 300 150 600 180 Q 800 200 1000 250 Q 1100 300 1200 400 L 1200 600 Q 1000 650 800 620 Q 600 600 400 580 Q 200 550 50 500 Z" 
-              fill="url(#land)" 
-              stroke={theme === 'dark' ? '#6b7280' : '#9ca3af'} 
-              strokeWidth="2"
-            />
-            
-            {/* Lagos Island */}
-            <ellipse 
-              cx="1150" 
-              cy="480" 
-              rx="80" 
-              ry="40" 
-              fill="url(#land)" 
-              stroke={theme === 'dark' ? '#6b7280' : '#9ca3af'} 
-              strokeWidth="2"
-            />
-            
-            {/* Victoria Island */}
-            <ellipse 
-              cx="1200" 
-              cy="520" 
-              rx="60" 
-              ry="25" 
-              fill="url(#land)" 
-              stroke={theme === 'dark' ? '#6b7280' : '#9ca3af'} 
-              strokeWidth="2"
-            />
-            
-            {/* Ikorodu Peninsula */}
-            <path 
-              d="M 50 550 Q 150 580 250 600 Q 350 620 400 580 L 380 560 Q 300 580 200 560 Q 100 540 50 520 Z" 
-              fill="url(#land)" 
-              stroke={theme === 'dark' ? '#6b7280' : '#9ca3af'} 
-              strokeWidth="2"
-            />
-            
-            {/* Lagos Lagoon */}
-            <path 
-              d="M 800 400 Q 1000 420 1150 450 Q 1200 480 1250 500 Q 1200 520 1150 540 Q 1000 560 800 540 Q 700 520 650 480 Q 700 440 800 400 Z" 
-              fill="url(#water)" 
-              stroke={theme === 'dark' ? '#1e40af' : '#3b82f6'} 
-              strokeWidth="1"
-            />
-            
-            {/* Atlantic Ocean */}
-            <rect 
-              x="1100" 
-              y="550" 
-              width="180" 
-              height="170" 
-              fill="url(#water)" 
-              stroke={theme === 'dark' ? '#1e40af' : '#3b82f6'} 
-              strokeWidth="1"
-            />
-            
-            {/* Major Roads */}
-            <path 
-              d="M 100 300 Q 400 280 800 300 Q 1000 320 1200 350" 
-              stroke={theme === 'dark' ? '#4b5563' : '#6b7280'} 
-              strokeWidth="3" 
-              fill="none" 
-              opacity="0.6"
-            />
-            <path 
-              d="M 200 250 Q 500 230 800 250" 
-              stroke={theme === 'dark' ? '#4b5563' : '#6b7280'} 
-              strokeWidth="2" 
-              fill="none" 
-              opacity="0.5"
-            />
-            <path 
-              d="M 100 400 Q 600 380 1000 400" 
-              stroke={theme === 'dark' ? '#4b5563' : '#6b7280'} 
-              strokeWidth="2" 
-              fill="none" 
-              opacity="0.5"
-            />
-            
-            {/* Area Labels */}
-            <text 
-              x="300" 
-              y="320" 
-              fill={theme === 'dark' ? '#d1d5db' : '#374151'} 
-              fontSize="14" 
-              fontWeight="bold" 
-              opacity="0.8"
+            {/* Geographical Features */}
+            <svg
+              width="1280"
+              height="720"
+              className="absolute inset-0"
+              viewBox="0 0 1280 720"
             >
-              IKEJA
-            </text>
-            <text 
-              x="150" 
-              y="570" 
-              fill={theme === 'dark' ? '#d1d5db' : '#374151'} 
-              fontSize="14" 
-              fontWeight="bold" 
-              opacity="0.8"
-            >
-              IKORODU
-            </text>
-            <text 
-              x="1120" 
-              y="470" 
-              fill={theme === 'dark' ? '#d1d5db' : '#374151'} 
-              fontSize="12" 
-              fontWeight="bold" 
-              opacity="0.8"
-            >
-              LAGOS ISLAND
-            </text>
-            <text 
-              x="1140" 
-              y="530" 
-              fill={theme === 'dark' ? '#d1d5db' : '#374151'} 
-              fontSize="10" 
-              opacity="0.8"
-            >
-              V.I.
-            </text>
-            <text 
-              x="950" 
-              y="490" 
-              fill={theme === 'dark' ? '#60a5fa' : '#2563eb'} 
-              fontSize="12" 
-              opacity="0.9"
-            >
-              Lagos Lagoon
-            </text>
-          </svg>
+              {/* Water Bodies - Lagos Lagoon */}
+              <path 
+                d="M 600 300 Q 800 280 1000 320 Q 1200 360 1250 450 Q 1200 520 1000 540 Q 800 520 600 480 Q 500 440 500 380 Q 520 340 600 300 Z" 
+                fill={theme === 'dark' ? 'rgba(59, 130, 246, 0.3)' : 'rgba(59, 130, 246, 0.2)'} 
+                stroke={theme === 'dark' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(59, 130, 246, 0.3)'} 
+                strokeWidth="2"
+              />
+              
+              {/* Atlantic Ocean */}
+              <rect 
+                x="1000" 
+                y="500" 
+                width="280" 
+                height="220" 
+                fill={theme === 'dark' ? 'rgba(59, 130, 246, 0.2)' : 'rgba(59, 130, 246, 0.15)'} 
+                stroke={theme === 'dark' ? 'rgba(59, 130, 246, 0.4)' : 'rgba(59, 130, 246, 0.25)'} 
+                strokeWidth="1"
+              />
+              
+              {/* Major Highways */}
+              <path 
+                d="M 0 200 Q 200 180 400 190 Q 600 200 800 220 Q 1000 240 1200 270" 
+                stroke={theme === 'dark' ? 'rgba(156, 163, 175, 0.4)' : 'rgba(107, 114, 128, 0.3)'} 
+                strokeWidth="4" 
+                fill="none" 
+                strokeDasharray="20,10"
+              />
+              <path 
+                d="M 100 400 Q 300 380 500 390 Q 700 400 900 420 Q 1100 440 1280 460" 
+                stroke={theme === 'dark' ? 'rgba(156, 163, 175, 0.4)' : 'rgba(107, 114, 128, 0.3)'} 
+                strokeWidth="4" 
+                fill="none" 
+                strokeDasharray="20,10"
+              />
+              
+              {/* Area Labels */}
+              <text 
+                x="300" 
+                y="250" 
+                fill={theme === 'dark' ? 'rgba(209, 213, 219, 0.6)' : 'rgba(55, 65, 81, 0.5)'} 
+                fontSize="18" 
+                fontWeight="bold"
+                textAnchor="middle"
+              >
+                IKEJA
+              </text>
+              <text 
+                x="200" 
+                y="500" 
+                fill={theme === 'dark' ? 'rgba(209, 213, 219, 0.6)' : 'rgba(55, 65, 81, 0.5)'} 
+                fontSize="18" 
+                fontWeight="bold"
+                textAnchor="middle"
+              >
+                IKORODU
+              </text>
+              <text 
+                x="1100" 
+                y="400" 
+                fill={theme === 'dark' ? 'rgba(209, 213, 219, 0.6)' : 'rgba(55, 65, 81, 0.5)'} 
+                fontSize="16" 
+                fontWeight="bold"
+                textAnchor="middle"
+              >
+                LAGOS ISLAND
+              </text>
+              <text 
+                x="1150" 
+                y="550" 
+                fill={theme === 'dark' ? 'rgba(209, 213, 219, 0.6)' : 'rgba(55, 65, 81, 0.5)'} 
+                fontSize="14" 
+                fontWeight="bold"
+                textAnchor="middle"
+              >
+                VICTORIA ISLAND
+              </text>
+              <text 
+                x="800" 
+                y="420" 
+                fill={theme === 'dark' ? 'rgba(96, 165, 250, 0.8)' : 'rgba(37, 99, 235, 0.6)'} 
+                fontSize="14" 
+                fontStyle="italic"
+                textAnchor="middle"
+              >
+                Lagos Lagoon
+              </text>
+            </svg>
+            
+            {/* Lagos Area Overlay */}
+            <div className="absolute bottom-4 right-4">
+              <div className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'} opacity-40 select-none`}>
+                LAGOS, NIGERIA
+              </div>
+            </div>
+          </div>
         )}
 
         {/* Background grid */}
