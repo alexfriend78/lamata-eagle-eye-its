@@ -1,16 +1,8 @@
 import type { 
   Route, Station, Bus, Alert, RouteStation, BusArrival, 
-  CrowdDensityReading, CrowdPrediction, HistoricalPattern,
   InsertRoute, InsertStation, InsertBus, InsertAlert, InsertRouteStation, InsertBusArrival,
-  InsertCrowdDensityReading, InsertCrowdPrediction, InsertHistoricalPattern,
-  BusWithRoute, AlertWithDetails, BusArrivalWithDetails, StationDetails, SystemStats, CrowdAnalytics
+  BusWithRoute, AlertWithDetails, BusArrivalWithDetails, StationDetails, SystemStats
 } from "../shared/schema.js";
-import { db } from "./db.js";
-import { 
-  routes, stations, buses, alerts, routeStations, busArrivals,
-  crowdDensityReadings, crowdPredictions, historicalPatterns 
-} from "../shared/schema.js";
-import { eq, and, desc, asc, sql } from "drizzle-orm";
 
 export interface IStorage {
   // Routes
@@ -51,26 +43,21 @@ export interface IStorage {
   
   // System Stats
   getSystemStats(): Promise<SystemStats>;
-  
-  // Crowd Density Analytics
-  getCrowdDensityReadings(stationId?: number, busId?: number): Promise<CrowdDensityReading[]>;
-  getLatestCrowdDensity(stationId: number): Promise<CrowdDensityReading | undefined>;
-  createCrowdDensityReading(reading: InsertCrowdDensityReading): Promise<CrowdDensityReading>;
-  
-  // Crowd Predictions
-  getCrowdPredictions(stationId: number, routeId: number): Promise<CrowdPrediction[]>;
-  createCrowdPrediction(prediction: InsertCrowdPrediction): Promise<CrowdPrediction>;
-  
-  // Historical Patterns
-  getHistoricalPatterns(stationId: number, routeId: number): Promise<HistoricalPattern[]>;
-  updateHistoricalPattern(pattern: InsertHistoricalPattern): Promise<HistoricalPattern>;
-  
-  // Analytics
-  getCrowdAnalytics(stationId: number): Promise<CrowdAnalytics>;
-  generateCrowdPredictions(stationId: number, routeId: number): Promise<CrowdPrediction[]>;
 }
 
-export class DatabaseStorage implements IStorage {
+export class MemStorage implements IStorage {
+  private routes: Map<number, Route>;
+  private stations: Map<number, Station>;
+  private buses: Map<number, Bus>;
+  private alerts: Map<number, Alert>;
+  private routeStations: Map<number, RouteStation>;
+  private busArrivals: Map<number, BusArrival>;
+  private currentRouteId: number;
+  private currentStationId: number;
+  private currentBusId: number;
+  private currentAlertId: number;
+  private currentRouteStationId: number;
+  private currentBusArrivalId: number;
 
   constructor() {
     this.routes = new Map();
@@ -121,12 +108,12 @@ export class DatabaseStorage implements IStorage {
       { name: "Bolade", x: 0.48, y: 0.58, zone: 2, routeId: 1 },
       { name: "Ladipo", x: 0.46, y: 0.56, zone: 2, routeId: 1 },
       { name: "Shogunle", x: 0.44, y: 0.54, zone: 2, routeId: 1 },
-      { name: "PWD", x: 0.42, y: 0.52, zone: 2, routeId: 1 },
-      { name: "Airport Junction", x: 0.40, y: 0.50, zone: 2, routeId: 1 },
-      { name: "Ikeja Along", x: 0.38, y: 0.48, zone: 2, routeId: 1 },
-      { name: "Ile Zik", x: 0.36, y: 0.46, zone: 2, routeId: 1 },
-      { name: "Mangoro", x: 0.34, y: 0.44, zone: 2, routeId: 1 },
-      { name: "Cement", x: 0.32, y: 0.42, zone: 2, routeId: 1 },
+      { name: "PWD", x: 0.42, y: 0.52, zone: 1, routeId: 1 },
+      { name: "Airport Junction", x: 0.40, y: 0.50, zone: 1, routeId: 1 },
+      { name: "Ikeja Along", x: 0.38, y: 0.48, zone: 1, routeId: 1 },
+      { name: "Ile Zik", x: 0.36, y: 0.46, zone: 1, routeId: 1 },
+      { name: "Mangoro", x: 0.34, y: 0.44, zone: 1, routeId: 1 },
+      { name: "Cement", x: 0.32, y: 0.42, zone: 1, routeId: 1 },
       { name: "Iyana Dopemu", x: 0.30, y: 0.40, zone: 1, routeId: 1 },
       { name: "Adealu", x: 0.28, y: 0.38, zone: 1, routeId: 1 },
       { name: "Iyana Ipaja Bus stop", x: 0.26, y: 0.36, zone: 1, routeId: 1 },
@@ -135,19 +122,7 @@ export class DatabaseStorage implements IStorage {
       { name: "Super", x: 0.20, y: 0.30, zone: 1, routeId: 1 },
       { name: "Abule Egba", x: 0.18, y: 0.28, zone: 1, routeId: 1 },
 
-      // Route 2: Abule Egba - TBS/Obalende stations (matching route coordinates)
-      { name: "LASMA", x: 0.52, y: 0.62, zone: 2, routeId: 2 },
-      { name: "Anthony", x: 0.54, y: 0.64, zone: 2, routeId: 2 },
-      { name: "Westex", x: 0.56, y: 0.66, zone: 2, routeId: 2 },
-      { name: "First Pedro", x: 0.58, y: 0.68, zone: 3, routeId: 2 },
-      { name: "Charley Boy", x: 0.60, y: 0.70, zone: 3, routeId: 2 },
-      { name: "Gbagada Phase 1", x: 0.62, y: 0.72, zone: 3, routeId: 2 },
-      { name: "Iyana Oworo", x: 0.64, y: 0.74, zone: 3, routeId: 2 },
-      { name: "Adeniji", x: 0.66, y: 0.76, zone: 3, routeId: 2 },
-      { name: "Obalende", x: 0.68, y: 0.78, zone: 3, routeId: 2 },
-      { name: "CMS Terminal", x: 0.70, y: 0.80, zone: 3, routeId: 2 },
-
-      // Route 3: Ikorodu - TBS stations (matching route coordinates)  
+      // Route 3: Ikorodu - TBS stations 
       { name: "Ikorodu Terminal", x: 0.15, y: 0.85, zone: 4, routeId: 3 },
       { name: "Benson", x: 0.17, y: 0.83, zone: 4, routeId: 3 },
       { name: "ARUNA", x: 0.19, y: 0.81, zone: 4, routeId: 3 },
@@ -160,12 +135,12 @@ export class DatabaseStorage implements IStorage {
       { name: "IDERA", x: 0.33, y: 0.67, zone: 3, routeId: 3 },
       { name: "OWODEONIRIN", x: 0.35, y: 0.65, zone: 3, routeId: 3 },
       { name: "MILE12 TERMINAL", x: 0.37, y: 0.63, zone: 3, routeId: 3 },
-      { name: "KETU", x: 0.39, y: 0.61, zone: 3, routeId: 3 },
+      { name: "KETU", x: 0.39, y: 0.61, zone: 2, routeId: 3 },
       { name: "OJOTA", x: 0.41, y: 0.59, zone: 2, routeId: 3 },
       { name: "NEWGARAGE", x: 0.43, y: 0.57, zone: 2, routeId: 3 },
       { name: "Maryland", x: 0.45, y: 0.55, zone: 2, routeId: 3 },
       { name: "Idiroko", x: 0.47, y: 0.53, zone: 2, routeId: 3 },
-      { name: "Anthony Route 3", x: 0.49, y: 0.51, zone: 2, routeId: 3 },
+      { name: "Anthony", x: 0.49, y: 0.51, zone: 2, routeId: 3 },
       { name: "Obanikoro", x: 0.51, y: 0.49, zone: 2, routeId: 3 },
       { name: "Palmgroove", x: 0.53, y: 0.47, zone: 2, routeId: 3 },
       { name: "Onipanu", x: 0.55, y: 0.45, zone: 2, routeId: 3 },
@@ -176,99 +151,77 @@ export class DatabaseStorage implements IStorage {
       { name: "Iponri", x: 0.65, y: 0.35, zone: 2, routeId: 3 },
       { name: "Costain", x: 0.67, y: 0.33, zone: 2, routeId: 3 },
       { name: "Leventis", x: 0.69, y: 0.31, zone: 2, routeId: 3 },
-      { name: "CMS Terminal Route 3", x: 0.71, y: 0.29, zone: 2, routeId: 3 },
+      { name: "CMS Terminal", x: 0.71, y: 0.29, zone: 2, routeId: 3 },
       { name: "MARINA TRAIN STATION", x: 0.73, y: 0.27, zone: 2, routeId: 3 },
       { name: "TBS Terminal", x: 0.75, y: 0.25, zone: 2, routeId: 3 }
     ];
 
-    // Track sequence per route
-    const routeSequences: Record<number, number> = {};
-    
-    stationsData.forEach((stationData) => {
-      const stationId = this.currentStationId++;
-      this.stations.set(stationId, {
-        id: stationId,
-        name: stationData.name,
-        x: stationData.x,
-        y: stationData.y,
-        zone: stationData.zone,
-        passengerCount: Math.floor(Math.random() * 400) + 100,
-        trafficCondition: ["light", "normal", "heavy"][Math.floor(Math.random() * 3)],
-        accessibility: true,
-        amenities: ["shelter", "seating", "lighting"]
+    stationsData.forEach(stationData => {
+      const id = this.currentStationId++;
+      this.stations.set(id, {
+        id,
+        ...stationData,
+        passengerCount: Math.floor(Math.random() * 60) + 10 // 10-70 passengers
       });
+    });
 
-      // Initialize route sequence counter if not exists
-      if (!routeSequences[stationData.routeId]) {
-        routeSequences[stationData.routeId] = 1;
-      }
-
-      // Create route-station association with proper sequence
+    // Add route-station relationships
+    stationsData.forEach((stationData, index) => {
       const routeStationId = this.currentRouteStationId++;
       this.routeStations.set(routeStationId, {
         id: routeStationId,
         routeId: stationData.routeId,
-        stationId: stationId,
-        sequence: routeSequences[stationData.routeId]++
+        stationId: index + 1,
+        order: index
       });
     });
 
-    // Create buses for the 5 routes using percentage coordinates
+    // Create buses for each route
     const busesData = [
-      // Route 1 buses
-      { routeId: 1, busNumber: "LBT-001", currentX: 0.38, currentY: 0.48, status: "on_time", direction: "forward" },
-      { routeId: 1, busNumber: "LBT-002", currentX: 0.26, currentY: 0.36, status: "on_time", direction: "reverse" },
-      { routeId: 1, busNumber: "LBT-003", currentX: 0.42, currentY: 0.52, status: "delayed", direction: "forward" },
-
-      // Route 2 buses
-      { routeId: 2, busNumber: "LBT-004", currentX: 0.20, currentY: 0.30, status: "on_time", direction: "forward" },
-      { routeId: 2, busNumber: "LBT-005", currentX: 0.62, currentY: 0.72, status: "on_time", direction: "reverse" },
-      { routeId: 2, busNumber: "LBT-006", currentX: 0.50, currentY: 0.60, status: "on_time", direction: "forward" },
-
-      // Route 3 buses
-      { routeId: 3, busNumber: "LBT-007", currentX: 0.25, currentY: 0.75, status: "on_time", direction: "forward" },
-      { routeId: 3, busNumber: "LBT-008", currentX: 0.61, currentY: 0.39, status: "delayed", direction: "reverse" },
-      { routeId: 3, busNumber: "LBT-009", currentX: 0.45, currentY: 0.55, status: "on_time", direction: "forward" },
-
-      // Route 4 buses
-      { routeId: 4, busNumber: "LBT-010", currentX: 0.21, currentY: 0.79, status: "on_time", direction: "forward" },
-      { routeId: 4, busNumber: "LBT-011", currentX: 0.53, currentY: 0.47, status: "on_time", direction: "reverse" },
-      { routeId: 4, busNumber: "LBT-012", currentX: 0.39, currentY: 0.61, status: "on_time", direction: "forward" },
-
-      // Route 5 buses
-      { routeId: 5, busNumber: "LBT-013", currentX: 0.17, currentY: 0.83, status: "on_time", direction: "forward" },
-      { routeId: 5, busNumber: "LBT-014", currentX: 0.43, currentY: 0.57, status: "on_time", direction: "reverse" },
-      { routeId: 5, busNumber: "LBT-015", currentX: 0.31, currentY: 0.69, status: "delayed", direction: "forward" }
+      { number: "BRT001", routeId: 1, status: "active", capacity: 70 },
+      { number: "BRT002", routeId: 1, status: "active", capacity: 70 },
+      { number: "BRT003", routeId: 2, status: "delayed", capacity: 70 },
+      { number: "BRT004", routeId: 2, status: "active", capacity: 70 },
+      { number: "BRT005", routeId: 3, status: "active", capacity: 70 },
+      { number: "BRT006", routeId: 3, status: "alert", capacity: 70 },
+      { number: "BRT007", routeId: 4, status: "active", capacity: 70 },
+      { number: "BRT008", routeId: 5, status: "active", capacity: 70 }
     ];
 
     busesData.forEach(busData => {
       const id = this.currentBusId++;
+      const routePoints = this.getRoutePoints(busData.routeId);
+      const randomPoint = routePoints[Math.floor(Math.random() * routePoints.length)] || { x: 0.5, y: 0.5 };
+      
       this.buses.set(id, {
         id,
-        lastUpdated: new Date(),
-        ...busData
+        ...busData,
+        currentX: randomPoint.x,
+        currentY: randomPoint.y,
+        passengerCount: Math.floor(Math.random() * busData.capacity * 0.8),
+        lastUpdated: new Date()
       });
     });
 
-    // Create alerts
+    // Create some sample alerts
     const alertsData = [
-      { busId: 3, routeId: 1, type: "delay", message: "Route 1 experiencing delays due to traffic at Ikeja Along", severity: "medium" },
-      { busId: null, routeId: null, type: "maintenance", message: "Scheduled maintenance at Oshodi Terminal", severity: "low" }
+      { type: "traffic", message: "Heavy traffic on Route 2", routeId: 2, severity: "medium", isActive: true },
+      { type: "maintenance", message: "Bus BRT006 requires maintenance", busId: 6, severity: "high", isActive: true }
     ];
 
     alertsData.forEach(alertData => {
       const id = this.currentAlertId++;
       this.alerts.set(id, {
         id,
-        isActive: true,
-        createdAt: new Date(),
-        stationId: null,
-        ...alertData
+        ...alertData,
+        createdAt: new Date()
       });
     });
+
+    // Start bus movement simulation
+    setInterval(() => this.simulateBusMovement(), 5000);
   }
 
-  // Rest of the interface methods remain the same...
   async getRoutes(): Promise<Route[]> {
     return Array.from(this.routes.values());
   }
@@ -281,12 +234,9 @@ export class DatabaseStorage implements IStorage {
     const id = this.currentRouteId++;
     const newRoute: Route = { 
       id, 
-      routeNumber: route.routeNumber,
-      name: route.name,
-      color: route.color || "#1976D2",
-      isActive: route.isActive ?? true,
+      ...route,
       lineStyle: route.lineStyle || "solid",
-      lineWidth: route.lineWidth || 3,
+      lineWidth: route.lineWidth || 4,
       opacity: route.opacity || 1.0,
       pattern: route.pattern || "none",
       animation: route.animation || "none",
@@ -298,17 +248,16 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateRouteAesthetics(id: number, aesthetics: Partial<Route>): Promise<Route | undefined> {
-    const existingRoute = this.routes.get(id);
-    if (!existingRoute) return undefined;
-
-    const updatedRoute: Route = {
-      ...existingRoute,
-      ...aesthetics,
-      id
-    };
-    
-    this.routes.set(id, updatedRoute);
-    return updatedRoute;
+    const route = this.routes.get(id);
+    if (route) {
+      const updatedRoute: Route = {
+        ...route,
+        ...aesthetics
+      };
+      this.routes.set(id, updatedRoute);
+      return updatedRoute;
+    }
+    return undefined;
   }
 
   async getStations(): Promise<Station[]> {
@@ -323,14 +272,8 @@ export class DatabaseStorage implements IStorage {
     const id = this.currentStationId++;
     const newStation: Station = { 
       id, 
-      name: station.name,
-      x: station.x,
-      y: station.y,
-      zone: station.zone ?? 1,
-      passengerCount: station.passengerCount ?? 0,
-      trafficCondition: station.trafficCondition ?? "normal",
-      accessibility: station.accessibility ?? true,
-      amenities: station.amenities ?? []
+      ...station,
+      passengerCount: station.passengerCount || 0
     };
     this.stations.set(id, newStation);
     return newStation;
@@ -356,13 +299,11 @@ export class DatabaseStorage implements IStorage {
     const id = this.currentBusId++;
     const newBus: Bus = { 
       id, 
-      lastUpdated: new Date(),
-      routeId: bus.routeId,
-      busNumber: bus.busNumber,
-      currentX: bus.currentX,
-      currentY: bus.currentY,
-      status: bus.status || "on_time",
-      direction: bus.direction || "forward"
+      ...bus,
+      currentX: bus.currentX || 0.5,
+      currentY: bus.currentY || 0.5,
+      passengerCount: bus.passengerCount || 0,
+      lastUpdated: new Date()
     };
     this.buses.set(id, newBus);
     return newBus;
@@ -376,6 +317,45 @@ export class DatabaseStorage implements IStorage {
       return updatedBus;
     }
     return undefined;
+  }
+
+  public simulateBusMovement() {
+    Array.from(this.buses.values()).forEach(bus => {
+      if (bus.status === "maintenance") return;
+      
+      const routePoints = this.getRoutePoints(bus.routeId);
+      if (routePoints.length === 0) return;
+      
+      // Find closest point and move towards next
+      let closestIndex = 0;
+      let closestDistance = Infinity;
+      
+      routePoints.forEach((point, index) => {
+        const distance = Math.sqrt(
+          Math.pow(point.x - bus.currentX, 2) + Math.pow(point.y - bus.currentY, 2)
+        );
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+      
+      const targetIndex = (closestIndex + 1) % routePoints.length;
+      const targetPoint = routePoints[targetIndex];
+      const speed = bus.status === "delayed" ? 2 : bus.status === "alert" ? 1 : 4;
+      
+      // Calculate new position
+      const newX = bus.currentX + (targetPoint.x - bus.currentX) * (speed / 100);
+      const newY = bus.currentY + (targetPoint.y - bus.currentY) * (speed / 100);
+      
+      // Update bus position
+      this.buses.set(bus.id, {
+        ...bus,
+        currentX: newX,
+        currentY: newY,
+        lastUpdated: new Date()
+      });
+    });
   }
 
   async updateBusStatus(id: number, status: string): Promise<Bus | undefined> {
@@ -405,14 +385,8 @@ export class DatabaseStorage implements IStorage {
     const id = this.currentAlertId++;
     const newAlert: Alert = { 
       id, 
-      isActive: true,
-      createdAt: new Date(),
-      type: alert.type,
-      message: alert.message,
-      severity: alert.severity,
-      busId: alert.busId || null,
-      routeId: alert.routeId || null,
-      stationId: alert.stationId || null
+      ...alert,
+      createdAt: new Date()
     };
     this.alerts.set(id, newAlert);
     return newAlert;
@@ -429,11 +403,11 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getRouteStations(routeId: number): Promise<Station[]> {
-    const routeStationMappings = Array.from(this.routeStations.values())
+    const routeStations = Array.from(this.routeStations.values())
       .filter(rs => rs.routeId === routeId)
-      .sort((a, b) => a.sequence - b.sequence);
+      .sort((a, b) => a.order - b.order);
     
-    return routeStationMappings
+    return routeStations
       .map(rs => this.stations.get(rs.stationId))
       .filter(station => station !== undefined) as Station[];
   }
@@ -449,13 +423,22 @@ export class DatabaseStorage implements IStorage {
     const station = this.stations.get(id);
     if (!station) return undefined;
 
-    const upcomingArrivals = await this.getBusArrivals(id);
-    const routeStationMappings = Array.from(this.routeStations.values())
+    const routeStations = Array.from(this.routeStations.values())
       .filter(rs => rs.stationId === id);
     
-    const activeRoutes = routeStationMappings
+    const activeRoutes = routeStations
       .map(rs => this.routes.get(rs.routeId))
       .filter(route => route !== undefined) as Route[];
+
+    // Get upcoming arrivals (simplified)
+    const upcomingArrivals = Array.from(this.busArrivals.values())
+      .filter(arrival => arrival.stationId === id)
+      .slice(0, 3)
+      .map(arrival => ({
+        ...arrival,
+        bus: { ...this.buses.get(arrival.busId)!, route: this.routes.get(arrival.routeId)! },
+        route: this.routes.get(arrival.routeId)!
+      }));
 
     return {
       ...station,
@@ -478,27 +461,20 @@ export class DatabaseStorage implements IStorage {
     const arrivals = Array.from(this.busArrivals.values())
       .filter(arrival => arrival.stationId === stationId);
     
-    return arrivals.map(arrival => {
-      const bus = this.buses.get(arrival.busId);
-      const route = bus ? this.routes.get(bus.routeId) : undefined;
-      return {
-        ...arrival,
-        bus: bus ? { ...bus, route: route! } : {} as BusWithRoute,
-        route: route!
-      };
-    });
+    return arrivals.map(arrival => ({
+      ...arrival,
+      bus: { ...this.buses.get(arrival.busId)!, route: this.routes.get(arrival.routeId)! },
+      route: this.routes.get(arrival.routeId)!
+    }));
   }
 
   async createBusArrival(arrival: InsertBusArrival): Promise<BusArrival> {
     const id = this.currentBusArrivalId++;
     const newArrival: BusArrival = { 
       id, 
-      busId: arrival.busId,
-      stationId: arrival.stationId,
-      scheduledArrival: arrival.scheduledArrival,
-      estimatedArrival: arrival.estimatedArrival,
-      actualArrival: arrival.actualArrival || null,
-      status: arrival.status
+      ...arrival,
+      status: arrival.status || "scheduled",
+      actualArrival: arrival.actualArrival || null
     };
     this.busArrivals.set(id, newArrival);
     return newArrival;
@@ -517,73 +493,20 @@ export class DatabaseStorage implements IStorage {
   async getSystemStats(): Promise<SystemStats> {
     const totalBuses = this.buses.size;
     const activeRoutes = this.routes.size;
-    const onTimeBuses = Array.from(this.buses.values()).filter(bus => bus.status === "on_time").length;
+    const onTimeBuses = Array.from(this.buses.values()).filter(bus => bus.status === "active").length;
     const delayedBuses = Array.from(this.buses.values()).filter(bus => bus.status === "delayed").length;
     const alertBuses = Array.from(this.buses.values()).filter(bus => bus.status === "alert").length;
-    const onTimePercentage = totalBuses > 0 ? Math.round((onTimeBuses / totalBuses) * 100) : 0;
-
+    
     return {
       totalBuses,
       activeRoutes,
-      onTimePercentage,
+      onTimePercentage: totalBuses > 0 ? Math.round((onTimeBuses / totalBuses) * 100) : 0,
       onTimeBuses,
       delayedBuses,
-      alertBuses
+      alertBuses,
+      avgCrowdDensity: 0,
+      peakStations: 0
     };
-  }
-
-  public simulateBusMovement() {
-    Array.from(this.buses.values()).forEach(bus => {
-      // Get route path points for this bus's route
-      const routePoints = this.getRoutePoints(bus.routeId);
-      if (routePoints.length < 2) return;
-
-      // Find closest point on route to current bus position
-      let closestIndex = 0;
-      let minDistance = Infinity;
-      
-      for (let i = 0; i < routePoints.length; i++) {
-        const distance = Math.sqrt(
-          Math.pow(bus.currentX - routePoints[i].x, 2) + 
-          Math.pow(bus.currentY - routePoints[i].y, 2)
-        );
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestIndex = i;
-        }
-      }
-
-      // Move towards next point on route (or loop back to start)
-      const direction = bus.direction === "forward" ? 1 : -1;
-      let targetIndex = closestIndex + direction;
-      
-      // Handle route boundaries
-      if (targetIndex >= routePoints.length) {
-        targetIndex = bus.direction === "forward" ? 0 : routePoints.length - 1;
-      } else if (targetIndex < 0) {
-        targetIndex = bus.direction === "reverse" ? routePoints.length - 1 : 0;
-      }
-
-      const target = routePoints[targetIndex];
-      const speed = 0.01; // Movement speed
-
-      // Calculate movement towards target
-      const deltaX = target.x - bus.currentX;
-      const deltaY = target.y - bus.currentY;
-      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-
-      if (distance > 0.001) {
-        // Move towards target
-        const moveX = (deltaX / distance) * speed;
-        const moveY = (deltaY / distance) * speed;
-        const newX = bus.currentX + moveX;
-        const newY = bus.currentY + moveY;
-        this.updateBusPosition(bus.id, newX, newY);
-      } else {
-        // Reached target, continue to next point
-        this.updateBusPosition(bus.id, target.x, target.y);
-      }
-    });
   }
 
   private getRoutePoints(routeId: number): Array<{x: number, y: number}> {
@@ -719,5 +642,4 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-// Import and use the working memory storage
-export { storage } from "./storage-old.js";
+export const storage = new MemStorage();
