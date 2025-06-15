@@ -139,10 +139,10 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
 
   return (
     <div 
-      className="fixed w-96 bg-background border border-border shadow-lg z-50 flex flex-col"
+      className="fixed w-[600px] bg-background border border-border shadow-lg z-50 flex flex-col"
       style={{
         top: Math.max(0, Math.min(position.y, window.innerHeight - 400)),
-        left: Math.max(0, Math.min(position.x, window.innerWidth - 384)),
+        left: Math.max(0, Math.min(position.x, window.innerWidth - 600)),
         height: 'calc(100vh - 40px)',
         maxHeight: '90vh'
       }}
@@ -263,13 +263,30 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                   muted={isVideoMuted}
                   playsInline
                   controls={false}
-                  preload="metadata"
-                  className="w-full h-48 object-cover"
-                  style={{ minHeight: '192px' }}
+                  preload="auto"
+                  className="w-full h-64 object-cover"
+                  style={{ minHeight: '256px' }}
                   onLoadedData={() => {
                     const video = document.getElementById('station-video') as HTMLVideoElement;
                     if (video) {
+                      video.currentTime = 0;
                       video.play().catch(console.error);
+                      setIsVideoPlaying(true);
+                    }
+                  }}
+                  onError={(e) => {
+                    console.error('Video error:', e);
+                    const video = e.target as HTMLVideoElement;
+                    console.log('Failed video source:', video.src);
+                    // Try reloading the video source
+                    setTimeout(() => {
+                      video.load();
+                    }, 1000);
+                  }}
+                  onCanPlay={() => {
+                    const video = document.getElementById('station-video') as HTMLVideoElement;
+                    if (video && !video.paused) {
+                      setIsVideoPlaying(true);
                     }
                   }}
                 />
