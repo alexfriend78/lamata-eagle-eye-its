@@ -19,19 +19,19 @@ interface EmergencyAlertSystemProps {
 type Priority = "P1" | "P2" | "P3" | "P4" | "P5";
 
 const PRIORITY_COLORS = {
-  P1: "rgba(239, 68, 68, 0.95)", // Red
-  P2: "rgba(248, 113, 113, 0.95)", // Lighter red
-  P3: "rgba(245, 158, 11, 0.95)", // Amber
-  P4: "rgba(251, 191, 36, 0.95)", // Lighter amber
-  P5: "rgba(107, 114, 128, 0.95)", // Grey
+  P1: "rgba(252, 165, 165, 0.85)", // Light red with transparency
+  P2: "rgba(254, 202, 202, 0.85)", // Very light red with transparency
+  P3: "rgba(253, 230, 138, 0.85)", // Light amber with transparency
+  P4: "rgba(254, 240, 138, 0.85)", // Very light amber with transparency
+  P5: "rgba(209, 213, 219, 0.85)", // Light grey with transparency
 };
 
 const PRIORITY_TEXT_COLORS = {
-  P1: "text-white",
-  P2: "text-white", 
-  P3: "text-white",
-  P4: "text-black",
-  P5: "text-white",
+  P1: "text-red-900",
+  P2: "text-red-800", 
+  P3: "text-amber-900",
+  P4: "text-amber-800",
+  P5: "text-gray-700",
 };
 
 export default function EmergencyAlertSystem({ 
