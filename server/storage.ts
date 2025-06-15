@@ -168,15 +168,35 @@ export class MemStorage implements IStorage {
       { name: "TBS Terminal", x: 0.75, y: 0.25, zone: 2, routeId: 3 }
     ];
 
-    stationsData.forEach(stationData => {
-      const id = this.currentStationId++;
-      this.stations.set(id, {
-        id,
-        ...stationData,
+    // Track sequence per route
+    const routeSequences: Record<number, number> = {};
+    
+    stationsData.forEach((stationData) => {
+      const stationId = this.currentStationId++;
+      this.stations.set(stationId, {
+        id: stationId,
+        name: stationData.name,
+        x: stationData.x,
+        y: stationData.y,
+        zone: stationData.zone,
         passengerCount: Math.floor(Math.random() * 400) + 100,
         trafficCondition: ["light", "normal", "heavy"][Math.floor(Math.random() * 3)],
         accessibility: true,
         amenities: ["shelter", "seating", "lighting"]
+      });
+
+      // Initialize route sequence counter if not exists
+      if (!routeSequences[stationData.routeId]) {
+        routeSequences[stationData.routeId] = 1;
+      }
+
+      // Create route-station association with proper sequence
+      const routeStationId = this.currentRouteStationId++;
+      this.routeStations.set(routeStationId, {
+        id: routeStationId,
+        routeId: stationData.routeId,
+        stationId: stationId,
+        sequence: routeSequences[stationData.routeId]++
       });
     });
 

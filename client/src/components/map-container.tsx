@@ -1,5 +1,6 @@
 import { type BusWithRoute, type Route, type Station } from "@shared/schema";
 import BusIcon from "./bus-icon";
+import { useRouteStations } from "@/hooks/use-route-stations";
 
 interface MapContainerProps {
   buses: BusWithRoute[];
@@ -24,6 +25,9 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   // Dynamic screen dimensions accounting for header
   const mapWidth = typeof window !== 'undefined' ? window.innerWidth : 1920;
   const mapHeight = typeof window !== 'undefined' ? window.innerHeight - 64 : 1016; // Subtract header height
+  
+  // Fetch stations for selected routes
+  const { data: routeStations = [] } = useRouteStations(selectedRoutes);
 
   const getRoutePoints = (routeId: number) => {
     // Define routes using dynamic resolution for consistent coverage
@@ -646,14 +650,19 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         })()}
         
         {/* Bus Stations - only show if stations visibility is enabled */}
-        {showStations && stations.filter(station => {
+        {showStations && (() => {
           // Show all stations if no routes are selected
-          if (selectedRoutes.length === 0) return true;
+          if (selectedRoutes.length === 0) return stations;
           
-          // For now, let's simplify - show all stations when any route is selected
-          // This ensures stations are visible while we debug the coordinate matching
-          return true;
-        }).map((station) => {
+          // Show only stations that belong to selected routes
+          if (routeStations.length > 0) {
+            const routeStationIds = new Set(routeStations.map(rs => rs.id));
+            return stations.filter(station => routeStationIds.has(station.id));
+          }
+          
+          // Fallback: show all stations if route stations are still loading
+          return stations;
+        })().map((station) => {
           const stationPixelX = station.x * mapWidth;
           const stationPixelY = station.y * mapHeight;
           
