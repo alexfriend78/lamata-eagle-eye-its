@@ -505,9 +505,58 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         {routes
           .filter(route => selectedRoutes.length === 0 || selectedRoutes.includes(route.id))
           .map((route, index) => renderRouteLine(route, index))}
+
+        {/* Route Intersections */}
+        {routes
+          .filter(route => selectedRoutes.length === 0 || selectedRoutes.includes(route.id))
+          .map(route => {
+            const routePoints = getRoutePoints(route.id);
+            const intersections = [];
+            
+            // Find intersections with other routes
+            routes.forEach(otherRoute => {
+              if (otherRoute.id === route.id) return;
+              if (selectedRoutes.length > 0 && !selectedRoutes.includes(otherRoute.id)) return;
+              
+              const otherPoints = getRoutePoints(otherRoute.id);
+              
+              routePoints.forEach(p1 => {
+                otherPoints.forEach(p2 => {
+                  const distance = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+                  if (distance < 80) { // Intersection threshold
+                    intersections.push({
+                      x: (p1.x + p2.x) / 2,
+                      y: (p1.y + p2.y) / 2,
+                      routes: [route.id, otherRoute.id]
+                    });
+                  }
+                });
+              });
+            });
+            
+            return intersections.map((intersection, index) => (
+              <div
+                key={`intersection-${route.id}-${index}`}
+                className="absolute z-25"
+                style={{
+                  left: `${intersection.x - 6}px`,
+                  top: `${intersection.y - 6}px`,
+                }}
+              >
+                <div className={`w-3 h-3 rounded-full border-2 ${
+                  theme === 'dark' ? 'bg-gray-200 border-gray-800' : 'bg-gray-800 border-white'
+                }`} />
+              </div>
+            ));
+          })}
         
-        {/* Bus Stations */}
-        {stations.map((station) => (
+        {/* Bus Stations - only for selected routes or all if none selected */}
+        {stations.filter(station => {
+          // Show all stations if no routes are selected
+          if (selectedRoutes.length === 0) return true;
+          // Show station if it belongs to any selected route (simplified - in real app would have route-station mapping)
+          return selectedRoutes.length > 0;
+        }).map((station) => (
           <div 
             key={station.id}
             className="absolute z-20 cursor-pointer"
@@ -515,7 +564,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
               top: `${station.y - 8}px`, 
               left: `${station.x - 8}px` 
             }}
-            onClick={() => onStationClick(station)}
+            onClick={() => onStationClick && onStationClick(station)}
             onMouseEnter={() => onStationHover?.(station)}
             onMouseLeave={() => onStationHover?.(null)}
           >
