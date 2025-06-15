@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
 import { useBusData } from "@/hooks/use-bus-data";
+import { useTheme } from "@/hooks/use-theme";
 import MapContainer from "@/components/map-container";
 import ControlPanel from "@/components/control-panel";
 import EmergencyAlert from "@/components/emergency-alert";
+import { Button } from "@/components/ui/button";
+import { Sun, Moon, Settings } from "lucide-react";
 
 export default function BusMonitor() {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [selectedRoutes, setSelectedRoutes] = useState<number[]>([]);
+  const [showSettings, setShowSettings] = useState(false);
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
+  const { theme, setTheme } = useTheme();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -19,7 +25,7 @@ export default function BusMonitor() {
   useEffect(() => {
     const interval = setInterval(() => {
       refetch();
-    }, 5000); // Refresh data every 5 seconds
+    }, 5000);
 
     return () => clearInterval(interval);
   }, [refetch]);
@@ -35,8 +41,16 @@ export default function BusMonitor() {
 
   const criticalAlert = alerts?.find(alert => alert.severity === "critical");
 
+  const toggleRouteHighlight = (routeId: number) => {
+    setSelectedRoutes(prev => 
+      prev.includes(routeId) 
+        ? prev.filter(id => id !== routeId)
+        : [...prev, routeId]
+    );
+  };
+
   return (
-    <div className="min-h-screen bus-monitor-bg text-white">
+    <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
       {criticalAlert && (
         <EmergencyAlert 
           alert={criticalAlert}
@@ -44,18 +58,60 @@ export default function BusMonitor() {
         />
       )}
       
-      {/* Header */}
-      <header className="bus-monitor-surface border-b border-gray-700 px-6 py-4">
+      {/* Full Screen Header */}
+      <header className={`${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-gray-100 border-gray-300'} border-b px-6 py-3`}>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="text-2xl">🚌</div>
-            <h1 className="text-xl font-semibold">London Bus Transit Monitor</h1>
+            <h1 className="text-xl font-semibold">Lagos BRT Transit Monitor</h1>
           </div>
+          
           <div className="flex items-center space-x-6">
+            {/* Route Selection */}
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium">Highlight Routes:</span>
+              <div className="flex space-x-1">
+                {routes?.slice(0, 5).map((route) => (
+                  <Button
+                    key={route.id}
+                    onClick={() => toggleRouteHighlight(route.id)}
+                    variant={selectedRoutes.includes(route.id) ? "default" : "outline"}
+                    size="sm"
+                    className="h-7 px-2 text-xs"
+                    style={selectedRoutes.includes(route.id) ? { backgroundColor: route.color } : {}}
+                  >
+                    {route.routeNumber}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            {/* Theme Toggle */}
+            <Button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              variant="outline"
+              size="sm"
+              className="h-8 w-8 p-0"
+            >
+              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+
+            {/* Settings */}
+            <Button
+              onClick={() => setShowSettings(!showSettings)}
+              variant="outline"
+              size="sm"
+              className="h-8 w-8 p-0"
+            >
+              <Settings className="h-4 w-4" />
+            </Button>
+
+            {/* System Status */}
             <div className="flex items-center space-x-2">
               <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-sm">System Online</span>
             </div>
+            
             <div className="text-sm text-gray-400">
               {formatTime(currentTime)}
             </div>
@@ -63,25 +119,30 @@ export default function BusMonitor() {
         </div>
       </header>
 
-      <div className="flex h-[calc(100vh-80px)]">
-        {/* Main Map Area */}
-        <div className="flex-1 p-6 relative overflow-hidden">
+      <div className="flex h-[calc(100vh-64px)]">
+        {/* Full Screen Map Area */}
+        <div className="flex-1 relative overflow-hidden">
           <MapContainer 
             buses={buses || []}
             routes={routes || []}
             stations={stations || []}
+            selectedRoutes={selectedRoutes}
+            theme={theme}
           />
         </div>
 
-        {/* Control Panel */}
-        <div className="w-80 bus-monitor-surface border-l border-gray-700 p-6 overflow-y-auto">
-          <ControlPanel 
-            stats={stats}
-            alerts={alerts || []}
-            routes={routes || []}
-            onRefresh={refetch}
-          />
-        </div>
+        {/* Collapsible Control Panel */}
+        {showSettings && (
+          <div className={`w-80 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-gray-100 border-gray-300'} border-l p-4 overflow-y-auto`}>
+            <ControlPanel 
+              stats={stats}
+              alerts={alerts || []}
+              routes={routes || []}
+              onRefresh={refetch}
+              theme={theme}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

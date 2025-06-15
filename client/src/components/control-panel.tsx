@@ -9,9 +9,10 @@ interface ControlPanelProps {
   alerts: AlertWithDetails[];
   routes: Route[];
   onRefresh: () => void;
+  theme: "light" | "dark";
 }
 
-export default function ControlPanel({ stats, alerts, routes, onRefresh }: ControlPanelProps) {
+export default function ControlPanel({ stats, alerts, routes, onRefresh, theme }: ControlPanelProps) {
   const { toast } = useToast();
 
   const simulateAlertMutation = useMutation({
@@ -82,27 +83,37 @@ export default function ControlPanel({ stats, alerts, routes, onRefresh }: Contr
 
   return (
     <div className="space-y-6">
-      <h2 className="text-lg font-semibold">System Monitor</h2>
+      <h2 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+        System Monitor
+      </h2>
       
       {/* System Status */}
       <div>
-        <h3 className="text-sm font-medium text-gray-400 mb-3">SYSTEM STATUS</h3>
+        <h3 className={`text-sm font-medium mb-3 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+          SYSTEM STATUS
+        </h3>
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-sm">Total Buses</span>
-            <span className="text-lg font-semibold text-blue-400">
+            <span className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+              Total Buses
+            </span>
+            <span className="text-lg font-semibold text-blue-500">
               {stats?.totalBuses || 0}
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm">Active Routes</span>
-            <span className="text-lg font-semibold text-blue-400">
+            <span className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+              Active Routes
+            </span>
+            <span className="text-lg font-semibold text-blue-500">
               {stats?.activeRoutes || 0}
             </span>
           </div>
           <div className="flex items-center justify-between">
-            <span className="text-sm">On Time</span>
-            <span className="text-lg font-semibold text-green-400">
+            <span className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+              On Time
+            </span>
+            <span className="text-lg font-semibold text-green-500">
               {stats?.onTimePercentage || 0}%
             </span>
           </div>
@@ -111,26 +122,34 @@ export default function ControlPanel({ stats, alerts, routes, onRefresh }: Contr
 
       {/* Bus Status Legend */}
       <div>
-        <h3 className="text-sm font-medium text-gray-400 mb-3">BUS STATUS</h3>
+        <h3 className={`text-sm font-medium mb-3 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+          BUS STATUS
+        </h3>
         <div className="space-y-2">
           <div className="flex items-center space-x-3">
-            <span className="text-xl" style={{ color: 'var(--bus-on-time)' }}>🚌</span>
-            <span className="text-sm">On Time</span>
-            <span className="text-xs text-gray-400 ml-auto">
+            <span className="text-xl text-green-500">🚌</span>
+            <span className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+              On Time
+            </span>
+            <span className={`text-xs ml-auto ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
               {stats?.onTimeBuses || 0} buses
             </span>
           </div>
           <div className="flex items-center space-x-3">
-            <span className="text-xl" style={{ color: 'var(--bus-delayed)' }}>🚌</span>
-            <span className="text-sm">Delayed</span>
-            <span className="text-xs text-gray-400 ml-auto">
+            <span className="text-xl text-yellow-500">🚌</span>
+            <span className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+              Delayed
+            </span>
+            <span className={`text-xs ml-auto ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
               {stats?.delayedBuses || 0} buses
             </span>
           </div>
           <div className="flex items-center space-x-3">
-            <span className="text-xl" style={{ color: 'var(--bus-alert)' }}>🚌</span>
-            <span className="text-sm">Alert</span>
-            <span className="text-xs text-gray-400 ml-auto">
+            <span className="text-xl text-red-500">🚌</span>
+            <span className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+              Alert
+            </span>
+            <span className={`text-xs ml-auto ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
               {stats?.alertBuses || 0} buses
             </span>
           </div>
@@ -139,25 +158,33 @@ export default function ControlPanel({ stats, alerts, routes, onRefresh }: Contr
 
       {/* Active Alerts */}
       <div>
-        <h3 className="text-sm font-medium text-gray-400 mb-3">ACTIVE ALERTS</h3>
+        <h3 className={`text-sm font-medium mb-3 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+          ACTIVE ALERTS
+        </h3>
         <div className="space-y-2 max-h-48 overflow-y-auto">
           {alerts.length === 0 ? (
-            <p className="text-sm text-gray-500">No active alerts</p>
+            <p className={`text-sm ${theme === 'dark' ? 'text-gray-500' : 'text-gray-400'}`}>
+              No active alerts
+            </p>
           ) : (
             alerts.map((alert) => (
               <div 
                 key={alert.id}
-                className={`border rounded-lg p-3 ${getSeverityColor(alert.severity)}`}
+                className={`border rounded-lg p-3 ${getSeverityColor(alert.severity)} ${
+                  theme === 'dark' ? 'border-gray-600' : 'border-gray-300'
+                }`}
               >
                 <div className="flex items-center justify-between mb-1">
                   <span className={`text-sm font-medium ${getStatusColor(alert.type)}`}>
                     {alert.route ? `Route ${alert.route.routeNumber}` : "System"}
                   </span>
-                  <span className="text-xs text-gray-400">
+                  <span className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
                     {formatTimeAgo(alert.createdAt)}
                   </span>
                 </div>
-                <p className="text-xs text-gray-300">{alert.message}</p>
+                <p className={`text-xs ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                  {alert.message}
+                </p>
               </div>
             ))
           )}
@@ -166,14 +193,21 @@ export default function ControlPanel({ stats, alerts, routes, onRefresh }: Contr
 
       {/* Route Quick Access */}
       <div>
-        <h3 className="text-sm font-medium text-gray-400 mb-3">QUICK ACCESS</h3>
-        <div className="grid grid-cols-3 gap-2">
+        <h3 className={`text-sm font-medium mb-3 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+          ROUTES
+        </h3>
+        <div className="grid grid-cols-2 gap-2">
           {routes.slice(0, 6).map((route) => (
             <Button
               key={route.id}
               variant="outline"
               size="sm"
-              className="bus-monitor-elevated hover:bg-gray-600 text-xs p-2 h-8"
+              className={`text-xs p-2 h-8 ${
+                theme === 'dark' 
+                  ? 'bg-gray-700 hover:bg-gray-600 text-white border-gray-600' 
+                  : 'bg-white hover:bg-gray-100 text-gray-900 border-gray-300'
+              }`}
+              style={{ borderColor: route.color }}
             >
               {route.routeNumber}
             </Button>
@@ -193,15 +227,13 @@ export default function ControlPanel({ stats, alerts, routes, onRefresh }: Contr
         <Button
           onClick={onRefresh}
           variant="outline"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white border-blue-600"
+          className={`w-full ${
+            theme === 'dark'
+              ? 'bg-blue-600 hover:bg-blue-700 text-white border-blue-600'
+              : 'bg-blue-500 hover:bg-blue-600 text-white border-blue-500'
+          }`}
         >
           Refresh Data
-        </Button>
-        <Button
-          variant="outline"
-          className="w-full bus-monitor-elevated hover:bg-gray-700 text-white border-gray-600"
-        >
-          Export Report
         </Button>
       </div>
     </div>

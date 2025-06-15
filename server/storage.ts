@@ -66,16 +66,40 @@ export class MemStorage implements IStorage {
   }
 
   private seedData() {
-    // Create stations based on London bus routes
+    // Create stations based on Lagos BRT routes
     const stationsData = [
-      { name: "Paddington", x: 80, y: 128 },
-      { name: "Oxford Circus", x: 320, y: 128 },
-      { name: "King's Cross", x: 384, y: 80 },
-      { name: "Liverpool Street", x: 480, y: 128 },
-      { name: "Bank", x: 448, y: 192 },
-      { name: "Holborn", x: 300, y: 200 },
-      { name: "Tottenham Court Road", x: 260, y: 160 },
-      { name: "Regent Street", x: 240, y: 180 },
+      // Route 1: Oshodi - Abule-Egba
+      { name: "Oshodi Terminal 2", x: 400, y: 300 },
+      { name: "Bolade", x: 380, y: 280 },
+      { name: "Ladipo", x: 360, y: 260 },
+      { name: "Shogunle", x: 340, y: 240 },
+      { name: "PWD", x: 320, y: 220 },
+      { name: "Airport Junction", x: 300, y: 200 },
+      { name: "Ikeja Along", x: 280, y: 180 },
+      { name: "Ile Zik", x: 260, y: 160 },
+      { name: "Mangoro", x: 240, y: 140 },
+      { name: "Cement", x: 220, y: 120 },
+      { name: "Iyana Dopemu", x: 200, y: 100 },
+      { name: "Adealu", x: 180, y: 80 },
+      { name: "Iyana Ipaja Bus stop", x: 160, y: 60 },
+      { name: "Pleasure", x: 140, y: 40 },
+      { name: "Ile Epo", x: 120, y: 20 },
+      { name: "Super", x: 100, y: 10 },
+      { name: "Abule Egba", x: 80, y: 5 },
+      
+      // Route 2/3 additional stations
+      { name: "CMS Terminal", x: 600, y: 500 },
+      { name: "Obalende", x: 580, y: 480 },
+      { name: "TBS Terminal", x: 650, y: 520 },
+      { name: "Anthony", x: 420, y: 350 },
+      { name: "Maryland", x: 460, y: 380 },
+      { name: "Fadeyi", x: 500, y: 420 },
+      
+      // Route 3/4/5 Ikorodu line
+      { name: "Ikorodu Terminal", x: 100, y: 600 },
+      { name: "Mile12 Terminal", x: 300, y: 500 },
+      { name: "Ketu", x: 350, y: 460 },
+      { name: "Ojota", x: 400, y: 420 },
     ];
 
     stationsData.forEach(station => {
@@ -83,12 +107,13 @@ export class MemStorage implements IStorage {
       this.stations.set(id, { id, ...station });
     });
 
-    // Create routes
+    // Create routes based on Lagos BRT system
     const routesData = [
-      { routeNumber: "8", name: "Bow - Tottenham Court Road", color: "#1976D2" },
-      { routeNumber: "25", name: "Holborn - Ilford", color: "#1976D2" },
-      { routeNumber: "73", name: "Victoria - Stoke Newington", color: "#1976D2" },
-      { routeNumber: "205", name: "Paddington - Bow", color: "#1976D2" },
+      { routeNumber: "1", name: "Oshodi - Abule-Egba", color: "#FF6B35" },
+      { routeNumber: "2", name: "Abule Egba - TBS/Obalende", color: "#2E86AB" },
+      { routeNumber: "3", name: "Ikorodu - TBS", color: "#A23B72" },
+      { routeNumber: "4", name: "Ikorodu - Fadeyi", color: "#F18F01" },
+      { routeNumber: "5", name: "Ikorodu - Oshodi", color: "#C73E1D" },
     ];
 
     routesData.forEach(route => {
@@ -96,14 +121,15 @@ export class MemStorage implements IStorage {
       this.routes.set(id, { id, ...route, isActive: true });
     });
 
-    // Create buses
+    // Create buses on different routes
     const busesData = [
-      { routeId: 1, busNumber: "LF08-KXY", currentX: 96, currentY: 112, status: "on_time", direction: "forward" },
-      { routeId: 1, busNumber: "LF08-MZB", currentX: 320, currentY: 112, status: "delayed", direction: "reverse" },
-      { routeId: 2, busNumber: "LF09-ABC", currentX: 160, currentY: 144, status: "alert", direction: "forward" },
-      { routeId: 3, busNumber: "LF09-DEF", currentX: 304, currentY: 128, status: "on_time", direction: "forward" },
-      { routeId: 4, busNumber: "LF10-GHI", currentX: 176, currentY: 224, status: "on_time", direction: "reverse" },
-      { routeId: 4, busNumber: "LF10-JKL", currentX: 352, currentY: 224, status: "delayed", direction: "forward" },
+      { routeId: 1, busNumber: "LG-01-KXY", currentX: 200, currentY: 150, status: "on_time", direction: "forward" },
+      { routeId: 1, busNumber: "LG-01-MZB", currentX: 300, currentY: 200, status: "delayed", direction: "reverse" },
+      { routeId: 2, busNumber: "LG-02-ABC", currentX: 180, currentY: 80, status: "alert", direction: "forward" },
+      { routeId: 2, busNumber: "LG-02-DEF", currentX: 500, currentY: 400, status: "on_time", direction: "reverse" },
+      { routeId: 3, busNumber: "LG-03-GHI", currentX: 200, currentY: 550, status: "on_time", direction: "forward" },
+      { routeId: 4, busNumber: "LG-04-JKL", currentX: 250, currentY: 500, status: "delayed", direction: "forward" },
+      { routeId: 5, busNumber: "LG-05-MNO", currentX: 150, currentY: 600, status: "on_time", direction: "reverse" },
     ];
 
     busesData.forEach(bus => {
@@ -114,12 +140,39 @@ export class MemStorage implements IStorage {
     // Create some alerts
     const alertsData = [
       { busId: 3, routeId: 2, type: "emergency", message: "Emergency stop - Medical assistance required", severity: "critical" },
-      { busId: null, routeId: 1, type: "delay", message: "Traffic delay - Expected 10 min behind schedule", severity: "medium" },
+      { busId: null, routeId: 3, type: "delay", message: "Heavy traffic on Third Mainland Bridge - 15 min delay", severity: "medium" },
     ];
 
     alertsData.forEach(alert => {
       const id = this.currentAlertId++;
       this.alerts.set(id, { id, isActive: true, createdAt: new Date(), ...alert });
+    });
+
+    // Add route-station relationships
+    const routeStationsData = [
+      // Route 1: Oshodi - Abule-Egba
+      { routeId: 1, stationId: 1, sequence: 1 }, // Oshodi Terminal 2
+      { routeId: 1, stationId: 2, sequence: 2 }, // Bolade
+      { routeId: 1, stationId: 3, sequence: 3 }, // Ladipo
+      { routeId: 1, stationId: 4, sequence: 4 }, // Shogunle
+      { routeId: 1, stationId: 5, sequence: 5 }, // PWD
+      { routeId: 1, stationId: 6, sequence: 6 }, // Airport Junction
+      { routeId: 1, stationId: 7, sequence: 7 }, // Ikeja Along
+      { routeId: 1, stationId: 8, sequence: 8 }, // Ile Zik
+      { routeId: 1, stationId: 9, sequence: 9 }, // Mangoro
+      { routeId: 1, stationId: 10, sequence: 10 }, // Cement
+      { routeId: 1, stationId: 11, sequence: 11 }, // Iyana Dopemu
+      { routeId: 1, stationId: 12, sequence: 12 }, // Adealu
+      { routeId: 1, stationId: 13, sequence: 13 }, // Iyana Ipaja Bus stop
+      { routeId: 1, stationId: 14, sequence: 14 }, // Pleasure
+      { routeId: 1, stationId: 15, sequence: 15 }, // Ile Epo
+      { routeId: 1, stationId: 16, sequence: 16 }, // Super
+      { routeId: 1, stationId: 17, sequence: 17 }, // Abule Egba
+    ];
+
+    routeStationsData.forEach(routeStation => {
+      const id = this.currentRouteStationId++;
+      this.routeStations.set(id, { id, ...routeStation });
     });
   }
 
