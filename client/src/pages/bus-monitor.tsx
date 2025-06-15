@@ -5,13 +5,14 @@ import MapContainer from "@/components/map-container";
 import ControlPanel from "@/components/control-panel";
 import EmergencyAlert from "@/components/emergency-alert";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map } from "lucide-react";
 
 export default function BusMonitor() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedRoutes, setSelectedRoutes] = useState<number[]>([]);
   const [selectedZone, setSelectedZone] = useState<number | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [showMap, setShowMap] = useState(false);
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
   const { theme, setTheme } = useTheme();
 
@@ -88,6 +89,17 @@ export default function BusMonitor() {
               </div>
             </div>
 
+            {/* Map Toggle */}
+            <Button
+              onClick={() => setShowMap(!showMap)}
+              variant={showMap ? "default" : "outline"}
+              size="sm"
+              className="h-8 w-8 p-0"
+              title="Toggle background map"
+            >
+              <Map className="h-4 w-4" />
+            </Button>
+
             {/* Theme Toggle */}
             <Button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -132,6 +144,7 @@ export default function BusMonitor() {
             theme={theme}
             selectedZone={selectedZone}
             onZoneSelect={setSelectedZone}
+            showMap={showMap}
           />
         </div>
 

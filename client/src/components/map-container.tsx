@@ -9,9 +9,10 @@ interface MapContainerProps {
   theme: "light" | "dark";
   selectedZone: number | null;
   onZoneSelect: (zone: number | null) => void;
+  showMap: boolean;
 }
 
-export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect }: MapContainerProps) {
+export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap }: MapContainerProps) {
   const getRoutePoints = (routeId: number) => {
     // Define route paths for Lagos BRT system - spread across full screen
     const routePaths: Record<number, { x: number; y: number }[]> = {
@@ -225,6 +226,63 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
           transformOrigin: 'center center'
         }}
       >
+        {/* Background Map Layer */}
+        {showMap && (
+          <div 
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(`
+                <svg width="1280" height="720" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="water" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:0.3" />
+                      <stop offset="100%" style="stop-color:#1e40af;stop-opacity:0.4" />
+                    </linearGradient>
+                    <linearGradient id="land" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:${theme === 'dark' ? '#374151' : '#f3f4f6'};stop-opacity:0.8" />
+                      <stop offset="100%" style="stop-color:${theme === 'dark' ? '#1f2937' : '#e5e7eb'};stop-opacity:0.9" />
+                    </linearGradient>
+                  </defs>
+                  
+                  <!-- Lagos Mainland -->
+                  <path d="M 50 200 Q 300 150 600 180 Q 800 200 1000 250 Q 1100 300 1200 400 L 1200 600 Q 1000 650 800 620 Q 600 600 400 580 Q 200 550 50 500 Z" fill="url(#land)" stroke="${theme === 'dark' ? '#6b7280' : '#9ca3af'}" stroke-width="2"/>
+                  
+                  <!-- Lagos Island -->
+                  <ellipse cx="1150" cy="480" rx="80" ry="40" fill="url(#land)" stroke="${theme === 'dark' ? '#6b7280' : '#9ca3af'}" stroke-width="2"/>
+                  
+                  <!-- Victoria Island -->
+                  <ellipse cx="1200" cy="520" rx="60" ry="25" fill="url(#land)" stroke="${theme === 'dark' ? '#6b7280' : '#9ca3af'}" stroke-width="2"/>
+                  
+                  <!-- Ikorodu Peninsula -->
+                  <path d="M 50 550 Q 150 580 250 600 Q 350 620 400 580 L 380 560 Q 300 580 200 560 Q 100 540 50 520 Z" fill="url(#land)" stroke="${theme === 'dark' ? '#6b7280' : '#9ca3af'}" stroke-width="2"/>
+                  
+                  <!-- Lagos Lagoon -->
+                  <path d="M 800 400 Q 1000 420 1150 450 Q 1200 480 1250 500 Q 1200 520 1150 540 Q 1000 560 800 540 Q 700 520 650 480 Q 700 440 800 400 Z" fill="url(#water)" stroke="${theme === 'dark' ? '#1e40af' : '#3b82f6'}" stroke-width="1"/>
+                  
+                  <!-- Atlantic Ocean -->
+                  <rect x="1100" y="550" width="180" height="170" fill="url(#water)" stroke="${theme === 'dark' ? '#1e40af' : '#3b82f6'}" stroke-width="1"/>
+                  
+                  <!-- Major Roads -->
+                  <path d="M 100 300 Q 400 280 800 300 Q 1000 320 1200 350" stroke="${theme === 'dark' ? '#4b5563' : '#6b7280'}" stroke-width="3" fill="none" opacity="0.6"/>
+                  <path d="M 200 250 Q 500 230 800 250" stroke="${theme === 'dark' ? '#4b5563' : '#6b7280'}" stroke-width="2" fill="none" opacity="0.5"/>
+                  <path d="M 100 400 Q 600 380 1000 400" stroke="${theme === 'dark' ? '#4b5563' : '#6b7280'}" stroke-width="2" fill="none" opacity="0.5"/>
+                  
+                  <!-- Area Labels -->
+                  <text x="300" y="320" fill="${theme === 'dark' ? '#d1d5db' : '#374151'}" font-size="14" font-weight="bold" opacity="0.7">IKEJA</text>
+                  <text x="150" y="570" fill="${theme === 'dark' ? '#d1d5db' : '#374151'}" font-size="14" font-weight="bold" opacity="0.7">IKORODU</text>
+                  <text x="1120" y="470" fill="${theme === 'dark' ? '#d1d5db' : '#374151'}" font-size="12" font-weight="bold" opacity="0.7">LAGOS ISLAND</text>
+                  <text x="1140" y="530" fill="${theme === 'dark' ? '#d1d5db' : '#374151'}" font-size="10" opacity="0.7">V.I.</text>
+                  <text x="950" y="490" fill="${theme === 'dark' ? '#60a5fa' : '#2563eb'}" font-size="12" opacity="0.8">Lagos Lagoon</text>
+                </svg>
+              `)}")`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              opacity: 0.6
+            }}
+          />
+        )}
+
         {/* Background grid */}
         <svg
           width="1280"
