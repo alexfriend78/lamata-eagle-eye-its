@@ -259,9 +259,19 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
           {/* Live Video Feed */}
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium flex items-center gap-2">
-                <Camera className="h-4 w-4" />
-                Live Video Feed
+              <CardTitle className="text-sm font-medium flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Camera className="h-4 w-4" />
+                  Live Video Feed
+                </div>
+                <a 
+                  href={getStationVideoSrc()} 
+                  target="_blank" 
+                  className="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700"
+                  rel="noopener noreferrer"
+                >
+                  Open Video
+                </a>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -323,19 +333,8 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                 </div>
               </div>
               
-              {/* Video controls and test link below video */}
-              <div className="mt-2 flex items-center justify-between">
-                <div className="text-xs text-muted-foreground">
-                  Bus Stop Security Camera - Real-time monitoring
-                </div>
-                <a 
-                  href={getStationVideoSrc()} 
-                  target="_blank" 
-                  className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700"
-                  rel="noopener noreferrer"
-                >
-                  Test Video File
-                </a>
+              <div className="mt-2 text-xs text-muted-foreground">
+                Bus Stop Security Camera - Real-time monitoring
               </div>
             </CardContent>
           </Card>
