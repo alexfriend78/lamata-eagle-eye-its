@@ -5,8 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { AlertTriangle, Phone, MapPin, Clock, User, Video, X } from "lucide-react";
+import { AlertTriangle, Phone, MapPin, Clock, User, Video, X, Play, Pause, Volume2, VolumeX } from "lucide-react";
 import { type AlertWithDetails, type BusWithRoute, type Station } from "@shared/schema";
+import swordVideoPath from "@assets/Sword_Lagos_Bus_CCTV_Video_Ready (1)_1750007599619.mp4";
+import knifeVideoPath from "@assets/knife_Lagos_Bus_CCTV_Video_Ready_1750007661394.mp4";
+import gunVideoPath from "@assets/BRT_Bus_with_Machine_Gun_1750007661395.mp4";
+import fightVideoPath from "@assets/Bus_Fight_Video_Generated_1750007661396.mp4";
 
 interface EmergencyAlertSystemProps {
   buses: BusWithRoute[];
@@ -34,6 +38,15 @@ const PRIORITY_TEXT_COLORS = {
   P5: "text-gray-700",
 };
 
+// Video mapping for different alert types
+const EMERGENCY_VIDEOS = {
+  "weapon": swordVideoPath,
+  "knife": knifeVideoPath, 
+  "gun": gunVideoPath,
+  "fight": fightVideoPath,
+  "emergency": swordVideoPath, // Default for emergency alerts
+};
+
 export default function EmergencyAlertSystem({ 
   buses, 
   stations, 
@@ -47,6 +60,8 @@ export default function EmergencyAlertSystem({
   const [selectedBus, setSelectedBus] = useState<string>("");
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState("emergency");
+  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
+  const [isVideoMuted, setIsVideoMuted] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -112,37 +127,140 @@ export default function EmergencyAlertSystem({
     return stations.find(s => s.id === stationId);
   };
 
+  // Helper function to get video for alert type
+  const getVideoForAlert = (alert: AlertWithDetails) => {
+    const alertMessage = alert.message.toLowerCase();
+    
+    if (alertMessage.includes('weapon') || alertMessage.includes('sword')) return EMERGENCY_VIDEOS.weapon;
+    if (alertMessage.includes('knife')) return EMERGENCY_VIDEOS.knife;
+    if (alertMessage.includes('gun') || alertMessage.includes('machine gun')) return EMERGENCY_VIDEOS.gun;
+    if (alertMessage.includes('fight')) return EMERGENCY_VIDEOS.fight;
+    
+    return EMERGENCY_VIDEOS.emergency; // Default
+  };
+
+  // Video player controls
+  const toggleVideoPlayback = () => {
+    const video = document.querySelector('#emergency-video') as HTMLVideoElement;
+    if (video) {
+      if (isVideoPlaying) {
+        video.pause();
+      } else {
+        video.play();
+      }
+      setIsVideoPlaying(!isVideoPlaying);
+    }
+  };
+
+  const toggleVideoMute = () => {
+    const video = document.querySelector('#emergency-video') as HTMLVideoElement;
+    if (video) {
+      video.muted = !isVideoMuted;
+      setIsVideoMuted(!isVideoMuted);
+    }
+  };
+
   // Full-screen overlay for active alerts
   if (activeAlert && !showTriage) {
     const overlayColor = PRIORITY_COLORS[activeAlert.priority as Priority] || PRIORITY_COLORS.P3;
     const textColor = PRIORITY_TEXT_COLORS[activeAlert.priority as Priority] || "text-white";
+    const isPriorityOne = activeAlert.priority === 'P1';
+    const videoSrc = getVideoForAlert(activeAlert);
 
     return (
       <div 
         className="fixed inset-0 z-50 flex items-center justify-center p-8"
         style={{ backgroundColor: overlayColor }}
       >
-        <Card className="w-full max-w-2xl bg-black/20 border-white/30 backdrop-blur-sm">
-          <CardContent className="p-8 text-center">
-            <div className="flex justify-center mb-6">
-              <AlertTriangle className={`w-24 h-24 ${textColor}`} />
-            </div>
-            
-            <h1 className={`text-4xl font-bold mb-4 ${textColor}`}>
-              EMERGENCY ALERT
-            </h1>
-            
-            <div className={`text-2xl font-semibold mb-2 ${textColor}`}>
-              PRIORITY: {activeAlert.priority}
-            </div>
-            
-            <div className={`text-xl mb-6 ${textColor}`}>
-              {activeAlert.message}
-            </div>
-            
-            <div className={`text-lg mb-8 ${textColor} opacity-80`}>
-              Alert Type: {activeAlert.type.toUpperCase()}
-            </div>
+        <Card className={`w-full ${isPriorityOne ? 'max-w-6xl' : 'max-w-2xl'} bg-black/20 border-white/30 backdrop-blur-sm`}>
+          <CardContent className="p-8">
+            {isPriorityOne && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+                {/* Video Feed for P1 Alerts */}
+                <div className="relative">
+                  <div className="bg-black rounded-lg overflow-hidden">
+                    <video
+                      id="emergency-video"
+                      src={videoSrc}
+                      autoPlay
+                      loop
+                      muted={isVideoMuted}
+                      className="w-full h-64 object-cover"
+                    />
+                    <div className="absolute bottom-2 right-2 flex gap-2">
+                      <Button
+                        onClick={toggleVideoPlayback}
+                        size="sm"
+                        variant="secondary"
+                        className="bg-black/60 text-white hover:bg-black/80"
+                      >
+                        {isVideoPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                      </Button>
+                      <Button
+                        onClick={toggleVideoMute}
+                        size="sm"
+                        variant="secondary"
+                        className="bg-black/60 text-white hover:bg-black/80"
+                      >
+                        {isVideoMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="mt-2 text-center">
+                    <span className={`text-sm ${textColor} opacity-80`}>
+                      LIVE CCTV FEED - Bus {activeAlert.bus?.busNumber || 'Unknown'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Alert Information */}
+                <div className="text-center lg:text-left">
+                  <div className="flex justify-center lg:justify-start mb-6">
+                    <AlertTriangle className={`w-24 h-24 ${textColor}`} />
+                  </div>
+                  
+                  <h1 className={`text-4xl font-bold mb-4 ${textColor}`}>
+                    🚨 CRITICAL EMERGENCY 🚨
+                  </h1>
+                  
+                  <div className={`text-2xl font-semibold mb-2 ${textColor}`}>
+                    PRIORITY: {activeAlert.priority}
+                  </div>
+                  
+                  <div className={`text-xl mb-6 ${textColor}`}>
+                    {activeAlert.message}
+                  </div>
+                  
+                  <div className={`text-lg mb-8 ${textColor} opacity-80`}>
+                    Alert Type: {activeAlert.type.toUpperCase()}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {!isPriorityOne && (
+              <div className="text-center">
+                <div className="flex justify-center mb-6">
+                  <AlertTriangle className={`w-24 h-24 ${textColor}`} />
+                </div>
+                
+                <h1 className={`text-4xl font-bold mb-4 ${textColor}`}>
+                  EMERGENCY ALERT
+                </h1>
+                
+                <div className={`text-2xl font-semibold mb-2 ${textColor}`}>
+                  PRIORITY: {activeAlert.priority}
+                </div>
+                
+                <div className={`text-xl mb-6 ${textColor}`}>
+                  {activeAlert.message}
+                </div>
+                
+                <div className={`text-lg mb-8 ${textColor} opacity-80`}>
+                  Alert Type: {activeAlert.type.toUpperCase()}
+                </div>
+              </div>
+            )}
             
             <div className="flex gap-4 justify-center">
               <Button
@@ -161,6 +279,7 @@ export default function EmergencyAlertSystem({
                 size="lg"
                 className="bg-white/20 text-white border-white/30 hover:bg-white/30"
               >
+                <Video className="w-4 h-4 mr-2" />
                 Triage Alert
               </Button>
             </div>
