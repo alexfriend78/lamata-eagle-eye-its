@@ -167,17 +167,22 @@ export class MemStorage implements IStorage {
 
     // Create routes based on Lagos BRT system - comprehensive zone coverage
     const routesData = [
-      { routeNumber: "1", name: "Oshodi - Abule-Egba", color: "#FF6B35" },
-      { routeNumber: "2", name: "Abule Egba - TBS/Obalende", color: "#2E86AB" },
-      { routeNumber: "3", name: "Ikorodu - TBS", color: "#A23B72" },
-      { routeNumber: "4", name: "Berger - Lekki Express", color: "#F18F01" },
-      { routeNumber: "5", name: "Lagos Island - Mainland Corridor", color: "#C73E1D" },
-      { routeNumber: "6", name: "Victoria Island - Ajah Coastal", color: "#1B5E20" },
-      { routeNumber: "7", name: "Yaba - Surulere Central", color: "#4A148C" },
-      { routeNumber: "8", name: "Ikeja - Airport Express", color: "#D84315" },
-      { routeNumber: "9", name: "Outer Ring Road Circuit", color: "#006064" },
-      { routeNumber: "10", name: "North-South Connector", color: "#8E24AA" },
-      { routeNumber: "11", name: "East-West Expressway", color: "#00BCD4" }
+      { routeNumber: "1", name: "Zone 1 Network - Agege-Ikeja", color: "#3B82F6" },
+      { routeNumber: "2", name: "Zone 2 Network - Ogba-Ikeja", color: "#EF4444" },
+      { routeNumber: "3", name: "Zone 3 Network - Allen-Opebi", color: "#10B981" },
+      { routeNumber: "4", name: "Zone 4 Network - GRA-Airport", color: "#F59E0B" },
+      { routeNumber: "5", name: "Zone 5 Network - Mushin-Isolo", color: "#8B5CF6" },
+      { routeNumber: "6", name: "Zone 6 Network - Surulere-Alaba", color: "#EC4899" },
+      { routeNumber: "7", name: "Zone 7 Network - Yaba-Ebute Metta", color: "#06B6D4" },
+      { routeNumber: "8", name: "Zone 8 Network - Apapa-Festac", color: "#84CC16" },
+      { routeNumber: "9", name: "Zone 9 Network - Ketu-Mile 12", color: "#F97316" },
+      { routeNumber: "10", name: "Zone 10 Network - Gbagada-Shomolu", color: "#14B8A6" },
+      { routeNumber: "11", name: "Zone 11 Network - Bariga-Somolu", color: "#A855F7" },
+      { routeNumber: "12", name: "Zone 12 Network - Lagos Island", color: "#DC2626" },
+      { routeNumber: "13", name: "Zone 13 Network - Ikorodu North", color: "#059669" },
+      { routeNumber: "14", name: "Zone 14 Network - Kosofe-Anthony", color: "#D97706" },
+      { routeNumber: "15", name: "Zone 15 Network - Victoria Island", color: "#7C3AED" },
+      { routeNumber: "16", name: "Zone 16 Network - Lekki-Ajah", color: "#BE185D" }
     ];
 
     routesData.forEach(route => {
@@ -185,19 +190,71 @@ export class MemStorage implements IStorage {
       this.routes.set(id, { id, ...route, isActive: true });
     });
 
-    // Create buses on different routes - positioned on expanded route paths across full screen
+    // Create buses for all 16 zone networks - comprehensive coverage
     const busesData = [
-      { routeId: 1, busNumber: "LG-01-KXY", currentX: 780, currentY: 320, status: "on_time", direction: "forward" },
-      { routeId: 1, busNumber: "LG-01-MZB", currentX: 540, currentY: 140, status: "delayed", direction: "reverse" },
-      { routeId: 2, busNumber: "LG-02-ABC", currentX: 1020, currentY: 500, status: "alert", direction: "forward" },
-      { routeId: 2, busNumber: "LG-02-DEF", currentX: 1180, currentY: 620, status: "on_time", direction: "reverse" },
-      { routeId: 3, busNumber: "LG-03-GHI", currentX: 520, currentY: 620, status: "on_time", direction: "forward" },
-      { routeId: 4, busNumber: "LG-04-JKL", currentX: 630, currentY: 150, status: "delayed", direction: "forward" },
-      { routeId: 5, busNumber: "LG-05-MNO", currentX: 950, currentY: 330, status: "on_time", direction: "reverse" },
-      { routeId: 6, busNumber: "LG-06-PQR", currentX: 940, currentY: 520, status: "on_time", direction: "forward" },
-      { routeId: 7, busNumber: "LG-07-STU", currentX: 780, currentY: 110, status: "delayed", direction: "forward" },
-      { routeId: 8, busNumber: "LG-08-VWX", currentX: 600, currentY: 200, status: "on_time", direction: "reverse" },
-      { routeId: 9, busNumber: "LG-09-YZA", currentX: 700, currentY: 420, status: "on_time", direction: "forward" },
+      // Zone 1 buses
+      { routeId: 1, busNumber: "Z1-01-AGE", currentX: 160, currentY: 90, status: "on_time", direction: "forward" },
+      { routeId: 1, busNumber: "Z1-02-IKE", currentX: 240, currentY: 130, status: "delayed", direction: "reverse" },
+      
+      // Zone 2 buses  
+      { routeId: 2, busNumber: "Z2-01-OGB", currentX: 480, currentY: 100, status: "on_time", direction: "forward" },
+      { routeId: 2, busNumber: "Z2-02-IKJ", currentX: 420, currentY: 140, status: "on_time", direction: "reverse" },
+      
+      // Zone 3 buses
+      { routeId: 3, busNumber: "Z3-01-ALL", currentX: 760, currentY: 110, status: "alert", direction: "forward" },
+      { routeId: 3, busNumber: "Z3-02-OPE", currentX: 680, currentY: 130, status: "on_time", direction: "reverse" },
+      
+      // Zone 4 buses
+      { routeId: 4, busNumber: "Z4-01-GRA", currentX: 1080, currentY: 120, status: "on_time", direction: "forward" },
+      { routeId: 4, busNumber: "Z4-02-AIR", currentX: 1000, currentY: 130, status: "delayed", direction: "reverse" },
+      
+      // Zone 5 buses
+      { routeId: 5, busNumber: "Z5-01-MUS", currentX: 180, currentY: 290, status: "on_time", direction: "forward" },
+      { routeId: 5, busNumber: "Z5-02-ISO", currentX: 240, currentY: 320, status: "on_time", direction: "reverse" },
+      
+      // Zone 6 buses
+      { routeId: 6, busNumber: "Z6-01-SUR", currentX: 480, currentY: 300, status: "on_time", direction: "forward" },
+      { routeId: 6, busNumber: "Z6-02-ALA", currentX: 420, currentY: 320, status: "delayed", direction: "reverse" },
+      
+      // Zone 7 buses
+      { routeId: 7, busNumber: "Z7-01-YAB", currentX: 760, currentY: 310, status: "on_time", direction: "forward" },
+      { routeId: 7, busNumber: "Z7-02-EBU", currentX: 680, currentY: 320, status: "on_time", direction: "reverse" },
+      
+      // Zone 8 buses
+      { routeId: 8, busNumber: "Z8-01-APA", currentX: 1080, currentY: 300, status: "on_time", direction: "forward" },
+      { routeId: 8, busNumber: "Z8-02-FES", currentX: 1000, currentY: 310, status: "alert", direction: "reverse" },
+      
+      // Zone 9 buses
+      { routeId: 9, busNumber: "Z9-01-KET", currentX: 180, currentY: 480, status: "on_time", direction: "forward" },
+      { routeId: 9, busNumber: "Z9-02-MIL", currentX: 240, currentY: 500, status: "on_time", direction: "reverse" },
+      
+      // Zone 10 buses
+      { routeId: 10, busNumber: "Z10-01-GBA", currentX: 480, currentY: 490, status: "delayed", direction: "forward" },
+      { routeId: 10, busNumber: "Z10-02-SHO", currentX: 420, currentY: 500, status: "on_time", direction: "reverse" },
+      
+      // Zone 11 buses
+      { routeId: 11, busNumber: "Z11-01-BAR", currentX: 760, currentY: 500, status: "on_time", direction: "forward" },
+      { routeId: 11, busNumber: "Z11-02-SOM", currentX: 680, currentY: 490, status: "on_time", direction: "reverse" },
+      
+      // Zone 12 buses
+      { routeId: 12, busNumber: "Z12-01-LAG", currentX: 1080, currentY: 480, status: "on_time", direction: "forward" },
+      { routeId: 12, busNumber: "Z12-02-ISL", currentX: 1000, currentY: 490, status: "delayed", direction: "reverse" },
+      
+      // Zone 13 buses
+      { routeId: 13, busNumber: "Z13-01-IKO", currentX: 180, currentY: 670, status: "on_time", direction: "forward" },
+      { routeId: 13, busNumber: "Z13-02-NOR", currentX: 240, currentY: 680, status: "on_time", direction: "reverse" },
+      
+      // Zone 14 buses
+      { routeId: 14, busNumber: "Z14-01-KOS", currentX: 480, currentY: 680, status: "on_time", direction: "forward" },
+      { routeId: 14, busNumber: "Z14-02-ANT", currentX: 420, currentY: 670, status: "alert", direction: "reverse" },
+      
+      // Zone 15 buses
+      { routeId: 15, busNumber: "Z15-01-VIC", currentX: 760, currentY: 670, status: "on_time", direction: "forward" },
+      { routeId: 15, busNumber: "Z15-02-ISL", currentX: 680, currentY: 680, status: "on_time", direction: "reverse" },
+      
+      // Zone 16 buses
+      { routeId: 16, busNumber: "Z16-01-LEK", currentX: 1080, currentY: 680, status: "delayed", direction: "forward" },
+      { routeId: 16, busNumber: "Z16-02-AJA", currentX: 1000, currentY: 670, status: "on_time", direction: "reverse" }
     ];
 
     busesData.forEach(bus => {

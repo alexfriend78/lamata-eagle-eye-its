@@ -109,7 +109,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-2">
-                {stationDetails.amenities && stationDetails.amenities.length > 0 ? (
+                {stationDetails.amenities && Array.isArray(stationDetails.amenities) && stationDetails.amenities.length > 0 ? (
                   stationDetails.amenities.map((amenity, index) => (
                     <Badge key={index} variant="outline" className="text-xs">
                       {amenity}
