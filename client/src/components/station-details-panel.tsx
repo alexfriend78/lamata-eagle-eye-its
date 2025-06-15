@@ -139,22 +139,25 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
 
   return (
     <div 
-      className="fixed w-96 bg-background border border-border shadow-lg z-50 flex flex-col cursor-move"
+      className="fixed w-96 bg-background border border-border shadow-lg z-50 flex flex-col"
       style={{
-        top: position.y,
-        right: -position.x,
+        top: Math.max(0, Math.min(position.y, window.innerHeight - 400)),
+        left: Math.max(0, Math.min(position.x, window.innerWidth - 384)),
         height: 'calc(100vh - 40px)',
         maxHeight: '90vh'
       }}
-      onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
-      <div className="flex items-center justify-between p-4 border-b">
+      <div 
+        className="flex items-center justify-between p-4 border-b cursor-move bg-muted/30 hover:bg-muted/50 transition-colors"
+        onMouseDown={handleMouseDown}
+      >
         <div className="flex items-center gap-2">
           <span className="text-2xl">🚏</span>
           <h2 className="text-lg font-semibold">{stationDetails.name}</h2>
+          <Badge variant="outline" className="text-xs ml-2">Drag to move</Badge>
         </div>
         <Button
           variant="ghost"
