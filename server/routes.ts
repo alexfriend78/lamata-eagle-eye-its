@@ -300,6 +300,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/crowd/predictions/:stationId", async (req, res) => {
+    try {
+      const stationId = parseInt(req.params.stationId);
+      const routeId = stationId <= 17 ? 1 : 3; // Route assignment logic
+      const predictions = await storage.getCrowdPredictions(stationId, routeId);
+      res.json(predictions);
+    } catch (error) {
+      console.error('Error fetching station predictions:', error);
+      res.status(500).json({ error: "Failed to fetch station predictions" });
+    }
+  });
+
   // Get crowd density readings
   app.get("/api/crowd/density-readings", async (req, res) => {
     try {

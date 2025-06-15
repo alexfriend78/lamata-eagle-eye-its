@@ -37,6 +37,12 @@ export default function CrowdAnalyticsPopup({ station, isOpen, onClose }: CrowdA
     refetchInterval: 5000,
   });
 
+  // Fetch crowd predictions for this station
+  const { data: predictions = [] } = useQuery<any[]>({
+    queryKey: ['/api/crowd/predictions', station?.id],
+    enabled: !!station && isOpen,
+  });
+
   if (!station) return null;
 
   const getDensityColor = (level: string) => {
@@ -125,6 +131,33 @@ export default function CrowdAnalyticsPopup({ station, isOpen, onClose }: CrowdA
                 </div>
               </div>
             </div>
+
+            {/* Crowd Predictions */}
+            {predictions.length > 0 && (
+              <div className="bg-card rounded-lg p-4 border">
+                <div className="flex items-center gap-2 mb-4">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  <h3 className="font-semibold">15-Minute Predictions</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {predictions.slice(0, 4).map((prediction, index) => (
+                    <div key={index} className="p-3 bg-muted rounded-lg">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <div className="font-semibold">{prediction.predictedPassengerCount} passengers</div>
+                          <div className="text-sm text-muted-foreground">
+                            {prediction.predictionTimeMinutes} min forecast
+                          </div>
+                        </div>
+                        <Badge variant="outline" className="text-xs">
+                          {prediction.confidenceLevel}% confidence
+                        </Badge>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Peak Times */}
             <div className="bg-card rounded-lg p-4 border">
