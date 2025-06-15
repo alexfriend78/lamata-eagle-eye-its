@@ -183,6 +183,17 @@ export default function BusMonitor() {
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
 
+            {/* Route Customization */}
+            <Button
+              onClick={() => setShowRouteCustomization(!showRouteCustomization)}
+              variant="outline"
+              size="sm"
+              className="h-8 w-8 p-0"
+              title="Customize route aesthetics"
+            >
+              <Palette className="h-4 w-4" />
+            </Button>
+
             {/* Settings */}
             <Button
               onClick={() => setShowSettings(!showSettings)}
@@ -311,6 +322,14 @@ export default function BusMonitor() {
             </div>
           </div>
         )}
+
+      {/* Route Customization Panel */}
+      <RouteCustomizationPanel
+        routes={routes || []}
+        isOpen={showRouteCustomization}
+        onClose={() => setShowRouteCustomization(false)}
+        theme={theme}
+      />
       </div>
     </div>
   );

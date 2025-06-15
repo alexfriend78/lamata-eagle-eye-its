@@ -2,6 +2,48 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Transit line aesthetic animations */
+@keyframes flow {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: 30;
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+  50% {
+    filter: drop-shadow(0 0 12px currentColor);
+  }
+}
+
+@keyframes pulse-route {
+  0%, 100% {
+    stroke-opacity: 0.8;
+    stroke-width: var(--base-width);
+  }
+  50% {
+    stroke-opacity: 1;
+    stroke-width: calc(var(--base-width) + 2);
+  }
+}
+
+.route-flow {
+  animation: flow 2s linear infinite;
+}
+
+.route-glow {
+  animation: glow 2s ease-in-out infinite;
+}
+
+.route-pulse {
+  animation: pulse-route 1.5s ease-in-out infinite;
+}
+
 :root {
   --background: hsl(0, 0%, 100%);
   --foreground: hsl(20, 14.3%, 4.1%);
