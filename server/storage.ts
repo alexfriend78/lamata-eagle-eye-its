@@ -78,30 +78,29 @@ export class MemStorage implements IStorage {
   }
 
   private seedData() {
-    // Create stations based on Lagos BRT routes - utilizing full landscape screen (1280x720)
+    // Create stations based on Lagos BRT routes - utilizing full 3456x2234 resolution
     const stationsData = [
-      // Route 1: Main northwest diagonal across full screen
-      { name: "Oshodi Terminal 2", x: 940, y: 440 },
-      { name: "Bolade", x: 860, y: 380 },
-      { name: "Ladipo", x: 780, y: 320 },
-      { name: "Shogunle", x: 700, y: 260 },
-      { name: "PWD", x: 620, y: 200 },
-      { name: "Airport Junction", x: 540, y: 140 },
-      { name: "Ikeja Along", x: 460, y: 100 },
-      { name: "Ile Zik", x: 380, y: 80 },
-      { name: "Mangoro", x: 300, y: 60 },
-      { name: "Cement", x: 220, y: 50 },
-      { name: "Iyana Dopemu", x: 140, y: 40 },
-      { name: "Adealu", x: 80, y: 30 },
-      { name: "Abule Egba", x: 20, y: 20 },
+      // Route 1: Blue Line - Ultra-wide northern express corridor
+      { name: "Abule Egba West", x: 200, y: 200 },
+      { name: "Dopemu Central", x: 432, y: 180 },
+      { name: "Agege Main", x: 864, y: 185 },
+      { name: "Ikeja GRA", x: 1296, y: 190 },
+      { name: "Airport Junction", x: 1728, y: 195 },
+      { name: "Oshodi Terminal", x: 2160, y: 200 },
+      { name: "Bolade", x: 2592, y: 205 },
+      { name: "Shogunle", x: 3024, y: 210 },
+      { name: "PWD East", x: 3256, y: 215 },
       
-      // Route 2: Southeast extension to full screen edge
-      { name: "CMS Terminal", x: 1180, y: 620 },
-      { name: "Obalende", x: 1100, y: 560 },
-      { name: "TBS Terminal", x: 1260, y: 680 },
-      { name: "Anthony", x: 1020, y: 500 },
-      { name: "Maryland", x: 1180, y: 620 },
-      { name: "Fadeyi", x: 1100, y: 560 },
+      // Route 2: Red Line - Full diagonal transcontinental
+      { name: "Badagry West", x: 200, y: 200 },
+      { name: "Festac", x: 432, y: 320 },
+      { name: "Orile", x: 864, y: 540 },
+      { name: "Yaba", x: 1296, y: 760 },
+      { name: "Marina", x: 1728, y: 980 },
+      { name: "Victoria Island", x: 2160, y: 1200 },
+      { name: "Lekki Phase 1", x: 2592, y: 1420 },
+      { name: "Ajah", x: 3024, y: 1640 },
+      { name: "Epe Terminal", x: 3256, y: 1860 },
       
       // Route 3: Bottom horizontal traverse
       { name: "Ikorodu Terminal", x: 40, y: 700 },
