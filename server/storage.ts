@@ -10,6 +10,7 @@ export interface IStorage {
   getRoutes(): Promise<Route[]>;
   getRoute(id: number): Promise<Route | undefined>;
   createRoute(route: InsertRoute): Promise<Route>;
+  updateRouteAesthetics(id: number, aesthetics: Partial<Route>): Promise<Route | undefined>;
   
   // Stations
   getStations(): Promise<Station[]>;
@@ -417,6 +418,20 @@ export class MemStorage implements IStorage {
     };
     this.routes.set(id, newRoute);
     return newRoute;
+  }
+
+  async updateRouteAesthetics(id: number, aesthetics: Partial<Route>): Promise<Route | undefined> {
+    const existingRoute = this.routes.get(id);
+    if (!existingRoute) return undefined;
+
+    const updatedRoute: Route = {
+      ...existingRoute,
+      ...aesthetics,
+      id // Ensure ID doesn't change
+    };
+    
+    this.routes.set(id, updatedRoute);
+    return updatedRoute;
   }
 
   async getStations(): Promise<Station[]> {

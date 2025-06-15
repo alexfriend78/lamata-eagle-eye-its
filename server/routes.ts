@@ -100,6 +100,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update route aesthetics
+  app.patch("/api/routes/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const route = await storage.updateRouteAesthetics(id, updates);
+      if (!route) {
+        res.status(404).json({ error: "Route not found" });
+        return;
+      }
+      res.json(route);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to update route aesthetics" });
+    }
+  });
+
   // Update bus position (for simulation)
   app.patch("/api/buses/:id/position", async (req, res) => {
     try {

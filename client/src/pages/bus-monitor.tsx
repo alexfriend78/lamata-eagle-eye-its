@@ -6,8 +6,9 @@ import MapContainer from "@/components/map-container";
 import ControlPanel from "@/components/control-panel";
 import EmergencyAlert from "@/components/emergency-alert";
 import StationDetailsPanel from "@/components/station-details-panel";
+import RouteCustomizationPanel from "@/components/route-customization-panel";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
@@ -21,6 +22,7 @@ export default function BusMonitor() {
   const [hoveredStation, setHoveredStation] = useState<Station | null>(null);
   const [hoveredBus, setHoveredBus] = useState<any | null>(null);
   const [showLiveFeed, setShowLiveFeed] = useState(false);
+  const [showRouteCustomization, setShowRouteCustomization] = useState(false);
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
   const { theme, setTheme } = useTheme();
 
