@@ -18,9 +18,9 @@ interface MapContainerProps {
 }
 
 export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed }: MapContainerProps) {
-  // Dynamic screen dimensions
+  // Dynamic screen dimensions accounting for header
   const mapWidth = typeof window !== 'undefined' ? window.innerWidth : 1920;
-  const mapHeight = typeof window !== 'undefined' ? window.innerHeight : 1080;
+  const mapHeight = typeof window !== 'undefined' ? window.innerHeight - 64 : 1016; // Subtract header height
 
   const getRoutePoints = (routeId: number) => {
     // Define routes using dynamic resolution for consistent coverage
@@ -331,8 +331,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   };
 
   return (
-    <div className="fixed inset-0 w-full h-full overflow-hidden bg-white dark:bg-gray-900"
-         style={{ width: mapWidth, height: mapHeight }}>
+    <div className="relative w-full h-full overflow-hidden bg-white dark:bg-gray-900"
+         style={{ minWidth: mapWidth, minHeight: mapHeight }}>
       {/* Grid zones overlay */}
       <div className="absolute inset-0 pointer-events-none z-40">
         {Array.from({ length: 16 }, (_, i) => {
