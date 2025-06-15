@@ -1,8 +1,8 @@
 import { 
-  routes, stations, buses, alerts, routeStations,
-  type Route, type Station, type Bus, type Alert, type RouteStation,
-  type InsertRoute, type InsertStation, type InsertBus, type InsertAlert, type InsertRouteStation,
-  type BusWithRoute, type RouteWithStations, type AlertWithDetails, type SystemStats
+  routes, stations, buses, alerts, routeStations, busArrivals,
+  type Route, type Station, type Bus, type Alert, type RouteStation, type BusArrival,
+  type InsertRoute, type InsertStation, type InsertBus, type InsertAlert, type InsertRouteStation, type InsertBusArrival,
+  type BusWithRoute, type RouteWithStations, type AlertWithDetails, type SystemStats, type StationDetails, type BusArrivalWithDetails
 } from "@shared/schema";
 
 export interface IStorage {
@@ -14,7 +14,9 @@ export interface IStorage {
   // Stations
   getStations(): Promise<Station[]>;
   getStation(id: number): Promise<Station | undefined>;
+  getStationDetails(id: number): Promise<StationDetails | undefined>;
   createStation(station: InsertStation): Promise<Station>;
+  updateStationPassengerCount(id: number, count: number): Promise<Station | undefined>;
   
   // Buses
   getBuses(): Promise<Bus[]>;
@@ -34,6 +36,11 @@ export interface IStorage {
   getRouteStations(routeId: number): Promise<Station[]>;
   addStationToRoute(routeStation: InsertRouteStation): Promise<RouteStation>;
   
+  // Bus Arrivals
+  getBusArrivals(stationId: number): Promise<BusArrivalWithDetails[]>;
+  createBusArrival(arrival: InsertBusArrival): Promise<BusArrival>;
+  updateArrivalStatus(id: number, status: string): Promise<BusArrival | undefined>;
+  
   // System Stats
   getSystemStats(): Promise<SystemStats>;
 }
@@ -44,11 +51,13 @@ export class MemStorage implements IStorage {
   private buses: Map<number, Bus>;
   private alerts: Map<number, Alert>;
   private routeStations: Map<number, RouteStation>;
+  private busArrivals: Map<number, BusArrival>;
   private currentRouteId: number;
   private currentStationId: number;
   private currentBusId: number;
   private currentAlertId: number;
   private currentRouteStationId: number;
+  private currentBusArrivalId: number;
 
   constructor() {
     this.routes = new Map();
@@ -56,11 +65,13 @@ export class MemStorage implements IStorage {
     this.buses = new Map();
     this.alerts = new Map();
     this.routeStations = new Map();
+    this.busArrivals = new Map();
     this.currentRouteId = 1;
     this.currentStationId = 1;
     this.currentBusId = 1;
     this.currentAlertId = 1;
     this.currentRouteStationId = 1;
+    this.currentBusArrivalId = 1;
     
     this.seedData();
   }
@@ -108,9 +119,26 @@ export class MemStorage implements IStorage {
       { name: "Newgarage", x: 720, y: 420 },
     ];
 
-    stationsData.forEach(station => {
+    stationsData.forEach((station, index) => {
       const id = this.currentStationId++;
-      this.stations.set(id, { id, ...station });
+      const trafficConditions = ["light", "normal", "heavy", "severe"];
+      const amenitiesOptions = [
+        ["shelter", "seating", "lighting"],
+        ["shelter", "lighting", "cctv"],
+        ["seating", "lighting"],
+        ["shelter", "seating", "lighting", "cctv"],
+        ["lighting"]
+      ];
+      
+      this.stations.set(id, { 
+        id, 
+        ...station,
+        zone: Math.floor(index / 7) + 1, // Distribute across 4 zones
+        passengerCount: Math.floor(Math.random() * 50) + 5,
+        trafficCondition: trafficConditions[Math.floor(Math.random() * trafficConditions.length)],
+        accessibility: Math.random() > 0.2, // 80% accessible
+        amenities: amenitiesOptions[Math.floor(Math.random() * amenitiesOptions.length)]
+      });
     });
 
     // Create routes based on Lagos BRT system

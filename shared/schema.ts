@@ -88,6 +88,12 @@ export type InsertBusArrival = z.infer<typeof insertBusArrivalSchema>;
 export type BusWithRoute = Bus & { route: Route };
 export type RouteWithStations = Route & { stations: Station[] };
 export type AlertWithDetails = Alert & { bus?: Bus; route?: Route };
+export type BusArrivalWithDetails = BusArrival & { bus: BusWithRoute; route: Route };
+
+export type StationDetails = Station & {
+  upcomingArrivals: BusArrivalWithDetails[];
+  activeRoutes: Route[];
+};
 
 export type SystemStats = {
   totalBuses: number;
