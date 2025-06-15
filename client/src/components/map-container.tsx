@@ -656,8 +656,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             key={station.id}
             className="absolute z-20 cursor-pointer"
             style={{ 
-              top: `${station.y - 8}px`, 
-              left: `${station.x - 8}px` 
+              top: `${(station.y * mapHeight) - 8}px`, 
+              left: `${(station.x * mapWidth) - 8}px` 
             }}
             onClick={() => onStationClick && onStationClick(station)}
             onMouseEnter={() => onStationHover?.(station)}
@@ -721,8 +721,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
               key={bus.id}
               style={{
                 position: 'absolute',
-                top: `${bus.currentY - 12}px`,
-                left: `${bus.currentX - 12}px`,
+                top: `${(bus.currentY * mapHeight) - 12}px`,
+                left: `${(bus.currentX * mapWidth) - 12}px`,
                 zIndex: 30
               }}
               onMouseEnter={() => onBusHover?.(bus)}

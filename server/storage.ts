@@ -101,74 +101,74 @@ export class MemStorage implements IStorage {
       });
     });
 
-    // Create authentic Lagos BRT stations
+    // Create authentic Lagos BRT stations using percentage coordinates to match routes
     const stationsData = [
       // Route 1: Oshodi - Abule-Egba stations
-      { name: "Oshodi Terminal 2", x: 800, y: 600, zone: 2 },
-      { name: "Bolade", x: 780, y: 580, zone: 2 },
-      { name: "Ladipo", x: 760, y: 560, zone: 2 },
-      { name: "Shogunle", x: 740, y: 540, zone: 2 },
-      { name: "PWD", x: 720, y: 520, zone: 2 },
-      { name: "Airport Junction", x: 700, y: 500, zone: 2 },
-      { name: "Ikeja Along", x: 680, y: 480, zone: 2 },
-      { name: "Ile Zik", x: 660, y: 460, zone: 2 },
-      { name: "Mangoro", x: 640, y: 440, zone: 2 },
-      { name: "Cement", x: 620, y: 420, zone: 2 },
-      { name: "Iyana Dopemu", x: 600, y: 400, zone: 1 },
-      { name: "Adealu", x: 580, y: 380, zone: 1 },
-      { name: "Iyana Ipaja Bus stop", x: 560, y: 360, zone: 1 },
-      { name: "Pleasure", x: 540, y: 340, zone: 1 },
-      { name: "Ile Epo", x: 520, y: 320, zone: 1 },
-      { name: "Super", x: 500, y: 300, zone: 1 },
-      { name: "Abule Egba", x: 480, y: 280, zone: 1 },
+      { name: "Oshodi Terminal 2", x: 0.5, y: 0.6, zone: 2 },
+      { name: "Bolade", x: 0.48, y: 0.58, zone: 2 },
+      { name: "Ladipo", x: 0.46, y: 0.56, zone: 2 },
+      { name: "Shogunle", x: 0.44, y: 0.54, zone: 2 },
+      { name: "PWD", x: 0.42, y: 0.52, zone: 2 },
+      { name: "Airport Junction", x: 0.40, y: 0.50, zone: 2 },
+      { name: "Ikeja Along", x: 0.38, y: 0.48, zone: 2 },
+      { name: "Ile Zik", x: 0.36, y: 0.46, zone: 2 },
+      { name: "Mangoro", x: 0.34, y: 0.44, zone: 2 },
+      { name: "Cement", x: 0.32, y: 0.42, zone: 2 },
+      { name: "Iyana Dopemu", x: 0.30, y: 0.40, zone: 1 },
+      { name: "Adealu", x: 0.28, y: 0.38, zone: 1 },
+      { name: "Iyana Ipaja Bus stop", x: 0.26, y: 0.36, zone: 1 },
+      { name: "Pleasure", x: 0.24, y: 0.34, zone: 1 },
+      { name: "Ile Epo", x: 0.22, y: 0.32, zone: 1 },
+      { name: "Super", x: 0.20, y: 0.30, zone: 1 },
+      { name: "Abule Egba", x: 0.18, y: 0.28, zone: 1 },
 
       // Route 2 additional stations
-      { name: "LASMA", x: 820, y: 620, zone: 2 },
-      { name: "Anthony", x: 840, y: 640, zone: 2 },
-      { name: "Westex", x: 860, y: 660, zone: 2 },
-      { name: "First Pedro", x: 880, y: 680, zone: 3 },
-      { name: "Charley Boy", x: 900, y: 700, zone: 3 },
-      { name: "Gbagada Phase 1", x: 920, y: 720, zone: 3 },
-      { name: "Iyana Oworo", x: 940, y: 740, zone: 3 },
-      { name: "Adeniji", x: 960, y: 760, zone: 3 },
-      { name: "Obalende", x: 980, y: 780, zone: 3 },
-      { name: "CMS Terminal", x: 1000, y: 800, zone: 3 },
+      { name: "LASMA", x: 0.52, y: 0.62, zone: 2 },
+      { name: "Anthony", x: 0.54, y: 0.64, zone: 2 },
+      { name: "Westex", x: 0.56, y: 0.66, zone: 2 },
+      { name: "First Pedro", x: 0.58, y: 0.68, zone: 3 },
+      { name: "Charley Boy", x: 0.60, y: 0.70, zone: 3 },
+      { name: "Gbagada Phase 1", x: 0.62, y: 0.72, zone: 3 },
+      { name: "Iyana Oworo", x: 0.64, y: 0.74, zone: 3 },
+      { name: "Adeniji", x: 0.66, y: 0.76, zone: 3 },
+      { name: "Obalende", x: 0.68, y: 0.78, zone: 3 },
+      { name: "CMS Terminal", x: 0.70, y: 0.80, zone: 3 },
 
       // Ikorodu routes stations
-      { name: "Ikorodu Terminal", x: 300, y: 850, zone: 4 },
-      { name: "Benson", x: 320, y: 830, zone: 4 },
-      { name: "ARUNA", x: 340, y: 810, zone: 4 },
-      { name: "AGRIC TERMINAL", x: 360, y: 790, zone: 4 },
-      { name: "OWUTU IDIROKO", x: 380, y: 770, zone: 4 },
-      { name: "OGOLONTO", x: 400, y: 750, zone: 3 },
-      { name: "MAJIDUN AWORI", x: 420, y: 730, zone: 3 },
-      { name: "AJEGUNLE", x: 440, y: 710, zone: 3 },
-      { name: "IRAWO", x: 460, y: 690, zone: 3 },
-      { name: "IDERA", x: 480, y: 670, zone: 3 },
-      { name: "OWODEONIRIN", x: 500, y: 650, zone: 3 },
-      { name: "MILE12 TERMINAL", x: 520, y: 630, zone: 3 },
-      { name: "KETU", x: 540, y: 610, zone: 3 },
-      { name: "OJOTA", x: 560, y: 590, zone: 2 },
-      { name: "NEWGARAGE", x: 580, y: 570, zone: 2 },
-      { name: "Maryland", x: 600, y: 550, zone: 2 },
-      { name: "Idiroko", x: 620, y: 530, zone: 2 },
-      { name: "Obanikoro", x: 660, y: 490, zone: 2 },
-      { name: "Palmgroove", x: 680, y: 470, zone: 2 },
-      { name: "Onipanu", x: 700, y: 450, zone: 2 },
-      { name: "Fadeyi", x: 720, y: 430, zone: 2 },
+      { name: "Ikorodu Terminal", x: 0.15, y: 0.85, zone: 4 },
+      { name: "Benson", x: 0.17, y: 0.83, zone: 4 },
+      { name: "ARUNA", x: 0.19, y: 0.81, zone: 4 },
+      { name: "AGRIC TERMINAL", x: 0.21, y: 0.79, zone: 4 },
+      { name: "OWUTU IDIROKO", x: 0.23, y: 0.77, zone: 4 },
+      { name: "OGOLONTO", x: 0.25, y: 0.75, zone: 3 },
+      { name: "MAJIDUN AWORI", x: 0.27, y: 0.73, zone: 3 },
+      { name: "AJEGUNLE", x: 0.29, y: 0.71, zone: 3 },
+      { name: "IRAWO", x: 0.31, y: 0.69, zone: 3 },
+      { name: "IDERA", x: 0.33, y: 0.67, zone: 3 },
+      { name: "OWODEONIRIN", x: 0.35, y: 0.65, zone: 3 },
+      { name: "MILE12 TERMINAL", x: 0.37, y: 0.63, zone: 3 },
+      { name: "KETU", x: 0.39, y: 0.61, zone: 3 },
+      { name: "OJOTA", x: 0.41, y: 0.59, zone: 2 },
+      { name: "NEWGARAGE", x: 0.43, y: 0.57, zone: 2 },
+      { name: "Maryland", x: 0.45, y: 0.55, zone: 2 },
+      { name: "Idiroko", x: 0.47, y: 0.53, zone: 2 },
+      { name: "Obanikoro", x: 0.51, y: 0.49, zone: 2 },
+      { name: "Palmgroove", x: 0.53, y: 0.47, zone: 2 },
+      { name: "Onipanu", x: 0.55, y: 0.45, zone: 2 },
+      { name: "Fadeyi", x: 0.57, y: 0.43, zone: 2 },
 
       // Route 3 additional stations
-      { name: "MOSALASI TERMINAL", x: 740, y: 410, zone: 2 },
-      { name: "BARRAKS", x: 760, y: 390, zone: 2 },
-      { name: "Stadium", x: 780, y: 370, zone: 2 },
-      { name: "Iponri", x: 800, y: 350, zone: 2 },
-      { name: "Costain", x: 820, y: 330, zone: 2 },
-      { name: "Leventis", x: 840, y: 310, zone: 2 },
-      { name: "MARINA TRAIN STATION", x: 860, y: 290, zone: 2 },
-      { name: "TBS Terminal", x: 880, y: 270, zone: 2 },
+      { name: "MOSALASI TERMINAL", x: 0.59, y: 0.41, zone: 2 },
+      { name: "BARRAKS", x: 0.61, y: 0.39, zone: 2 },
+      { name: "Stadium", x: 0.63, y: 0.37, zone: 2 },
+      { name: "Iponri", x: 0.65, y: 0.35, zone: 2 },
+      { name: "Costain", x: 0.67, y: 0.33, zone: 2 },
+      { name: "Leventis", x: 0.69, y: 0.31, zone: 2 },
+      { name: "MARINA TRAIN STATION", x: 0.73, y: 0.27, zone: 2 },
+      { name: "TBS Terminal", x: 0.75, y: 0.25, zone: 2 },
 
       // Route 5 additional station
-      { name: "Oshodi Terminal 3", x: 805, y: 605, zone: 2 }
+      { name: "Oshodi Terminal 3", x: 0.50, y: 0.60, zone: 2 }
     ];
 
     stationsData.forEach(stationData => {
@@ -183,32 +183,32 @@ export class MemStorage implements IStorage {
       });
     });
 
-    // Create buses for the 5 routes
+    // Create buses for the 5 routes using percentage coordinates
     const busesData = [
       // Route 1 buses
-      { routeId: 1, busNumber: "LBT-001", currentX: 680, currentY: 480, status: "on_time", direction: "forward" },
-      { routeId: 1, busNumber: "LBT-002", currentX: 560, currentY: 360, status: "on_time", direction: "reverse" },
-      { routeId: 1, busNumber: "LBT-003", currentX: 720, currentY: 520, status: "delayed", direction: "forward" },
+      { routeId: 1, busNumber: "LBT-001", currentX: 0.38, currentY: 0.48, status: "on_time", direction: "forward" },
+      { routeId: 1, busNumber: "LBT-002", currentX: 0.26, currentY: 0.36, status: "on_time", direction: "reverse" },
+      { routeId: 1, busNumber: "LBT-003", currentX: 0.42, currentY: 0.52, status: "delayed", direction: "forward" },
 
       // Route 2 buses
-      { routeId: 2, busNumber: "LBT-004", currentX: 500, currentY: 300, status: "on_time", direction: "forward" },
-      { routeId: 2, busNumber: "LBT-005", currentX: 920, currentY: 720, status: "on_time", direction: "reverse" },
-      { routeId: 2, busNumber: "LBT-006", currentX: 800, currentY: 600, status: "on_time", direction: "forward" },
+      { routeId: 2, busNumber: "LBT-004", currentX: 0.20, currentY: 0.30, status: "on_time", direction: "forward" },
+      { routeId: 2, busNumber: "LBT-005", currentX: 0.62, currentY: 0.72, status: "on_time", direction: "reverse" },
+      { routeId: 2, busNumber: "LBT-006", currentX: 0.50, currentY: 0.60, status: "on_time", direction: "forward" },
 
       // Route 3 buses
-      { routeId: 3, busNumber: "LBT-007", currentX: 400, currentY: 750, status: "on_time", direction: "forward" },
-      { routeId: 3, busNumber: "LBT-008", currentX: 760, currentY: 390, status: "delayed", direction: "reverse" },
-      { routeId: 3, busNumber: "LBT-009", currentX: 600, currentY: 550, status: "on_time", direction: "forward" },
+      { routeId: 3, busNumber: "LBT-007", currentX: 0.25, currentY: 0.75, status: "on_time", direction: "forward" },
+      { routeId: 3, busNumber: "LBT-008", currentX: 0.61, currentY: 0.39, status: "delayed", direction: "reverse" },
+      { routeId: 3, busNumber: "LBT-009", currentX: 0.45, currentY: 0.55, status: "on_time", direction: "forward" },
 
       // Route 4 buses
-      { routeId: 4, busNumber: "LBT-010", currentX: 360, currentY: 790, status: "on_time", direction: "forward" },
-      { routeId: 4, busNumber: "LBT-011", currentX: 680, currentY: 470, status: "on_time", direction: "reverse" },
-      { routeId: 4, busNumber: "LBT-012", currentX: 540, currentY: 610, status: "on_time", direction: "forward" },
+      { routeId: 4, busNumber: "LBT-010", currentX: 0.21, currentY: 0.79, status: "on_time", direction: "forward" },
+      { routeId: 4, busNumber: "LBT-011", currentX: 0.53, currentY: 0.47, status: "on_time", direction: "reverse" },
+      { routeId: 4, busNumber: "LBT-012", currentX: 0.39, currentY: 0.61, status: "on_time", direction: "forward" },
 
       // Route 5 buses
-      { routeId: 5, busNumber: "LBT-013", currentX: 320, currentY: 830, status: "on_time", direction: "forward" },
-      { routeId: 5, busNumber: "LBT-014", currentX: 580, currentY: 570, status: "on_time", direction: "reverse" },
-      { routeId: 5, busNumber: "LBT-015", currentX: 460, currentY: 690, status: "delayed", direction: "forward" }
+      { routeId: 5, busNumber: "LBT-013", currentX: 0.17, currentY: 0.83, status: "on_time", direction: "forward" },
+      { routeId: 5, busNumber: "LBT-014", currentX: 0.43, currentY: 0.57, status: "on_time", direction: "reverse" },
+      { routeId: 5, busNumber: "LBT-015", currentX: 0.31, currentY: 0.69, status: "delayed", direction: "forward" }
     ];
 
     busesData.forEach(busData => {
@@ -504,9 +504,9 @@ export class MemStorage implements IStorage {
 
   public simulateBusMovement() {
     Array.from(this.buses.values()).forEach(bus => {
-      const variation = (Math.random() - 0.5) * 20;
-      const newX = Math.max(0, Math.min(1200, bus.currentX + variation));
-      const newY = Math.max(0, Math.min(900, bus.currentY + variation));
+      const variation = (Math.random() - 0.5) * 0.02; // Small percentage-based movement
+      const newX = Math.max(0.05, Math.min(0.95, bus.currentX + variation));
+      const newY = Math.max(0.05, Math.min(0.95, bus.currentY + variation));
       this.updateBusPosition(bus.id, newX, newY);
     });
   }
