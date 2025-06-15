@@ -22,12 +22,12 @@ interface MapContainerProps {
   showRoutes: boolean;
   showStations: boolean;
   showBuses: boolean;
-  showHeatMap?: boolean;
+
   showCrowdBubbles?: boolean;
   showDensityBubbles?: boolean;
 }
 
-export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed, showRoutes, showStations, showBuses, showHeatMap, showCrowdBubbles, showDensityBubbles }: MapContainerProps) {
+export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed, showRoutes, showStations, showBuses, showCrowdBubbles, showDensityBubbles }: MapContainerProps) {
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const [showAnalyticsPopup, setShowAnalyticsPopup] = useState(false);
   // Dynamic screen dimensions accounting for header
@@ -37,12 +37,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   // Fetch stations for selected routes
   const { data: routeStations = [] } = useRouteStations(selectedRoutes);
 
-  // Fetch crowd density data for heat map
-  const { data: crowdData = [] } = useQuery<CrowdDensityReading[]>({
-    queryKey: ['/api/crowd/density-readings'],
-    enabled: !!showHeatMap,
-    refetchInterval: showHeatMap ? 5000 : false, // Refresh every 5 seconds when heat map is active
-  });
+
 
   // Fetch crowd predictions for bubbles
   const { data: crowdPredictions = [] } = useQuery<any[]>({
@@ -227,32 +222,9 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     };
   };
 
-  // Function to get heat map intensity for a route segment
-  const getHeatMapIntensity = (routeId: number, segmentIndex: number) => {
-    if (!showHeatMap || !crowdData.length) return 0;
-    
-    // Find crowd density readings for stations on this route
-    const routeStationsData = stations.filter(station => {
-      // Check if station belongs to this route (simplified logic)
-      return routeStations.some(rs => rs.id === station.id);
-    });
-    
-    // Calculate average density for this route segment
-    const segmentDensity = crowdData
-      .filter(reading => routeStationsData.some(station => station.id === reading.stationId))
-      .reduce((sum, reading) => sum + reading.passengerCount, 0) / Math.max(routeStationsData.length, 1);
-    
-    // Normalize to 0-1 range (assuming max capacity of 100)
-    return Math.min(segmentDensity / 100, 1);
-  };
 
-  // Function to get heat map color based on intensity
-  const getHeatMapColor = (intensity: number) => {
-    if (intensity < 0.3) return 'rgba(0, 255, 0, 0.4)'; // Green - low density
-    if (intensity < 0.6) return 'rgba(255, 255, 0, 0.5)'; // Yellow - medium density
-    if (intensity < 0.8) return 'rgba(255, 165, 0, 0.6)'; // Orange - high density
-    return 'rgba(255, 0, 0, 0.7)'; // Red - very high density
-  };
+
+
 
   const renderRouteLine = (route: Route, routeIndex: number) => {
     // Only render if route is selected or no specific routes are selected

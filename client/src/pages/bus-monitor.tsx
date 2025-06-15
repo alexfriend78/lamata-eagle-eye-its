@@ -32,7 +32,7 @@ export default function BusMonitor() {
   const [showRoutes, setShowRoutes] = useState(true);
   const [showStations, setShowStations] = useState(true);
   const [showBuses, setShowBuses] = useState(true);
-  const [showHeatMap, setShowHeatMap] = useState(false);
+
   const [showCrowdBubbles, setShowCrowdBubbles] = useState(false);
   const [showDensityBubbles, setShowDensityBubbles] = useState(false);
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
@@ -217,16 +217,7 @@ export default function BusMonitor() {
               <Map className="h-4 w-4" />
             </Button>
 
-            {/* Heat Map Toggle */}
-            <Button
-              onClick={() => setShowHeatMap(!showHeatMap)}
-              variant={showHeatMap ? "default" : "outline"}
-              size="sm"
-              className="h-8 w-8 p-0"
-              title="Toggle crowd density heat map"
-            >
-              <MapPin className="h-4 w-4" />
-            </Button>
+
 
             {/* Crowd Bubbles Toggle */}
             <Button
@@ -318,7 +309,7 @@ export default function BusMonitor() {
             showRoutes={showRoutes}
             showStations={showStations}
             showBuses={showBuses}
-            showHeatMap={showHeatMap}
+
             showCrowdBubbles={showCrowdBubbles}
             showDensityBubbles={showDensityBubbles}
           />
