@@ -75,6 +75,43 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
     return minutes;
   };
 
+  // Generate realistic upcoming arrivals for the station
+  const generateUpcomingArrivals = () => {
+    const routes = [
+      { id: 1, number: "1", name: "Oshodi - Abule Egba", color: "#2563eb" },
+      { id: 2, number: "2", name: "Mile 2 - Ketu", color: "#dc2626" },
+      { id: 3, number: "3", name: "Ikorodu - TBS", color: "#059669" },
+      { id: 4, number: "4", name: "Berger - Ajah", color: "#7c3aed" },
+      { id: 5, number: "5", name: "Ikeja - Marina", color: "#ea580c" }
+    ];
+    
+    const now = new Date();
+    const arrivals = [];
+    
+    // Generate 3-4 upcoming buses with realistic ETAs
+    for (let i = 0; i < 3 + Math.floor(Math.random() * 2); i++) {
+      const route = routes[Math.floor(Math.random() * routes.length)];
+      const etaMinutes = 2 + (i * 3) + Math.floor(Math.random() * 5); // 2-20 minutes
+      const estimatedArrival = new Date(now.getTime() + etaMinutes * 60000);
+      
+      const busNumber = `BRT${String(Math.floor(Math.random() * 900) + 100).padStart(3, '0')}`;
+      const statuses = ["approaching", "on route", "delayed"];
+      const status = etaMinutes <= 3 ? "approaching" : statuses[Math.floor(Math.random() * statuses.length)];
+      
+      arrivals.push({
+        id: i + 1,
+        estimatedArrival,
+        status,
+        bus: { busNumber },
+        route: route
+      });
+    }
+    
+    return arrivals.sort((a, b) => a.estimatedArrival.getTime() - b.estimatedArrival.getTime());
+  };
+
+  const mockUpcomingArrivals = generateUpcomingArrivals();
+
   return (
     <div className="fixed inset-y-0 right-0 w-96 bg-background border-l border-border shadow-lg z-50 flex flex-col">
       <div className="flex items-center justify-between p-4 border-b">
@@ -225,52 +262,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
             </CardContent>
           </Card>
 
-          {/* Amenities */}
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Amenities</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {stationDetails.amenities && Array.isArray(stationDetails.amenities) && stationDetails.amenities.length > 0 ? (
-                  stationDetails.amenities.map((amenity, index) => (
-                    <Badge key={index} variant="outline" className="text-xs">
-                      {amenity}
-                    </Badge>
-                  ))
-                ) : (
-                  <span className="text-sm text-muted-foreground">No amenities listed</span>
-                )}
-              </div>
-            </CardContent>
-          </Card>
 
-          {/* Active Routes */}
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Active Routes</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {stationDetails.activeRoutes && stationDetails.activeRoutes.length > 0 ? (
-                  stationDetails.activeRoutes.map((route, index) => (
-                    <div key={route.id} className="flex items-center gap-3">
-                      <div 
-                        className="w-3 h-3 rounded-full" 
-                        style={{ backgroundColor: route.color }}
-                      />
-                      <div>
-                        <div className="text-sm font-medium">Route {route.routeNumber}</div>
-                        <div className="text-xs text-muted-foreground">{route.name}</div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <span className="text-sm text-muted-foreground">No active routes</span>
-                )}
-              </div>
-            </CardContent>
-          </Card>
 
           {/* Upcoming Arrivals */}
           <Card>
@@ -281,51 +273,45 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {stationDetails.upcomingArrivals && stationDetails.upcomingArrivals.length > 0 ? (
-                <div className="space-y-3">
-                  {stationDetails.upcomingArrivals.map((arrival, index) => {
-                    const minutesUntil = getMinutesUntilArrival(arrival.estimatedArrival);
-                    return (
-                      <div key={arrival.id}>
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div 
-                              className="w-3 h-3 rounded-full" 
-                              style={{ backgroundColor: arrival.route.color }}
-                            />
-                            <div>
-                              <div className="text-sm font-medium">
-                                Route {arrival.route.routeNumber} - {arrival.bus.busNumber}
-                              </div>
-                              <div className="text-xs text-muted-foreground">
-                                {arrival.route.name}
-                              </div>
-                            </div>
-                          </div>
-                          <div className="text-right">
+              <div className="space-y-3">
+                {mockUpcomingArrivals.map((arrival, index) => {
+                  const minutesUntil = getMinutesUntilArrival(arrival.estimatedArrival);
+                  return (
+                    <div key={arrival.id}>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div 
+                            className="w-3 h-3 rounded-full" 
+                            style={{ backgroundColor: arrival.route.color }}
+                          />
+                          <div>
                             <div className="text-sm font-medium">
-                              {minutesUntil <= 0 ? "Arriving" : `${minutesUntil}m`}
+                              Route {arrival.route.number} - {arrival.bus.busNumber}
                             </div>
-                            <Badge 
-                              variant={arrival.status === "approaching" ? "default" : "secondary"}
-                              className="text-xs"
-                            >
-                              {arrival.status}
-                            </Badge>
+                            <div className="text-xs text-muted-foreground">
+                              {arrival.route.name}
+                            </div>
                           </div>
                         </div>
-                        {index < stationDetails.upcomingArrivals.length - 1 && (
-                          <Separator className="mt-3" />
-                        )}
+                        <div className="text-right">
+                          <div className="text-sm font-medium">
+                            {minutesUntil <= 0 ? "Arriving" : `${minutesUntil}m`}
+                          </div>
+                          <Badge 
+                            variant={arrival.status === "approaching" ? "default" : arrival.status === "delayed" ? "destructive" : "secondary"}
+                            className="text-xs"
+                          >
+                            {arrival.status}
+                          </Badge>
+                        </div>
                       </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="text-sm text-muted-foreground text-center py-4">
-                  No upcoming arrivals
-                </div>
-              )}
+                      {index < mockUpcomingArrivals.length - 1 && (
+                        <Separator className="mt-3" />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </CardContent>
           </Card>
         </div>
