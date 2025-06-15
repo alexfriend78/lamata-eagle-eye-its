@@ -64,7 +64,7 @@ export default function AlertSimulator() {
 
   // Create alert mutation
   const createAlertMutation = useMutation({
-    mutationFn: (alertData: any) => apiRequest("/api/alerts", "POST", alertData),
+    mutationFn: (alertData: any) => apiRequest("POST", "/api/alerts", alertData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/alerts"] });
       toast({
@@ -97,7 +97,7 @@ export default function AlertSimulator() {
 
   // Acknowledge alert mutation
   const acknowledgeAlertMutation = useMutation({
-    mutationFn: (alertId: number) => apiRequest(`/api/alerts/${alertId}/acknowledge`, "PATCH"),
+    mutationFn: (alertId: number) => apiRequest("PATCH", `/api/alerts/${alertId}/acknowledge`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/alerts"] });
       toast({
