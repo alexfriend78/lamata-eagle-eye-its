@@ -36,6 +36,16 @@ export default function BusMonitor() {
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
   const { theme, setTheme } = useTheme();
 
+  // Listen for analytics panel requests from heatmap
+  useEffect(() => {
+    const handleShowAnalytics = () => {
+      setShowCrowdAnalytics(true);
+    };
+    
+    window.addEventListener('showCrowdAnalytics', handleShowAnalytics);
+    return () => window.removeEventListener('showCrowdAnalytics', handleShowAnalytics);
+  }, []);
+
   // Fetch station details when a station is hovered or selected
   const activeStation = hoveredStation || selectedStation;
   const { data: stationDetails } = useQuery<StationDetails>({
