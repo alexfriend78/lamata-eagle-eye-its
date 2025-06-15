@@ -7,6 +7,7 @@ import ControlPanel from "@/components/control-panel";
 import EmergencyAlert from "@/components/emergency-alert";
 import StationDetailsPanel from "@/components/station-details-panel";
 import RouteCustomizationPanel from "@/components/route-customization-panel";
+import RouteAestheticsPanel from "@/components/route-aesthetics-panel";
 import { Button } from "@/components/ui/button";
 import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
@@ -217,16 +218,11 @@ export default function BusMonitor() {
               {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </Button>
 
-            {/* Route Customization */}
-            <Button
-              onClick={() => setShowRouteCustomization(!showRouteCustomization)}
-              variant="outline"
-              size="sm"
-              className="h-8 w-8 p-0"
-              title="Customize route aesthetics"
-            >
-              <Palette className="h-4 w-4" />
-            </Button>
+            {/* Route Aesthetics */}
+            <RouteAestheticsPanel 
+              routes={routes || []}
+              theme={theme}
+            />
 
             {/* Settings */}
             <Button

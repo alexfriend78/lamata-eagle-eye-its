@@ -81,6 +81,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update route aesthetics
+  app.patch("/api/routes/:id/aesthetics", async (req, res) => {
+    try {
+      const routeId = parseInt(req.params.id);
+      const aestheticUpdates = req.body;
+      
+      const updatedRoute = await storage.updateRouteAesthetics(routeId, aestheticUpdates);
+      if (!updatedRoute) {
+        return res.status(404).json({ error: "Route not found" });
+      }
+      
+      res.json(updatedRoute);
+    } catch (error) {
+      console.error("Error updating route aesthetics:", error);
+      res.status(500).json({ error: "Failed to update route aesthetics" });
+    }
+  });
+
   // Create alert
   app.post("/api/alerts", async (req, res) => {
     try {
