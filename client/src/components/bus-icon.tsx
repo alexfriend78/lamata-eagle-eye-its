@@ -11,7 +11,8 @@ function BusIcon({ bus, style }: BusIconProps) {
     switch (status) {
       case "on_time": return "#22c55e"; // green-500
       case "delayed": return "#eab308"; // yellow-500
-      case "alert": return "#ef4444"; // red-500
+      case "alert": return "#22c55e"; // green-500 (show as active)
+      case "active": return "#22c55e"; // green-500
       default: return "#22c55e";
     }
   };
@@ -31,7 +32,7 @@ function BusIcon({ bus, style }: BusIconProps) {
           : "drop-shadow(0 1px 2px rgba(0,0,0,0.3))",
         zIndex: 30
       }}
-      title={`Bus ${bus.number} - Route ${bus.route.routeNumber} - Status: ${bus.status}`}
+      title={`Bus ${bus.number} - Route ${bus.route.routeNumber} - Status: ${isAlertBus ? 'active (with alerts)' : bus.status}`}
     >
       🚌
     </div>
