@@ -270,6 +270,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get all crowd predictions for active stations
+  app.get("/api/crowd/predictions", async (req, res) => {
+    try {
+      const stations = await storage.getStations();
+      const predictions = [];
+      
+      for (const station of stations) {
+        // Get predictions for station's primary route
+        const routeId = station.id <= 17 ? 1 : 3; // Route assignment logic
+        const stationPredictions = await storage.getCrowdPredictions(station.id, routeId);
+        
+        if (stationPredictions.length > 0) {
+          predictions.push({
+            stationId: station.id,
+            stationName: station.name,
+            x: station.x,
+            y: station.y,
+            routeId,
+            predictions: stationPredictions
+          });
+        }
+      }
+      
+      res.json(predictions);
+    } catch (error) {
+      console.error('Error fetching crowd predictions:', error);
+      res.status(500).json({ error: "Failed to fetch crowd predictions" });
+    }
+  });
+
   app.post("/api/crowd-density", async (req, res) => {
     try {
       const reading = await storage.createCrowdDensityReading(req.body);

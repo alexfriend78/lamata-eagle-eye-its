@@ -39,6 +39,13 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     refetchInterval: showHeatMap ? 5000 : false, // Refresh every 5 seconds when heat map is active
   });
 
+  // Fetch crowd predictions for bubbles
+  const { data: crowdPredictions = [] } = useQuery<any[]>({
+    queryKey: ['/api/crowd/predictions'],
+    enabled: !!showCrowdBubbles,
+    refetchInterval: showCrowdBubbles ? 10000 : false, // Refresh every 10 seconds when bubbles are active
+  });
+
   const getRoutePoints = (routeId: number) => {
     // Define routes using dynamic resolution for consistent coverage
     const routePaths: Record<number, { x: number; y: number }[]> = {
@@ -811,6 +818,59 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
               />
             </div>
           ))}
+
+        {/* Crowd Prediction Bubbles */}
+        {showCrowdBubbles && crowdPredictions.map((stationPrediction) => {
+          const station = stations.find(s => s.id === stationPrediction.stationId);
+          if (!station) return null;
+
+          // Get the latest prediction for display
+          const latestPrediction = stationPrediction.predictions[0];
+          if (!latestPrediction) return null;
+
+          // Calculate bubble size based on predicted passenger count
+          const maxCapacity = 150; // Typical BRT station capacity
+          const percentage = Math.min((latestPrediction.predictedPassengerCount / maxCapacity) * 100, 100);
+          const bubbleSize = Math.max(20, Math.min(60, percentage * 0.6)); // Size between 20-60px
+
+          // Color based on crowding level
+          const getBubbleColor = (percentage: number) => {
+            if (percentage < 30) return 'rgba(34, 197, 94, 0.6)'; // Green - Low
+            if (percentage < 60) return 'rgba(234, 179, 8, 0.6)'; // Yellow - Medium
+            if (percentage < 80) return 'rgba(249, 115, 22, 0.6)'; // Orange - High
+            return 'rgba(239, 68, 68, 0.6)'; // Red - Very High
+          };
+
+          const getBorderColor = (percentage: number) => {
+            if (percentage < 30) return 'rgb(34, 197, 94)'; // Green
+            if (percentage < 60) return 'rgb(234, 179, 8)'; // Yellow
+            if (percentage < 80) return 'rgb(249, 115, 22)'; // Orange
+            return 'rgb(239, 68, 68)'; // Red
+          };
+
+          return (
+            <div
+              key={`bubble-${stationPrediction.stationId}`}
+              className="absolute rounded-full border-2 flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110"
+              style={{
+                left: `${(station.x * mapWidth) - (bubbleSize / 2)}px`,
+                top: `${(station.y * mapHeight) - (bubbleSize / 2)}px`,
+                width: `${bubbleSize}px`,
+                height: `${bubbleSize}px`,
+                backgroundColor: getBubbleColor(percentage),
+                borderColor: getBorderColor(percentage),
+                zIndex: 25,
+                boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+              }}
+              title={`${station.name}: ${latestPrediction.predictedPassengerCount} passengers predicted (${percentage.toFixed(0)}% capacity)`}
+              onClick={() => onStationClick(station)}
+            >
+              <div className="text-xs font-bold text-white drop-shadow-md">
+                {latestPrediction.predictedPassengerCount}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Heat Map Legend */}
@@ -833,6 +893,34 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             <div className="flex items-center space-x-2">
               <div className="w-4 h-2 rounded" style={{ backgroundColor: 'rgba(255, 0, 0, 0.7)' }}></div>
               <span className="text-xs">Very High (80%+)</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Crowd Prediction Bubbles Legend */}
+      {showCrowdBubbles && (
+        <div className={`absolute bottom-4 left-4 ${theme === 'dark' ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'} border rounded-lg p-3 shadow-lg z-40`}>
+          <div className="text-sm font-semibold mb-2">Crowd Predictions</div>
+          <div className="space-y-1">
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 rounded-full border-2" style={{ backgroundColor: 'rgba(34, 197, 94, 0.6)', borderColor: 'rgb(34, 197, 94)' }}></div>
+              <span className="text-xs">Low (&lt;30%)</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 rounded-full border-2" style={{ backgroundColor: 'rgba(234, 179, 8, 0.6)', borderColor: 'rgb(234, 179, 8)' }}></div>
+              <span className="text-xs">Medium (30-60%)</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 rounded-full border-2" style={{ backgroundColor: 'rgba(249, 115, 22, 0.6)', borderColor: 'rgb(249, 115, 22)' }}></div>
+              <span className="text-xs">High (60-80%)</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 rounded-full border-2" style={{ backgroundColor: 'rgba(239, 68, 68, 0.6)', borderColor: 'rgb(239, 68, 68)' }}></div>
+              <span className="text-xs">Critical (80%+)</span>
+            </div>
+            <div className="text-xs text-gray-500 mt-2 border-t pt-1">
+              Bubble size = passenger count
             </div>
           </div>
         </div>
