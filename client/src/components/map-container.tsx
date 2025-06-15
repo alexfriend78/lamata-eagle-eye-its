@@ -1,3 +1,4 @@
+
 import { type BusWithRoute, type Route, type Station } from "@shared/schema";
 import BusIcon from "./bus-icon";
 import { useRouteStations } from "@/hooks/use-route-stations";
@@ -179,7 +180,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     };
   };
 
-  const renderRouteLine = (route: Route, routeIndex: number) => {
+  const renderRouteLine = (route: Route) => {
     // Only render if route is selected or no specific routes are selected
     if (selectedRoutes.length > 0 && !selectedRoutes.includes(route.id)) {
       return null;
@@ -190,18 +191,12 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     
     if (points.length < 2) return null;
 
-    // Calculate offset for overlapping routes - spread them more
-    const offsetDistance = (routeIndex % 5 - 2) * 12; // -24, -12, 0, 12, 24 pixel offset
-    
-    // Apply perpendicular offset to create parallel lines
-    const offsetPoints = points.map((point, i) => {
-      if (i === points.length - 1) {
-        // For last point, use previous segment direction
-        return calculatePerpendicularOffset(points[i-1], point, offsetDistance);
-      }
-      // Use current segment direction
-      return calculatePerpendicularOffset(point, points[i+1], offsetDistance);
-    });
+    // Use stable offset based on route ID to prevent oscillation
+    const stableOffset = (route.id - 1) * 3; // 0, 3, 6, 9, 12 pixel offsets
+    const offsetPoints = points.map(point => ({
+      x: point.x + stableOffset,
+      y: point.y + stableOffset * 0.5
+    }));
 
     return (
       <svg
@@ -211,7 +206,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         height="100%"
         viewBox={`0 0 ${mapWidth} ${mapHeight}`}
         preserveAspectRatio="xMidYMid slice"
-        style={{ zIndex: 10 + routeIndex }}
+        style={{ zIndex: 10 + route.id }}
       >
         {/* Create gradients and filters for aesthetic effects */}
         <defs>
@@ -573,7 +568,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         {/* Route Lines */}
         {showRoutes && routes
           .filter(route => selectedRoutes.length === 0 || selectedRoutes.includes(route.id))
-          .map((route) => renderRouteLine(route, route.id - 1))}
+          .map((route) => renderRouteLine(route))}
 
         {/* Major Interchange Stations - London Underground style */}
         {(() => {
