@@ -8,10 +8,8 @@ import EmergencyAlert from "@/components/emergency-alert";
 import StationDetailsPanel from "@/components/station-details-panel";
 import RouteCustomizationPanel from "@/components/route-customization-panel";
 import RouteAestheticsPanel from "@/components/route-aesthetics-panel";
-import CrowdDensityHeatmap from "@/components/crowd-density-heatmap";
-import CrowdAnalyticsPanel from "@/components/crowd-analytics-panel";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, Users, BarChart3 } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
@@ -31,20 +29,8 @@ export default function BusMonitor() {
   const [showRoutes, setShowRoutes] = useState(true);
   const [showStations, setShowStations] = useState(true);
   const [showBuses, setShowBuses] = useState(true);
-  const [showCrowdHeatmap, setShowCrowdHeatmap] = useState(false);
-  const [showCrowdAnalytics, setShowCrowdAnalytics] = useState(false);
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
   const { theme, setTheme } = useTheme();
-
-  // Listen for analytics panel requests from heatmap
-  useEffect(() => {
-    const handleShowAnalytics = () => {
-      setShowCrowdAnalytics(true);
-    };
-    
-    window.addEventListener('showCrowdAnalytics', handleShowAnalytics);
-    return () => window.removeEventListener('showCrowdAnalytics', handleShowAnalytics);
-  }, []);
 
   // Fetch station details when a station is hovered or selected
   const activeStation = hoveredStation || selectedStation;
@@ -220,17 +206,6 @@ export default function BusMonitor() {
               <Map className="h-4 w-4" />
             </Button>
 
-            {/* Crowd Density Heatmap Toggle */}
-            <Button
-              onClick={() => setShowCrowdHeatmap(!showCrowdHeatmap)}
-              variant={showCrowdHeatmap ? "default" : "outline"}
-              size="sm"
-              className="h-8 w-8 p-0"
-              title="Toggle crowd density heatmap"
-            >
-              <Users className="h-4 w-4" />
-            </Button>
-
 
 
             {/* Theme Toggle */}
@@ -302,17 +277,6 @@ export default function BusMonitor() {
             showStations={showStations}
             showBuses={showBuses}
           />
-          
-          {/* Crowd Density Heatmap Overlay */}
-          <CrowdDensityHeatmap
-            stations={stations || []}
-            routes={routes || []}
-            theme={theme}
-            mapWidth={typeof window !== 'undefined' ? window.innerWidth : 1920}
-            mapHeight={typeof window !== 'undefined' ? window.innerHeight - 64 : 1016}
-            isVisible={showCrowdHeatmap}
-            onToggle={() => setShowCrowdHeatmap(!showCrowdHeatmap)}
-          />
         </div>
 
         {/* Collapsible Control Panel */}
@@ -327,26 +291,16 @@ export default function BusMonitor() {
             />
           </div>
         )}
-      </div>
 
-      {/* Crowd Analytics Panel */}
-      <CrowdAnalyticsPanel
-        stations={stations || []}
-        routes={routes || []}
-        theme={theme}
-        isOpen={showCrowdAnalytics}
-        onClose={() => setShowCrowdAnalytics(false)}
-      />
+        {/* Station Details Panel */}
+        <StationDetailsPanel
+          stationDetails={stationDetails || null}
+          isOpen={!!activeStation}
+          onClose={handleCloseStationDetails}
+        />
 
-      {/* Station Details Panel */}
-      <StationDetailsPanel
-        stationDetails={stationDetails || null}
-        isOpen={!!activeStation}
-        onClose={handleCloseStationDetails}
-      />
-
-      {/* Bus Details Panel */}
-      {hoveredBus && (
+        {/* Bus Details Panel */}
+        {hoveredBus && (
           <div className={`fixed right-4 top-24 w-80 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-300'} border rounded-lg shadow-lg p-4 z-50`}>
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-semibold">Bus Details</h3>
@@ -409,6 +363,7 @@ export default function BusMonitor() {
         onClose={() => setShowRouteCustomization(false)}
         theme={theme}
       />
+      </div>
     </div>
   );
 }
