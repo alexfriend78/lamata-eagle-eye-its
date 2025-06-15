@@ -93,7 +93,7 @@ export class MemStorage implements IStorage {
 
     routesData.forEach(route => {
       const id = this.currentRouteId++;
-      this.routes.set(id, { id, isActive: true, ...route });
+      this.routes.set(id, { id, ...route, isActive: true });
     });
 
     // Create buses
@@ -114,7 +114,7 @@ export class MemStorage implements IStorage {
     // Create some alerts
     const alertsData = [
       { busId: 3, routeId: 2, type: "emergency", message: "Emergency stop - Medical assistance required", severity: "critical" },
-      { routeId: 1, type: "delay", message: "Traffic delay - Expected 10 min behind schedule", severity: "medium" },
+      { busId: null, routeId: 1, type: "delay", message: "Traffic delay - Expected 10 min behind schedule", severity: "medium" },
     ];
 
     alertsData.forEach(alert => {
@@ -133,7 +133,13 @@ export class MemStorage implements IStorage {
 
   async createRoute(route: InsertRoute): Promise<Route> {
     const id = this.currentRouteId++;
-    const newRoute: Route = { id, ...route };
+    const newRoute: Route = { 
+      id, 
+      routeNumber: route.routeNumber,
+      name: route.name,
+      color: route.color || "#1976D2",
+      isActive: route.isActive ?? true
+    };
     this.routes.set(id, newRoute);
     return newRoute;
   }
@@ -171,7 +177,16 @@ export class MemStorage implements IStorage {
 
   async createBus(bus: InsertBus): Promise<Bus> {
     const id = this.currentBusId++;
-    const newBus: Bus = { id, lastUpdated: new Date(), ...bus };
+    const newBus: Bus = { 
+      id, 
+      lastUpdated: new Date(),
+      routeId: bus.routeId,
+      busNumber: bus.busNumber,
+      currentX: bus.currentX,
+      currentY: bus.currentY,
+      status: bus.status || "on_time",
+      direction: bus.direction || "forward"
+    };
     this.buses.set(id, newBus);
     return newBus;
   }
@@ -211,7 +226,16 @@ export class MemStorage implements IStorage {
 
   async createAlert(alert: InsertAlert): Promise<Alert> {
     const id = this.currentAlertId++;
-    const newAlert: Alert = { id, isActive: true, createdAt: new Date(), ...alert };
+    const newAlert: Alert = { 
+      id, 
+      isActive: true, 
+      createdAt: new Date(),
+      busId: alert.busId ?? null,
+      routeId: alert.routeId ?? null,
+      type: alert.type,
+      message: alert.message,
+      severity: alert.severity ?? "medium"
+    };
     this.alerts.set(id, newAlert);
     return newAlert;
   }

@@ -52,9 +52,10 @@ export default function ControlPanel({ stats, alerts, routes, onRefresh }: Contr
     }
   });
 
-  const formatTimeAgo = (date: Date) => {
+  const formatTimeAgo = (date: Date | string) => {
     const now = new Date();
-    const diffMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
+    const alertDate = typeof date === 'string' ? new Date(date) : date;
+    const diffMinutes = Math.floor((now.getTime() - alertDate.getTime()) / (1000 * 60));
     if (diffMinutes < 1) return "just now";
     if (diffMinutes < 60) return `${diffMinutes} min ago`;
     const diffHours = Math.floor(diffMinutes / 60);
