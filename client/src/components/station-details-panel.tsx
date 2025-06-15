@@ -339,7 +339,49 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
             </CardContent>
           </Card>
 
-
+          {/* Video Test Panel */}
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium">Video Diagnostics</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <div className="text-xs text-muted-foreground">
+                  Current video URL: {getStationVideoSrc()}
+                </div>
+                <div className="flex gap-2">
+                  <a 
+                    href={getStationVideoSrc()} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center px-3 py-2 text-xs font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    Open Video Direct
+                  </a>
+                  <button
+                    onClick={() => {
+                      const video = document.getElementById('station-video') as HTMLVideoElement;
+                      if (video) {
+                        console.log('Video element found:', {
+                          src: video.src,
+                          currentSrc: video.currentSrc,
+                          readyState: video.readyState,
+                          networkState: video.networkState,
+                          error: video.error
+                        });
+                        video.load();
+                      } else {
+                        console.log('Video element not found');
+                      }
+                    }}
+                    className="inline-flex items-center px-3 py-2 text-xs font-medium text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  >
+                    Debug Video
+                  </button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Upcoming Arrivals */}
           <Card>
