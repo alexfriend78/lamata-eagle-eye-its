@@ -141,7 +141,10 @@ export default function EmergencyAlertSystem({
 
   // Video player controls
   const toggleVideoPlayback = () => {
-    const video = document.querySelector('#emergency-video') as HTMLVideoElement;
+    const emergencyVideo = document.querySelector('#emergency-video') as HTMLVideoElement;
+    const triageVideo = document.querySelector('#triage-video') as HTMLVideoElement;
+    const video = emergencyVideo || triageVideo;
+    
     if (video) {
       if (isVideoPlaying) {
         video.pause();
@@ -153,7 +156,10 @@ export default function EmergencyAlertSystem({
   };
 
   const toggleVideoMute = () => {
-    const video = document.querySelector('#emergency-video') as HTMLVideoElement;
+    const emergencyVideo = document.querySelector('#emergency-video') as HTMLVideoElement;
+    const triageVideo = document.querySelector('#triage-video') as HTMLVideoElement;
+    const video = emergencyVideo || triageVideo;
+    
     if (video) {
       video.muted = !isVideoMuted;
       setIsVideoMuted(!isVideoMuted);
@@ -294,10 +300,12 @@ export default function EmergencyAlertSystem({
     const bus = getBusInfo(activeAlert.busId);
     const lastStop = getStationInfo(activeAlert.lastStopId);
     const nextStop = getStationInfo(activeAlert.nextStopId);
+    const isPriorityOne = activeAlert.priority === 'P1';
+    const videoSrc = getVideoForAlert(activeAlert);
 
     return (
       <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
-        <Card className="w-full max-w-4xl max-h-[90vh] overflow-auto bg-white dark:bg-gray-800">
+        <Card className={`w-full ${isPriorityOne ? 'max-w-7xl' : 'max-w-4xl'} max-h-[90vh] overflow-auto bg-white dark:bg-gray-800`}>
           <CardContent className="p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-red-600 dark:text-red-400">
@@ -312,7 +320,50 @@ export default function EmergencyAlertSystem({
               </Button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Video Feed Section for P1 Alerts */}
+            {isPriorityOne && (
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                  <Video className="w-5 h-5" />
+                  Live CCTV Feed
+                </h3>
+                <div className="relative bg-black rounded-lg overflow-hidden">
+                  <video
+                    id="triage-video"
+                    src={videoSrc}
+                    autoPlay
+                    loop
+                    muted={isVideoMuted}
+                    className="w-full h-80 object-cover"
+                  />
+                  <div className="absolute bottom-2 right-2 flex gap-2">
+                    <Button
+                      onClick={toggleVideoPlayback}
+                      size="sm"
+                      variant="secondary"
+                      className="bg-black/60 text-white hover:bg-black/80"
+                    >
+                      {isVideoPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                    </Button>
+                    <Button
+                      onClick={toggleVideoMute}
+                      size="sm"
+                      variant="secondary"
+                      className="bg-black/60 text-white hover:bg-black/80"
+                    >
+                      {isVideoMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                    </Button>
+                  </div>
+                  <div className="absolute bottom-2 left-2">
+                    <span className="bg-red-600 text-white px-2 py-1 rounded text-xs font-bold">
+                      LIVE FEED - Bus {bus?.busNumber || 'Unknown'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className={`grid grid-cols-1 ${isPriorityOne ? 'lg:grid-cols-3' : 'md:grid-cols-2'} gap-6`}>
               {/* Alert Information */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold mb-3">Alert Details</h3>
