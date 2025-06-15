@@ -5,6 +5,12 @@ import type {
   InsertCrowdDensityReading, InsertCrowdPrediction, InsertHistoricalPattern,
   BusWithRoute, AlertWithDetails, BusArrivalWithDetails, StationDetails, SystemStats, CrowdAnalytics
 } from "../shared/schema.js";
+import { db } from "./db.js";
+import { 
+  routes, stations, buses, alerts, routeStations, busArrivals,
+  crowdDensityReadings, crowdPredictions, historicalPatterns 
+} from "../shared/schema.js";
+import { eq, and, desc, asc, sql } from "drizzle-orm";
 
 export interface IStorage {
   // Routes
@@ -64,25 +70,7 @@ export interface IStorage {
   generateCrowdPredictions(stationId: number, routeId: number): Promise<CrowdPrediction[]>;
 }
 
-export class MemStorage implements IStorage {
-  private routes: Map<number, Route>;
-  private stations: Map<number, Station>;
-  private buses: Map<number, Bus>;
-  private alerts: Map<number, Alert>;
-  private routeStations: Map<number, RouteStation>;
-  private busArrivals: Map<number, BusArrival>;
-  private crowdDensityReadings: Map<number, CrowdDensityReading>;
-  private crowdPredictions: Map<number, CrowdPrediction>;
-  private historicalPatterns: Map<number, HistoricalPattern>;
-  private currentRouteId: number;
-  private currentStationId: number;
-  private currentBusId: number;
-  private currentAlertId: number;
-  private currentRouteStationId: number;
-  private currentBusArrivalId: number;
-  private currentCrowdDensityId: number;
-  private currentCrowdPredictionId: number;
-  private currentHistoricalPatternId: number;
+export class DatabaseStorage implements IStorage {
 
   constructor() {
     this.routes = new Map();
@@ -731,7 +719,7 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export { storage } from "./storage-db.js";
 
 // Simulate bus movement every 3 seconds
 setInterval(() => {

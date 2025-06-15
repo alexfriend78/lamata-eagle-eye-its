@@ -189,6 +189,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Crowd density analytics endpoints
+  app.get("/api/crowd-density", async (req, res) => {
+    try {
+      const { stationId, busId } = req.query;
+      const readings = await storage.getCrowdDensityReadings(
+        stationId ? Number(stationId) : undefined,
+        busId ? Number(busId) : undefined
+      );
+      res.json(readings);
+    } catch (error) {
+      console.error('Error fetching crowd density readings:', error);
+      res.status(500).json({ error: "Failed to fetch crowd density readings" });
+    }
+  });
+
+  app.get("/api/stations/:id/crowd-analytics", async (req, res) => {
+    try {
+      const stationId = Number(req.params.id);
+      const analytics = await storage.getCrowdAnalytics(stationId);
+      res.json(analytics);
+    } catch (error) {
+      console.error('Error fetching crowd analytics:', error);
+      res.status(500).json({ error: "Failed to fetch crowd analytics" });
+    }
+  });
+
+  app.get("/api/stations/:stationId/predictions/:routeId", async (req, res) => {
+    try {
+      const stationId = Number(req.params.stationId);
+      const routeId = Number(req.params.routeId);
+      const predictions = await storage.getCrowdPredictions(stationId, routeId);
+      res.json(predictions);
+    } catch (error) {
+      console.error('Error fetching crowd predictions:', error);
+      res.status(500).json({ error: "Failed to fetch crowd predictions" });
+    }
+  });
+
+  app.post("/api/crowd-density", async (req, res) => {
+    try {
+      const reading = await storage.createCrowdDensityReading(req.body);
+      res.status(201).json(reading);
+    } catch (error) {
+      console.error('Error creating crowd density reading:', error);
+      res.status(500).json({ error: "Failed to create crowd density reading" });
+    }
+  });
+
+  app.post("/api/predictions/generate", async (req, res) => {
+    try {
+      const { stationId, routeId } = req.body;
+      const predictions = await storage.generateCrowdPredictions(stationId, routeId);
+      res.status(201).json(predictions);
+    } catch (error) {
+      console.error('Error generating predictions:', error);
+      res.status(500).json({ error: "Failed to generate predictions" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
