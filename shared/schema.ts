@@ -177,3 +177,5 @@ export type CrowdAnalytics = {
   historicalAverage: number;
   peakTimes: Array<{ hour: number; avgDensity: string }>;
 };
+
+

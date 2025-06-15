@@ -1,7 +1,9 @@
 import type { 
   Route, Station, Bus, Alert, RouteStation, BusArrival, 
   InsertRoute, InsertStation, InsertBus, InsertAlert, InsertRouteStation, InsertBusArrival,
-  BusWithRoute, AlertWithDetails, BusArrivalWithDetails, StationDetails, SystemStats
+  BusWithRoute, AlertWithDetails, BusArrivalWithDetails, StationDetails, SystemStats,
+  CrowdDensityReading, InsertCrowdDensityReading, CrowdPrediction, InsertCrowdPrediction,
+  HistoricalPattern, InsertHistoricalPattern, CrowdAnalytics
 } from "../shared/schema.js";
 
 export interface IStorage {
@@ -43,6 +45,17 @@ export interface IStorage {
   
   // System Stats
   getSystemStats(): Promise<SystemStats>;
+  
+  // Crowd Density Analytics
+  getCrowdDensityReadings(stationId?: number, busId?: number): Promise<CrowdDensityReading[]>;
+  getLatestCrowdDensity(stationId: number): Promise<CrowdDensityReading | undefined>;
+  createCrowdDensityReading(reading: InsertCrowdDensityReading): Promise<CrowdDensityReading>;
+  getCrowdPredictions(stationId: number, routeId: number): Promise<CrowdPrediction[]>;
+  createCrowdPrediction(prediction: InsertCrowdPrediction): Promise<CrowdPrediction>;
+  getHistoricalPatterns(stationId: number, routeId: number): Promise<HistoricalPattern[]>;
+  updateHistoricalPattern(pattern: InsertHistoricalPattern): Promise<HistoricalPattern>;
+  getCrowdAnalytics(stationId: number): Promise<CrowdAnalytics>;
+  generateCrowdPredictions(stationId: number, routeId: number): Promise<CrowdPrediction[]>;
 }
 
 export class MemStorage implements IStorage {
@@ -52,12 +65,18 @@ export class MemStorage implements IStorage {
   private alerts: Map<number, Alert>;
   private routeStations: Map<number, RouteStation>;
   private busArrivals: Map<number, BusArrival>;
+  private crowdDensityReadings: Map<number, CrowdDensityReading>;
+  private crowdPredictions: Map<number, CrowdPrediction>;
+  private historicalPatterns: Map<number, HistoricalPattern>;
   private currentRouteId: number;
   private currentStationId: number;
   private currentBusId: number;
   private currentAlertId: number;
   private currentRouteStationId: number;
   private currentBusArrivalId: number;
+  private currentCrowdReadingId: number;
+  private currentCrowdPredictionId: number;
+  private currentHistoricalPatternId: number;
 
   constructor() {
     this.routes = new Map();
@@ -66,12 +85,18 @@ export class MemStorage implements IStorage {
     this.alerts = new Map();
     this.routeStations = new Map();
     this.busArrivals = new Map();
+    this.crowdDensityReadings = new Map();
+    this.crowdPredictions = new Map();
+    this.historicalPatterns = new Map();
     this.currentRouteId = 1;
     this.currentStationId = 1;
     this.currentBusId = 1;
     this.currentAlertId = 1;
     this.currentRouteStationId = 1;
     this.currentBusArrivalId = 1;
+    this.currentCrowdReadingId = 1;
+    this.currentCrowdPredictionId = 1;
+    this.currentHistoricalPatternId = 1;
     this.seedData();
   }
 
@@ -663,6 +688,155 @@ export class MemStorage implements IStorage {
       ]
     };
     return routePaths[routeId] || [];
+  }
+
+  // Crowd Density Analytics Methods
+  async getCrowdDensityReadings(stationId?: number, busId?: number): Promise<CrowdDensityReading[]> {
+    const readings = Array.from(this.crowdDensityReadings.values());
+    return readings.filter(reading => {
+      if (stationId && reading.stationId !== stationId) return false;
+      if (busId && reading.busId !== busId) return false;
+      return true;
+    });
+  }
+
+  async getLatestCrowdDensity(stationId: number): Promise<CrowdDensityReading | undefined> {
+    const readings = Array.from(this.crowdDensityReadings.values())
+      .filter(reading => reading.stationId === stationId)
+      .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+    return readings[0];
+  }
+
+  async createCrowdDensityReading(reading: InsertCrowdDensityReading): Promise<CrowdDensityReading> {
+    const id = this.currentCrowdReadingId++;
+    const densityLevel = this.calculateDensityLevel(reading.passengerCount, reading.capacity || 70);
+    const newReading: CrowdDensityReading = {
+      id,
+      ...reading,
+      timestamp: new Date(),
+      densityLevel,
+      capacity: reading.capacity || 70,
+      source: reading.source || "sensor"
+    };
+    this.crowdDensityReadings.set(id, newReading);
+    return newReading;
+  }
+
+  async getCrowdPredictions(stationId: number, routeId: number): Promise<CrowdPrediction[]> {
+    return Array.from(this.crowdPredictions.values())
+      .filter(prediction => prediction.stationId === stationId && prediction.routeId === routeId);
+  }
+
+  async createCrowdPrediction(prediction: InsertCrowdPrediction): Promise<CrowdPrediction> {
+    const id = this.currentCrowdPredictionId++;
+    const newPrediction: CrowdPrediction = {
+      id,
+      ...prediction,
+      createdAt: new Date(),
+      confidenceLevel: prediction.confidenceLevel || 75,
+      predictionType: prediction.predictionType || "ml_model"
+    };
+    this.crowdPredictions.set(id, newPrediction);
+    return newPrediction;
+  }
+
+  async getHistoricalPatterns(stationId: number, routeId: number): Promise<HistoricalPattern[]> {
+    return Array.from(this.historicalPatterns.values())
+      .filter(pattern => pattern.stationId === stationId && pattern.routeId === routeId);
+  }
+
+  async updateHistoricalPattern(pattern: InsertHistoricalPattern): Promise<HistoricalPattern> {
+    const id = this.currentHistoricalPatternId++;
+    const newPattern: HistoricalPattern = {
+      id,
+      ...pattern,
+      lastUpdated: new Date()
+    };
+    this.historicalPatterns.set(id, newPattern);
+    return newPattern;
+  }
+
+  async getCrowdAnalytics(stationId: number): Promise<CrowdAnalytics> {
+    const latestDensity = await this.getLatestCrowdDensity(stationId);
+    const station = this.stations.get(stationId);
+    
+    if (!station) {
+      throw new Error(`Station ${stationId} not found`);
+    }
+
+    const predictions = Array.from(this.crowdPredictions.values())
+      .filter(p => p.stationId === stationId);
+
+    return {
+      stationId,
+      currentDensity: latestDensity?.densityLevel || "low",
+      passengerCount: latestDensity?.passengerCount || station.passengerCount,
+      capacity: latestDensity?.capacity || 70,
+      utilizationRate: latestDensity ? (latestDensity.passengerCount / (latestDensity.capacity || 70)) * 100 : 0,
+      predictions,
+      historicalAverage: this.calculateHistoricalAverage(stationId),
+      peakTimes: this.calculatePeakTimes(stationId)
+    };
+  }
+
+  async generateCrowdPredictions(stationId: number, routeId: number): Promise<CrowdPrediction[]> {
+    const now = new Date();
+    const predictions: CrowdPrediction[] = [];
+    
+    // Generate predictions for next 6 hours
+    for (let i = 1; i <= 6; i++) {
+      const predictedTime = new Date(now.getTime() + (i * 60 * 60 * 1000));
+      const hour = predictedTime.getHours();
+      
+      // Simple prediction based on time patterns
+      let expectedPassengers = 30; // Base load
+      if (hour >= 7 && hour <= 9) expectedPassengers = 60; // Morning rush
+      else if (hour >= 17 && hour <= 19) expectedPassengers = 65; // Evening rush
+      else if (hour >= 12 && hour <= 14) expectedPassengers = 45; // Lunch time
+      
+      // Add some variance
+      expectedPassengers += Math.floor(Math.random() * 20) - 10;
+      expectedPassengers = Math.max(10, Math.min(70, expectedPassengers));
+
+      const prediction = await this.createCrowdPrediction({
+        stationId,
+        routeId,
+        predictedTime,
+        expectedPassengers,
+        confidenceLevel: 80,
+        predictionType: "ml_model"
+      });
+      
+      predictions.push(prediction);
+    }
+    
+    return predictions;
+  }
+
+  private calculateDensityLevel(passengerCount: number, capacity: number): string {
+    const ratio = passengerCount / capacity;
+    if (ratio < 0.3) return "low";
+    if (ratio < 0.6) return "medium";
+    if (ratio < 0.85) return "high";
+    return "critical";
+  }
+
+  private calculateHistoricalAverage(stationId: number): number {
+    const patterns = Array.from(this.historicalPatterns.values())
+      .filter(p => p.stationId === stationId);
+    
+    if (patterns.length === 0) return 35; // Default average
+    
+    const total = patterns.reduce((sum, pattern) => sum + pattern.avgPassengerCount, 0);
+    return Math.round(total / patterns.length);
+  }
+
+  private calculatePeakTimes(stationId: number): Array<{ hour: number; avgDensity: string }> {
+    const peakHours = [7, 8, 9, 12, 13, 17, 18, 19]; // Typical peak hours
+    return peakHours.map(hour => ({
+      hour,
+      avgDensity: hour >= 17 && hour <= 19 ? "high" : hour >= 7 && hour <= 9 ? "high" : "medium"
+    }));
   }
 }
 
