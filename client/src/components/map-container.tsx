@@ -68,15 +68,15 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         { x: 500, y: 420 }, { x: 600, y: 400 }, { x: 700, y: 420 }, { x: 800, y: 440 },
         { x: 900, y: 460 }, { x: 1000, y: 480 }, { x: 1100, y: 500 }, { x: 1180, y: 520 }
       ],
-      10: [ // North-South Connector (vertical coverage)
-        { x: 400, y: 20 }, { x: 420, y: 80 }, { x: 440, y: 140 }, { x: 460, y: 200 },
-        { x: 480, y: 260 }, { x: 500, y: 320 }, { x: 520, y: 380 }, { x: 540, y: 440 },
-        { x: 560, y: 500 }, { x: 580, y: 560 }, { x: 600, y: 620 }, { x: 620, y: 680 }
+      10: [ // North-South Connector (vertical coverage through zones 1,5,9,13)
+        { x: 80, y: 40 }, { x: 90, y: 100 }, { x: 100, y: 160 }, { x: 110, y: 220 },
+        { x: 120, y: 280 }, { x: 130, y: 340 }, { x: 140, y: 400 }, { x: 150, y: 460 },
+        { x: 160, y: 520 }, { x: 170, y: 580 }, { x: 180, y: 640 }, { x: 190, y: 700 }
       ],
-      11: [ // East-West Expressway (horizontal middle coverage)
-        { x: 40, y: 400 }, { x: 140, y: 390 }, { x: 240, y: 380 }, { x: 340, y: 370 },
-        { x: 440, y: 360 }, { x: 540, y: 350 }, { x: 640, y: 340 }, { x: 740, y: 330 },
-        { x: 840, y: 320 }, { x: 940, y: 310 }, { x: 1040, y: 300 }, { x: 1140, y: 290 }, { x: 1240, y: 280 }
+      11: [ // East-West Secondary (zones 2,3,4 to 14,15,16)
+        { x: 480, y: 60 }, { x: 560, y: 70 }, { x: 640, y: 80 }, { x: 720, y: 90 },
+        { x: 800, y: 100 }, { x: 880, y: 110 }, { x: 960, y: 120 }, { x: 1040, y: 130 },
+        { x: 1120, y: 140 }, { x: 1200, y: 150 }
       ]
     };
     return routePaths[routeId] || [];
@@ -217,10 +217,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 top: `${row * 25}%`,
                 width: '25%',
                 height: '25%',
-                pointerEvents: 'auto',
-                cursor: 'pointer'
+                pointerEvents: 'none'
               }}
-              onClick={() => onZoneSelect(selectedZone === zoneNumber ? null : zoneNumber)}
               title={`Zone ${zoneNumber}`}
             >
               <div className={`absolute top-1 left-1 text-xs font-bold ${
