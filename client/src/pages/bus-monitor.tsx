@@ -26,6 +26,7 @@ export default function BusMonitor() {
   const [hoveredBus, setHoveredBus] = useState<any | null>(null);
   const [showLiveFeed, setShowLiveFeed] = useState(false);
   const [showRouteCustomization, setShowRouteCustomization] = useState(false);
+  const [activeAlert, setActiveAlert] = useState<any | null>(null);
   
   // Visibility controls for routes, bus stops, and buses
   const [showRoutes, setShowRoutes] = useState(true);
@@ -368,6 +369,15 @@ export default function BusMonitor() {
         isOpen={showRouteCustomization}
         onClose={() => setShowRouteCustomization(false)}
         theme={theme}
+      />
+
+      {/* Emergency Alert System */}
+      <EmergencyAlertSystem
+        buses={buses || []}
+        stations={stations || []}
+        activeAlert={activeAlert}
+        onAlertDismiss={() => setActiveAlert(null)}
+        onAlertCreate={(alert) => setActiveAlert(alert)}
       />
       </div>
     </div>

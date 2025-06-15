@@ -378,7 +378,7 @@ export default function EmergencyAlertSystem({
                   <SelectContent>
                     {buses.map((bus) => (
                       <SelectItem key={bus.id} value={bus.id.toString()}>
-                        {bus.number} - Route {bus.route.routeNumber}
+                        {bus.busNumber} - Route {bus.route.routeNumber}
                       </SelectItem>
                     ))}
                   </SelectContent>
