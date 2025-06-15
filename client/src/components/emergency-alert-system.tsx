@@ -440,22 +440,12 @@ export default function EmergencyAlertSystem({
               </div>
             </div>
 
-            {/* Live Video Feed Placeholder */}
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold mb-3">Live Video Feed</h3>
-              <div className="bg-gray-900 rounded-lg p-8 text-center">
-                <Video className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-                <p className="text-gray-400">Live video feed from Bus #{bus?.busNumber}</p>
-                <p className="text-sm text-gray-500 mt-2">Camera feed would be integrated here</p>
-              </div>
-            </div>
-
-            {/* Live Feed Section for P1 Critical Security Alerts */}
+            {/* Live Video Feed Section for P1 Critical Security Alerts */}
             {hasVideo && (
               <div className="mt-6">
                 <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
                   <Video className="w-5 h-5" />
-                  Live Feed
+                  Live Video Feed
                 </h3>
                 <div className="relative bg-black rounded-lg overflow-hidden">
                   <video
