@@ -127,11 +127,12 @@ export default function EmergencyAlertSystem({
     return stations.find(s => s.id === stationId);
   };
 
-  // Helper function to get random video for P1 alerts
+  // Helper function to get video for P1 critical security emergencies only
   const getVideoForAlert = (alert: AlertWithDetails) => {
-    // For P1 alerts, randomly select from available emergency videos
-    if (alert.priority === 'P1') {
-      const p1Videos = [
+    // Only show videos for P1 critical security emergencies
+    if (alert.priority === 'P1' && 
+        (alert.type === 'emergency' || alert.type === 'security')) {
+      const p1SecurityVideos = [
         EMERGENCY_VIDEOS.weapon,
         EMERGENCY_VIDEOS.knife,
         EMERGENCY_VIDEOS.gun,
@@ -140,11 +141,11 @@ export default function EmergencyAlertSystem({
       ];
       
       // Use alert ID as seed for consistent video selection per alert
-      const videoIndex = alert.id % p1Videos.length;
-      return p1Videos[videoIndex];
+      const videoIndex = alert.id % p1SecurityVideos.length;
+      return p1SecurityVideos[videoIndex];
     }
     
-    return EMERGENCY_VIDEOS.emergency; // Default for non-P1 alerts
+    return null; // No video for non-critical security alerts
   };
 
   // Video player controls
@@ -180,22 +181,23 @@ export default function EmergencyAlertSystem({
     const textColor = PRIORITY_TEXT_COLORS[activeAlert.priority as Priority] || "text-white";
     const isPriorityOne = activeAlert.priority === 'P1';
     const videoSrc = getVideoForAlert(activeAlert);
+    const hasVideo = videoSrc !== null;
 
     return (
       <div 
         className="fixed inset-0 z-50 flex items-center justify-center p-8"
         style={{ backgroundColor: overlayColor }}
       >
-        <Card className={`w-full ${isPriorityOne ? 'max-w-6xl' : 'max-w-2xl'} bg-black/20 border-white/30 backdrop-blur-sm`}>
+        <Card className={`w-full ${hasVideo ? 'max-w-6xl' : 'max-w-2xl'} bg-black/20 border-white/30 backdrop-blur-sm`}>
           <CardContent className="p-8">
-            {isPriorityOne && (
+            {hasVideo && (
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
-                {/* Video Feed for P1 Alerts */}
+                {/* Video Feed for P1 Critical Security Alerts */}
                 <div className="relative">
                   <div className="bg-black rounded-lg overflow-hidden">
                     <video
                       id="emergency-video"
-                      src={videoSrc}
+                      src={videoSrc || ''}
                       autoPlay
                       loop
                       muted={isVideoMuted}
@@ -252,7 +254,7 @@ export default function EmergencyAlertSystem({
               </div>
             )}
 
-            {!isPriorityOne && (
+            {!hasVideo && (
               <div className="text-center">
                 <div className="flex justify-center mb-6">
                   <AlertTriangle className={`w-24 h-24 ${textColor}`} />
@@ -310,6 +312,7 @@ export default function EmergencyAlertSystem({
     const nextStop = getStationInfo(activeAlert.nextStopId);
     const isPriorityOne = activeAlert.priority === 'P1';
     const videoSrc = getVideoForAlert(activeAlert);
+    const hasVideo = videoSrc !== null;
 
     return (
       <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
@@ -447,8 +450,8 @@ export default function EmergencyAlertSystem({
               </div>
             </div>
 
-            {/* Live Feed Section for P1 Alerts */}
-            {isPriorityOne && (
+            {/* Live Feed Section for P1 Critical Security Alerts */}
+            {hasVideo && (
               <div className="mt-6">
                 <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
                   <Video className="w-5 h-5" />
@@ -457,7 +460,7 @@ export default function EmergencyAlertSystem({
                 <div className="relative bg-black rounded-lg overflow-hidden">
                   <video
                     id="triage-video"
-                    src={videoSrc}
+                    src={videoSrc || ''}
                     autoPlay
                     loop
                     muted={isVideoMuted}
