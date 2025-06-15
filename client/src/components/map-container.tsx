@@ -205,7 +205,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         className="absolute inset-0 pointer-events-none"
         width="100%"
         height="100%"
-        viewBox="0 0 3456 2234"
+        viewBox={`0 0 ${mapWidth} ${mapHeight}`}
         preserveAspectRatio="xMidYMid slice"
         style={{ zIndex: 10 + routeIndex }}
       >
@@ -649,15 +649,6 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         {showStations && stations.map((station) => {
           const stationPixelX = station.x * mapWidth;
           const stationPixelY = station.y * mapHeight;
-          
-          // Debug: log first few stations to verify coordinates
-          if (station.id <= 3) {
-            console.log(`Station ${station.name}:`, {
-              percentage: { x: station.x, y: station.y },
-              pixels: { x: stationPixelX, y: stationPixelY },
-              mapDimensions: { width: mapWidth, height: mapHeight }
-            });
-          }
           
           return (
             <div 
