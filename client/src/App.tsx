@@ -14,6 +14,7 @@ function Router() {
     <Switch>
       <Route path="/" component={BusMonitor} />
       <Route path="/alert-simulator" component={AlertSimulator} />
+      <Route path="/crowd-analytics" component={CrowdAnalytics} />
       <Route component={NotFound} />
     </Switch>
   );
