@@ -646,12 +646,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         })()}
         
         {/* Bus Stations - only show if stations visibility is enabled */}
-        {showStations && stations.filter(station => {
-          // Show all stations if no routes are selected
-          if (selectedRoutes.length === 0) return true;
-          // Show station if it belongs to any selected route (simplified - in real app would have route-station mapping)
-          return selectedRoutes.length > 0;
-        }).map((station) => (
+        {showStations && stations.map((station) => (
           <div 
             key={station.id}
             className="absolute z-20 cursor-pointer"
