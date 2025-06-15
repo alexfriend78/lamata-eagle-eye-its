@@ -267,7 +267,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
             <CardContent>
               <div className="relative bg-black rounded-lg overflow-hidden">
                 <video
-                  key={stationDetails.id} // Force re-render when station changes
+                  key={stationDetails.id}
                   src={getStationVideoSrc()}
                   loop
                   muted
@@ -276,16 +276,34 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                   preload="metadata"
                   className="w-full h-64 object-cover"
                   style={{ minHeight: '256px' }}
+                  onError={(e) => {
+                    const video = e.target as HTMLVideoElement;
+                    console.error('Video error:', {
+                      src: video.src,
+                      error: video.error,
+                      networkState: video.networkState,
+                      readyState: video.readyState
+                    });
+                  }}
+                  onLoadStart={() => console.log('Video load started')}
+                  onCanPlay={() => console.log('Video can play')}
+                  onLoadedMetadata={() => console.log('Video metadata loaded')}
                 />
                 
                 {/* Video status overlay */}
                 <div className="absolute top-2 left-2 bg-black/80 text-white px-2 py-1 rounded text-xs">
-                  🔴 LIVE CCTV FEED
+                  LIVE CCTV FEED
                 </div>
                 
-                {/* Simple play instruction */}
-                <div className="absolute bottom-2 left-2 bg-black/80 text-white px-2 py-1 rounded text-xs">
-                  Click ▶ to play video
+                {/* Test direct link */}
+                <div className="absolute bottom-2 left-2">
+                  <a 
+                    href={getStationVideoSrc()} 
+                    target="_blank" 
+                    className="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700"
+                  >
+                    Open Video Direct
+                  </a>
                 </div>
                 <div className="absolute bottom-2 right-2 flex gap-2">
                   <Button
