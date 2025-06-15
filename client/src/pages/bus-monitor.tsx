@@ -68,6 +68,11 @@ export default function BusMonitor() {
   };
 
   const criticalAlert = alerts?.find(alert => alert.severity === "critical");
+  
+  // Find the most recent active alert with highest priority
+  const priorityOrder = { P1: 1, P2: 2, P3: 3, P4: 4, P5: 5 };
+  const highestPriorityAlert = alerts?.filter(alert => alert.isActive)
+    .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])[0];
 
   const toggleRouteHighlight = (routeId: number) => {
     setSelectedRoutes(prev => 
@@ -375,7 +380,7 @@ export default function BusMonitor() {
       <EmergencyAlertSystem
         buses={buses || []}
         stations={stations || []}
-        activeAlert={activeAlert}
+        activeAlert={highestPriorityAlert || activeAlert}
         onAlertDismiss={() => setActiveAlert(null)}
         onAlertCreate={(alert) => setActiveAlert(alert)}
       />
