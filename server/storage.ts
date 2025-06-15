@@ -165,29 +165,96 @@ export class MemStorage implements IStorage {
       });
     });
 
-    // Create routes based on Lagos BRT system - comprehensive zone coverage
+    // Create routes with aesthetic customization options
     const routesData = [
-      { routeNumber: "1", name: "Blue Line - Northern Corridor", color: "#1E40AF" },
-      { routeNumber: "2", name: "Red Line - Main Diagonal", color: "#DC2626" },
-      { routeNumber: "3", name: "Green Line - Upper Express", color: "#059669" },
-      { routeNumber: "4", name: "Orange Line - Central Spine", color: "#EA580C" },
-      { routeNumber: "5", name: "Purple Line - Southern Express", color: "#7C3AED" },
-      { routeNumber: "6", name: "Teal Line - Coastal Edge", color: "#0D9488" },
-      { routeNumber: "7", name: "Yellow Line - Western Spine", color: "#CA8A04" },
-      { routeNumber: "8", name: "Pink Line - Central Axis", color: "#BE185D" },
-      { routeNumber: "9", name: "Cyan Line - Eastern Spine", color: "#0891B2" },
-      { routeNumber: "10", name: "Brown Line - Cross Diagonal", color: "#A16207" },
-      { routeNumber: "11", name: "Lime Line - Orbital Ring", color: "#65A30D" },
-      { routeNumber: "12", name: "Indigo Line - Figure Eight", color: "#4338CA" },
-      { routeNumber: "13", name: "Violet Line - Grand Circle", color: "#8B5CF6" },
-      { routeNumber: "14", name: "Gold Line - Mountain Ridge", color: "#D97706" },
-      { routeNumber: "15", name: "Silver Line - River Flow", color: "#6B7280" },
-      { routeNumber: "16", name: "Coral Line - Wave Pattern", color: "#F97316" }
+      { 
+        routeNumber: "1", name: "Blue Line - Northern Corridor", color: "#1E40AF",
+        lineStyle: "solid", lineWidth: 4, opacity: 1.0, pattern: "none", animation: "none"
+      },
+      { 
+        routeNumber: "2", name: "Red Line - Main Diagonal", color: "#DC2626",
+        lineStyle: "solid", lineWidth: 5, opacity: 0.9, pattern: "arrows", animation: "flow"
+      },
+      { 
+        routeNumber: "3", name: "Green Line - Upper Express", color: "#059669",
+        lineStyle: "dashed", lineWidth: 3, opacity: 1.0, pattern: "none", animation: "none"
+      },
+      { 
+        routeNumber: "4", name: "Orange Line - Central Spine", color: "#EA580C",
+        lineStyle: "solid", lineWidth: 6, opacity: 0.8, pattern: "gradient", animation: "glow",
+        gradientEnd: "#F97316", glowColor: "#FB923C"
+      },
+      { 
+        routeNumber: "5", name: "Purple Line - Southern Express", color: "#7C3AED",
+        lineStyle: "solid", lineWidth: 4, opacity: 1.0, pattern: "dots", animation: "pulse"
+      },
+      { 
+        routeNumber: "6", name: "Teal Line - Coastal Edge", color: "#0D9488",
+        lineStyle: "dotted", lineWidth: 3, opacity: 0.9, pattern: "none", animation: "none"
+      },
+      { 
+        routeNumber: "7", name: "Yellow Line - Western Spine", color: "#CA8A04",
+        lineStyle: "solid", lineWidth: 4, opacity: 1.0, pattern: "arrows", animation: "flow"
+      },
+      { 
+        routeNumber: "8", name: "Pink Line - Central Axis", color: "#BE185D",
+        lineStyle: "double", lineWidth: 5, opacity: 0.8, pattern: "gradient", animation: "glow",
+        gradientEnd: "#F472B6", glowColor: "#FBCFE8"
+      },
+      { 
+        routeNumber: "9", name: "Cyan Line - Eastern Spine", color: "#0891B2",
+        lineStyle: "solid", lineWidth: 3, opacity: 1.0, pattern: "dots", animation: "none"
+      },
+      { 
+        routeNumber: "10", name: "Brown Line - Cross Diagonal", color: "#A16207",
+        lineStyle: "dashed", lineWidth: 4, opacity: 0.9, pattern: "arrows", animation: "flow"
+      },
+      { 
+        routeNumber: "11", name: "Lime Line - Orbital Ring", color: "#65A30D",
+        lineStyle: "solid", lineWidth: 5, opacity: 0.7, pattern: "gradient", animation: "pulse",
+        gradientEnd: "#84CC16", glowColor: "#BEF264"
+      },
+      { 
+        routeNumber: "12", name: "Indigo Line - Figure Eight", color: "#4338CA",
+        lineStyle: "solid", lineWidth: 4, opacity: 1.0, pattern: "dots", animation: "glow",
+        glowColor: "#A5B4FC"
+      },
+      { 
+        routeNumber: "13", name: "Violet Line - Grand Circle", color: "#8B5CF6",
+        lineStyle: "solid", lineWidth: 6, opacity: 0.8, pattern: "gradient", animation: "pulse",
+        gradientEnd: "#C4B5FD", glowColor: "#DDD6FE"
+      },
+      { 
+        routeNumber: "14", name: "Gold Line - Mountain Ridge", color: "#D97706",
+        lineStyle: "double", lineWidth: 4, opacity: 1.0, pattern: "arrows", animation: "glow",
+        glowColor: "#FCD34D"
+      },
+      { 
+        routeNumber: "15", name: "Silver Line - River Flow", color: "#6B7280",
+        lineStyle: "solid", lineWidth: 3, opacity: 0.9, pattern: "dots", animation: "flow"
+      },
+      { 
+        routeNumber: "16", name: "Coral Line - Wave Pattern", color: "#F97316",
+        lineStyle: "dotted", lineWidth: 5, opacity: 0.8, pattern: "gradient", animation: "pulse",
+        gradientEnd: "#FDBA74", glowColor: "#FED7AA"
+      }
     ];
 
     routesData.forEach(route => {
       const id = this.currentRouteId++;
-      this.routes.set(id, { id, ...route, isActive: true });
+      this.routes.set(id, { 
+        id, 
+        ...route, 
+        isActive: true,
+        // Add default values for missing aesthetic properties
+        lineStyle: route.lineStyle || "solid",
+        lineWidth: route.lineWidth || 3,
+        opacity: route.opacity || 1.0,
+        pattern: route.pattern || "none",
+        animation: route.animation || "none",
+        glowColor: route.glowColor || null,
+        gradientEnd: route.gradientEnd || null
+      });
     });
 
     // Create buses for all 16 zone networks - comprehensive coverage
@@ -339,7 +406,14 @@ export class MemStorage implements IStorage {
       routeNumber: route.routeNumber,
       name: route.name,
       color: route.color || "#1976D2",
-      isActive: route.isActive ?? true
+      isActive: route.isActive ?? true,
+      lineStyle: route.lineStyle || "solid",
+      lineWidth: route.lineWidth || 3,
+      opacity: route.opacity || 1.0,
+      pattern: route.pattern || "none",
+      animation: route.animation || "none",
+      glowColor: route.glowColor || null,
+      gradientEnd: route.gradientEnd || null
     };
     this.routes.set(id, newRoute);
     return newRoute;

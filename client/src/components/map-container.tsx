@@ -151,25 +151,123 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         height="720"
         style={{ zIndex: 10 + routeIndex }}
       >
-        {/* Route line with shadow effect */}
-        <polyline
-          points={offsetPoints.map(p => `${p.x + 2},${p.y + 2}`).join(' ')}
-          fill="none"
-          stroke="rgba(0,0,0,0.3)"
-          strokeWidth={isHighlighted ? "10" : "8"}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        <polyline
-          points={offsetPoints.map(p => `${p.x},${p.y}`).join(' ')}
-          fill="none"
-          stroke={route.color}
-          strokeWidth={isHighlighted ? "8" : "6"}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className={isHighlighted ? "animate-pulse" : ""}
-          opacity={isHighlighted ? "1" : "0.9"}
-        />
+        {/* Create gradients and filters for aesthetic effects */}
+        <defs>
+          {(route.pattern === "gradient" && route.gradientEnd) && (
+            <linearGradient id={`gradient-${route.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor={route.color} />
+              <stop offset="100%" stopColor={route.gradientEnd} />
+            </linearGradient>
+          )}
+          {route.glowColor && (
+            <filter id={`glow-${route.id}`} x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+              <feMerge> 
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/> 
+              </feMerge>
+            </filter>
+          )}
+        </defs>
+
+        {/* Build stroke pattern based on line style */}
+        {(() => {
+          const getStrokePattern = () => {
+            switch (route.lineStyle || "solid") {
+              case "dashed": return "12,6";
+              case "dotted": return "3,4";
+              default: return undefined;
+            }
+          };
+
+          const getAnimationClass = () => {
+            switch (route.animation || "none") {
+              case "flow": return "animate-pulse";
+              case "pulse": return "animate-bounce";
+              case "glow": return "animate-pulse";
+              default: return isHighlighted ? "animate-pulse" : "";
+            }
+          };
+
+          const strokeColor = (route.pattern === "gradient" && route.gradientEnd) 
+            ? `url(#gradient-${route.id})` 
+            : route.color;
+
+          const lineWidth = route.lineWidth || 6;
+          const opacity = route.opacity || (isHighlighted ? 1 : 0.9);
+
+          return (
+            <>
+              {/* Shadow effect */}
+              <polyline
+                points={offsetPoints.map(p => `${p.x + 2},${p.y + 2}`).join(' ')}
+                fill="none"
+                stroke="rgba(0,0,0,0.3)"
+                strokeWidth={isHighlighted ? lineWidth + 2 : lineWidth}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+
+              {/* Double line background effect */}
+              {route.lineStyle === "double" && (
+                <polyline
+                  points={offsetPoints.map(p => `${p.x},${p.y}`).join(' ')}
+                  fill="none"
+                  stroke={route.color}
+                  strokeWidth={lineWidth + 4}
+                  strokeOpacity={opacity * 0.4}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              )}
+
+              {/* Main route line */}
+              <polyline
+                points={offsetPoints.map(p => `${p.x},${p.y}`).join(' ')}
+                fill="none"
+                stroke={strokeColor}
+                strokeWidth={lineWidth}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray={getStrokePattern()}
+                className={getAnimationClass()}
+                opacity={opacity}
+                filter={route.glowColor ? `url(#glow-${route.id})` : undefined}
+              />
+
+              {/* Pattern overlays */}
+              {route.pattern === "arrows" && offsetPoints.map((point, index) => {
+                if (index === 0 || index % 4 !== 0) return null;
+                const prevPoint = offsetPoints[index - 1];
+                const angle = Math.atan2(point.y - prevPoint.y, point.x - prevPoint.x) * 180 / Math.PI;
+                
+                return (
+                  <polygon
+                    key={`arrow-${index}`}
+                    points="0,0 -10,-4 -10,4"
+                    fill={route.color}
+                    opacity={opacity}
+                    transform={`translate(${point.x}, ${point.y}) rotate(${angle})`}
+                  />
+                );
+              })}
+
+              {route.pattern === "dots" && offsetPoints.map((point, index) => {
+                if (index % 6 !== 0) return null;
+                return (
+                  <circle
+                    key={`dot-${index}`}
+                    cx={point.x}
+                    cy={point.y}
+                    r="3"
+                    fill={route.color}
+                    opacity={opacity}
+                  />
+                );
+              })}
+            </>
+          );
+        })()}
         
         {/* Route number label at multiple points */}
         {offsetPoints.length > 4 && [

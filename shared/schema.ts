@@ -8,6 +8,14 @@ export const routes = pgTable("routes", {
   name: text("name").notNull(),
   color: text("color").notNull().default("#1976D2"),
   isActive: boolean("is_active").notNull().default(true),
+  // Aesthetic customization fields
+  lineStyle: text("line_style").notNull().default("solid"), // solid, dashed, dotted, double
+  lineWidth: integer("line_width").notNull().default(3), // 1-8 pixels
+  opacity: real("opacity").notNull().default(1.0), // 0.1-1.0
+  pattern: text("pattern").notNull().default("none"), // none, arrows, dots, gradient
+  animation: text("animation").notNull().default("none"), // none, flow, pulse, glow
+  glowColor: text("glow_color"), // optional glow effect color
+  gradientEnd: text("gradient_end"), // optional gradient end color
 });
 
 export const stations = pgTable("stations", {
