@@ -229,115 +229,120 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         {/* Background Map Layer */}
         {showMap && (
           <div 
-            className="absolute inset-0 z-0"
+            className="absolute inset-0"
             style={{
-              backgroundColor: theme === 'dark' ? '#1e293b' : '#f1f5f9',
-              backgroundImage: `
-                radial-gradient(circle at 200px 300px, ${theme === 'dark' ? 'rgba(59, 130, 246, 0.1)' : 'rgba(59, 130, 246, 0.05)'} 0%, transparent 50%),
-                radial-gradient(circle at 1000px 400px, ${theme === 'dark' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(34, 197, 94, 0.05)'} 0%, transparent 50%),
-                linear-gradient(135deg, ${theme === 'dark' ? 'rgba(55, 65, 81, 0.8)' : 'rgba(243, 244, 246, 0.8)'} 0%, ${theme === 'dark' ? 'rgba(31, 41, 55, 0.9)' : 'rgba(229, 231, 235, 0.9)'} 100%)
-              `,
-              opacity: 0.6
+              zIndex: 1,
+              backgroundColor: theme === 'dark' ? '#0f172a' : '#e2e8f0',
+              border: `2px solid ${theme === 'dark' ? '#1e293b' : '#cbd5e1'}`,
             }}
           >
-            {/* Geographical Features */}
-            <svg
-              width="1280"
-              height="720"
-              className="absolute inset-0"
-              viewBox="0 0 1280 720"
-            >
-              {/* Water Bodies - Lagos Lagoon */}
-              <path 
-                d="M 600 300 Q 800 280 1000 320 Q 1200 360 1250 450 Q 1200 520 1000 540 Q 800 520 600 480 Q 500 440 500 380 Q 520 340 600 300 Z" 
-                fill={theme === 'dark' ? 'rgba(59, 130, 246, 0.3)' : 'rgba(59, 130, 246, 0.2)'} 
-                stroke={theme === 'dark' ? 'rgba(59, 130, 246, 0.5)' : 'rgba(59, 130, 246, 0.3)'} 
-                strokeWidth="2"
-              />
-              
-              {/* Atlantic Ocean */}
-              <rect 
-                x="1000" 
-                y="500" 
-                width="280" 
-                height="220" 
-                fill={theme === 'dark' ? 'rgba(59, 130, 246, 0.2)' : 'rgba(59, 130, 246, 0.15)'} 
-                stroke={theme === 'dark' ? 'rgba(59, 130, 246, 0.4)' : 'rgba(59, 130, 246, 0.25)'} 
-                strokeWidth="1"
-              />
-              
-              {/* Major Highways */}
-              <path 
-                d="M 0 200 Q 200 180 400 190 Q 600 200 800 220 Q 1000 240 1200 270" 
-                stroke={theme === 'dark' ? 'rgba(156, 163, 175, 0.4)' : 'rgba(107, 114, 128, 0.3)'} 
-                strokeWidth="4" 
-                fill="none" 
-                strokeDasharray="20,10"
-              />
-              <path 
-                d="M 100 400 Q 300 380 500 390 Q 700 400 900 420 Q 1100 440 1280 460" 
-                stroke={theme === 'dark' ? 'rgba(156, 163, 175, 0.4)' : 'rgba(107, 114, 128, 0.3)'} 
-                strokeWidth="4" 
-                fill="none" 
-                strokeDasharray="20,10"
-              />
-              
-              {/* Area Labels */}
-              <text 
-                x="300" 
-                y="250" 
-                fill={theme === 'dark' ? 'rgba(209, 213, 219, 0.6)' : 'rgba(55, 65, 81, 0.5)'} 
-                fontSize="18" 
-                fontWeight="bold"
-                textAnchor="middle"
-              >
-                IKEJA
-              </text>
-              <text 
-                x="200" 
-                y="500" 
-                fill={theme === 'dark' ? 'rgba(209, 213, 219, 0.6)' : 'rgba(55, 65, 81, 0.5)'} 
-                fontSize="18" 
-                fontWeight="bold"
-                textAnchor="middle"
-              >
-                IKORODU
-              </text>
-              <text 
-                x="1100" 
-                y="400" 
-                fill={theme === 'dark' ? 'rgba(209, 213, 219, 0.6)' : 'rgba(55, 65, 81, 0.5)'} 
-                fontSize="16" 
-                fontWeight="bold"
-                textAnchor="middle"
-              >
-                LAGOS ISLAND
-              </text>
-              <text 
-                x="1150" 
-                y="550" 
-                fill={theme === 'dark' ? 'rgba(209, 213, 219, 0.6)' : 'rgba(55, 65, 81, 0.5)'} 
-                fontSize="14" 
-                fontWeight="bold"
-                textAnchor="middle"
-              >
-                VICTORIA ISLAND
-              </text>
-              <text 
-                x="800" 
-                y="420" 
-                fill={theme === 'dark' ? 'rgba(96, 165, 250, 0.8)' : 'rgba(37, 99, 235, 0.6)'} 
-                fontSize="14" 
-                fontStyle="italic"
-                textAnchor="middle"
-              >
-                Lagos Lagoon
-              </text>
-            </svg>
+            {/* Clear visual indicator that map is active */}
+            <div className="absolute top-4 left-4">
+              <div className={`px-3 py-1 rounded ${theme === 'dark' ? 'bg-blue-600 text-white' : 'bg-blue-500 text-white'} text-sm font-medium`}>
+                MAP VIEW ACTIVE
+              </div>
+            </div>
             
-            {/* Lagos Area Overlay */}
+            {/* Lagos geographical features */}
+            <div className="w-full h-full relative">
+              {/* Water bodies */}
+              <div 
+                className="absolute"
+                style={{
+                  left: '600px',
+                  top: '300px',
+                  width: '400px',
+                  height: '200px',
+                  backgroundColor: theme === 'dark' ? '#1e40af' : '#3b82f6',
+                  opacity: 0.3,
+                  borderRadius: '50%',
+                  transform: 'rotate(-15deg)'
+                }}
+              />
+              <div 
+                className="absolute"
+                style={{
+                  left: '1000px',
+                  top: '500px',
+                  width: '280px',
+                  height: '220px',
+                  backgroundColor: theme === 'dark' ? '#1e40af' : '#3b82f6',
+                  opacity: 0.2,
+                }}
+              />
+              
+              {/* Land masses */}
+              <div 
+                className="absolute"
+                style={{
+                  left: '50px',
+                  top: '200px',
+                  width: '500px',
+                  height: '300px',
+                  backgroundColor: theme === 'dark' ? '#374151' : '#f3f4f6',
+                  opacity: 0.4,
+                  borderRadius: '30px',
+                  transform: 'rotate(5deg)'
+                }}
+              />
+              
+              {/* Area labels with clear backgrounds */}
+              <div className="absolute" style={{ left: '250px', top: '220px' }}>
+                <div className={`px-2 py-1 rounded text-sm font-bold ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`}>
+                  IKEJA
+                </div>
+              </div>
+              <div className="absolute" style={{ left: '150px', top: '470px' }}>
+                <div className={`px-2 py-1 rounded text-sm font-bold ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`}>
+                  IKORODU
+                </div>
+              </div>
+              <div className="absolute" style={{ left: '1050px', top: '370px' }}>
+                <div className={`px-2 py-1 rounded text-sm font-bold ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`}>
+                  LAGOS ISLAND
+                </div>
+              </div>
+              <div className="absolute" style={{ left: '1100px', top: '520px' }}>
+                <div className={`px-2 py-1 rounded text-xs font-bold ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`}>
+                  VICTORIA ISLAND
+                </div>
+              </div>
+              <div className="absolute" style={{ left: '750px', top: '390px' }}>
+                <div className={`px-2 py-1 rounded text-xs italic ${theme === 'dark' ? 'bg-blue-800 text-blue-200' : 'bg-blue-100 text-blue-800'}`}>
+                  Lagos Lagoon
+                </div>
+              </div>
+              
+              {/* Roads */}
+              <div 
+                className="absolute"
+                style={{
+                  left: '0px',
+                  top: '200px',
+                  width: '1200px',
+                  height: '4px',
+                  backgroundColor: theme === 'dark' ? '#6b7280' : '#9ca3af',
+                  opacity: 0.6,
+                  transform: 'rotate(2deg)'
+                }}
+              />
+              <div 
+                className="absolute"
+                style={{
+                  left: '100px',
+                  top: '400px',
+                  width: '1000px',
+                  height: '4px',
+                  backgroundColor: theme === 'dark' ? '#6b7280' : '#9ca3af',
+                  opacity: 0.6,
+                  transform: 'rotate(1deg)'
+                }}
+              />
+            </div>
+            
+            {/* Bottom right label */}
             <div className="absolute bottom-4 right-4">
-              <div className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'} opacity-40 select-none`}>
+              <div className={`px-3 py-2 rounded text-lg font-bold ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`}>
                 LAGOS, NIGERIA
               </div>
             </div>
