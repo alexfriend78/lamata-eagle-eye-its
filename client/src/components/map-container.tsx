@@ -25,88 +25,130 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   const getRoutePoints = (routeId: number) => {
     // Define routes using dynamic resolution for consistent coverage
     const routePaths: Record<number, { x: number; y: number }[]> = {
-      1: [ // Northern Line - Main north-south spine
-        { x: mapWidth * 0.4, y: 0 }, { x: mapWidth * 0.42, y: mapHeight * 0.2 }, 
-        { x: mapWidth * 0.44, y: mapHeight * 0.4 }, { x: mapWidth * 0.46, y: mapHeight * 0.6 }, 
-        { x: mapWidth * 0.48, y: mapHeight * 0.8 }, { x: mapWidth * 0.5, y: mapHeight }
+      1: [ // Route 1: Oshodi - Abule-Egba (North-South line)
+        { x: mapWidth * 0.5, y: mapHeight * 0.6 }, // Oshodi Terminal 2
+        { x: mapWidth * 0.48, y: mapHeight * 0.58 }, // Bolade
+        { x: mapWidth * 0.46, y: mapHeight * 0.56 }, // Ladipo
+        { x: mapWidth * 0.44, y: mapHeight * 0.54 }, // Shogunle
+        { x: mapWidth * 0.42, y: mapHeight * 0.52 }, // PWD
+        { x: mapWidth * 0.40, y: mapHeight * 0.50 }, // Airport Junction
+        { x: mapWidth * 0.38, y: mapHeight * 0.48 }, // Ikeja Along
+        { x: mapWidth * 0.36, y: mapHeight * 0.46 }, // Ile Zik
+        { x: mapWidth * 0.34, y: mapHeight * 0.44 }, // Mangoro
+        { x: mapWidth * 0.32, y: mapHeight * 0.42 }, // Cement
+        { x: mapWidth * 0.30, y: mapHeight * 0.40 }, // Iyana Dopemu
+        { x: mapWidth * 0.28, y: mapHeight * 0.38 }, // Adealu
+        { x: mapWidth * 0.26, y: mapHeight * 0.36 }, // Iyana Ipaja Bus stop
+        { x: mapWidth * 0.24, y: mapHeight * 0.34 }, // Pleasure
+        { x: mapWidth * 0.22, y: mapHeight * 0.32 }, // Ile Epo
+        { x: mapWidth * 0.20, y: mapHeight * 0.30 }, // Super
+        { x: mapWidth * 0.18, y: mapHeight * 0.28 }  // Abule Egba
       ],
-      2: [ // Central Line - Main east-west artery
-        { x: 0, y: mapHeight * 0.5 }, { x: mapWidth * 0.2, y: mapHeight * 0.48 }, 
-        { x: mapWidth * 0.4, y: mapHeight * 0.5 }, { x: mapWidth * 0.6, y: mapHeight * 0.52 }, 
-        { x: mapWidth * 0.8, y: mapHeight * 0.5 }, { x: mapWidth, y: mapHeight * 0.52 }
+      2: [ // Route 2: Abule Egba - TBS/Obalende (Full north-south-central)
+        { x: mapWidth * 0.18, y: mapHeight * 0.28 }, // Abule Egba
+        { x: mapWidth * 0.20, y: mapHeight * 0.30 }, // Super
+        { x: mapWidth * 0.22, y: mapHeight * 0.32 }, // Ile Epo
+        { x: mapWidth * 0.24, y: mapHeight * 0.34 }, // Pleasure
+        { x: mapWidth * 0.26, y: mapHeight * 0.36 }, // Iyana Ipaja Bus stop
+        { x: mapWidth * 0.28, y: mapHeight * 0.38 }, // Adealu
+        { x: mapWidth * 0.30, y: mapHeight * 0.40 }, // Iyana Dopemu
+        { x: mapWidth * 0.32, y: mapHeight * 0.42 }, // Cement
+        { x: mapWidth * 0.34, y: mapHeight * 0.44 }, // Mangoro
+        { x: mapWidth * 0.36, y: mapHeight * 0.46 }, // Ile Zik
+        { x: mapWidth * 0.38, y: mapHeight * 0.48 }, // Ikeja Along
+        { x: mapWidth * 0.40, y: mapHeight * 0.50 }, // Airport Junction
+        { x: mapWidth * 0.42, y: mapHeight * 0.52 }, // PWD
+        { x: mapWidth * 0.44, y: mapHeight * 0.54 }, // Shogunle
+        { x: mapWidth * 0.46, y: mapHeight * 0.56 }, // Ladipo
+        { x: mapWidth * 0.48, y: mapHeight * 0.58 }, // Bolade
+        { x: mapWidth * 0.50, y: mapHeight * 0.60 }, // Oshodi Terminal 2
+        { x: mapWidth * 0.52, y: mapHeight * 0.62 }, // LASMA
+        { x: mapWidth * 0.54, y: mapHeight * 0.64 }, // Anthony
+        { x: mapWidth * 0.56, y: mapHeight * 0.66 }, // Westex
+        { x: mapWidth * 0.58, y: mapHeight * 0.68 }, // First Pedro
+        { x: mapWidth * 0.60, y: mapHeight * 0.70 }, // Charley Boy
+        { x: mapWidth * 0.62, y: mapHeight * 0.72 }, // Gbagada Phase 1
+        { x: mapWidth * 0.64, y: mapHeight * 0.74 }, // Iyana Oworo
+        { x: mapWidth * 0.66, y: mapHeight * 0.76 }, // Adeniji
+        { x: mapWidth * 0.68, y: mapHeight * 0.78 }, // Obalende
+        { x: mapWidth * 0.70, y: mapHeight * 0.80 }  // CMS Terminal
       ],
-      3: [ // Circle Line - Inner ring
-        { x: mapWidth * 0.35, y: mapHeight * 0.25 }, { x: mapWidth * 0.6, y: mapHeight * 0.3 }, 
-        { x: mapWidth * 0.7, y: mapHeight * 0.5 }, { x: mapWidth * 0.6, y: mapHeight * 0.7 }, 
-        { x: mapWidth * 0.35, y: mapHeight * 0.75 }, { x: mapWidth * 0.25, y: mapHeight * 0.5 }
+      3: [ // Route 3: Ikorodu - TBS (Southwest to Central)
+        { x: mapWidth * 0.15, y: mapHeight * 0.85 }, // Ikorodu Terminal
+        { x: mapWidth * 0.17, y: mapHeight * 0.83 }, // Benson
+        { x: mapWidth * 0.19, y: mapHeight * 0.81 }, // ARUNA
+        { x: mapWidth * 0.21, y: mapHeight * 0.79 }, // AGRIC TERMINAL
+        { x: mapWidth * 0.23, y: mapHeight * 0.77 }, // OWUTU IDIROKO
+        { x: mapWidth * 0.25, y: mapHeight * 0.75 }, // OGOLONTO
+        { x: mapWidth * 0.27, y: mapHeight * 0.73 }, // MAJIDUN AWORI
+        { x: mapWidth * 0.29, y: mapHeight * 0.71 }, // AJEGUNLE
+        { x: mapWidth * 0.31, y: mapHeight * 0.69 }, // IRAWO
+        { x: mapWidth * 0.33, y: mapHeight * 0.67 }, // IDERA
+        { x: mapWidth * 0.35, y: mapHeight * 0.65 }, // OWODEONIRIN
+        { x: mapWidth * 0.37, y: mapHeight * 0.63 }, // MILE12 TERMINAL
+        { x: mapWidth * 0.39, y: mapHeight * 0.61 }, // KETU
+        { x: mapWidth * 0.41, y: mapHeight * 0.59 }, // OJOTA
+        { x: mapWidth * 0.43, y: mapHeight * 0.57 }, // NEWGARAGE
+        { x: mapWidth * 0.45, y: mapHeight * 0.55 }, // Maryland
+        { x: mapWidth * 0.47, y: mapHeight * 0.53 }, // Idiroko
+        { x: mapWidth * 0.49, y: mapHeight * 0.51 }, // Anthony
+        { x: mapWidth * 0.51, y: mapHeight * 0.49 }, // Obanikoro
+        { x: mapWidth * 0.53, y: mapHeight * 0.47 }, // Palmgroove
+        { x: mapWidth * 0.55, y: mapHeight * 0.45 }, // Onipanu
+        { x: mapWidth * 0.57, y: mapHeight * 0.43 }, // Fadeyi
+        { x: mapWidth * 0.59, y: mapHeight * 0.41 }, // MOSALASI TERMINAL
+        { x: mapWidth * 0.61, y: mapHeight * 0.39 }, // BARRAKS
+        { x: mapWidth * 0.63, y: mapHeight * 0.37 }, // Stadium
+        { x: mapWidth * 0.65, y: mapHeight * 0.35 }, // Iponri
+        { x: mapWidth * 0.67, y: mapHeight * 0.33 }, // Costain
+        { x: mapWidth * 0.69, y: mapHeight * 0.31 }, // Leventis
+        { x: mapWidth * 0.71, y: mapHeight * 0.29 }, // CMS Terminal
+        { x: mapWidth * 0.73, y: mapHeight * 0.27 }, // MARINA TRAIN STATION
+        { x: mapWidth * 0.75, y: mapHeight * 0.25 }  // TBS Terminal
       ],
-      4: [ // District Line - Southern cross-city
-        { x: 0, y: mapHeight * 0.75 }, { x: mapWidth * 0.25, y: mapHeight * 0.74 }, 
-        { x: mapWidth * 0.5, y: mapHeight * 0.75 }, { x: mapWidth * 0.75, y: mapHeight * 0.76 }, 
-        { x: mapWidth, y: mapHeight * 0.75 }
+      4: [ // Route 4: Ikorodu - Fadeyi (Southwest to Mid-Central)
+        { x: mapWidth * 0.15, y: mapHeight * 0.85 }, // Ikorodu Terminal
+        { x: mapWidth * 0.17, y: mapHeight * 0.83 }, // Benson
+        { x: mapWidth * 0.19, y: mapHeight * 0.81 }, // ARUNA
+        { x: mapWidth * 0.21, y: mapHeight * 0.79 }, // AGRIC TERMINAL
+        { x: mapWidth * 0.23, y: mapHeight * 0.77 }, // OWUTU IDIROKO
+        { x: mapWidth * 0.25, y: mapHeight * 0.75 }, // OGOLONTO
+        { x: mapWidth * 0.27, y: mapHeight * 0.73 }, // MAJIDUN AWORI
+        { x: mapWidth * 0.29, y: mapHeight * 0.71 }, // AJEGUNLE
+        { x: mapWidth * 0.31, y: mapHeight * 0.69 }, // IRAWO
+        { x: mapWidth * 0.33, y: mapHeight * 0.67 }, // IDERA
+        { x: mapWidth * 0.35, y: mapHeight * 0.65 }, // OWODEONIRIN
+        { x: mapWidth * 0.37, y: mapHeight * 0.63 }, // MILE12 TERMINAL
+        { x: mapWidth * 0.39, y: mapHeight * 0.61 }, // KETU
+        { x: mapWidth * 0.41, y: mapHeight * 0.59 }, // OJOTA
+        { x: mapWidth * 0.43, y: mapHeight * 0.57 }, // NEWGARAGE
+        { x: mapWidth * 0.45, y: mapHeight * 0.55 }, // Maryland
+        { x: mapWidth * 0.47, y: mapHeight * 0.53 }, // Idiroko
+        { x: mapWidth * 0.49, y: mapHeight * 0.51 }, // Anthony
+        { x: mapWidth * 0.51, y: mapHeight * 0.49 }, // Obanikoro
+        { x: mapWidth * 0.53, y: mapHeight * 0.47 }, // Palmgroove
+        { x: mapWidth * 0.55, y: mapHeight * 0.45 }, // Onipanu
+        { x: mapWidth * 0.57, y: mapHeight * 0.43 }  // Fadeyi
       ],
-      5: [ // Piccadilly Line - Northwest diagonal
-        { x: 0, y: mapHeight * 0.2 }, { x: mapWidth * 0.2, y: mapHeight * 0.3 }, 
-        { x: mapWidth * 0.4, y: mapHeight * 0.4 }, { x: mapWidth * 0.6, y: mapHeight * 0.5 }, 
-        { x: mapWidth * 0.8, y: mapHeight * 0.6 }
-      ],
-      6: [ // Metropolitan Line - Northern express
-        { x: 0, y: mapHeight * 0.3 }, { x: mapWidth * 0.25, y: mapHeight * 0.25 }, 
-        { x: mapWidth * 0.5, y: mapHeight * 0.2 }, { x: mapWidth * 0.75, y: mapHeight * 0.15 }, 
-        { x: mapWidth, y: mapHeight * 0.1 }
-      ],
-      7: [ // Jubilee Line - Southeast curve
-        { x: mapWidth * 0.3, y: mapHeight * 0.6 }, { x: mapWidth * 0.45, y: mapHeight * 0.65 }, 
-        { x: mapWidth * 0.6, y: mapHeight * 0.7 }, { x: mapWidth * 0.75, y: mapHeight * 0.75 }, 
-        { x: mapWidth * 0.9, y: mapHeight * 0.8 }
-      ],
-      8: [ // Victoria Line - Express north-south
-        { x: mapWidth * 0.6, y: 0 }, { x: mapWidth * 0.61, y: mapHeight * 0.25 }, 
-        { x: mapWidth * 0.62, y: mapHeight * 0.5 }, { x: mapWidth * 0.63, y: mapHeight * 0.75 }, 
-        { x: mapWidth * 0.64, y: mapHeight }
-      ],
-      9: [ // Waterloo & City - Short connector
-        { x: mapWidth * 0.5, y: mapHeight * 0.48 }, { x: mapWidth * 0.55, y: mapHeight * 0.49 }, 
-        { x: mapWidth * 0.6, y: mapHeight * 0.51 }, { x: mapWidth * 0.65, y: mapHeight * 0.52 }
-      ],
-      10: [ // Hammersmith & City - Western branch
-        { x: 0, y: mapHeight * 0.4 }, { x: mapWidth * 0.2, y: mapHeight * 0.39 }, 
-        { x: mapWidth * 0.4, y: mapHeight * 0.4 }, { x: mapWidth * 0.6, y: mapHeight * 0.41 }, 
-        { x: mapWidth * 0.8, y: mapHeight * 0.4 }
-      ],
-      11: [ // Bakerloo Line - Southwest diagonal
-        { x: mapWidth * 0.15, y: mapHeight * 0.2 }, { x: mapWidth * 0.3, y: mapHeight * 0.35 }, 
-        { x: mapWidth * 0.45, y: mapHeight * 0.5 }, { x: mapWidth * 0.6, y: mapHeight * 0.65 }, 
-        { x: mapWidth * 0.75, y: mapHeight * 0.8 }
-      ],
-      12: [ // DLR - Eastern branch network
-        { x: mapWidth * 0.7, y: mapHeight * 0.4 }, { x: mapWidth * 0.75, y: mapHeight * 0.42 }, 
-        { x: mapWidth * 0.8, y: mapHeight * 0.45 }, { x: mapWidth * 0.9, y: mapHeight * 0.48 }, 
-        { x: mapWidth, y: mapHeight * 0.5 }
-      ],
-      13: [ // Elizabeth Line - East-west express
-        { x: 0, y: mapHeight * 0.6 }, { x: mapWidth * 0.2, y: mapHeight * 0.59 }, 
-        { x: mapWidth * 0.4, y: mapHeight * 0.6 }, { x: mapWidth * 0.6, y: mapHeight * 0.61 }, 
-        { x: mapWidth * 0.8, y: mapHeight * 0.6 }, { x: mapWidth, y: mapHeight * 0.61 }
-      ],
-      14: [ // GO Transit Outer Ring - Suburban orbital
-        { x: mapWidth * 0.1, y: mapHeight * 0.1 }, { x: mapWidth * 0.4, y: mapHeight * 0.05 }, 
-        { x: mapWidth * 0.7, y: mapHeight * 0.1 }, { x: mapWidth * 0.9, y: mapHeight * 0.3 }, 
-        { x: mapWidth * 0.95, y: mapHeight * 0.6 }, { x: mapWidth * 0.9, y: mapHeight * 0.9 }, 
-        { x: mapWidth * 0.6, y: mapHeight * 0.95 }, { x: mapWidth * 0.3, y: mapHeight * 0.9 }, 
-        { x: mapWidth * 0.05, y: mapHeight * 0.6 }, { x: mapWidth * 0.1, y: mapHeight * 0.3 }
-      ],
-      15: [ // GO Transit Radial - Airport express
-        { x: mapWidth * 0.5, y: mapHeight * 0.5 }, { x: mapWidth * 0.65, y: mapHeight * 0.35 }, 
-        { x: mapWidth * 0.8, y: mapHeight * 0.2 }, { x: mapWidth * 0.95, y: mapHeight * 0.05 }
-      ],
-      16: [ // Overground - Orbital connector
-        { x: mapWidth * 0.2, y: mapHeight * 0.5 }, { x: mapWidth * 0.25, y: mapHeight * 0.35 }, 
-        { x: mapWidth * 0.35, y: mapHeight * 0.25 }, { x: mapWidth * 0.5, y: mapHeight * 0.2 }, 
-        { x: mapWidth * 0.65, y: mapHeight * 0.25 }, { x: mapWidth * 0.75, y: mapHeight * 0.35 }, 
-        { x: mapWidth * 0.8, y: mapHeight * 0.5 }, { x: mapWidth * 0.75, y: mapHeight * 0.65 }, 
-        { x: mapWidth * 0.65, y: mapHeight * 0.75 }, { x: mapWidth * 0.5, y: mapHeight * 0.8 }, 
-        { x: mapWidth * 0.35, y: mapHeight * 0.75 }, { x: mapWidth * 0.25, y: mapHeight * 0.65 }
+      5: [ // Route 5: Ikorodu - Oshodi (Southwest to Central)
+        { x: mapWidth * 0.15, y: mapHeight * 0.85 }, // Ikorodu Terminal
+        { x: mapWidth * 0.17, y: mapHeight * 0.83 }, // Benson
+        { x: mapWidth * 0.19, y: mapHeight * 0.81 }, // ARUNA
+        { x: mapWidth * 0.21, y: mapHeight * 0.79 }, // AGRIC TERMINAL
+        { x: mapWidth * 0.23, y: mapHeight * 0.77 }, // OWUTU IDIROKO
+        { x: mapWidth * 0.25, y: mapHeight * 0.75 }, // OGOLONTO
+        { x: mapWidth * 0.27, y: mapHeight * 0.73 }, // MAJIDUN AWORI
+        { x: mapWidth * 0.29, y: mapHeight * 0.71 }, // AJEGUNLE
+        { x: mapWidth * 0.31, y: mapHeight * 0.69 }, // IRAWO
+        { x: mapWidth * 0.33, y: mapHeight * 0.67 }, // IDERA
+        { x: mapWidth * 0.35, y: mapHeight * 0.65 }, // OWODEONIRIN
+        { x: mapWidth * 0.37, y: mapHeight * 0.63 }, // MILE12 TERMINAL
+        { x: mapWidth * 0.39, y: mapHeight * 0.61 }, // KETU
+        { x: mapWidth * 0.41, y: mapHeight * 0.59 }, // OJOTA
+        { x: mapWidth * 0.43, y: mapHeight * 0.57 }, // NEWGARAGE
+        { x: mapWidth * 0.45, y: mapHeight * 0.55 }, // Maryland
+        { x: mapWidth * 0.47, y: mapHeight * 0.53 }, // Anthony
+        { x: mapWidth * 0.50, y: mapHeight * 0.60 }  // Oshodi Terminal 3
       ]
     };
     return routePaths[routeId] || [];
@@ -529,23 +571,20 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         {/* Major Interchange Stations - London Underground style */}
         {(() => {
           const interchanges = [
-            // King's Cross / St. Pancras equivalent - Major north-south hub
-            { x: mapWidth * 0.42, y: mapHeight * 0.4, routes: [1, 2, 8, 10], name: "Lagos Central" },
-            // Oxford Circus equivalent - Central interchange  
-            { x: mapWidth * 0.5, y: mapHeight * 0.5, routes: [2, 8, 13], name: "Victoria Island Hub" },
-            // Liverpool Street equivalent - Eastern interchange
-            { x: mapWidth * 0.7, y: mapHeight * 0.45, routes: [2, 5, 12], name: "Mainland Terminal" },
-            // Waterloo equivalent - Southern hub
-            { x: mapWidth * 0.45, y: mapHeight * 0.7, routes: [3, 4, 7], name: "Ikorodu Interchange" },
-            // Paddington equivalent - Western terminus
-            { x: mapWidth * 0.2, y: mapHeight * 0.4, routes: [2, 6, 10, 11], name: "Ikeja Gateway" },
-            // Bank/Monument equivalent - Financial district
-            { x: mapWidth * 0.6, y: mapHeight * 0.55, routes: [2, 8, 9, 13], name: "Business District" },
-            // Circle Line connections
-            { x: mapWidth * 0.35, y: mapHeight * 0.25, routes: [3, 6], name: "Northern Gate" },
-            { x: mapWidth * 0.7, y: mapHeight * 0.5, routes: [3, 12], name: "Eastern Cross" },
-            { x: mapWidth * 0.5, y: mapHeight * 0.75, routes: [3, 4], name: "Southern Bridge" },
-            { x: mapWidth * 0.3, y: mapHeight * 0.45, routes: [1, 3, 10], name: "Western Junction" }
+            // Oshodi - Major central hub connecting Routes 1, 2, and 5
+            { x: mapWidth * 0.50, y: mapHeight * 0.60, routes: [1, 2, 5], name: "Oshodi Terminal" },
+            // Anthony - Key interchange for Routes 2, 3, 4, and 5
+            { x: mapWidth * 0.49, y: mapHeight * 0.51, routes: [2, 3, 4, 5], name: "Anthony" },
+            // Abule Egba - Northern terminus for Routes 1 and 2
+            { x: mapWidth * 0.18, y: mapHeight * 0.28, routes: [1, 2], name: "Abule Egba" },
+            // Ikorodu - Southern terminus for Routes 3, 4, and 5
+            { x: mapWidth * 0.15, y: mapHeight * 0.85, routes: [3, 4, 5], name: "Ikorodu Terminal" },
+            // Fadeyi - Connection point for Routes 3 and 4
+            { x: mapWidth * 0.57, y: mapHeight * 0.43, routes: [3, 4], name: "Fadeyi" },
+            // Maryland - Shared station for Routes 3, 4, and 5
+            { x: mapWidth * 0.45, y: mapHeight * 0.55, routes: [3, 4, 5], name: "Maryland" },
+            // Ikeja Along - Airport connection on Routes 1 and 2
+            { x: mapWidth * 0.38, y: mapHeight * 0.48, routes: [1, 2], name: "Ikeja Along" }
           ];
 
           return interchanges

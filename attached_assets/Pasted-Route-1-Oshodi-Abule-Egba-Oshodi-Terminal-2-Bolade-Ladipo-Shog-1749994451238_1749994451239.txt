@@ -1,0 +1,125 @@
+Route 1
+    Oshodi - Abule-Egba
+        Oshodi Terminal 2
+        Bolade
+        Ladipo
+        Shogunle
+        PWD
+        Airport Junction
+        Ikeja Along
+        Ile Zik
+        Mangoro
+        Cement
+        Iyana Dopemu
+        Adealu
+        Iyana Ipaja Bus stop
+        Pleasure
+        Ile Epo
+        Super
+        Abule Egba
+Route 2
+    Abule Egba - TBS/Obalende
+        Abule Egba
+        Super
+        Ile Epo
+        Pleasure
+        Iyana Ipaja Bus stop
+        Adealu
+        Iyana Dopemu
+        Cement
+        Mangoro
+        Ile Zik
+        Ikeja Along
+        Airport Junction
+        PWD
+        Shogunle
+        Ladipo
+        Bolade
+        Oshodi Terminal 2
+        LASMA
+        Anthony
+        Westex
+        First Pedro
+        Charley Boy
+        Gbagada Phase 1
+        Iyana Oworo
+        Adeniji
+        Obalende
+        CMS Terminal
+Route 3    
+    IKORODU - TBS
+        Ikorodu Terminal
+        Benson
+        ARUNA
+        AGRIC TERMINAL
+        OWUTU IDIROKO
+        OGOLONTO
+        MAJIDUN AWORI
+        AJEGUNLE
+        IRAWO
+        IDERA
+        OWODEONIRIN
+        MILE12 TERMINAL
+        KETU
+        OJOTA
+        NEWGARAGE
+        Maryland
+        Idiroko
+        Anthony
+        Obanikoro
+        Palmgroove
+        Onipanu
+        Fadeyi
+        MOSALASI TERMINAL
+        BARRAKS
+        Stadium
+        Iponri
+        Costain
+        Leventis
+        CMS Terminal
+        MARINA TRAIN STATION
+        TBS Terminal
+Route 4
+    Ikorodu - Fadeyi    
+        Ikorodu Terminal
+        Benson
+        ARUNA
+        AGRIC TERMINAL
+        OWUTU IDIROKO
+        OGOLONTO
+        MAJIDUN AWORI
+        AJEGUNLE
+        IRAWO
+        IDERA
+        OWODEONIRIN
+        MILE12 TERMINAL
+        KETU
+        OJOTA
+        NEWGARAGE
+        Maryland
+        Idiroko
+        Anthony
+        Obanikoro
+        Palmgroove
+        Onipanu
+        Fadeyi
+Route 5
+    Ikorodu - Oshodi    
+        Ikorodu Terminal
+        Benson
+        ARUNA
+        AGRIC TERMINAL
+        OWUTU IDIROKO
+        OGOLONTO
+        MAJIDUN AWORI
+        AJEGUNLE
+        IRAWO
+        IDERA
+        OWODEONIRIN
+        MILE12 TERMINAL
+        KETU
+        OJOTA
+        NEWGARAGE
+        Maryland
+        Anthony
+        Oshodi Terminal 3
