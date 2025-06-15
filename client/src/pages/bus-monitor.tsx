@@ -95,13 +95,28 @@ export default function BusMonitor() {
       
       {/* Full Screen Header */}
       <header className={`${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-gray-100 border-gray-300'} border-b px-6 py-3`}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="text-2xl">🚌</div>
-            <h1 className="text-xl font-semibold">LAMATA - Eagle Eye ITS 🦅</h1>
+        <div className="flex flex-col space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="text-2xl">🚌</div>
+              <h1 className="text-xl font-semibold">LAMATA - Eagle Eye ITS 🦅</h1>
+            </div>
+            
+            <div className="flex items-center space-x-6">
+              {/* System Status */}
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-sm">System Online</span>
+              </div>
+              
+              <div className="text-sm text-gray-400">
+                {formatTime(currentTime)}
+              </div>
+            </div>
           </div>
-          
-          <div className="flex items-center space-x-6">
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-6">
             {/* Route Selection */}
             <div className="flex items-center space-x-2">
               <span className="text-sm font-medium">Highlight Routes:</span>
@@ -121,23 +136,7 @@ export default function BusMonitor() {
               </div>
             </div>
 
-            {/* Zone Selection */}
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium">Zones:</span>
-              <div className="flex space-x-1 flex-wrap">
-                {Array.from({ length: 16 }, (_, i) => i + 1).map((zone) => (
-                  <Button
-                    key={zone}
-                    onClick={() => setSelectedZone(selectedZone === zone ? null : zone)}
-                    variant={selectedZone === zone ? "default" : "outline"}
-                    size="sm"
-                    className="h-7 px-2 text-xs"
-                  >
-                    Z{zone}
-                  </Button>
-                ))}
-              </div>
-            </div>
+
 
             {/* Station Names Toggle */}
             <Button
@@ -191,15 +190,24 @@ export default function BusMonitor() {
             >
               <Settings className="h-4 w-4" />
             </Button>
-
-            {/* System Status */}
-            <div className="flex items-center space-x-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-              <span className="text-sm">System Online</span>
             </div>
             
-            <div className="text-sm text-gray-400">
-              {formatTime(currentTime)}
+            {/* Zone Selection */}
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium">Zones:</span>
+              <div className="flex space-x-1 flex-wrap">
+                {Array.from({ length: 16 }, (_, i) => i + 1).map((zone) => (
+                  <Button
+                    key={zone}
+                    onClick={() => setSelectedZone(selectedZone === zone ? null : zone)}
+                    variant={selectedZone === zone ? "default" : "outline"}
+                    size="sm"
+                    className="h-7 px-2 text-xs"
+                  >
+                    Z{zone}
+                  </Button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
