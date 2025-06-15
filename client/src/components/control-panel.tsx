@@ -55,7 +55,22 @@ export default function ControlPanel({ stats, alerts, routes, onRefresh, theme }
 
   const formatTimeAgo = (date: Date | string) => {
     const now = new Date();
-    const alertDate = typeof date === 'string' ? new Date(date) : date;
+    let alertDate: Date;
+    
+    if (typeof date === 'string') {
+      alertDate = new Date(date);
+    } else if (date instanceof Date) {
+      alertDate = date;
+    } else {
+      // Handle cases where date might be null, undefined, or invalid
+      return "unknown";
+    }
+    
+    // Check if the date is valid
+    if (isNaN(alertDate.getTime())) {
+      return "unknown";
+    }
+    
     const diffMinutes = Math.floor((now.getTime() - alertDate.getTime()) / (1000 * 60));
     if (diffMinutes < 1) return "just now";
     if (diffMinutes < 60) return `${diffMinutes} min ago`;
