@@ -23,16 +23,16 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
   if (!isOpen || !stationDetails) return null;
 
   // Station Live Feed - using station-specific video feed
-  const getStationVideoSrc = () => {
-    // Use station ID as seed for consistent video selection
-    const videoFiles = [
-      "/attached_assets/knife_Lagos_Bus_CCTV_Video_Ready_1750007661394.mp4",
-      "/attached_assets/Bus_Fight_Video_Generated_1750007661396.mp4"
-    ];
-    
-    const selectedIndex = stationDetails.id % videoFiles.length;
-    return videoFiles[selectedIndex];
-  };
+  const videoFiles = [
+    "/attached_assets/knife_Lagos_Bus_CCTV_Video_Ready_1750007661394.mp4",
+    "/attached_assets/Bus_Fight_Video_Generated_1750007661396.mp4"
+  ];
+  
+  const stationId = stationDetails?.id || 1;
+  const selectedIndex = stationId % videoFiles.length;
+  const videoSrc = videoFiles[selectedIndex];
+  
+
 
   const toggleVideoPlayback = () => {
     const video = document.getElementById('station-video') as HTMLVideoElement;
@@ -279,7 +279,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                 <video
                   id="station-video"
                   key={stationDetails.id}
-                  src={getStationVideoSrc()}
+                  src={videoSrc}
                   loop
                   muted
                   playsInline
@@ -348,14 +348,15 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
             <CardContent>
               <div className="space-y-2">
                 <div className="text-xs text-muted-foreground">
-                  Current video URL: {getStationVideoSrc()}
+                  Current video URL: {videoSrc}
                 </div>
                 <div className="flex gap-2">
                   <a 
-                    href={getStationVideoSrc()} 
+                    href={videoSrc} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="inline-flex items-center px-3 py-2 text-xs font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="inline-flex items-center px-3 py-2 text-xs font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer z-10 relative"
+                    style={{ pointerEvents: 'auto' }}
                   >
                     Open Video Direct
                   </a>
