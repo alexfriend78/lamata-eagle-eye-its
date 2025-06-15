@@ -11,7 +11,7 @@ import RouteCustomizationPanel from "@/components/route-customization-panel";
 import RouteAestheticsPanel from "@/components/route-aesthetics-panel";
 import CrowdAnalyticsPanel from "@/components/crowd-analytics-panel";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, Circle } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, Circle, CircleDot } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
@@ -239,7 +239,16 @@ export default function BusMonitor() {
               <Circle className="h-4 w-4" />
             </Button>
 
-
+            {/* Density Bubbles Toggle */}
+            <Button
+              onClick={() => setShowDensityBubbles(!showDensityBubbles)}
+              variant={showDensityBubbles ? "default" : "outline"}
+              size="sm"
+              className="h-8 w-8 p-0"
+              title="Toggle real-time density bubbles with analytics"
+            >
+              <CircleDot className="h-4 w-4" />
+            </Button>
 
             {/* Theme Toggle */}
             <Button
@@ -311,6 +320,7 @@ export default function BusMonitor() {
             showBuses={showBuses}
             showHeatMap={showHeatMap}
             showCrowdBubbles={showCrowdBubbles}
+            showDensityBubbles={showDensityBubbles}
           />
         </div>
 
