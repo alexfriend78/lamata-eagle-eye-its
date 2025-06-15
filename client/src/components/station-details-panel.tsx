@@ -266,56 +266,27 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
             </CardHeader>
             <CardContent>
               <div className="relative bg-black rounded-lg overflow-hidden">
-                {!isVideoPlaying && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-10">
-                    <div className="text-center text-white">
-                      <div className="text-sm mb-2">CCTV FEED</div>
-                      <div className="text-xs opacity-70">Click play to start video</div>
-                    </div>
-                  </div>
-                )}
                 <video
-                  id="station-video"
+                  key={stationDetails.id} // Force re-render when station changes
                   src={getStationVideoSrc()}
                   loop
                   muted
                   playsInline
                   controls
+                  preload="metadata"
                   className="w-full h-64 object-cover"
                   style={{ minHeight: '256px' }}
-                  onLoadedData={(e) => {
-                    console.log('=== VIDEO LOADED ===');
-                    const video = e.target as HTMLVideoElement;
-                    console.log('Video src:', video.src);
-                    console.log('Video duration:', video.duration);
-                    console.log('Video readyState:', video.readyState);
-                    console.log('Video networkState:', video.networkState);
-                    
-                    // Reset video and try to play
-                    video.currentTime = 0;
-                    video.play().then(() => {
-                      setIsVideoPlaying(true);
-                      console.log('✅ Video autoplay successful');
-                    }).catch((error) => {
-                      console.warn('⚠️ Video autoplay blocked:', error.message);
-                      console.log('User interaction required to play video');
-                      setIsVideoPlaying(false);
-                    });
-                  }}
-                  onError={(e) => {
-                    console.error('Video error:', e);
-                    const video = e.target as HTMLVideoElement;
-                    console.log('Failed video source:', video.src);
-                  }}
-                  onPlay={() => {
-                    setIsVideoPlaying(true);
-                    console.log('Video is playing');
-                  }}
-                  onPause={() => {
-                    setIsVideoPlaying(false);
-                    console.log('Video is paused');
-                  }}
                 />
+                
+                {/* Video status overlay */}
+                <div className="absolute top-2 left-2 bg-black/80 text-white px-2 py-1 rounded text-xs">
+                  🔴 LIVE CCTV FEED
+                </div>
+                
+                {/* Simple play instruction */}
+                <div className="absolute bottom-2 left-2 bg-black/80 text-white px-2 py-1 rounded text-xs">
+                  Click ▶ to play video
+                </div>
                 <div className="absolute bottom-2 right-2 flex gap-2">
                   <Button
                     onClick={toggleVideoPlayback}
