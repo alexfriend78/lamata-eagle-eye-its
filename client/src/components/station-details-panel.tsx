@@ -22,15 +22,15 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
 
   if (!isOpen || !stationDetails) return null;
 
-  // Station Live Feed - restricted to P1 critical security emergencies only
-  const securityVideoFiles = [
-    "/attached_assets/knife_Lagos_Bus_CCTV_Video_Ready_1750007661394.mp4",
-    "/attached_assets/Bus_Fight_Video_Generated_1750007661396.mp4"
+  // Station Live Feed - normal operations only
+  const stationVideoFiles = [
+    "/attached_assets/Delayed Bus_Passenger At Bus Stop_1750009404917.mp4",
+    "/attached_assets/Passengers Queuing at BRT_Bus_Video_Generated_1750009404918.mp4"
   ];
   
   const stationId = stationDetails?.id || 1;
-  const selectedIndex = stationId % securityVideoFiles.length;
-  const videoSrc = securityVideoFiles[selectedIndex];
+  const selectedIndex = stationId % stationVideoFiles.length;
+  const videoSrc = stationVideoFiles[selectedIndex];
   
 
 
