@@ -593,34 +593,43 @@ export class MemStorage implements IStorage {
         { x: 0.20, y: 0.30 }, // Super
         { x: 0.18, y: 0.28 }  // Abule Egba
       ],
-      2: [ // Route 2: Abule Egba - TBS/Obalende (Full north-south-central)
-        { x: 0.18, y: 0.28 }, // Abule Egba
-        { x: 0.20, y: 0.30 }, // Super
+      2: [ // Route 2: Abule Egba - Lekki Phase 2 Terminal (Complete north-south-east)
+        { x: 0.18, y: 0.28 }, // Abule Egba Terminal
         { x: 0.22, y: 0.32 }, // Ile Epo
-        { x: 0.24, y: 0.34 }, // Pleasure
-        { x: 0.26, y: 0.36 }, // Iyana Ipaja Bus stop
-        { x: 0.28, y: 0.38 }, // Adealu
-        { x: 0.30, y: 0.40 }, // Iyana Dopemu
-        { x: 0.32, y: 0.42 }, // Cement
-        { x: 0.34, y: 0.44 }, // Mangoro
-        { x: 0.36, y: 0.46 }, // Ile Zik
-        { x: 0.38, y: 0.48 }, // Ikeja Along
-        { x: 0.40, y: 0.50 }, // Airport Junction
-        { x: 0.42, y: 0.52 }, // PWD
-        { x: 0.44, y: 0.54 }, // Shogunle
-        { x: 0.46, y: 0.56 }, // Ladipo
-        { x: 0.48, y: 0.58 }, // Bolade
-        { x: 0.50, y: 0.60 }, // Oshodi Terminal 2
-        { x: 0.52, y: 0.62 }, // LASMA
-        { x: 0.54, y: 0.64 }, // Anthony
-        { x: 0.56, y: 0.66 }, // Westex
-        { x: 0.58, y: 0.68 }, // First Pedro
-        { x: 0.60, y: 0.70 }, // Charley Boy
-        { x: 0.62, y: 0.72 }, // Gbagada Phase 1
-        { x: 0.64, y: 0.74 }, // Iyana Oworo
-        { x: 0.66, y: 0.76 }, // Adeniji
-        { x: 0.68, y: 0.78 }, // Obalende
-        { x: 0.70, y: 0.80 }  // CMS Terminal
+        { x: 0.24, y: 0.34 }, // Command
+        { x: 0.26, y: 0.36 }, // Canaan Land
+        { x: 0.28, y: 0.38 }, // Iyana Ipaja
+        { x: 0.30, y: 0.40 }, // Alimosho
+        { x: 0.32, y: 0.42 }, // Iyana Dopemu
+        { x: 0.34, y: 0.44 }, // Agege
+        { x: 0.36, y: 0.46 }, // Pen Cinema
+        { x: 0.38, y: 0.48 }, // Ogba
+        { x: 0.40, y: 0.50 }, // Berger
+        { x: 0.42, y: 0.52 }, // Ketu
+        { x: 0.44, y: 0.54 }, // Ojota
+        { x: 0.46, y: 0.56 }, // Ogudu
+        { x: 0.48, y: 0.58 }, // Palmgroove
+        { x: 0.50, y: 0.60 }, // Yaba
+        { x: 0.52, y: 0.62 }, // Jibowu
+        { x: 0.54, y: 0.64 }, // Oyingbo
+        { x: 0.56, y: 0.66 }, // Ebute Metta
+        { x: 0.58, y: 0.68 }, // National Theatre
+        { x: 0.60, y: 0.70 }, // Costain
+        { x: 0.62, y: 0.72 }, // Alaka
+        { x: 0.64, y: 0.74 }, // Iponri
+        { x: 0.66, y: 0.76 }, // Stadium
+        { x: 0.68, y: 0.78 }, // Lagos Island
+        { x: 0.70, y: 0.80 }, // CMS
+        { x: 0.72, y: 0.82 }, // TBS Terminal
+        { x: 0.74, y: 0.84 }, // Obalende
+        { x: 0.76, y: 0.86 }, // Falomo
+        { x: 0.78, y: 0.88 }, // Ikoyi
+        { x: 0.80, y: 0.90 }, // Victoria Island
+        { x: 0.82, y: 0.92 }, // Admiralty Way
+        { x: 0.84, y: 0.94 }, // Lekki Phase 1
+        { x: 0.86, y: 0.96 }, // Lekki Toll Gate
+        { x: 0.88, y: 0.98 }, // Chevron
+        { x: 0.90, y: 1.00 }  // Lekki Phase 2 Terminal
       ],
       3: [ // Route 3: Ikorodu - TBS (Southwest to Central)
         { x: 0.15, y: 0.85 }, // Ikorodu Terminal
