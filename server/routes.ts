@@ -300,6 +300,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get crowd density readings
+  app.get("/api/crowd/density-readings", async (req, res) => {
+    try {
+      const stationId = req.query.stationId ? parseInt(req.query.stationId as string) : undefined;
+      const busId = req.query.busId ? parseInt(req.query.busId as string) : undefined;
+      const readings = await storage.getCrowdDensityReadings(stationId, busId);
+      res.json(readings);
+    } catch (error) {
+      console.error('Error fetching crowd density readings:', error);
+      res.status(500).json({ error: "Failed to fetch crowd density readings" });
+    }
+  });
+
   app.post("/api/crowd-density", async (req, res) => {
     try {
       const reading = await storage.createCrowdDensityReading(req.body);
