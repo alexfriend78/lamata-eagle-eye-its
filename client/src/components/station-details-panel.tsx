@@ -16,6 +16,9 @@ interface StationDetailsPanelProps {
 export default function StationDetailsPanel({ stationDetails, isOpen, onClose }: StationDetailsPanelProps) {
   const [isVideoMuted, setIsVideoMuted] = useState(true);
   const [isVideoPlaying, setIsVideoPlaying] = useState(true);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   if (!isOpen || !stationDetails) return null;
 
@@ -37,14 +40,40 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
       if (isVideoPlaying) {
         video.pause();
       } else {
-        video.play();
+        video.play().catch(console.error);
       }
       setIsVideoPlaying(!isVideoPlaying);
     }
   };
 
   const toggleVideoMute = () => {
-    setIsVideoMuted(!isVideoMuted);
+    const video = document.getElementById('station-video') as HTMLVideoElement;
+    if (video) {
+      video.muted = !isVideoMuted;
+      setIsVideoMuted(!isVideoMuted);
+    }
+  };
+
+  // Drag functionality
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setDragStart({
+      x: e.clientX - position.x,
+      y: e.clientY - position.y
+    });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (isDragging) {
+      setPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y
+      });
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
   };
 
   const getTrafficBadgeColor = (condition: string) => {
@@ -109,7 +138,19 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
   const mockUpcomingArrivals = generateUpcomingArrivals();
 
   return (
-    <div className="fixed inset-y-0 right-0 w-96 bg-background border-l border-border shadow-lg z-50 flex flex-col">
+    <div 
+      className="fixed w-96 bg-background border border-border shadow-lg z-50 flex flex-col cursor-move"
+      style={{
+        top: position.y,
+        right: -position.x,
+        height: 'calc(100vh - 40px)',
+        maxHeight: '90vh'
+      }}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+    >
       <div className="flex items-center justify-between p-4 border-b">
         <div className="flex items-center gap-2">
           <span className="text-2xl">🚏</span>
@@ -217,8 +258,17 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                   autoPlay
                   loop
                   muted={isVideoMuted}
+                  playsInline
+                  controls={false}
+                  preload="metadata"
                   className="w-full h-48 object-cover"
                   style={{ minHeight: '192px' }}
+                  onLoadedData={() => {
+                    const video = document.getElementById('station-video') as HTMLVideoElement;
+                    if (video) {
+                      video.play().catch(console.error);
+                    }
+                  }}
                 />
                 <div className="absolute bottom-2 right-2 flex gap-2">
                   <Button
