@@ -15,6 +15,11 @@ export const stations = pgTable("stations", {
   name: text("name").notNull(),
   x: real("x").notNull(), // X coordinate for positioning
   y: real("y").notNull(), // Y coordinate for positioning
+  zone: integer("zone").notNull().default(1),
+  passengerCount: integer("passenger_count").notNull().default(0),
+  trafficCondition: text("traffic_condition").notNull().default("normal"), // light, normal, heavy, severe
+  accessibility: boolean("accessibility").notNull().default(true),
+  amenities: text("amenities").array().default([]), // ["shelter", "seating", "lighting", "cctv"]
 });
 
 export const buses = pgTable("buses", {
@@ -46,12 +51,23 @@ export const routeStations = pgTable("route_stations", {
   sequence: integer("sequence").notNull(),
 });
 
+export const busArrivals = pgTable("bus_arrivals", {
+  id: serial("id").primaryKey(),
+  busId: integer("bus_id").notNull(),
+  stationId: integer("station_id").notNull(),
+  routeId: integer("route_id").notNull(),
+  estimatedArrival: timestamp("estimated_arrival").notNull(),
+  actualArrival: timestamp("actual_arrival"),
+  status: text("status").notNull().default("scheduled"), // scheduled, approaching, arrived, departed
+});
+
 // Insert schemas
 export const insertRouteSchema = createInsertSchema(routes).omit({ id: true });
 export const insertStationSchema = createInsertSchema(stations).omit({ id: true });
 export const insertBusSchema = createInsertSchema(buses).omit({ id: true, lastUpdated: true });
 export const insertAlertSchema = createInsertSchema(alerts).omit({ id: true, createdAt: true });
 export const insertRouteStationSchema = createInsertSchema(routeStations).omit({ id: true });
+export const insertBusArrivalSchema = createInsertSchema(busArrivals).omit({ id: true });
 
 // Types
 export type Route = typeof routes.$inferSelect;
@@ -59,12 +75,14 @@ export type Station = typeof stations.$inferSelect;
 export type Bus = typeof buses.$inferSelect;
 export type Alert = typeof alerts.$inferSelect;
 export type RouteStation = typeof routeStations.$inferSelect;
+export type BusArrival = typeof busArrivals.$inferSelect;
 
 export type InsertRoute = z.infer<typeof insertRouteSchema>;
 export type InsertStation = z.infer<typeof insertStationSchema>;
 export type InsertBus = z.infer<typeof insertBusSchema>;
 export type InsertAlert = z.infer<typeof insertAlertSchema>;
 export type InsertRouteStation = z.infer<typeof insertRouteStationSchema>;
+export type InsertBusArrival = z.infer<typeof insertBusArrivalSchema>;
 
 // Extended types for API responses
 export type BusWithRoute = Bus & { route: Route };
