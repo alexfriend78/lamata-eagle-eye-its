@@ -267,6 +267,49 @@ export class MemStorage implements IStorage {
       });
     });
 
+    // Create sample crowd density readings
+    const crowdReadings = [
+      { stationId: 1, passengerCount: 45, capacity: 70, busId: null, source: "sensor" },
+      { stationId: 2, passengerCount: 32, capacity: 70, busId: null, source: "sensor" },
+      { stationId: 3, passengerCount: 58, capacity: 70, busId: null, source: "sensor" },
+      { stationId: 4, passengerCount: 25, capacity: 70, busId: null, source: "sensor" },
+      { stationId: 5, passengerCount: 65, capacity: 70, busId: null, source: "sensor" },
+      { stationId: 18, passengerCount: 40, capacity: 70, busId: null, source: "sensor" },
+      { stationId: 19, passengerCount: 28, capacity: 70, busId: null, source: "sensor" },
+      { stationId: 20, passengerCount: 52, capacity: 70, busId: null, source: "sensor" },
+      { stationId: 21, passengerCount: 35, capacity: 70, busId: null, source: "sensor" },
+      { stationId: 22, passengerCount: 48, capacity: 70, busId: null, source: "sensor" }
+    ];
+
+    crowdReadings.forEach(reading => {
+      this.createCrowdDensityReading(reading);
+    });
+
+    // Create sample crowd predictions
+    const crowdPredictionsData = [
+      { stationId: 1, routeId: 1, predictedPassengerCount: 65, predictionTimeMinutes: 15, confidenceLevel: 85, predictionType: "ml_model" },
+      { stationId: 2, routeId: 1, predictedPassengerCount: 42, predictionTimeMinutes: 15, confidenceLevel: 78, predictionType: "ml_model" },
+      { stationId: 3, routeId: 1, predictedPassengerCount: 72, predictionTimeMinutes: 15, confidenceLevel: 82, predictionType: "ml_model" },
+      { stationId: 4, routeId: 1, predictedPassengerCount: 38, predictionTimeMinutes: 15, confidenceLevel: 75, predictionType: "ml_model" },
+      { stationId: 5, routeId: 1, predictedPassengerCount: 88, predictionTimeMinutes: 15, confidenceLevel: 90, predictionType: "ml_model" },
+      { stationId: 6, routeId: 1, predictedPassengerCount: 55, predictionTimeMinutes: 15, confidenceLevel: 80, predictionType: "ml_model" },
+      { stationId: 7, routeId: 1, predictedPassengerCount: 48, predictionTimeMinutes: 15, confidenceLevel: 77, predictionType: "ml_model" },
+      { stationId: 8, routeId: 1, predictedPassengerCount: 35, predictionTimeMinutes: 15, confidenceLevel: 73, predictionType: "ml_model" },
+      
+      { stationId: 18, routeId: 3, predictedPassengerCount: 58, predictionTimeMinutes: 15, confidenceLevel: 83, predictionType: "ml_model" },
+      { stationId: 19, routeId: 3, predictedPassengerCount: 45, predictionTimeMinutes: 15, confidenceLevel: 79, predictionType: "ml_model" },
+      { stationId: 20, routeId: 3, predictedPassengerCount: 67, predictionTimeMinutes: 15, confidenceLevel: 86, predictionType: "ml_model" },
+      { stationId: 21, routeId: 3, predictedPassengerCount: 52, predictionTimeMinutes: 15, confidenceLevel: 81, predictionType: "ml_model" },
+      { stationId: 22, routeId: 3, predictedPassengerCount: 72, predictionTimeMinutes: 15, confidenceLevel: 88, predictionType: "ml_model" },
+      { stationId: 23, routeId: 3, predictedPassengerCount: 41, predictionTimeMinutes: 15, confidenceLevel: 76, predictionType: "ml_model" },
+      { stationId: 24, routeId: 3, predictedPassengerCount: 59, predictionTimeMinutes: 15, confidenceLevel: 84, predictionType: "ml_model" },
+      { stationId: 25, routeId: 3, predictedPassengerCount: 63, predictionTimeMinutes: 15, confidenceLevel: 85, predictionType: "ml_model" }
+    ];
+
+    crowdPredictionsData.forEach(prediction => {
+      this.createCrowdPrediction(prediction);
+    });
+
     // Start bus movement simulation
     setInterval(() => this.simulateBusMovement(), 5000);
   }
