@@ -1,0 +1,181 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+  
+  /* Custom colors for bus monitor */
+  --dark-bg: hsl(240, 10%, 7%);
+  --dark-surface: hsl(240, 5%, 12%);
+  --dark-elevated: hsl(240, 4%, 18%);
+  --bus-on-time: hsl(122, 39%, 49%);
+  --bus-delayed: hsl(45, 100%, 51%);
+  --bus-alert: hsl(0, 77%, 54%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .bus-monitor-bg {
+    background-color: var(--dark-bg);
+  }
+  
+  .bus-monitor-surface {
+    background-color: var(--dark-surface);
+  }
+  
+  .bus-monitor-elevated {
+    background-color: var(--dark-elevated);
+  }
+}
+
+@layer utilities {
+  /* Emergency flash animation */
+  @keyframes emergency-flash {
+    0%, 100% { 
+      background-color: hsl(0, 77%, 54%, 0.9); 
+    }
+    50% { 
+      background-color: hsl(0, 77%, 54%, 0.7); 
+    }
+  }
+  
+  .emergency-overlay {
+    animation: emergency-flash 1s ease-in-out infinite;
+  }
+  
+  /* Bus movement animations */
+  @keyframes bus-move-horizontal {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(400px); }
+  }
+  
+  @keyframes bus-move-reverse {
+    0% { transform: translateX(400px); }
+    100% { transform: translateX(0); }
+  }
+  
+  @keyframes bus-move-diagonal {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(300px, 80px); }
+  }
+  
+  @keyframes bus-move-vertical {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(200px); }
+  }
+  
+  @keyframes pulse-alert {
+    0%, 100% { 
+      color: var(--bus-alert);
+      filter: brightness(1);
+    }
+    50% { 
+      color: var(--bus-alert);
+      filter: brightness(1.3);
+    }
+  }
+  
+  .bus-animation-horizontal {
+    animation: bus-move-horizontal 15s linear infinite;
+  }
+  
+  .bus-animation-reverse {
+    animation: bus-move-reverse 15s linear infinite;
+  }
+  
+  .bus-animation-diagonal {
+    animation: bus-move-diagonal 12s linear infinite;
+  }
+  
+  .bus-animation-vertical {
+    animation: bus-move-vertical 10s linear infinite alternate;
+  }
+  
+  .bus-alert-pulse {
+    animation: pulse-alert 1s ease-in-out infinite;
+  }
+  
+  /* Route styling */
+  .route-line {
+    background: linear-gradient(90deg, hsl(207, 90%, 54%) 50%, transparent 50%);
+    background-size: 20px 2px;
+    height: 2px;
+  }
+  
+  .route-vertical {
+    background: linear-gradient(180deg, hsl(207, 90%, 54%) 50%, transparent 50%);
+    background-size: 2px 20px;
+    width: 2px;
+  }
+  
+  .route-diagonal {
+    background: linear-gradient(45deg, hsl(207, 90%, 54%) 50%, transparent 50%);
+    background-size: 20px 2px;
+    height: 2px;
+  }
+  
+  .station-dot {
+    width: 8px;
+    height: 8px;
+    background: hsl(207, 90%, 54%);
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+  
+  /* Grid background */
+  .grid-background {
+    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.1) 1px, transparent 0);
+    background-size: 20px 20px;
+  }
+}
