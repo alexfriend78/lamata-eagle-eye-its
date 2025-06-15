@@ -34,6 +34,7 @@ export default function BusMonitor() {
   const [showBuses, setShowBuses] = useState(true);
   const [showHeatMap, setShowHeatMap] = useState(false);
   const [showCrowdBubbles, setShowCrowdBubbles] = useState(false);
+  const [showDensityBubbles, setShowDensityBubbles] = useState(false);
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
   const { theme, setTheme } = useTheme();
 
