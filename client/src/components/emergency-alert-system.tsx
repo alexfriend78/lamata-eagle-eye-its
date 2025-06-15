@@ -133,11 +133,10 @@ export default function EmergencyAlertSystem({
     if (alert.priority === 'P1' && 
         (alert.type === 'emergency' || alert.type === 'security')) {
       const p1SecurityVideos = [
-        EMERGENCY_VIDEOS.weapon,
-        EMERGENCY_VIDEOS.knife,
-        EMERGENCY_VIDEOS.gun,
-        EMERGENCY_VIDEOS.fight,
-        EMERGENCY_VIDEOS.emergency
+        swordVideoPath,     // Sword attack
+        knifeVideoPath,     // Knife threat
+        gunVideoPath,       // Gun/machine gun
+        fightVideoPath      // Bus fight
       ];
       
       // Use alert ID as seed for consistent video selection per alert
