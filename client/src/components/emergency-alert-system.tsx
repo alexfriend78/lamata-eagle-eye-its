@@ -454,7 +454,8 @@ export default function EmergencyAlertSystem({
                     autoPlay
                     loop
                     muted={isVideoMuted}
-                    className="w-full h-64 object-cover"
+                    className="w-full h-96 object-cover"
+                    style={{ minHeight: '384px' }}
                   />
                   <div className="absolute bottom-2 right-2 flex gap-2">
                     <Button
