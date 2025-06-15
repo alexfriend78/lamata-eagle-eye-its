@@ -290,20 +290,10 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                   onLoadedMetadata={() => console.log('Video metadata loaded')}
                 />
                 
-                {/* Video status overlay */}
-                <div className="absolute top-2 left-2 bg-black/80 text-white px-2 py-1 rounded text-xs">
-                  LIVE CCTV FEED
-                </div>
-                
-                {/* Test direct link */}
-                <div className="absolute bottom-2 left-2">
-                  <a 
-                    href={getStationVideoSrc()} 
-                    target="_blank" 
-                    className="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700"
-                  >
-                    Open Video Direct
-                  </a>
+                <div className="absolute top-2 left-2">
+                  <Badge variant="destructive" className="text-xs">
+                    ● LIVE
+                  </Badge>
                 </div>
                 <div className="absolute bottom-2 right-2 flex gap-2">
                   <Button
@@ -331,14 +321,21 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                     )}
                   </Button>
                 </div>
-                <div className="absolute top-2 left-2">
-                  <Badge variant="destructive" className="text-xs">
-                    ● LIVE
-                  </Badge>
-                </div>
               </div>
-              <div className="mt-2 text-xs text-muted-foreground">
-                Bus Stop Security Camera - Real-time monitoring
+              
+              {/* Video controls and test link below video */}
+              <div className="mt-2 flex items-center justify-between">
+                <div className="text-xs text-muted-foreground">
+                  Bus Stop Security Camera - Real-time monitoring
+                </div>
+                <a 
+                  href={getStationVideoSrc()} 
+                  target="_blank" 
+                  className="bg-blue-600 text-white px-3 py-1 rounded text-xs hover:bg-blue-700"
+                  rel="noopener noreferrer"
+                >
+                  Test Video File
+                </a>
               </div>
             </CardContent>
           </Card>
