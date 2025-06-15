@@ -1,13 +1,13 @@
 import { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { TrendingUp, Users, Activity, Clock, MapPin, Thermometer } from "lucide-react";
+import { TrendingUp, Users, Activity, Clock, MapPin, Thermometer, BarChart3 } from "lucide-react";
 import type { Station, Route } from "@shared/schema";
 
 interface CrowdDensityData {
@@ -333,6 +333,9 @@ export default function CrowdDensityHeatmap({
                 <MapPin className="h-5 w-5" />
                 {selectedStation.name}
               </DialogTitle>
+              <DialogDescription>
+                View detailed crowd density analytics and predictions for this station
+              </DialogDescription>
             </DialogHeader>
 
             {(() => {

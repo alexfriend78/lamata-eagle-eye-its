@@ -9,8 +9,9 @@ import StationDetailsPanel from "@/components/station-details-panel";
 import RouteCustomizationPanel from "@/components/route-customization-panel";
 import RouteAestheticsPanel from "@/components/route-aesthetics-panel";
 import CrowdDensityHeatmap from "@/components/crowd-density-heatmap";
+import CrowdAnalyticsPanel from "@/components/crowd-analytics-panel";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, Users } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, Users, BarChart3 } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
@@ -31,6 +32,7 @@ export default function BusMonitor() {
   const [showStations, setShowStations] = useState(true);
   const [showBuses, setShowBuses] = useState(true);
   const [showCrowdHeatmap, setShowCrowdHeatmap] = useState(false);
+  const [showCrowdAnalytics, setShowCrowdAnalytics] = useState(false);
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
   const { theme, setTheme } = useTheme();
 
