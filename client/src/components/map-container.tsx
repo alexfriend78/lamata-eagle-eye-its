@@ -68,11 +68,42 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     return routePaths[routeId] || [];
   };
 
-  const renderRouteLine = (route: Route) => {
+  const calculatePerpendicularOffset = (p1: {x: number, y: number}, p2: {x: number, y: number}, offset: number) => {
+    // Calculate direction vector
+    const dx = p2.x - p1.x;
+    const dy = p2.y - p1.y;
+    const length = Math.sqrt(dx * dx + dy * dy);
+    
+    if (length === 0) return { x: p1.x, y: p1.y };
+    
+    // Normalize and get perpendicular vector
+    const perpX = -dy / length;
+    const perpY = dx / length;
+    
+    return {
+      x: p1.x + perpX * offset,
+      y: p1.y + perpY * offset
+    };
+  };
+
+  const renderRouteLine = (route: Route, routeIndex: number) => {
     const points = getRoutePoints(route.id);
     const isHighlighted = selectedRoutes.includes(route.id);
     
     if (points.length < 2) return null;
+
+    // Calculate offset for overlapping routes - spread them more
+    const offsetDistance = (routeIndex % 5 - 2) * 12; // -24, -12, 0, 12, 24 pixel offset
+    
+    // Apply perpendicular offset to create parallel lines
+    const offsetPoints = points.map((point, i) => {
+      if (i === points.length - 1) {
+        // For last point, use previous segment direction
+        return calculatePerpendicularOffset(points[i-1], point, offsetDistance);
+      }
+      // Use current segment direction
+      return calculatePerpendicularOffset(point, points[i+1], offsetDistance);
+    });
 
     return (
       <svg
@@ -80,16 +111,48 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         className="absolute inset-0 pointer-events-none"
         width="1280"
         height="720"
-        style={{ zIndex: 10 }}
+        style={{ zIndex: 10 + routeIndex }}
       >
+        {/* Route line with shadow effect */}
         <polyline
-          points={points.map(p => `${p.x},${p.y}`).join(' ')}
+          points={offsetPoints.map(p => `${p.x + 2},${p.y + 2}`).join(' ')}
+          fill="none"
+          stroke="rgba(0,0,0,0.3)"
+          strokeWidth={isHighlighted ? "10" : "8"}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <polyline
+          points={offsetPoints.map(p => `${p.x},${p.y}`).join(' ')}
           fill="none"
           stroke={route.color}
-          strokeWidth={isHighlighted ? "4" : "2"}
-          strokeDasharray={isHighlighted ? "none" : "5,5"}
+          strokeWidth={isHighlighted ? "8" : "6"}
+          strokeLinecap="round"
+          strokeLinejoin="round"
           className={isHighlighted ? "animate-pulse" : ""}
+          opacity={isHighlighted ? "1" : "0.9"}
         />
+        
+        {/* Route number label at multiple points */}
+        {offsetPoints.length > 4 && [
+          Math.floor(offsetPoints.length * 0.3),
+          Math.floor(offsetPoints.length * 0.7)
+        ].map((pointIndex, labelIndex) => (
+          <text
+            key={labelIndex}
+            x={offsetPoints[pointIndex].x}
+            y={offsetPoints[pointIndex].y - 8}
+            fill="white"
+            fontSize="11"
+            fontWeight="bold"
+            textAnchor="middle"
+            style={{
+              filter: "drop-shadow(0px 1px 3px rgba(0,0,0,0.9))"
+            }}
+          >
+            {route.routeNumber}
+          </text>
+        ))}
       </svg>
     );
   };
@@ -184,7 +247,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         </svg>
 
         {/* Route Lines */}
-        {routes.map(renderRouteLine)}
+        {routes.map((route, index) => renderRouteLine(route, index))}
         
         {/* Major Stations */}
         {stations.map((station) => (
