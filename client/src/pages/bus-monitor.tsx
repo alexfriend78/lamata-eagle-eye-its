@@ -213,13 +213,13 @@ export default function BusMonitor() {
                 <div>
                   <h4 className="font-medium text-sm mb-2">Passenger Crowd</h4>
                   <div className="flex items-center space-x-2">
-                    <div className={`w-3 h-3 rounded-full ${Math.random() > 0.7 ? 'bg-red-500' : Math.random() > 0.4 ? 'bg-yellow-500' : 'bg-green-500'}`}></div>
+                    <div className={`w-3 h-3 rounded-full ${selectedStation.id % 3 === 0 ? 'bg-red-500' : selectedStation.id % 3 === 1 ? 'bg-yellow-500' : 'bg-green-500'}`}></div>
                     <span className="text-sm">
-                      {Math.random() > 0.7 ? 'High' : Math.random() > 0.4 ? 'Medium' : 'Low'} crowd level
+                      {selectedStation.id % 3 === 0 ? 'High' : selectedStation.id % 3 === 1 ? 'Medium' : 'Low'} crowd level
                     </span>
                   </div>
                   <div className="text-xs text-gray-500 mt-1">
-                    {Math.floor(Math.random() * 50 + 10)} people waiting
+                    {(selectedStation.id * 7 + 15) % 45 + 10} people waiting
                   </div>
                 </div>
 
@@ -229,9 +229,9 @@ export default function BusMonitor() {
                   <div className="space-y-1">
                     {[1, 2, 3].map((_, i) => (
                       <div key={i} className="flex justify-between text-sm">
-                        <span>Route {Math.floor(Math.random() * 9 + 1)}</span>
+                        <span>Route {((selectedStation.id + i) % 9) + 1}</span>
                         <span className={i === 0 ? 'text-green-500' : 'text-gray-500'}>
-                          {i === 0 ? '2 min' : `${(i + 1) * 5 + Math.floor(Math.random() * 3)} min`}
+                          {i === 0 ? '2 min' : `${(i + 1) * 5 + ((selectedStation.id + i) % 3)} min`}
                         </span>
                       </div>
                     ))}

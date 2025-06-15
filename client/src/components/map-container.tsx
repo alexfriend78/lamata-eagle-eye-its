@@ -414,7 +414,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
               {showLiveFeed && (
                 <div 
                   className={`absolute -bottom-1 -left-1 w-2 h-2 rounded-full ${
-                    Math.random() > 0.5 ? 'bg-green-500' : 'bg-red-500'
+                    station.id % 2 === 0 ? 'bg-green-500' : 'bg-red-500'
                   } animate-pulse`}
                 />
               )}

@@ -1,12 +1,12 @@
 import { type BusWithRoute } from "@shared/schema";
-import { CSSProperties } from "react";
+import { CSSProperties, memo } from "react";
 
 interface BusIconProps {
   bus: BusWithRoute;
   style?: CSSProperties;
 }
 
-export default function BusIcon({ bus, style }: BusIconProps) {
+function BusIcon({ bus, style }: BusIconProps) {
   const getBusColor = (status: string) => {
     switch (status) {
       case "on_time": return "#22c55e"; // green-500
@@ -35,3 +35,6 @@ export default function BusIcon({ bus, style }: BusIconProps) {
     </div>
   );
 }
+
+const MemoizedBusIcon = memo(BusIcon);
+export default MemoizedBusIcon;
