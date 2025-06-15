@@ -203,10 +203,34 @@ export class MemStorage implements IStorage {
       });
     });
 
-    // Create some sample alerts
+    // Create some sample alerts with enhanced fields
     const alertsData = [
-      { type: "traffic", message: "Heavy traffic on Route 2", routeId: 2, severity: "medium", isActive: true },
-      { type: "maintenance", message: "Bus BRT006 requires maintenance", busId: 6, severity: "high", isActive: true }
+      { 
+        type: "traffic", 
+        message: "Heavy traffic on Route 2", 
+        routeId: 2, 
+        priority: "P3",
+        severity: "medium", 
+        isActive: true,
+        driverName: null,
+        driverNumber: null,
+        lastStopId: null,
+        nextStopId: null,
+        zoneNumber: "Zone 2"
+      },
+      { 
+        type: "maintenance", 
+        message: "Bus BRT006 requires maintenance", 
+        busId: 6, 
+        priority: "P2",
+        severity: "high", 
+        isActive: true,
+        driverName: "John Adebayo",
+        driverNumber: "+234-8012-345-678",
+        lastStopId: 15,
+        nextStopId: 16,
+        zoneNumber: "Zone 3"
+      }
     ];
 
     alertsData.forEach(alertData => {

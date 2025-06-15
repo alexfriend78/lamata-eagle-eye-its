@@ -47,8 +47,14 @@ export const alerts = pgTable("alerts", {
   routeId: integer("route_id"),
   type: text("type").notNull(), // emergency, delay, breakdown, security
   message: text("message").notNull(),
+  priority: text("priority").notNull().default("P3"), // P1, P2, P3, P4, P5
   severity: text("severity").notNull().default("medium"), // low, medium, high, critical
   isActive: boolean("is_active").notNull().default(true),
+  driverName: text("driver_name"),
+  driverNumber: text("driver_number"),
+  lastStopId: integer("last_stop_id"),
+  nextStopId: integer("next_stop_id"),
+  zoneNumber: text("zone_number"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

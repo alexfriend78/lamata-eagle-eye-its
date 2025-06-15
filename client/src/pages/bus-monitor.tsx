@@ -5,6 +5,7 @@ import { useTheme } from "@/hooks/use-theme";
 import MapContainer from "@/components/map-container";
 import ControlPanel from "@/components/control-panel";
 import EmergencyAlert from "@/components/emergency-alert";
+import EmergencyAlertSystem from "@/components/emergency-alert-system";
 import StationDetailsPanel from "@/components/station-details-panel";
 import RouteCustomizationPanel from "@/components/route-customization-panel";
 import RouteAestheticsPanel from "@/components/route-aesthetics-panel";
