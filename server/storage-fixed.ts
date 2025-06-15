@@ -176,16 +176,16 @@ export class MemStorage implements IStorage {
       });
     });
 
-    // Create buses for each route
+    // Create buses for each route with direction of travel
     const busesData = [
-      { number: "BRT001", routeId: 1, status: "active", capacity: 70 },
-      { number: "BRT002", routeId: 1, status: "active", capacity: 70 },
-      { number: "BRT003", routeId: 2, status: "delayed", capacity: 70 },
-      { number: "BRT004", routeId: 2, status: "active", capacity: 70 },
-      { number: "BRT005", routeId: 3, status: "active", capacity: 70 },
-      { number: "BRT006", routeId: 3, status: "alert", capacity: 70 },
-      { number: "BRT007", routeId: 4, status: "active", capacity: 70 },
-      { number: "BRT008", routeId: 5, status: "active", capacity: 70 }
+      { number: "BRT001", routeId: 1, status: "active", capacity: 70, direction: "Outbound" },
+      { number: "BRT002", routeId: 1, status: "active", capacity: 70, direction: "Inbound" },
+      { number: "BRT003", routeId: 2, status: "delayed", capacity: 70, direction: "Southbound" },
+      { number: "BRT004", routeId: 2, status: "active", capacity: 70, direction: "Northbound" },
+      { number: "BRT005", routeId: 3, status: "active", capacity: 70, direction: "Eastbound" },
+      { number: "BRT006", routeId: 3, status: "alert", capacity: 70, direction: "Westbound" },
+      { number: "BRT007", routeId: 4, status: "active", capacity: 70, direction: "Northbound" },
+      { number: "BRT008", routeId: 5, status: "active", capacity: 70, direction: "Eastbound" }
     ];
 
     busesData.forEach(busData => {

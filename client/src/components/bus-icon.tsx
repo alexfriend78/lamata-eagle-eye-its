@@ -32,7 +32,7 @@ function BusIcon({ bus, style }: BusIconProps) {
           : "drop-shadow(0 1px 2px rgba(0,0,0,0.3))",
         zIndex: 30
       }}
-      title={`Bus ${bus.number} - Route ${bus.route.routeNumber} - Status: ${isAlertBus ? 'active (with alerts)' : bus.status}`}
+      title={`Bus ${bus.number} - Route ${bus.route.routeNumber} - Direction: ${bus.direction || 'Unknown'} - Status: ${isAlertBus ? 'Active (with alerts)' : bus.status === 'active' ? 'Active' : bus.status}`}
     >
       🚌
     </div>

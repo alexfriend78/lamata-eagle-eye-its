@@ -326,11 +326,15 @@ export default function BusMonitor() {
                 <div>
                   <span className="font-medium">Status:</span>
                   <div className={`inline-block ml-2 px-2 py-1 rounded text-xs ${
-                    hoveredBus.status === 'on_time' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
-                    hoveredBus.status === 'delayed' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
-                    'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                    hoveredBus.status === 'on_time' || hoveredBus.status === 'active' || hoveredBus.status === 'alert' 
+                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                    hoveredBus.status === 'delayed' 
+                      ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200' :
+                    'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200'
                   }`}>
-                    {hoveredBus.status.replace('_', ' ').toUpperCase()}
+                    {hoveredBus.status === 'alert' ? 'ACTIVE (WITH ALERTS)' : 
+                     hoveredBus.status === 'active' ? 'ACTIVE' :
+                     hoveredBus.status.replace('_', ' ').toUpperCase()}
                   </div>
                 </div>
                 
