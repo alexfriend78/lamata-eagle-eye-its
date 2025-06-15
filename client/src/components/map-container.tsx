@@ -646,18 +646,31 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         })()}
         
         {/* Bus Stations - only show if stations visibility is enabled */}
-        {showStations && stations.map((station) => (
-          <div 
-            key={station.id}
-            className="absolute z-20 cursor-pointer"
-            style={{ 
-              top: `${(station.y * mapHeight) - 8}px`, 
-              left: `${(station.x * mapWidth) - 8}px` 
-            }}
-            onClick={() => onStationClick && onStationClick(station)}
-            onMouseEnter={() => onStationHover?.(station)}
-            onMouseLeave={() => onStationHover?.(null)}
-          >
+        {showStations && stations.map((station) => {
+          const stationPixelX = station.x * mapWidth;
+          const stationPixelY = station.y * mapHeight;
+          
+          // Debug: log first few stations to verify coordinates
+          if (station.id <= 3) {
+            console.log(`Station ${station.name}:`, {
+              percentage: { x: station.x, y: station.y },
+              pixels: { x: stationPixelX, y: stationPixelY },
+              mapDimensions: { width: mapWidth, height: mapHeight }
+            });
+          }
+          
+          return (
+            <div 
+              key={station.id}
+              className="absolute z-20 cursor-pointer"
+              style={{ 
+                top: `${stationPixelY - 8}px`, 
+                left: `${stationPixelX - 8}px` 
+              }}
+              onClick={() => onStationClick && onStationClick(station)}
+              onMouseEnter={() => onStationHover?.(station)}
+              onMouseLeave={() => onStationHover?.(null)}
+            >
             {/* Bus Stop Icon - Unicode */}
             <div className="relative">
               <span 
@@ -705,8 +718,9 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 {station.name}
               </div>
             )}
-          </div>
-        ))}
+            </div>
+          );
+        })}
 
         {/* Bus Icons with Animations - only show if buses visibility is enabled */}
         {showBuses && buses
