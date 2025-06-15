@@ -266,6 +266,14 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
             </CardHeader>
             <CardContent>
               <div className="relative bg-black rounded-lg overflow-hidden">
+                {!isVideoPlaying && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/80 z-10">
+                    <div className="text-center text-white">
+                      <div className="text-sm mb-2">CCTV FEED</div>
+                      <div className="text-xs opacity-70">Click play to start video</div>
+                    </div>
+                  </div>
+                )}
                 <video
                   id="station-video"
                   src={getStationVideoSrc()}
@@ -275,19 +283,24 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                   controls
                   className="w-full h-64 object-cover"
                   style={{ minHeight: '256px' }}
-                  onLoadedData={() => {
-                    console.log('Video loaded successfully');
-                    const video = document.getElementById('station-video') as HTMLVideoElement;
-                    if (video) {
-                      video.currentTime = 0;
-                      video.play().then(() => {
-                        setIsVideoPlaying(true);
-                        console.log('Video started playing');
-                      }).catch((error) => {
-                        console.error('Video play failed:', error);
-                        setIsVideoPlaying(false);
-                      });
-                    }
+                  onLoadedData={(e) => {
+                    console.log('=== VIDEO LOADED ===');
+                    const video = e.target as HTMLVideoElement;
+                    console.log('Video src:', video.src);
+                    console.log('Video duration:', video.duration);
+                    console.log('Video readyState:', video.readyState);
+                    console.log('Video networkState:', video.networkState);
+                    
+                    // Reset video and try to play
+                    video.currentTime = 0;
+                    video.play().then(() => {
+                      setIsVideoPlaying(true);
+                      console.log('✅ Video autoplay successful');
+                    }).catch((error) => {
+                      console.warn('⚠️ Video autoplay blocked:', error.message);
+                      console.log('User interaction required to play video');
+                      setIsVideoPlaying(false);
+                    });
                   }}
                   onError={(e) => {
                     console.error('Video error:', e);
