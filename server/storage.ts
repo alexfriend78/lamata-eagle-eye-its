@@ -167,22 +167,22 @@ export class MemStorage implements IStorage {
 
     // Create routes based on Lagos BRT system - comprehensive zone coverage
     const routesData = [
-      { routeNumber: "1", name: "Lagos Blue Line - Coastal Express", color: "#1E40AF" },
-      { routeNumber: "2", name: "Red Line - Metropolitan Diagonal", color: "#DC2626" },
-      { routeNumber: "3", name: "Green Line - Central Curve", color: "#059669" },
-      { routeNumber: "4", name: "Orange Line - Northern Arc", color: "#EA580C" },
-      { routeNumber: "5", name: "Purple Line - Riverside Route", color: "#7C3AED" },
-      { routeNumber: "6", name: "Teal Line - Metropolitan Loop", color: "#0D9488" },
-      { routeNumber: "7", name: "Yellow Line - Express Highway", color: "#CA8A04" },
-      { routeNumber: "8", name: "Pink Line - Northern Arterial", color: "#BE185D" },
-      { routeNumber: "9", name: "Cyan Line - Southern Express", color: "#0891B2" },
-      { routeNumber: "10", name: "Brown Line - Cross-City Connector", color: "#A16207" },
-      { routeNumber: "11", name: "Lime Line - Central Spine", color: "#65A30D" },
-      { routeNumber: "12", name: "Indigo Line - Eastern Corridor", color: "#4338CA" },
-      { routeNumber: "13", name: "Violet Line - Orbital Circuit", color: "#8B5CF6" },
-      { routeNumber: "14", name: "Gold Line - Luxury Express", color: "#D97706" },
-      { routeNumber: "15", name: "Silver Line - Island Hopper", color: "#6B7280" },
-      { routeNumber: "16", name: "Coral Line - Scenic Coastal", color: "#F97316" }
+      { routeNumber: "1", name: "Blue Line - Northern Corridor", color: "#1E40AF" },
+      { routeNumber: "2", name: "Red Line - Main Diagonal", color: "#DC2626" },
+      { routeNumber: "3", name: "Green Line - Upper Express", color: "#059669" },
+      { routeNumber: "4", name: "Orange Line - Central Spine", color: "#EA580C" },
+      { routeNumber: "5", name: "Purple Line - Southern Express", color: "#7C3AED" },
+      { routeNumber: "6", name: "Teal Line - Coastal Edge", color: "#0D9488" },
+      { routeNumber: "7", name: "Yellow Line - Western Spine", color: "#CA8A04" },
+      { routeNumber: "8", name: "Pink Line - Central Axis", color: "#BE185D" },
+      { routeNumber: "9", name: "Cyan Line - Eastern Spine", color: "#0891B2" },
+      { routeNumber: "10", name: "Brown Line - Cross Diagonal", color: "#A16207" },
+      { routeNumber: "11", name: "Lime Line - Orbital Ring", color: "#65A30D" },
+      { routeNumber: "12", name: "Indigo Line - Figure Eight", color: "#4338CA" },
+      { routeNumber: "13", name: "Violet Line - Grand Circle", color: "#8B5CF6" },
+      { routeNumber: "14", name: "Gold Line - Mountain Ridge", color: "#D97706" },
+      { routeNumber: "15", name: "Silver Line - River Flow", color: "#6B7280" },
+      { routeNumber: "16", name: "Coral Line - Wave Pattern", color: "#F97316" }
     ];
 
     routesData.forEach(route => {

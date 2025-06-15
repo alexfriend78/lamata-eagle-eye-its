@@ -19,72 +19,77 @@ interface MapContainerProps {
 
 export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed }: MapContainerProps) {
   const getRoutePoints = (routeId: number) => {
-    // Define aesthetically pleasing routes inspired by real transit systems
+    // Define routes that utilize the full 1280x720 screen area with comprehensive coverage
     const routePaths: Record<number, { x: number; y: number }[]> = {
-      1: [ // Lagos Blue Line - Elegant coastal curve
-        { x: 50, y: 100 }, { x: 200, y: 80 }, { x: 400, y: 90 }, { x: 600, y: 120 }, 
-        { x: 800, y: 140 }, { x: 1000, y: 160 }, { x: 1200, y: 180 }
+      1: [ // Blue Line - Northern corridor spanning full width
+        { x: 20, y: 80 }, { x: 160, y: 70 }, { x: 320, y: 85 }, { x: 480, y: 90 }, 
+        { x: 640, y: 95 }, { x: 800, y: 100 }, { x: 960, y: 105 }, { x: 1120, y: 110 }, { x: 1260, y: 120 }
       ],
-      2: [ // Red Line - Dynamic diagonal sweep
-        { x: 100, y: 50 }, { x: 250, y: 150 }, { x: 450, y: 250 }, { x: 650, y: 350 }, 
-        { x: 850, y: 450 }, { x: 1050, y: 550 }, { x: 1200, y: 650 }
+      2: [ // Red Line - Main diagonal from northwest to southeast
+        { x: 40, y: 40 }, { x: 180, y: 120 }, { x: 320, y: 200 }, { x: 460, y: 280 }, 
+        { x: 600, y: 360 }, { x: 740, y: 440 }, { x: 880, y: 520 }, { x: 1020, y: 600 }, { x: 1160, y: 680 }
       ],
-      3: [ // Green Line - Gentle S-curve through center
-        { x: 80, y: 360 }, { x: 200, y: 320 }, { x: 350, y: 300 }, { x: 500, y: 320 }, 
-        { x: 650, y: 340 }, { x: 800, y: 360 }, { x: 950, y: 380 }, { x: 1100, y: 400 }
+      3: [ // Green Line - Upper middle horizontal with gentle curves
+        { x: 30, y: 180 }, { x: 200, y: 170 }, { x: 370, y: 175 }, { x: 540, y: 180 }, 
+        { x: 710, y: 185 }, { x: 880, y: 190 }, { x: 1050, y: 195 }, { x: 1220, y: 200 }
       ],
-      4: [ // Orange Line - Smooth arc across top
-        { x: 150, y: 200 }, { x: 300, y: 180 }, { x: 450, y: 170 }, { x: 600, y: 180 }, 
-        { x: 750, y: 190 }, { x: 900, y: 200 }, { x: 1050, y: 210 }
+      4: [ // Orange Line - Central east-west spine
+        { x: 25, y: 300 }, { x: 180, y: 295 }, { x: 335, y: 305 }, { x: 490, y: 300 }, 
+        { x: 645, y: 310 }, { x: 800, y: 305 }, { x: 955, y: 315 }, { x: 1110, y: 310 }, { x: 1255, y: 320 }
       ],
-      5: [ // Purple Line - Flowing riverside route
-        { x: 40, y: 500 }, { x: 180, y: 480 }, { x: 320, y: 460 }, { x: 480, y: 450 }, 
-        { x: 640, y: 460 }, { x: 800, y: 480 }, { x: 960, y: 500 }, { x: 1120, y: 520 }
+      5: [ // Purple Line - Southern corridor full width
+        { x: 35, y: 520 }, { x: 190, y: 515 }, { x: 345, y: 525 }, { x: 500, y: 520 }, 
+        { x: 655, y: 530 }, { x: 810, y: 525 }, { x: 965, y: 535 }, { x: 1120, y: 530 }, { x: 1245, y: 540 }
       ],
-      6: [ // Teal Line - Metropolitan loop (partial)
-        { x: 200, y: 600 }, { x: 350, y: 580 }, { x: 500, y: 560 }, { x: 650, y: 580 }, 
-        { x: 800, y: 600 }, { x: 950, y: 620 }, { x: 1100, y: 640 }
+      6: [ // Teal Line - Bottom edge express
+        { x: 50, y: 650 }, { x: 220, y: 640 }, { x: 390, y: 645 }, { x: 560, y: 650 }, 
+        { x: 730, y: 655 }, { x: 900, y: 660 }, { x: 1070, y: 665 }, { x: 1230, y: 670 }
       ],
-      7: [ // Yellow Line - Express highway parallel
-        { x: 120, y: 300 }, { x: 280, y: 290 }, { x: 440, y: 280 }, { x: 600, y: 290 }, 
-        { x: 760, y: 300 }, { x: 920, y: 310 }, { x: 1080, y: 320 }
+      7: [ // Yellow Line - Western north-south spine
+        { x: 120, y: 30 }, { x: 130, y: 140 }, { x: 140, y: 250 }, { x: 150, y: 360 }, 
+        { x: 160, y: 470 }, { x: 170, y: 580 }, { x: 180, y: 690 }
       ],
-      8: [ // Pink Line - Northern arterial
-        { x: 60, y: 150 }, { x: 220, y: 140 }, { x: 380, y: 130 }, { x: 540, y: 140 }, 
-        { x: 700, y: 150 }, { x: 860, y: 160 }, { x: 1020, y: 170 }, { x: 1180, y: 180 }
+      8: [ // Pink Line - Central vertical spine
+        { x: 640, y: 25 }, { x: 645, y: 130 }, { x: 650, y: 235 }, { x: 655, y: 340 }, 
+        { x: 660, y: 445 }, { x: 665, y: 550 }, { x: 670, y: 655 }, { x: 675, y: 705 }
       ],
-      9: [ // Cyan Line - Southern express
-        { x: 80, y: 550 }, { x: 240, y: 540 }, { x: 400, y: 530 }, { x: 560, y: 540 }, 
-        { x: 720, y: 550 }, { x: 880, y: 560 }, { x: 1040, y: 570 }, { x: 1200, y: 580 }
+      9: [ // Cyan Line - Eastern north-south corridor
+        { x: 1100, y: 35 }, { x: 1105, y: 145 }, { x: 1110, y: 255 }, { x: 1115, y: 365 }, 
+        { x: 1120, y: 475 }, { x: 1125, y: 585 }, { x: 1130, y: 695 }
       ],
-      10: [ // Brown Line - Cross-city connector
-        { x: 160, y: 100 }, { x: 200, y: 200 }, { x: 240, y: 300 }, { x: 280, y: 400 }, 
-        { x: 320, y: 500 }, { x: 360, y: 600 }, { x: 400, y: 680 }
+      10: [ // Brown Line - Northeast to southwest diagonal
+        { x: 1200, y: 60 }, { x: 1050, y: 140 }, { x: 900, y: 220 }, { x: 750, y: 300 }, 
+        { x: 600, y: 380 }, { x: 450, y: 460 }, { x: 300, y: 540 }, { x: 150, y: 620 }, { x: 80, y: 700 }
       ],
-      11: [ // Lime Line - Central spine
-        { x: 640, y: 50 }, { x: 640, y: 150 }, { x: 640, y: 250 }, { x: 640, y: 350 }, 
-        { x: 640, y: 450 }, { x: 640, y: 550 }, { x: 640, y: 650 }
+      11: [ // Lime Line - Orbital ring covering all corners
+        { x: 200, y: 100 }, { x: 400, y: 80 }, { x: 600, y: 90 }, { x: 800, y: 100 }, { x: 1000, y: 120 }, 
+        { x: 1150, y: 200 }, { x: 1200, y: 350 }, { x: 1180, y: 500 }, { x: 1100, y: 620 }, 
+        { x: 900, y: 680 }, { x: 700, y: 670 }, { x: 500, y: 660 }, { x: 300, y: 650 }, 
+        { x: 150, y: 580 }, { x: 80, y: 450 }, { x: 100, y: 300 }, { x: 150, y: 180 }
       ],
-      12: [ // Indigo Line - Eastern corridor
-        { x: 900, y: 80 }, { x: 920, y: 180 }, { x: 940, y: 280 }, { x: 960, y: 380 }, 
-        { x: 980, y: 480 }, { x: 1000, y: 580 }, { x: 1020, y: 680 }
+      12: [ // Indigo Line - Figure-8 pattern through center
+        { x: 320, y: 150 }, { x: 480, y: 180 }, { x: 640, y: 220 }, { x: 800, y: 260 }, { x: 960, y: 300 },
+        { x: 800, y: 340 }, { x: 640, y: 380 }, { x: 480, y: 420 }, { x: 320, y: 460 },
+        { x: 480, y: 500 }, { x: 640, y: 540 }, { x: 800, y: 580 }, { x: 960, y: 620 }
       ],
-      13: [ // Violet Line - Orbital route
-        { x: 300, y: 200 }, { x: 400, y: 180 }, { x: 500, y: 200 }, { x: 580, y: 250 }, 
-        { x: 600, y: 350 }, { x: 580, y: 450 }, { x: 500, y: 500 }, { x: 400, y: 520 }, 
-        { x: 300, y: 500 }, { x: 220, y: 450 }, { x: 200, y: 350 }, { x: 220, y: 250 }
+      13: [ // Violet Line - Complex curve through all quadrants
+        { x: 60, y: 200 }, { x: 180, y: 160 }, { x: 320, y: 140 }, { x: 480, y: 160 }, { x: 640, y: 200 },
+        { x: 800, y: 250 }, { x: 960, y: 320 }, { x: 1100, y: 400 }, { x: 1200, y: 500 },
+        { x: 1150, y: 600 }, { x: 1000, y: 650 }, { x: 800, y: 680 }, { x: 600, y: 670 },
+        { x: 400, y: 640 }, { x: 200, y: 580 }, { x: 80, y: 480 }, { x: 50, y: 350 }
       ],
-      14: [ // Gold Line - Luxury express
-        { x: 400, y: 120 }, { x: 500, y: 110 }, { x: 600, y: 100 }, { x: 700, y: 110 }, 
-        { x: 800, y: 120 }, { x: 900, y: 130 }, { x: 1000, y: 140 }
+      14: [ // Gold Line - Mountain range pattern across top
+        { x: 100, y: 120 }, { x: 250, y: 80 }, { x: 400, y: 130 }, { x: 550, y: 70 }, 
+        { x: 700, y: 140 }, { x: 850, y: 90 }, { x: 1000, y: 150 }, { x: 1150, y: 100 }
       ],
-      15: [ // Silver Line - Island hopper
-        { x: 700, y: 400 }, { x: 800, y: 380 }, { x: 900, y: 400 }, { x: 1000, y: 420 }, 
-        { x: 1100, y: 400 }, { x: 1180, y: 420 }, { x: 1240, y: 450 }
+      15: [ // Silver Line - River meander through lower half
+        { x: 80, y: 400 }, { x: 220, y: 420 }, { x: 360, y: 450 }, { x: 500, y: 480 }, 
+        { x: 640, y: 500 }, { x: 780, y: 520 }, { x: 920, y: 550 }, { x: 1060, y: 580 }, { x: 1200, y: 600 }
       ],
-      16: [ // Coral Line - Scenic coastal
-        { x: 500, y: 600 }, { x: 600, y: 620 }, { x: 700, y: 640 }, { x: 800, y: 660 }, 
-        { x: 900, y: 680 }, { x: 1000, y: 700 }, { x: 1100, y: 720 }
+      16: [ // Coral Line - Coastal wave pattern along bottom
+        { x: 40, y: 580 }, { x: 160, y: 600 }, { x: 280, y: 620 }, { x: 400, y: 640 }, 
+        { x: 520, y: 660 }, { x: 640, y: 680 }, { x: 760, y: 700 }, { x: 880, y: 690 }, 
+        { x: 1000, y: 680 }, { x: 1120, y: 670 }, { x: 1240, y: 660 }
       ]
     };
     return routePaths[routeId] || [];
