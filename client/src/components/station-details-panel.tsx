@@ -36,13 +36,24 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
 
   const toggleVideoPlayback = () => {
     const video = document.getElementById('station-video') as HTMLVideoElement;
+    console.log('Toggle video playback clicked');
     if (video) {
+      console.log('Video element found:', video.src);
+      console.log('Current playing state:', isVideoPlaying);
       if (isVideoPlaying) {
         video.pause();
+        setIsVideoPlaying(false);
       } else {
-        video.play().catch(console.error);
+        video.play().then(() => {
+          console.log('Video play promise resolved');
+          setIsVideoPlaying(true);
+        }).catch((error) => {
+          console.error('Video play failed:', error);
+          setIsVideoPlaying(false);
+        });
       }
-      setIsVideoPlaying(!isVideoPlaying);
+    } else {
+      console.error('Video element not found');
     }
   };
 
@@ -258,36 +269,38 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                 <video
                   id="station-video"
                   src={getStationVideoSrc()}
-                  autoPlay
                   loop
-                  muted={isVideoMuted}
+                  muted
                   playsInline
-                  controls={false}
-                  preload="auto"
+                  controls
                   className="w-full h-64 object-cover"
                   style={{ minHeight: '256px' }}
                   onLoadedData={() => {
+                    console.log('Video loaded successfully');
                     const video = document.getElementById('station-video') as HTMLVideoElement;
                     if (video) {
                       video.currentTime = 0;
-                      video.play().catch(console.error);
-                      setIsVideoPlaying(true);
+                      video.play().then(() => {
+                        setIsVideoPlaying(true);
+                        console.log('Video started playing');
+                      }).catch((error) => {
+                        console.error('Video play failed:', error);
+                        setIsVideoPlaying(false);
+                      });
                     }
                   }}
                   onError={(e) => {
                     console.error('Video error:', e);
                     const video = e.target as HTMLVideoElement;
                     console.log('Failed video source:', video.src);
-                    // Try reloading the video source
-                    setTimeout(() => {
-                      video.load();
-                    }, 1000);
                   }}
-                  onCanPlay={() => {
-                    const video = document.getElementById('station-video') as HTMLVideoElement;
-                    if (video && !video.paused) {
-                      setIsVideoPlaying(true);
-                    }
+                  onPlay={() => {
+                    setIsVideoPlaying(true);
+                    console.log('Video is playing');
+                  }}
+                  onPause={() => {
+                    setIsVideoPlaying(false);
+                    console.log('Video is paused');
                   }}
                 />
                 <div className="absolute bottom-2 right-2 flex gap-2">
