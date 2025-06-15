@@ -216,6 +216,29 @@ export class MemStorage implements IStorage {
       const id = this.currentRouteStationId++;
       this.routeStations.set(id, { id, ...routeStation });
     });
+
+    // Create sample bus arrivals for the next 30 minutes
+    const now = new Date();
+    const busArrivalsData = [];
+    
+    // Generate arrivals for first few stations
+    for (let stationId = 1; stationId <= 5; stationId++) {
+      for (let i = 0; i < 3; i++) {
+        const estimatedArrival = new Date(now.getTime() + (i * 10 + Math.random() * 5) * 60000); // 10-15 min intervals
+        busArrivalsData.push({
+          busId: Math.floor(Math.random() * 11) + 1,
+          stationId,
+          routeId: Math.floor(Math.random() * 9) + 1,
+          estimatedArrival,
+          status: Math.random() > 0.8 ? "approaching" : "scheduled"
+        });
+      }
+    }
+
+    busArrivalsData.forEach(arrival => {
+      const id = this.currentBusArrivalId++;
+      this.busArrivals.set(id, { id, actualArrival: null, ...arrival });
+    });
   }
 
   async getRoutes(): Promise<Route[]> {
@@ -249,7 +272,17 @@ export class MemStorage implements IStorage {
 
   async createStation(station: InsertStation): Promise<Station> {
     const id = this.currentStationId++;
-    const newStation: Station = { id, ...station };
+    const newStation: Station = { 
+      id, 
+      name: station.name,
+      x: station.x,
+      y: station.y,
+      zone: station.zone ?? 1,
+      passengerCount: station.passengerCount ?? 0,
+      trafficCondition: station.trafficCondition ?? "normal",
+      accessibility: station.accessibility ?? true,
+      amenities: station.amenities ?? []
+    };
     this.stations.set(id, newStation);
     return newStation;
   }
@@ -455,6 +488,75 @@ export class MemStorage implements IStorage {
     const newRouteStation: RouteStation = { id, ...routeStation };
     this.routeStations.set(id, newRouteStation);
     return newRouteStation;
+  }
+
+  async getStationDetails(id: number): Promise<StationDetails | undefined> {
+    const station = this.stations.get(id);
+    if (!station) return undefined;
+
+    const upcomingArrivals = await this.getBusArrivals(id);
+    const routeIds = Array.from(this.routeStations.values())
+      .filter(rs => rs.stationId === id)
+      .map(rs => rs.routeId);
+    const activeRoutes = routeIds.map(routeId => this.routes.get(routeId)!).filter(Boolean);
+
+    return {
+      ...station,
+      upcomingArrivals,
+      activeRoutes
+    };
+  }
+
+  async updateStationPassengerCount(id: number, count: number): Promise<Station | undefined> {
+    const station = this.stations.get(id);
+    if (station) {
+      const updatedStation = { ...station, passengerCount: count };
+      this.stations.set(id, updatedStation);
+      return updatedStation;
+    }
+    return undefined;
+  }
+
+  async getBusArrivals(stationId: number): Promise<BusArrivalWithDetails[]> {
+    const arrivals = Array.from(this.busArrivals.values())
+      .filter(arrival => arrival.stationId === stationId && arrival.estimatedArrival > new Date())
+      .sort((a, b) => a.estimatedArrival.getTime() - b.estimatedArrival.getTime())
+      .slice(0, 5); // Next 5 arrivals
+
+    return arrivals.map(arrival => {
+      const bus = this.buses.get(arrival.busId)!;
+      const route = this.routes.get(arrival.routeId)!;
+      return {
+        ...arrival,
+        bus: { ...bus, route },
+        route
+      };
+    });
+  }
+
+  async createBusArrival(arrival: InsertBusArrival): Promise<BusArrival> {
+    const id = this.currentBusArrivalId++;
+    const newArrival: BusArrival = { 
+      id, 
+      busId: arrival.busId,
+      stationId: arrival.stationId,
+      routeId: arrival.routeId,
+      estimatedArrival: arrival.estimatedArrival,
+      actualArrival: arrival.actualArrival ?? null,
+      status: arrival.status ?? "scheduled"
+    };
+    this.busArrivals.set(id, newArrival);
+    return newArrival;
+  }
+
+  async updateArrivalStatus(id: number, status: string): Promise<BusArrival | undefined> {
+    const arrival = this.busArrivals.get(id);
+    if (arrival) {
+      const updatedArrival = { ...arrival, status };
+      this.busArrivals.set(id, updatedArrival);
+      return updatedArrival;
+    }
+    return undefined;
   }
 
   async getSystemStats(): Promise<SystemStats> {

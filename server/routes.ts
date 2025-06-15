@@ -35,6 +35,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get station details
+  app.get("/api/stations/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const stationDetails = await storage.getStationDetails(id);
+      if (!stationDetails) {
+        res.status(404).json({ error: "Station not found" });
+        return;
+      }
+      res.json(stationDetails);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch station details" });
+    }
+  });
+
   // Get active alerts
   app.get("/api/alerts", async (_req, res) => {
     try {
