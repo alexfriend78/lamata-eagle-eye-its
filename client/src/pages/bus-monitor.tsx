@@ -8,8 +8,9 @@ import EmergencyAlert from "@/components/emergency-alert";
 import StationDetailsPanel from "@/components/station-details-panel";
 import RouteCustomizationPanel from "@/components/route-customization-panel";
 import RouteAestheticsPanel from "@/components/route-aesthetics-panel";
+import CrowdDensityHeatmap from "@/components/crowd-density-heatmap";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, Users } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
@@ -29,6 +30,7 @@ export default function BusMonitor() {
   const [showRoutes, setShowRoutes] = useState(true);
   const [showStations, setShowStations] = useState(true);
   const [showBuses, setShowBuses] = useState(true);
+  const [showCrowdHeatmap, setShowCrowdHeatmap] = useState(false);
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
   const { theme, setTheme } = useTheme();
 
@@ -206,6 +208,17 @@ export default function BusMonitor() {
               <Map className="h-4 w-4" />
             </Button>
 
+            {/* Crowd Density Heatmap Toggle */}
+            <Button
+              onClick={() => setShowCrowdHeatmap(!showCrowdHeatmap)}
+              variant={showCrowdHeatmap ? "default" : "outline"}
+              size="sm"
+              className="h-8 w-8 p-0"
+              title="Toggle crowd density heatmap"
+            >
+              <Users className="h-4 w-4" />
+            </Button>
+
 
 
             {/* Theme Toggle */}
@@ -276,6 +289,17 @@ export default function BusMonitor() {
             showRoutes={showRoutes}
             showStations={showStations}
             showBuses={showBuses}
+          />
+          
+          {/* Crowd Density Heatmap Overlay */}
+          <CrowdDensityHeatmap
+            stations={stations || []}
+            routes={routes || []}
+            theme={theme}
+            mapWidth={typeof window !== 'undefined' ? window.innerWidth : 1920}
+            mapHeight={typeof window !== 'undefined' ? window.innerHeight - 64 : 1016}
+            isVisible={showCrowdHeatmap}
+            onToggle={() => setShowCrowdHeatmap(!showCrowdHeatmap)}
           />
         </div>
 
