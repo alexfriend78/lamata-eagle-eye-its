@@ -120,6 +120,10 @@ export class MemStorage implements IStorage {
       { routeNumber: "3", name: "Ikorodu - TBS", color: "#A23B72" },
       { routeNumber: "4", name: "Ikorodu - Fadeyi", color: "#F18F01" },
       { routeNumber: "5", name: "Ikorodu - Oshodi", color: "#C73E1D" },
+      { routeNumber: "6", name: "Berger - Ajah", color: "#1B5E20" },
+      { routeNumber: "7", name: "Lekki - Victoria Island", color: "#4A148C" },
+      { routeNumber: "8", name: "Yaba - Surulere", color: "#D84315" },
+      { routeNumber: "9", name: "Ikeja - Lagos Island", color: "#006064" },
     ];
 
     routesData.forEach(route => {
@@ -136,6 +140,10 @@ export class MemStorage implements IStorage {
       { routeId: 3, busNumber: "LG-03-GHI", currentX: 200, currentY: 560, status: "on_time", direction: "forward" },
       { routeId: 4, busNumber: "LG-04-JKL", currentX: 440, currentY: 500, status: "delayed", direction: "forward" },
       { routeId: 5, busNumber: "LG-05-MNO", currentX: 680, currentY: 440, status: "on_time", direction: "reverse" },
+      { routeId: 6, busNumber: "LG-06-PQR", currentX: 300, currentY: 350, status: "on_time", direction: "forward" },
+      { routeId: 7, busNumber: "LG-07-STU", currentX: 1100, currentY: 300, status: "delayed", direction: "forward" },
+      { routeId: 8, busNumber: "LG-08-VWX", currentX: 700, currentY: 200, status: "on_time", direction: "reverse" },
+      { routeId: 9, busNumber: "LG-09-YZA", currentX: 500, currentY: 300, status: "on_time", direction: "forward" },
     ];
 
     busesData.forEach(bus => {
@@ -293,6 +301,24 @@ export class MemStorage implements IStorage {
         { x: 50, y: 600 }, { x: 120, y: 580 }, { x: 200, y: 560 }, { x: 280, y: 540 },
         { x: 360, y: 520 }, { x: 440, y: 500 }, { x: 520, y: 480 }, { x: 600, y: 460 },
         { x: 680, y: 440 }, { x: 720, y: 420 }, { x: 800, y: 400 }
+      ],
+      6: [ // Berger - Ajah (west to east)
+        { x: 100, y: 350 }, { x: 200, y: 340 }, { x: 300, y: 330 }, { x: 400, y: 325 },
+        { x: 500, y: 320 }, { x: 600, y: 315 }, { x: 700, y: 310 }, { x: 800, y: 305 },
+        { x: 900, y: 300 }, { x: 1000, y: 295 }, { x: 1100, y: 290 }, { x: 1200, y: 285 }
+      ],
+      7: [ // Lekki - Victoria Island (east coast)
+        { x: 1200, y: 200 }, { x: 1150, y: 220 }, { x: 1100, y: 240 }, { x: 1050, y: 260 },
+        { x: 1000, y: 280 }, { x: 950, y: 300 }, { x: 900, y: 320 }, { x: 850, y: 340 }
+      ],
+      8: [ // Yaba - Surulere (central)
+        { x: 600, y: 150 }, { x: 650, y: 170 }, { x: 700, y: 190 }, { x: 750, y: 210 },
+        { x: 800, y: 230 }, { x: 850, y: 250 }, { x: 900, y: 270 }
+      ],
+      9: [ // Ikeja - Lagos Island (central diagonal)
+        { x: 400, y: 250 }, { x: 450, y: 270 }, { x: 500, y: 290 }, { x: 550, y: 310 },
+        { x: 600, y: 330 }, { x: 650, y: 350 }, { x: 700, y: 370 }, { x: 750, y: 390 },
+        { x: 800, y: 410 }, { x: 850, y: 430 }
       ]
     };
 

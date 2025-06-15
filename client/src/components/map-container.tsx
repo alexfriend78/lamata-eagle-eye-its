@@ -7,9 +7,11 @@ interface MapContainerProps {
   stations: Station[];
   selectedRoutes: number[];
   theme: "light" | "dark";
+  selectedZone: number | null;
+  onZoneSelect: (zone: number | null) => void;
 }
 
-export default function MapContainer({ buses, routes, stations, selectedRoutes, theme }: MapContainerProps) {
+export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect }: MapContainerProps) {
   const getRoutePoints = (routeId: number) => {
     // Define route paths for Lagos BRT system - spread across full screen
     const routePaths: Record<number, { x: number; y: number }[]> = {
@@ -43,6 +45,24 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         { x: 50, y: 600 }, { x: 120, y: 580 }, { x: 200, y: 560 }, { x: 280, y: 540 },
         { x: 360, y: 520 }, { x: 440, y: 500 }, { x: 520, y: 480 }, { x: 600, y: 460 },
         { x: 680, y: 440 }, { x: 720, y: 420 }, { x: 800, y: 400 }
+      ],
+      6: [ // Berger - Ajah (west to east)
+        { x: 100, y: 350 }, { x: 200, y: 340 }, { x: 300, y: 330 }, { x: 400, y: 325 },
+        { x: 500, y: 320 }, { x: 600, y: 315 }, { x: 700, y: 310 }, { x: 800, y: 305 },
+        { x: 900, y: 300 }, { x: 1000, y: 295 }, { x: 1100, y: 290 }, { x: 1200, y: 285 }
+      ],
+      7: [ // Lekki - Victoria Island (east coast)
+        { x: 1200, y: 200 }, { x: 1150, y: 220 }, { x: 1100, y: 240 }, { x: 1050, y: 260 },
+        { x: 1000, y: 280 }, { x: 950, y: 300 }, { x: 900, y: 320 }, { x: 850, y: 340 }
+      ],
+      8: [ // Yaba - Surulere (central)
+        { x: 600, y: 150 }, { x: 650, y: 170 }, { x: 700, y: 190 }, { x: 750, y: 210 },
+        { x: 800, y: 230 }, { x: 850, y: 250 }, { x: 900, y: 270 }
+      ],
+      9: [ // Ikeja - Lagos Island (central diagonal)
+        { x: 400, y: 250 }, { x: 450, y: 270 }, { x: 500, y: 290 }, { x: 550, y: 310 },
+        { x: 600, y: 330 }, { x: 650, y: 350 }, { x: 700, y: 370 }, { x: 750, y: 390 },
+        { x: 800, y: 410 }, { x: 850, y: 430 }
       ]
     };
     return routePaths[routeId] || [];
@@ -50,16 +70,17 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
 
   const renderRouteLine = (route: Route) => {
     const points = getRoutePoints(route.id);
+    const isHighlighted = selectedRoutes.includes(route.id);
+    
     if (points.length < 2) return null;
 
-    const isHighlighted = selectedRoutes.includes(route.id);
-    const opacity = selectedRoutes.length === 0 || isHighlighted ? 1 : 0.3;
-    
     return (
       <svg
         key={route.id}
-        className="absolute inset-0 w-full h-full pointer-events-none"
-        style={{ opacity }}
+        className="absolute inset-0 pointer-events-none"
+        width="1280"
+        height="720"
+        style={{ zIndex: 10 }}
       >
         <polyline
           points={points.map(p => `${p.x},${p.y}`).join(' ')}
@@ -73,17 +94,95 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     );
   };
 
+  // Calculate zoom parameters for selected zone
+  const getZoomTransform = () => {
+    if (selectedZone === null) return "scale(1) translate(0, 0)";
+    
+    const row = Math.floor((selectedZone - 1) / 4);
+    const col = (selectedZone - 1) % 4;
+    
+    const zoneWidth = 1280 / 4;
+    const zoneHeight = 720 / 4;
+    
+    const centerX = col * zoneWidth + zoneWidth / 2;
+    const centerY = row * zoneHeight + zoneHeight / 2;
+    
+    const scale = 2;
+    const translateX = (640 - centerX);
+    const translateY = (360 - centerY);
+    
+    return `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
+  };
+
   return (
-    <div className={`h-full relative overflow-hidden ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}`}>
-      <div className="absolute top-4 left-4 z-10">
-        <h2 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-          Lagos BRT Network
-        </h2>
+    <div className="relative w-full h-full overflow-hidden border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900">
+      {/* Grid zones overlay */}
+      <div className="absolute inset-0 pointer-events-none z-40">
+        {Array.from({ length: 16 }, (_, i) => {
+          const row = Math.floor(i / 4);
+          const col = i % 4;
+          const zoneNumber = i + 1;
+          
+          return (
+            <div
+              key={zoneNumber}
+              className={`absolute border-2 transition-all duration-200 ${
+                selectedZone === zoneNumber 
+                  ? 'border-blue-500 bg-blue-500/20' 
+                  : 'border-gray-400/30 hover:border-blue-400/50 hover:bg-blue-400/10'
+              }`}
+              style={{
+                left: `${col * 25}%`,
+                top: `${row * 25}%`,
+                width: '25%',
+                height: '25%',
+                pointerEvents: 'auto',
+                cursor: 'pointer'
+              }}
+              onClick={() => onZoneSelect(selectedZone === zoneNumber ? null : zoneNumber)}
+              title={`Zone ${zoneNumber}`}
+            >
+              <div className={`absolute top-1 left-1 text-xs font-bold ${
+                theme === 'dark' ? 'text-white' : 'text-gray-800'
+              }`}>
+                {zoneNumber}
+              </div>
+            </div>
+          );
+        })}
       </div>
-      
-      {/* Route Network Visualization */}
-      <div className="relative w-full h-full overflow-hidden">
-        
+
+      {/* Main map content */}
+      <div 
+        className="relative transition-all duration-500 ease-in-out"
+        style={{ 
+          width: '1280px',
+          height: '720px',
+          transform: getZoomTransform(),
+          transformOrigin: 'center center'
+        }}
+      >
+        {/* Background grid */}
+        <svg
+          width="1280"
+          height="720"
+          className="absolute inset-0"
+          style={{ background: theme === "dark" ? "#1f2937" : "#f9fafb" }}
+        >
+          <defs>
+            <pattern id="grid" width="80" height="45" patternUnits="userSpaceOnUse">
+              <path 
+                d="M 80 0 L 0 0 0 45" 
+                fill="none" 
+                stroke={theme === "dark" ? "#374151" : "#d1d5db"} 
+                strokeWidth="0.5"
+                opacity="0.5"
+              />
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
+
         {/* Route Lines */}
         {routes.map(renderRouteLine)}
         
@@ -103,14 +202,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                   ? 'bg-blue-400 border-white' 
                   : 'bg-blue-600 border-gray-900'
               }`}
-            ></div>
-            <span 
-              className={`text-xs ml-3 whitespace-nowrap ${
-                theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-              }`}
-            >
-              {station.name}
-            </span>
+              title={station.name}
+            />
           </div>
         ))}
 
@@ -127,49 +220,6 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             }}
           />
         ))}
-
-        {/* Route Labels */}
-        {routes.map((route) => {
-          const points = getRoutePoints(route.id);
-          if (points.length === 0) return null;
-          
-          const midPoint = points[Math.floor(points.length / 2)];
-          const isHighlighted = selectedRoutes.includes(route.id);
-          const opacity = selectedRoutes.length === 0 || isHighlighted ? 1 : 0.5;
-          
-          return (
-            <div 
-              key={route.id}
-              className="absolute text-xs px-2 py-1 rounded-full font-semibold z-25"
-              style={{
-                top: `${midPoint.y - 15}px`,
-                left: `${midPoint.x - 15}px`,
-                backgroundColor: route.color,
-                color: 'white',
-                opacity,
-                transform: isHighlighted ? 'scale(1.1)' : 'scale(1)',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              {route.routeNumber}
-            </div>
-          );
-        })}
-
-        {/* Grid Background */}
-        <div 
-          className={`absolute inset-0 opacity-10 pointer-events-none ${
-            theme === 'dark' 
-              ? 'bg-gradient-to-br from-blue-900/20 to-purple-900/20' 
-              : 'bg-gradient-to-br from-blue-100/50 to-purple-100/50'
-          }`}
-          style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, ${
-              theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'
-            } 1px, transparent 0)`,
-            backgroundSize: '20px 20px'
-          }}
-        />
       </div>
     </div>
   );
