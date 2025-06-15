@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useBusData } from "@/hooks/use-bus-data";
 import { useTheme } from "@/hooks/use-theme";
 import MapContainer from "@/components/map-container";
 import ControlPanel from "@/components/control-panel";
 import EmergencyAlert from "@/components/emergency-alert";
+import StationDetailsPanel from "@/components/station-details-panel";
 import { Button } from "@/components/ui/button";
 import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type } from "lucide-react";
+import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -14,10 +17,16 @@ export default function BusMonitor() {
   const [showSettings, setShowSettings] = useState(false);
   const [showMap, setShowMap] = useState(false);
   const [showStationNames, setShowStationNames] = useState(true);
-  const [selectedStation, setSelectedStation] = useState<any>(null);
+  const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   const [showLiveFeed, setShowLiveFeed] = useState(false);
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
   const { theme, setTheme } = useTheme();
+
+  // Fetch station details when a station is selected
+  const { data: stationDetails } = useQuery({
+    queryKey: ['/api/stations', selectedStation?.id],
+    enabled: !!selectedStation?.id,
+  });
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -52,6 +61,14 @@ export default function BusMonitor() {
         ? prev.filter(id => id !== routeId)
         : [...prev, routeId]
     );
+  };
+
+  const handleStationClick = (station: Station) => {
+    setSelectedStation(station);
+  };
+
+  const handleCloseStationDetails = () => {
+    setSelectedStation(null);
   };
 
   return (
@@ -171,7 +188,7 @@ export default function BusMonitor() {
             onZoneSelect={setSelectedZone}
             showMap={showMap}
             showStationNames={showStationNames}
-            onStationClick={setSelectedStation}
+            onStationClick={handleStationClick}
             showLiveFeed={showLiveFeed}
           />
         </div>
@@ -189,85 +206,12 @@ export default function BusMonitor() {
           </div>
         )}
 
-        {/* Station Details Modal */}
-        {selectedStation && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className={`${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'} rounded-lg p-6 max-w-md w-full mx-4 shadow-xl`}>
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold flex items-center">
-                  <MapPin className="h-5 w-5 mr-2 text-blue-500" />
-                  {selectedStation.name}
-                </h3>
-                <Button
-                  onClick={() => setSelectedStation(null)}
-                  variant="outline"
-                  size="sm"
-                  className="h-8 w-8 p-0"
-                >
-                  ×
-                </Button>
-              </div>
-              
-              <div className="space-y-4">
-                {/* Passenger Crowd */}
-                <div>
-                  <h4 className="font-medium text-sm mb-2">Passenger Crowd</h4>
-                  <div className="flex items-center space-x-2">
-                    <div className={`w-3 h-3 rounded-full ${selectedStation.id % 3 === 0 ? 'bg-red-500' : selectedStation.id % 3 === 1 ? 'bg-yellow-500' : 'bg-green-500'}`}></div>
-                    <span className="text-sm">
-                      {selectedStation.id % 3 === 0 ? 'High' : selectedStation.id % 3 === 1 ? 'Medium' : 'Low'} crowd level
-                    </span>
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">
-                    {(selectedStation.id * 7 + 15) % 45 + 10} people waiting
-                  </div>
-                </div>
-
-                {/* Next Arrivals */}
-                <div>
-                  <h4 className="font-medium text-sm mb-2">Next Arrivals</h4>
-                  <div className="space-y-1">
-                    {[1, 2, 3].map((_, i) => (
-                      <div key={i} className="flex justify-between text-sm">
-                        <span>Route {((selectedStation.id + i) % 9) + 1}</span>
-                        <span className={i === 0 ? 'text-green-500' : 'text-gray-500'}>
-                          {i === 0 ? '2 min' : `${(i + 1) * 5 + ((selectedStation.id + i) % 3)} min`}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Traffic Conditions */}
-                <div>
-                  <h4 className="font-medium text-sm mb-2">Traffic Conditions</h4>
-                  <div className="flex items-center space-x-2">
-                    <div className={`w-3 h-3 rounded-full ${selectedStation.id % 5 === 0 ? 'bg-red-500' : selectedStation.id % 5 <= 2 ? 'bg-yellow-500' : 'bg-green-500'}`}></div>
-                    <span className="text-sm">
-                      {selectedStation.id % 5 === 0 ? 'Heavy traffic' : selectedStation.id % 5 <= 2 ? 'Moderate traffic' : 'Light traffic'}
-                    </span>
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">
-                    Average delay: {(selectedStation.id % 8) + 1} minutes
-                  </div>
-                </div>
-
-                {/* Live Feed Option */}
-                {showLiveFeed && (
-                  <div>
-                    <h4 className="font-medium text-sm mb-2">Live Feed</h4>
-                    <div className={`${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'} rounded p-4 text-center`}>
-                      <Video className="h-8 w-8 mx-auto mb-2 text-gray-500" />
-                      <div className="text-xs text-gray-500">
-                        Live camera feed would appear here
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Station Details Panel */}
+        <StationDetailsPanel
+          stationDetails={stationDetails}
+          isOpen={!!selectedStation}
+          onClose={handleCloseStationDetails}
+        />
       </div>
     </div>
   );

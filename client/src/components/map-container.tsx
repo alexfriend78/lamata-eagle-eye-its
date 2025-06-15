@@ -389,17 +389,16 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             }}
             onClick={() => onStationClick(station)}
           >
-            {/* Bus Stop Icon */}
+            {/* Bus Stop Icon - Unicode */}
             <div className="relative">
-              <svg 
-                width="16" 
-                height="16" 
-                viewBox="0 0 24 24" 
-                className={`${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'} hover:scale-110 transition-transform`}
-                fill="currentColor"
+              <span 
+                className={`text-2xl ${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'} hover:scale-110 transition-transform select-none`}
+                style={{ 
+                  filter: theme === 'dark' ? 'drop-shadow(0 1px 2px rgba(0,0,0,0.8))' : 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))'
+                }}
               >
-                <path d="M12 2L13.09 8.26L22 9L17 14L18.18 22.82L12 19.77L5.82 22.82L7 14L2 9L10.91 8.26L12 2Z"/>
-              </svg>
+                🚏
+              </span>
               
               {/* Station indicator dot */}
               <div 
