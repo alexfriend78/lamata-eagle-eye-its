@@ -5,12 +5,14 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/hooks/use-theme";
 import BusMonitor from "@/pages/bus-monitor";
+import AlertSimulator from "@/pages/alert-simulator";
 import NotFound from "@/pages/not-found";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={BusMonitor} />
+      <Route path="/alert-simulator" component={AlertSimulator} />
       <Route component={NotFound} />
     </Switch>
   );
