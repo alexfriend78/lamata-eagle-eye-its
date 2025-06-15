@@ -1,6 +1,7 @@
-import { type BusWithRoute, type Route, type Station } from "@shared/schema";
+import { type BusWithRoute, type Route, type Station, type CrowdDensityReading } from "@shared/schema";
 import BusIcon from "./bus-icon";
 import { useRouteStations } from "@/hooks/use-route-stations";
+import { useQuery } from "@tanstack/react-query";
 
 interface MapContainerProps {
   buses: BusWithRoute[];
@@ -19,15 +20,23 @@ interface MapContainerProps {
   showRoutes: boolean;
   showStations: boolean;
   showBuses: boolean;
+  showHeatMap?: boolean;
 }
 
-export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed, showRoutes, showStations, showBuses }: MapContainerProps) {
+export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed, showRoutes, showStations, showBuses, showHeatMap }: MapContainerProps) {
   // Dynamic screen dimensions accounting for header
   const mapWidth = typeof window !== 'undefined' ? window.innerWidth : 1920;
   const mapHeight = typeof window !== 'undefined' ? window.innerHeight - 64 : 1016; // Subtract header height
   
   // Fetch stations for selected routes
   const { data: routeStations = [] } = useRouteStations(selectedRoutes);
+
+  // Fetch crowd density data for heat map
+  const { data: crowdData = [] } = useQuery<CrowdDensityReading[]>({
+    queryKey: ['/api/crowd/density-readings'],
+    enabled: !!showHeatMap,
+    refetchInterval: showHeatMap ? 5000 : false, // Refresh every 5 seconds when heat map is active
+  });
 
   const getRoutePoints = (routeId: number) => {
     // Define routes using dynamic resolution for consistent coverage
