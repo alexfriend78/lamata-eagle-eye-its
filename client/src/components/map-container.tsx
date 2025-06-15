@@ -67,6 +67,22 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         { x: 100, y: 500 }, { x: 200, y: 480 }, { x: 300, y: 460 }, { x: 400, y: 440 },
         { x: 500, y: 420 }, { x: 600, y: 400 }, { x: 700, y: 420 }, { x: 800, y: 440 },
         { x: 900, y: 460 }, { x: 1000, y: 480 }, { x: 1100, y: 500 }, { x: 1180, y: 520 }
+      ],
+      10: [ // North-South Connector (vertical coverage)
+        { x: 400, y: 20 }, { x: 420, y: 80 }, { x: 440, y: 140 }, { x: 460, y: 200 },
+        { x: 480, y: 260 }, { x: 500, y: 320 }, { x: 520, y: 380 }, { x: 540, y: 440 },
+        { x: 560, y: 500 }, { x: 580, y: 560 }, { x: 600, y: 620 }, { x: 620, y: 680 }
+      ],
+      11: [ // East-West Expressway (horizontal middle coverage)
+        { x: 40, y: 400 }, { x: 140, y: 390 }, { x: 240, y: 380 }, { x: 340, y: 370 },
+        { x: 440, y: 360 }, { x: 540, y: 350 }, { x: 640, y: 340 }, { x: 740, y: 330 },
+        { x: 840, y: 320 }, { x: 940, y: 310 }, { x: 1040, y: 300 }, { x: 1140, y: 290 }, { x: 1240, y: 280 }
+      ],
+      12: [ // Metropolitan Circle (connecting outer zones)
+        { x: 100, y: 100 }, { x: 300, y: 80 }, { x: 500, y: 70 }, { x: 700, y: 80 }, { x: 900, y: 100 },
+        { x: 1100, y: 140 }, { x: 1200, y: 200 }, { x: 1250, y: 300 }, { x: 1200, y: 400 },
+        { x: 1100, y: 500 }, { x: 900, y: 600 }, { x: 700, y: 650 }, { x: 500, y: 680 },
+        { x: 300, y: 650 }, { x: 150, y: 600 }, { x: 80, y: 500 }, { x: 60, y: 400 }, { x: 80, y: 300 }, { x: 100, y: 200 }
       ]
     };
     return routePaths[routeId] || [];
@@ -388,6 +404,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
               left: `${station.x - 8}px` 
             }}
             onClick={() => onStationClick(station)}
+            onMouseEnter={() => onStationHover?.(station)}
+            onMouseLeave={() => onStationHover?.(null)}
           >
             {/* Bus Stop Icon - Unicode */}
             <div className="relative">
@@ -443,16 +461,23 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         {buses
           .filter(bus => selectedRoutes.length === 0 || selectedRoutes.includes(bus.routeId))
           .map((bus) => (
-            <BusIcon
+            <div
               key={bus.id}
-              bus={bus}
               style={{
                 position: 'absolute',
                 top: `${bus.currentY - 12}px`,
                 left: `${bus.currentX - 12}px`,
                 zIndex: 30
               }}
-            />
+              onMouseEnter={() => onBusHover?.(bus)}
+              onMouseLeave={() => onBusHover?.(null)}
+              className="cursor-pointer"
+            >
+              <BusIcon
+                bus={bus}
+                style={{}}
+              />
+            </div>
           ))}
       </div>
     </div>

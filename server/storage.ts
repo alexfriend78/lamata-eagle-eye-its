@@ -165,17 +165,20 @@ export class MemStorage implements IStorage {
       });
     });
 
-    // Create routes based on Lagos BRT system
+    // Create routes based on Lagos BRT system - comprehensive zone coverage
     const routesData = [
       { routeNumber: "1", name: "Oshodi - Abule-Egba", color: "#FF6B35" },
       { routeNumber: "2", name: "Abule Egba - TBS/Obalende", color: "#2E86AB" },
       { routeNumber: "3", name: "Ikorodu - TBS", color: "#A23B72" },
-      { routeNumber: "4", name: "Ikorodu - Fadeyi", color: "#F18F01" },
-      { routeNumber: "5", name: "Ikorodu - Oshodi", color: "#C73E1D" },
-      { routeNumber: "6", name: "Berger - Ajah", color: "#1B5E20" },
-      { routeNumber: "7", name: "Lekki - Victoria Island", color: "#4A148C" },
-      { routeNumber: "8", name: "Yaba - Surulere", color: "#D84315" },
-      { routeNumber: "9", name: "Ikeja - Lagos Island", color: "#006064" },
+      { routeNumber: "4", name: "Berger - Lekki Express", color: "#F18F01" },
+      { routeNumber: "5", name: "Lagos Island - Mainland Corridor", color: "#C73E1D" },
+      { routeNumber: "6", name: "Victoria Island - Ajah Coastal", color: "#1B5E20" },
+      { routeNumber: "7", name: "Yaba - Surulere Central", color: "#4A148C" },
+      { routeNumber: "8", name: "Ikeja - Airport Express", color: "#D84315" },
+      { routeNumber: "9", name: "Outer Ring Road Circuit", color: "#006064" },
+      { routeNumber: "10", name: "North-South Connector", color: "#8E24AA" },
+      { routeNumber: "11", name: "East-West Expressway", color: "#00BCD4" },
+      { routeNumber: "12", name: "Metropolitan Circle", color: "#FF9800" }
     ];
 
     routesData.forEach(route => {
