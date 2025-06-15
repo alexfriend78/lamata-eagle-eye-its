@@ -720,4 +720,4 @@ export class DatabaseStorage implements IStorage {
 }
 
 // Import and use the working memory storage
-export { storage } from "./storage-old.js";
+export { storage } from "./storage-fixed.js";
