@@ -262,13 +262,28 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             }}
           >
             <div 
-              className={`w-2 h-2 rounded-full border-2 ${
+              className={`w-3 h-3 rounded-full border-2 ${
                 theme === 'dark' 
                   ? 'bg-blue-400 border-white' 
                   : 'bg-blue-600 border-gray-900'
               }`}
               title={station.name}
             />
+            {/* Station name label */}
+            <div 
+              className={`absolute top-4 left-1/2 transform -translate-x-1/2 text-xs font-medium px-2 py-1 rounded ${
+                theme === 'dark' 
+                  ? 'bg-gray-800 text-white border border-gray-600' 
+                  : 'bg-white text-gray-900 border border-gray-300'
+              }`}
+              style={{
+                whiteSpace: 'nowrap',
+                fontSize: '10px',
+                filter: 'drop-shadow(0px 1px 2px rgba(0,0,0,0.3))'
+              }}
+            >
+              {station.name}
+            </div>
           </div>
         ))}
 
