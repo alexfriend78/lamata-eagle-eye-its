@@ -321,6 +321,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/crowd/latest/:stationId", async (req: Request, res: Response) => {
+    try {
+      const stationId = Number(req.params.stationId);
+      const reading = await storage.getLatestCrowdDensity(stationId);
+      res.json(reading);
+    } catch (error) {
+      console.error("Error fetching latest crowd density:", error);
+      res.status(500).json({ error: "Failed to fetch latest crowd density" });
+    }
+  });
+
+  app.get("/api/crowd/analytics/:stationId", async (req: Request, res: Response) => {
+    try {
+      const stationId = Number(req.params.stationId);
+      const analytics = await storage.getCrowdAnalytics(stationId);
+      res.json(analytics);
+    } catch (error) {
+      console.error("Error fetching crowd analytics:", error);
+      res.status(500).json({ error: "Failed to fetch crowd analytics" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

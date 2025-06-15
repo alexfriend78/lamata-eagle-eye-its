@@ -2,6 +2,8 @@ import { type BusWithRoute, type Route, type Station, type CrowdDensityReading }
 import BusIcon from "./bus-icon";
 import { useRouteStations } from "@/hooks/use-route-stations";
 import { useQuery } from "@tanstack/react-query";
+import CrowdAnalyticsPopup from "./crowd-analytics-popup";
+import { useState } from "react";
 
 interface MapContainerProps {
   buses: BusWithRoute[];
@@ -22,9 +24,12 @@ interface MapContainerProps {
   showBuses: boolean;
   showHeatMap?: boolean;
   showCrowdBubbles?: boolean;
+  showDensityBubbles?: boolean;
 }
 
-export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed, showRoutes, showStations, showBuses, showHeatMap, showCrowdBubbles }: MapContainerProps) {
+export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed, showRoutes, showStations, showBuses, showHeatMap, showCrowdBubbles, showDensityBubbles }: MapContainerProps) {
+  const [selectedStation, setSelectedStation] = useState<Station | null>(null);
+  const [showAnalyticsPopup, setShowAnalyticsPopup] = useState(false);
   // Dynamic screen dimensions accounting for header
   const mapWidth = typeof window !== 'undefined' ? window.innerWidth : 1920;
   const mapHeight = typeof window !== 'undefined' ? window.innerHeight - 64 : 1016; // Subtract header height
@@ -45,6 +50,32 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     enabled: !!showCrowdBubbles,
     refetchInterval: showCrowdBubbles ? 10000 : false, // Refresh every 10 seconds when bubbles are active
   });
+
+  // Fetch crowd density readings for density bubbles
+  const { data: densityReadings = [] } = useQuery<CrowdDensityReading[]>({
+    queryKey: ['/api/crowd/density-readings'],
+    enabled: !!showDensityBubbles,
+    refetchInterval: showDensityBubbles ? 5000 : false, // Refresh every 5 seconds when density bubbles are active
+  });
+
+  const handleStationAnalyticsClick = (station: Station) => {
+    setSelectedStation(station);
+    setShowAnalyticsPopup(true);
+  };
+
+  const getDensityColor = (level: string) => {
+    switch (level?.toLowerCase()) {
+      case 'low': return '#22c55e'; // green
+      case 'medium': return '#eab308'; // yellow
+      case 'high': return '#f97316'; // orange
+      case 'critical': return '#ef4444'; // red
+      default: return '#6b7280'; // gray
+    }
+  };
+
+  const getDensityByStationId = (stationId: number) => {
+    return densityReadings.find(reading => reading.stationId === stationId);
+  };
 
   const getRoutePoints = (routeId: number) => {
     // Define routes using dynamic resolution for consistent coverage
