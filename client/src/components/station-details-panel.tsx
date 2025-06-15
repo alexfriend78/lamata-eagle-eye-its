@@ -265,7 +265,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                   Live Video Feed
                 </div>
                 <a 
-                  href={getStationVideoSrc()} 
+                  href={videoSrc} 
                   target="_blank" 
                   className="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700"
                   rel="noopener noreferrer"
