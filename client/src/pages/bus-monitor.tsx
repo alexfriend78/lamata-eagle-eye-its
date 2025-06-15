@@ -18,14 +18,17 @@ export default function BusMonitor() {
   const [showMap, setShowMap] = useState(false);
   const [showStationNames, setShowStationNames] = useState(true);
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
+  const [hoveredStation, setHoveredStation] = useState<Station | null>(null);
+  const [hoveredBus, setHoveredBus] = useState<any | null>(null);
   const [showLiveFeed, setShowLiveFeed] = useState(false);
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
   const { theme, setTheme } = useTheme();
 
-  // Fetch station details when a station is selected
+  // Fetch station details when a station is hovered or selected
+  const activeStation = hoveredStation || selectedStation;
   const { data: stationDetails } = useQuery<StationDetails>({
-    queryKey: ['/api/stations', selectedStation?.id],
-    enabled: !!selectedStation?.id,
+    queryKey: ['/api/stations', activeStation?.id],
+    enabled: !!activeStation?.id,
   });
 
   useEffect(() => {
@@ -67,8 +70,18 @@ export default function BusMonitor() {
     setSelectedStation(station);
   };
 
+  const handleStationHover = (station: Station | null) => {
+    setHoveredStation(station);
+  };
+
+  const handleBusHover = (bus: any | null) => {
+    setHoveredBus(bus);
+  };
+
   const handleCloseStationDetails = () => {
     setSelectedStation(null);
+    setHoveredStation(null);
+    setHoveredBus(null);
   };
 
   return (
@@ -85,8 +98,7 @@ export default function BusMonitor() {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="text-2xl">🚌</div>
-            <h1 className="text-xl font-semibold">LAMATA - Eagle Eye ITS</h1>
-            <Eye className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            <h1 className="text-xl font-semibold">LAMATA - Eagle Eye ITS 🦅</h1>
           </div>
           
           <div className="flex items-center space-x-6">
@@ -189,6 +201,8 @@ export default function BusMonitor() {
             showMap={showMap}
             showStationNames={showStationNames}
             onStationClick={handleStationClick}
+            onStationHover={handleStationHover}
+            onBusHover={handleBusHover}
             showLiveFeed={showLiveFeed}
           />
         </div>

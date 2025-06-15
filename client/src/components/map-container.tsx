@@ -12,10 +12,12 @@ interface MapContainerProps {
   showMap: boolean;
   showStationNames: boolean;
   onStationClick: (station: Station) => void;
+  onStationHover?: (station: Station | null) => void;
+  onBusHover?: (bus: BusWithRoute | null) => void;
   showLiveFeed: boolean;
 }
 
-export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, showLiveFeed }: MapContainerProps) {
+export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed }: MapContainerProps) {
   const getRoutePoints = (routeId: number) => {
     // Define route paths for Lagos BRT system - utilizing full landscape screen (1280x720)
     const routePaths: Record<number, { x: number; y: number }[]> = {
