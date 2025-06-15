@@ -5,11 +5,12 @@ import MapContainer from "@/components/map-container";
 import ControlPanel from "@/components/control-panel";
 import EmergencyAlert from "@/components/emergency-alert";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings } from "lucide-react";
+import { Sun, Moon, Settings, Eye } from "lucide-react";
 
 export default function BusMonitor() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [selectedRoutes, setSelectedRoutes] = useState<number[]>([]);
+  const [selectedZone, setSelectedZone] = useState<number | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
   const { theme, setTheme } = useTheme();
@@ -63,15 +64,16 @@ export default function BusMonitor() {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="text-2xl">🚌</div>
-            <h1 className="text-xl font-semibold">Lagos BRT Transit Monitor</h1>
+            <h1 className="text-xl font-semibold">LAMATA - Eagle Eye ITS</h1>
+            <Eye className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           </div>
           
           <div className="flex items-center space-x-6">
             {/* Route Selection */}
             <div className="flex items-center space-x-2">
               <span className="text-sm font-medium">Highlight Routes:</span>
-              <div className="flex space-x-1">
-                {routes?.slice(0, 5).map((route) => (
+              <div className="flex space-x-1 flex-wrap">
+                {routes?.map((route) => (
                   <Button
                     key={route.id}
                     onClick={() => toggleRouteHighlight(route.id)}
@@ -128,6 +130,8 @@ export default function BusMonitor() {
             stations={stations || []}
             selectedRoutes={selectedRoutes}
             theme={theme}
+            selectedZone={selectedZone}
+            onZoneSelect={setSelectedZone}
           />
         </div>
 
