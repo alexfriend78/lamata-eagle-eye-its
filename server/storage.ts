@@ -1,9 +1,8 @@
-import { 
-  routes, stations, buses, alerts, routeStations, busArrivals,
-  type Route, type Station, type Bus, type Alert, type RouteStation, type BusArrival,
-  type InsertRoute, type InsertStation, type InsertBus, type InsertAlert, type InsertRouteStation, type InsertBusArrival,
-  type BusWithRoute, type RouteWithStations, type AlertWithDetails, type SystemStats, type StationDetails, type BusArrivalWithDetails
-} from "@shared/schema";
+import type { 
+  Route, Station, Bus, Alert, RouteStation, BusArrival, 
+  InsertRoute, InsertStation, InsertBus, InsertAlert, InsertRouteStation, InsertBusArrival,
+  BusWithRoute, AlertWithDetails, BusArrivalWithDetails, StationDetails, SystemStats
+} from "../shared/schema.js";
 
 export interface IStorage {
   // Routes
@@ -73,324 +72,173 @@ export class MemStorage implements IStorage {
     this.currentAlertId = 1;
     this.currentRouteStationId = 1;
     this.currentBusArrivalId = 1;
-    
     this.seedData();
   }
 
   private seedData() {
-    // Create stations based on Lagos BRT routes - utilizing full 3456x2234 resolution
-    const stationsData = [
-      // Route 1: Blue Line - Ultra-wide northern express corridor
-      { name: "Abule Egba West", x: 200, y: 200 },
-      { name: "Dopemu Central", x: 432, y: 180 },
-      { name: "Agege Main", x: 864, y: 185 },
-      { name: "Ikeja GRA", x: 1296, y: 190 },
-      { name: "Airport Junction", x: 1728, y: 195 },
-      { name: "Oshodi Terminal", x: 2160, y: 200 },
-      { name: "Bolade", x: 2592, y: 205 },
-      { name: "Shogunle", x: 3024, y: 210 },
-      { name: "PWD East", x: 3256, y: 215 },
-      
-      // Route 2: Red Line - Full diagonal transcontinental
-      { name: "Badagry West", x: 200, y: 200 },
-      { name: "Festac", x: 432, y: 320 },
-      { name: "Orile", x: 864, y: 540 },
-      { name: "Yaba", x: 1296, y: 760 },
-      { name: "Marina", x: 1728, y: 980 },
-      { name: "Victoria Island", x: 2160, y: 1200 },
-      { name: "Lekki Phase 1", x: 2592, y: 1420 },
-      { name: "Ajah", x: 3024, y: 1640 },
-      { name: "Epe Terminal", x: 3256, y: 1860 },
-      
-      // Route 3: Bottom horizontal traverse
-      { name: "Ikorodu Terminal", x: 40, y: 700 },
-      { name: "Benson", x: 160, y: 680 },
-      { name: "AGRIC TERMINAL", x: 280, y: 660 },
-      { name: "OWUTU IDIROKO", x: 400, y: 640 },
-      { name: "OGOLONTO", x: 520, y: 620 },
-      { name: "MAJIDUN AWORI", x: 640, y: 600 },
-      { name: "MILE12 TERMINAL", x: 760, y: 580 },
-      { name: "Ketu", x: 880, y: 560 },
-      { name: "Ojota", x: 1000, y: 540 },
-      { name: "Newgarage", x: 1120, y: 520 },
-      
-      // Route 4: Upper horizontal
-      { name: "Berger Terminal", x: 30, y: 200 },
-      { name: "Ogba", x: 150, y: 190 },
-      { name: "Agege", x: 270, y: 180 },
-      { name: "Pen Cinema", x: 390, y: 170 },
-      { name: "Ogba Junction", x: 510, y: 160 },
-      { name: "Allen Avenue", x: 630, y: 150 },
-      { name: "Computer Village", x: 750, y: 140 },
-      { name: "Underbridge", x: 870, y: 130 },
-      { name: "Lekki Phase 1", x: 990, y: 120 },
-      { name: "Lekki Toll Gate", x: 1110, y: 110 },
-      { name: "Lekki Terminal", x: 1230, y: 100 },
-      
-      // Route 5: Central east-west
-      { name: "Lagos Island", x: 1250, y: 360 },
-      { name: "Marina", x: 1150, y: 350 },
-      { name: "National Theatre", x: 1050, y: 340 },
-      { name: "Surulere", x: 950, y: 330 },
-      { name: "Yaba", x: 850, y: 320 },
-      { name: "Mushin", x: 750, y: 310 },
-      { name: "Papa Ajao", x: 650, y: 300 },
-      { name: "Isolo", x: 550, y: 290 },
-      { name: "Ejigbo", x: 450, y: 280 },
-      { name: "Igando", x: 350, y: 270 },
-      { name: "Alaba", x: 250, y: 260 },
-      { name: "Ojo", x: 150, y: 250 },
-      { name: "Badagry", x: 50, y: 240 }
-    ];
-
-    stationsData.forEach((station, index) => {
-      const id = this.currentStationId++;
-      const trafficConditions = ["light", "normal", "heavy", "severe"];
-      const amenitiesOptions = [
-        ["shelter", "seating", "lighting"],
-        ["shelter", "lighting", "cctv"],
-        ["seating", "lighting"],
-        ["shelter", "seating", "lighting", "cctv"],
-        ["lighting"]
-      ];
-      
-      this.stations.set(id, { 
-        id, 
-        ...station,
-        zone: Math.floor(index / 7) + 1, // Distribute across 4 zones
-        passengerCount: Math.floor(Math.random() * 50) + 5,
-        trafficCondition: trafficConditions[Math.floor(Math.random() * trafficConditions.length)],
-        accessibility: Math.random() > 0.2, // 80% accessible
-        amenities: amenitiesOptions[Math.floor(Math.random() * amenitiesOptions.length)]
-      });
-    });
-
-    // Create routes with aesthetic customization options
+    // Create only the 5 Lagos BRT routes
     const routesData = [
-      { 
-        routeNumber: "1", name: "Blue Line - Northern Corridor", color: "#1E40AF",
-        lineStyle: "solid", lineWidth: 4, opacity: 1.0, pattern: "none", animation: "none"
-      },
-      { 
-        routeNumber: "2", name: "Red Line - Main Diagonal", color: "#DC2626",
-        lineStyle: "solid", lineWidth: 5, opacity: 0.9, pattern: "arrows", animation: "flow"
-      },
-      { 
-        routeNumber: "3", name: "Green Line - Upper Express", color: "#059669",
-        lineStyle: "dashed", lineWidth: 3, opacity: 1.0, pattern: "none", animation: "none"
-      },
-      { 
-        routeNumber: "4", name: "Orange Line - Central Spine", color: "#EA580C",
-        lineStyle: "solid", lineWidth: 6, opacity: 0.8, pattern: "gradient", animation: "glow",
-        gradientEnd: "#F97316", glowColor: "#FB923C"
-      },
-      { 
-        routeNumber: "5", name: "Purple Line - Southern Express", color: "#7C3AED",
-        lineStyle: "solid", lineWidth: 4, opacity: 1.0, pattern: "dots", animation: "pulse"
-      },
-      { 
-        routeNumber: "6", name: "Teal Line - Coastal Edge", color: "#0D9488",
-        lineStyle: "dotted", lineWidth: 3, opacity: 0.9, pattern: "none", animation: "none"
-      },
-      { 
-        routeNumber: "7", name: "Yellow Line - Western Spine", color: "#CA8A04",
-        lineStyle: "solid", lineWidth: 4, opacity: 1.0, pattern: "arrows", animation: "flow"
-      },
-      { 
-        routeNumber: "8", name: "Pink Line - Central Axis", color: "#BE185D",
-        lineStyle: "double", lineWidth: 5, opacity: 0.8, pattern: "gradient", animation: "glow",
-        gradientEnd: "#F472B6", glowColor: "#FBCFE8"
-      },
-      { 
-        routeNumber: "9", name: "Cyan Line - Eastern Spine", color: "#0891B2",
-        lineStyle: "solid", lineWidth: 3, opacity: 1.0, pattern: "dots", animation: "none"
-      },
-      { 
-        routeNumber: "10", name: "Brown Line - Cross Diagonal", color: "#A16207",
-        lineStyle: "dashed", lineWidth: 4, opacity: 0.9, pattern: "arrows", animation: "flow"
-      },
-      { 
-        routeNumber: "11", name: "Lime Line - Orbital Ring", color: "#65A30D",
-        lineStyle: "solid", lineWidth: 5, opacity: 0.7, pattern: "gradient", animation: "pulse",
-        gradientEnd: "#84CC16", glowColor: "#BEF264"
-      },
-      { 
-        routeNumber: "12", name: "Indigo Line - Figure Eight", color: "#4338CA",
-        lineStyle: "solid", lineWidth: 4, opacity: 1.0, pattern: "dots", animation: "glow",
-        glowColor: "#A5B4FC"
-      },
-      { 
-        routeNumber: "13", name: "Violet Line - Grand Circle", color: "#8B5CF6",
-        lineStyle: "solid", lineWidth: 6, opacity: 0.8, pattern: "gradient", animation: "pulse",
-        gradientEnd: "#C4B5FD", glowColor: "#DDD6FE"
-      },
-      { 
-        routeNumber: "14", name: "Gold Line - Mountain Ridge", color: "#D97706",
-        lineStyle: "double", lineWidth: 4, opacity: 1.0, pattern: "arrows", animation: "glow",
-        glowColor: "#FCD34D"
-      },
-      { 
-        routeNumber: "15", name: "Silver Line - River Flow", color: "#6B7280",
-        lineStyle: "solid", lineWidth: 3, opacity: 0.9, pattern: "dots", animation: "flow"
-      },
-      { 
-        routeNumber: "16", name: "Coral Line - Wave Pattern", color: "#F97316",
-        lineStyle: "dotted", lineWidth: 5, opacity: 0.8, pattern: "gradient", animation: "pulse",
-        gradientEnd: "#FDBA74", glowColor: "#FED7AA"
-      }
+      { routeNumber: "1", name: "Oshodi - Abule-Egba", color: "#0066CC" },
+      { routeNumber: "2", name: "Abule Egba - TBS/Obalende", color: "#CC0000" },
+      { routeNumber: "3", name: "Ikorodu - TBS", color: "#00AA44" },
+      { routeNumber: "4", name: "Ikorodu - Fadeyi", color: "#FFD700" },
+      { routeNumber: "5", name: "Ikorodu - Oshodi", color: "#8A2BE2" }
     ];
 
-    routesData.forEach(route => {
+    routesData.forEach(routeData => {
       const id = this.currentRouteId++;
-      this.routes.set(id, { 
-        id, 
-        ...route, 
+      this.routes.set(id, {
+        id,
+        ...routeData,
         isActive: true,
-        // Add default values for missing aesthetic properties
-        lineStyle: route.lineStyle || "solid",
-        lineWidth: route.lineWidth || 3,
-        opacity: route.opacity || 1.0,
-        pattern: route.pattern || "none",
-        animation: route.animation || "none",
-        glowColor: route.glowColor || null,
-        gradientEnd: route.gradientEnd || null
+        lineStyle: "solid",
+        lineWidth: 4,
+        opacity: 1.0,
+        pattern: "none",
+        animation: "none",
+        glowColor: null,
+        gradientEnd: null
       });
     });
 
-    // Create buses for all 16 zone networks - comprehensive coverage
+    // Create authentic Lagos BRT stations
+    const stationsData = [
+      // Route 1: Oshodi - Abule-Egba stations
+      { name: "Oshodi Terminal 2", x: 800, y: 600, zone: 2 },
+      { name: "Bolade", x: 780, y: 580, zone: 2 },
+      { name: "Ladipo", x: 760, y: 560, zone: 2 },
+      { name: "Shogunle", x: 740, y: 540, zone: 2 },
+      { name: "PWD", x: 720, y: 520, zone: 2 },
+      { name: "Airport Junction", x: 700, y: 500, zone: 2 },
+      { name: "Ikeja Along", x: 680, y: 480, zone: 2 },
+      { name: "Ile Zik", x: 660, y: 460, zone: 2 },
+      { name: "Mangoro", x: 640, y: 440, zone: 2 },
+      { name: "Cement", x: 620, y: 420, zone: 2 },
+      { name: "Iyana Dopemu", x: 600, y: 400, zone: 1 },
+      { name: "Adealu", x: 580, y: 380, zone: 1 },
+      { name: "Iyana Ipaja Bus stop", x: 560, y: 360, zone: 1 },
+      { name: "Pleasure", x: 540, y: 340, zone: 1 },
+      { name: "Ile Epo", x: 520, y: 320, zone: 1 },
+      { name: "Super", x: 500, y: 300, zone: 1 },
+      { name: "Abule Egba", x: 480, y: 280, zone: 1 },
+
+      // Route 2 additional stations
+      { name: "LASMA", x: 820, y: 620, zone: 2 },
+      { name: "Anthony", x: 840, y: 640, zone: 2 },
+      { name: "Westex", x: 860, y: 660, zone: 2 },
+      { name: "First Pedro", x: 880, y: 680, zone: 3 },
+      { name: "Charley Boy", x: 900, y: 700, zone: 3 },
+      { name: "Gbagada Phase 1", x: 920, y: 720, zone: 3 },
+      { name: "Iyana Oworo", x: 940, y: 740, zone: 3 },
+      { name: "Adeniji", x: 960, y: 760, zone: 3 },
+      { name: "Obalende", x: 980, y: 780, zone: 3 },
+      { name: "CMS Terminal", x: 1000, y: 800, zone: 3 },
+
+      // Ikorodu routes stations
+      { name: "Ikorodu Terminal", x: 300, y: 850, zone: 4 },
+      { name: "Benson", x: 320, y: 830, zone: 4 },
+      { name: "ARUNA", x: 340, y: 810, zone: 4 },
+      { name: "AGRIC TERMINAL", x: 360, y: 790, zone: 4 },
+      { name: "OWUTU IDIROKO", x: 380, y: 770, zone: 4 },
+      { name: "OGOLONTO", x: 400, y: 750, zone: 3 },
+      { name: "MAJIDUN AWORI", x: 420, y: 730, zone: 3 },
+      { name: "AJEGUNLE", x: 440, y: 710, zone: 3 },
+      { name: "IRAWO", x: 460, y: 690, zone: 3 },
+      { name: "IDERA", x: 480, y: 670, zone: 3 },
+      { name: "OWODEONIRIN", x: 500, y: 650, zone: 3 },
+      { name: "MILE12 TERMINAL", x: 520, y: 630, zone: 3 },
+      { name: "KETU", x: 540, y: 610, zone: 3 },
+      { name: "OJOTA", x: 560, y: 590, zone: 2 },
+      { name: "NEWGARAGE", x: 580, y: 570, zone: 2 },
+      { name: "Maryland", x: 600, y: 550, zone: 2 },
+      { name: "Idiroko", x: 620, y: 530, zone: 2 },
+      { name: "Obanikoro", x: 660, y: 490, zone: 2 },
+      { name: "Palmgroove", x: 680, y: 470, zone: 2 },
+      { name: "Onipanu", x: 700, y: 450, zone: 2 },
+      { name: "Fadeyi", x: 720, y: 430, zone: 2 },
+
+      // Route 3 additional stations
+      { name: "MOSALASI TERMINAL", x: 740, y: 410, zone: 2 },
+      { name: "BARRAKS", x: 760, y: 390, zone: 2 },
+      { name: "Stadium", x: 780, y: 370, zone: 2 },
+      { name: "Iponri", x: 800, y: 350, zone: 2 },
+      { name: "Costain", x: 820, y: 330, zone: 2 },
+      { name: "Leventis", x: 840, y: 310, zone: 2 },
+      { name: "MARINA TRAIN STATION", x: 860, y: 290, zone: 2 },
+      { name: "TBS Terminal", x: 880, y: 270, zone: 2 },
+
+      // Route 5 additional station
+      { name: "Oshodi Terminal 3", x: 805, y: 605, zone: 2 }
+    ];
+
+    stationsData.forEach(stationData => {
+      const id = this.currentStationId++;
+      this.stations.set(id, {
+        id,
+        ...stationData,
+        passengerCount: Math.floor(Math.random() * 400) + 100,
+        trafficCondition: ["light", "normal", "heavy"][Math.floor(Math.random() * 3)],
+        accessibility: true,
+        amenities: ["shelter", "seating", "lighting"]
+      });
+    });
+
+    // Create buses for the 5 routes
     const busesData = [
-      // Zone 1 buses
-      { routeId: 1, busNumber: "Z1-01-AGE", currentX: 160, currentY: 90, status: "on_time", direction: "forward" },
-      { routeId: 1, busNumber: "Z1-02-IKE", currentX: 240, currentY: 130, status: "delayed", direction: "reverse" },
-      
-      // Zone 2 buses  
-      { routeId: 2, busNumber: "Z2-01-OGB", currentX: 480, currentY: 100, status: "on_time", direction: "forward" },
-      { routeId: 2, busNumber: "Z2-02-IKJ", currentX: 420, currentY: 140, status: "on_time", direction: "reverse" },
-      
-      // Zone 3 buses
-      { routeId: 3, busNumber: "Z3-01-ALL", currentX: 760, currentY: 110, status: "alert", direction: "forward" },
-      { routeId: 3, busNumber: "Z3-02-OPE", currentX: 680, currentY: 130, status: "on_time", direction: "reverse" },
-      
-      // Zone 4 buses
-      { routeId: 4, busNumber: "Z4-01-GRA", currentX: 1080, currentY: 120, status: "on_time", direction: "forward" },
-      { routeId: 4, busNumber: "Z4-02-AIR", currentX: 1000, currentY: 130, status: "delayed", direction: "reverse" },
-      
-      // Zone 5 buses
-      { routeId: 5, busNumber: "Z5-01-MUS", currentX: 180, currentY: 290, status: "on_time", direction: "forward" },
-      { routeId: 5, busNumber: "Z5-02-ISO", currentX: 240, currentY: 320, status: "on_time", direction: "reverse" },
-      
-      // Zone 6 buses
-      { routeId: 6, busNumber: "Z6-01-SUR", currentX: 480, currentY: 300, status: "on_time", direction: "forward" },
-      { routeId: 6, busNumber: "Z6-02-ALA", currentX: 420, currentY: 320, status: "delayed", direction: "reverse" },
-      
-      // Zone 7 buses
-      { routeId: 7, busNumber: "Z7-01-YAB", currentX: 760, currentY: 310, status: "on_time", direction: "forward" },
-      { routeId: 7, busNumber: "Z7-02-EBU", currentX: 680, currentY: 320, status: "on_time", direction: "reverse" },
-      
-      // Zone 8 buses
-      { routeId: 8, busNumber: "Z8-01-APA", currentX: 1080, currentY: 300, status: "on_time", direction: "forward" },
-      { routeId: 8, busNumber: "Z8-02-FES", currentX: 1000, currentY: 310, status: "alert", direction: "reverse" },
-      
-      // Zone 9 buses
-      { routeId: 9, busNumber: "Z9-01-KET", currentX: 180, currentY: 480, status: "on_time", direction: "forward" },
-      { routeId: 9, busNumber: "Z9-02-MIL", currentX: 240, currentY: 500, status: "on_time", direction: "reverse" },
-      
-      // Zone 10 buses
-      { routeId: 10, busNumber: "Z10-01-GBA", currentX: 480, currentY: 490, status: "delayed", direction: "forward" },
-      { routeId: 10, busNumber: "Z10-02-SHO", currentX: 420, currentY: 500, status: "on_time", direction: "reverse" },
-      
-      // Zone 11 buses
-      { routeId: 11, busNumber: "Z11-01-BAR", currentX: 760, currentY: 500, status: "on_time", direction: "forward" },
-      { routeId: 11, busNumber: "Z11-02-SOM", currentX: 680, currentY: 490, status: "on_time", direction: "reverse" },
-      
-      // Zone 12 buses
-      { routeId: 12, busNumber: "Z12-01-LAG", currentX: 1080, currentY: 480, status: "on_time", direction: "forward" },
-      { routeId: 12, busNumber: "Z12-02-ISL", currentX: 1000, currentY: 490, status: "delayed", direction: "reverse" },
-      
-      // Zone 13 buses
-      { routeId: 13, busNumber: "Z13-01-IKO", currentX: 180, currentY: 670, status: "on_time", direction: "forward" },
-      { routeId: 13, busNumber: "Z13-02-NOR", currentX: 240, currentY: 680, status: "on_time", direction: "reverse" },
-      
-      // Zone 14 buses
-      { routeId: 14, busNumber: "Z14-01-KOS", currentX: 480, currentY: 680, status: "on_time", direction: "forward" },
-      { routeId: 14, busNumber: "Z14-02-ANT", currentX: 420, currentY: 670, status: "alert", direction: "reverse" },
-      
-      // Zone 15 buses
-      { routeId: 15, busNumber: "Z15-01-VIC", currentX: 760, currentY: 670, status: "on_time", direction: "forward" },
-      { routeId: 15, busNumber: "Z15-02-ISL", currentX: 680, currentY: 680, status: "on_time", direction: "reverse" },
-      
-      // Zone 16 buses
-      { routeId: 16, busNumber: "Z16-01-LEK", currentX: 1080, currentY: 680, status: "delayed", direction: "forward" },
-      { routeId: 16, busNumber: "Z16-02-AJA", currentX: 1000, currentY: 670, status: "on_time", direction: "reverse" }
+      // Route 1 buses
+      { routeId: 1, busNumber: "LBT-001", currentX: 680, currentY: 480, status: "on_time", direction: "forward" },
+      { routeId: 1, busNumber: "LBT-002", currentX: 560, currentY: 360, status: "on_time", direction: "reverse" },
+      { routeId: 1, busNumber: "LBT-003", currentX: 720, currentY: 520, status: "delayed", direction: "forward" },
+
+      // Route 2 buses
+      { routeId: 2, busNumber: "LBT-004", currentX: 500, currentY: 300, status: "on_time", direction: "forward" },
+      { routeId: 2, busNumber: "LBT-005", currentX: 920, currentY: 720, status: "on_time", direction: "reverse" },
+      { routeId: 2, busNumber: "LBT-006", currentX: 800, currentY: 600, status: "on_time", direction: "forward" },
+
+      // Route 3 buses
+      { routeId: 3, busNumber: "LBT-007", currentX: 400, currentY: 750, status: "on_time", direction: "forward" },
+      { routeId: 3, busNumber: "LBT-008", currentX: 760, currentY: 390, status: "delayed", direction: "reverse" },
+      { routeId: 3, busNumber: "LBT-009", currentX: 600, currentY: 550, status: "on_time", direction: "forward" },
+
+      // Route 4 buses
+      { routeId: 4, busNumber: "LBT-010", currentX: 360, currentY: 790, status: "on_time", direction: "forward" },
+      { routeId: 4, busNumber: "LBT-011", currentX: 680, currentY: 470, status: "on_time", direction: "reverse" },
+      { routeId: 4, busNumber: "LBT-012", currentX: 540, currentY: 610, status: "on_time", direction: "forward" },
+
+      // Route 5 buses
+      { routeId: 5, busNumber: "LBT-013", currentX: 320, currentY: 830, status: "on_time", direction: "forward" },
+      { routeId: 5, busNumber: "LBT-014", currentX: 580, currentY: 570, status: "on_time", direction: "reverse" },
+      { routeId: 5, busNumber: "LBT-015", currentX: 460, currentY: 690, status: "delayed", direction: "forward" }
     ];
 
-    busesData.forEach(bus => {
+    busesData.forEach(busData => {
       const id = this.currentBusId++;
-      this.buses.set(id, { id, lastUpdated: new Date(), ...bus });
+      this.buses.set(id, {
+        id,
+        lastUpdated: new Date(),
+        ...busData
+      });
     });
 
-    // Create some alerts
+    // Create alerts
     const alertsData = [
-      { busId: 3, routeId: 2, type: "emergency", message: "Emergency stop - Medical assistance required", severity: "critical" },
-      { busId: null, routeId: 3, type: "delay", message: "Heavy traffic on Third Mainland Bridge - 15 min delay", severity: "medium" },
+      { busId: 3, routeId: 1, type: "delay", message: "Route 1 experiencing delays due to traffic at Ikeja Along", severity: "medium" },
+      { busId: null, routeId: null, type: "maintenance", message: "Scheduled maintenance at Oshodi Terminal", severity: "low" }
     ];
 
-    alertsData.forEach(alert => {
+    alertsData.forEach(alertData => {
       const id = this.currentAlertId++;
-      this.alerts.set(id, { id, isActive: true, createdAt: new Date(), ...alert });
-    });
-
-    // Add route-station relationships
-    const routeStationsData = [
-      // Route 1: Oshodi - Abule-Egba
-      { routeId: 1, stationId: 1, sequence: 1 }, // Oshodi Terminal 2
-      { routeId: 1, stationId: 2, sequence: 2 }, // Bolade
-      { routeId: 1, stationId: 3, sequence: 3 }, // Ladipo
-      { routeId: 1, stationId: 4, sequence: 4 }, // Shogunle
-      { routeId: 1, stationId: 5, sequence: 5 }, // PWD
-      { routeId: 1, stationId: 6, sequence: 6 }, // Airport Junction
-      { routeId: 1, stationId: 7, sequence: 7 }, // Ikeja Along
-      { routeId: 1, stationId: 8, sequence: 8 }, // Ile Zik
-      { routeId: 1, stationId: 9, sequence: 9 }, // Mangoro
-      { routeId: 1, stationId: 10, sequence: 10 }, // Cement
-      { routeId: 1, stationId: 11, sequence: 11 }, // Iyana Dopemu
-      { routeId: 1, stationId: 12, sequence: 12 }, // Adealu
-      { routeId: 1, stationId: 13, sequence: 13 }, // Iyana Ipaja Bus stop
-      { routeId: 1, stationId: 14, sequence: 14 }, // Pleasure
-      { routeId: 1, stationId: 15, sequence: 15 }, // Ile Epo
-      { routeId: 1, stationId: 16, sequence: 16 }, // Super
-      { routeId: 1, stationId: 17, sequence: 17 }, // Abule Egba
-    ];
-
-    routeStationsData.forEach(routeStation => {
-      const id = this.currentRouteStationId++;
-      this.routeStations.set(id, { id, ...routeStation });
-    });
-
-    // Create sample bus arrivals for the next 30 minutes
-    const now = new Date();
-    const busArrivalsData = [];
-    
-    // Generate arrivals for first few stations
-    for (let stationId = 1; stationId <= 5; stationId++) {
-      for (let i = 0; i < 3; i++) {
-        const estimatedArrival = new Date(now.getTime() + (i * 10 + Math.random() * 5) * 60000); // 10-15 min intervals
-        busArrivalsData.push({
-          busId: Math.floor(Math.random() * 11) + 1,
-          stationId,
-          routeId: Math.floor(Math.random() * 9) + 1,
-          estimatedArrival,
-          status: Math.random() > 0.8 ? "approaching" : "scheduled"
-        });
-      }
-    }
-
-    busArrivalsData.forEach(arrival => {
-      const id = this.currentBusArrivalId++;
-      this.busArrivals.set(id, { id, actualArrival: null, ...arrival });
+      this.alerts.set(id, {
+        id,
+        isActive: true,
+        createdAt: new Date(),
+        stationId: null,
+        ...alertData
+      });
     });
   }
 
+  // Rest of the interface methods remain the same...
   async getRoutes(): Promise<Route[]> {
     return Array.from(this.routes.values());
   }
@@ -426,7 +274,7 @@ export class MemStorage implements IStorage {
     const updatedRoute: Route = {
       ...existingRoute,
       ...aesthetics,
-      id // Ensure ID doesn't change
+      id
     };
     
     this.routes.set(id, updatedRoute);
@@ -500,103 +348,6 @@ export class MemStorage implements IStorage {
     return undefined;
   }
 
-  // Simulate bus movement along routes
-  public simulateBusMovement() {
-    const routePaths: Record<number, { x: number; y: number }[]> = {
-      1: [ // Oshodi - Abule-Egba (diagonal northwest)
-        { x: 800, y: 400 }, { x: 750, y: 370 }, { x: 700, y: 340 }, { x: 650, y: 310 },
-        { x: 600, y: 280 }, { x: 550, y: 250 }, { x: 500, y: 220 }, { x: 450, y: 190 },
-        { x: 400, y: 160 }, { x: 350, y: 130 }, { x: 300, y: 100 }, { x: 250, y: 70 },
-        { x: 200, y: 50 }, { x: 150, y: 30 }, { x: 100, y: 20 }, { x: 50, y: 15 }, { x: 20, y: 10 }
-      ],
-      2: [ // Abule Egba - TBS/Obalende (northwest to southeast)
-        { x: 20, y: 10 }, { x: 50, y: 15 }, { x: 100, y: 20 }, { x: 150, y: 30 },
-        { x: 200, y: 50 }, { x: 250, y: 70 }, { x: 300, y: 100 }, { x: 350, y: 130 },
-        { x: 400, y: 160 }, { x: 450, y: 190 }, { x: 500, y: 220 }, { x: 550, y: 250 },
-        { x: 600, y: 280 }, { x: 650, y: 310 }, { x: 700, y: 340 }, { x: 750, y: 370 },
-        { x: 800, y: 400 }, { x: 900, y: 450 }, { x: 950, y: 470 }, { x: 1000, y: 490 },
-        { x: 1150, y: 480 }, { x: 1200, y: 500 }, { x: 1250, y: 520 }
-      ],
-      3: [ // Ikorodu - TBS (southwest to southeast)
-        { x: 50, y: 600 }, { x: 120, y: 580 }, { x: 200, y: 560 }, { x: 280, y: 540 },
-        { x: 360, y: 520 }, { x: 440, y: 500 }, { x: 520, y: 480 }, { x: 600, y: 460 },
-        { x: 680, y: 440 }, { x: 720, y: 420 }, { x: 800, y: 400 }, { x: 900, y: 450 },
-        { x: 1000, y: 490 }, { x: 1200, y: 500 }, { x: 1250, y: 520 }
-      ],
-      4: [ // Ikorodu - Fadeyi (southwest to center)
-        { x: 50, y: 600 }, { x: 120, y: 580 }, { x: 200, y: 560 }, { x: 280, y: 540 },
-        { x: 360, y: 520 }, { x: 440, y: 500 }, { x: 520, y: 480 }, { x: 600, y: 460 },
-        { x: 680, y: 440 }, { x: 720, y: 420 }, { x: 800, y: 400 }, { x: 900, y: 450 },
-        { x: 1000, y: 490 }
-      ],
-      5: [ // Ikorodu - Oshodi (southwest to center)
-        { x: 50, y: 600 }, { x: 120, y: 580 }, { x: 200, y: 560 }, { x: 280, y: 540 },
-        { x: 360, y: 520 }, { x: 440, y: 500 }, { x: 520, y: 480 }, { x: 600, y: 460 },
-        { x: 680, y: 440 }, { x: 720, y: 420 }, { x: 800, y: 400 }
-      ],
-      6: [ // Berger - Ajah (west to east)
-        { x: 100, y: 350 }, { x: 200, y: 340 }, { x: 300, y: 330 }, { x: 400, y: 325 },
-        { x: 500, y: 320 }, { x: 600, y: 315 }, { x: 700, y: 310 }, { x: 800, y: 305 },
-        { x: 900, y: 300 }, { x: 1000, y: 295 }, { x: 1100, y: 290 }, { x: 1200, y: 285 }
-      ],
-      7: [ // Lekki - Victoria Island (east coast)
-        { x: 1200, y: 200 }, { x: 1150, y: 220 }, { x: 1100, y: 240 }, { x: 1050, y: 260 },
-        { x: 1000, y: 280 }, { x: 950, y: 300 }, { x: 900, y: 320 }, { x: 850, y: 340 }
-      ],
-      8: [ // Yaba - Surulere (central)
-        { x: 600, y: 150 }, { x: 650, y: 170 }, { x: 700, y: 190 }, { x: 750, y: 210 },
-        { x: 800, y: 230 }, { x: 850, y: 250 }, { x: 900, y: 270 }
-      ],
-      9: [ // Ikeja - Lagos Island (central diagonal)
-        { x: 400, y: 250 }, { x: 450, y: 270 }, { x: 500, y: 290 }, { x: 550, y: 310 },
-        { x: 600, y: 330 }, { x: 650, y: 350 }, { x: 700, y: 370 }, { x: 750, y: 390 },
-        { x: 800, y: 410 }, { x: 850, y: 430 }
-      ]
-    };
-
-    this.buses.forEach((bus) => {
-      const routePoints = routePaths[bus.routeId] || [];
-      if (routePoints.length > 1) {
-        // Find nearest point on route
-        let nearestIndex = 0;
-        let minDistance = Infinity;
-        
-        routePoints.forEach((point, index) => {
-          const distance = Math.sqrt(
-            Math.pow(point.x - bus.currentX, 2) + Math.pow(point.y - bus.currentY, 2)
-          );
-          if (distance < minDistance) {
-            minDistance = distance;
-            nearestIndex = index;
-          }
-        });
-        
-        // Move to next point based on direction
-        let targetIndex;
-        if (bus.direction === "forward") {
-          targetIndex = nearestIndex < routePoints.length - 1 ? nearestIndex + 1 : 0;
-        } else {
-          targetIndex = nearestIndex > 0 ? nearestIndex - 1 : routePoints.length - 1;
-        }
-        
-        const targetPoint = routePoints[targetIndex];
-        const speed = bus.status === "delayed" ? 2 : bus.status === "alert" ? 1 : 4;
-        
-        // Calculate new position
-        const newX = bus.currentX + (targetPoint.x - bus.currentX) * (speed / 100);
-        const newY = bus.currentY + (targetPoint.y - bus.currentY) * (speed / 100);
-        
-        // Update bus position
-        this.buses.set(bus.id, {
-          ...bus,
-          currentX: newX,
-          currentY: newY,
-          lastUpdated: new Date()
-        });
-      }
-    });
-  }
-
   async updateBusStatus(id: number, status: string): Promise<Bus | undefined> {
     const bus = this.buses.get(id);
     if (bus) {
@@ -624,13 +375,14 @@ export class MemStorage implements IStorage {
     const id = this.currentAlertId++;
     const newAlert: Alert = { 
       id, 
-      isActive: true, 
+      isActive: true,
       createdAt: new Date(),
-      busId: alert.busId ?? null,
-      routeId: alert.routeId ?? null,
       type: alert.type,
       message: alert.message,
-      severity: alert.severity ?? "medium"
+      severity: alert.severity,
+      busId: alert.busId || null,
+      routeId: alert.routeId || null,
+      stationId: alert.stationId || null
     };
     this.alerts.set(id, newAlert);
     return newAlert;
@@ -647,11 +399,13 @@ export class MemStorage implements IStorage {
   }
 
   async getRouteStations(routeId: number): Promise<Station[]> {
-    const routeStationsList = Array.from(this.routeStations.values())
+    const routeStationMappings = Array.from(this.routeStations.values())
       .filter(rs => rs.routeId === routeId)
-      .sort((a, b) => a.sequence - b.sequence);
+      .sort((a, b) => a.stopOrder - b.stopOrder);
     
-    return routeStationsList.map(rs => this.stations.get(rs.stationId)!);
+    return routeStationMappings
+      .map(rs => this.stations.get(rs.stationId))
+      .filter(station => station !== undefined) as Station[];
   }
 
   async addStationToRoute(routeStation: InsertRouteStation): Promise<RouteStation> {
@@ -666,10 +420,12 @@ export class MemStorage implements IStorage {
     if (!station) return undefined;
 
     const upcomingArrivals = await this.getBusArrivals(id);
-    const routeIds = Array.from(this.routeStations.values())
-      .filter(rs => rs.stationId === id)
-      .map(rs => rs.routeId);
-    const activeRoutes = routeIds.map(routeId => this.routes.get(routeId)!).filter(Boolean);
+    const routeStationMappings = Array.from(this.routeStations.values())
+      .filter(rs => rs.stationId === id);
+    
+    const activeRoutes = routeStationMappings
+      .map(rs => this.routes.get(rs.routeId))
+      .filter(route => route !== undefined) as Route[];
 
     return {
       ...station,
@@ -690,17 +446,15 @@ export class MemStorage implements IStorage {
 
   async getBusArrivals(stationId: number): Promise<BusArrivalWithDetails[]> {
     const arrivals = Array.from(this.busArrivals.values())
-      .filter(arrival => arrival.stationId === stationId && arrival.estimatedArrival > new Date())
-      .sort((a, b) => a.estimatedArrival.getTime() - b.estimatedArrival.getTime())
-      .slice(0, 5); // Next 5 arrivals
-
+      .filter(arrival => arrival.stationId === stationId);
+    
     return arrivals.map(arrival => {
-      const bus = this.buses.get(arrival.busId)!;
-      const route = this.routes.get(arrival.routeId)!;
+      const bus = this.buses.get(arrival.busId);
+      const route = bus ? this.routes.get(bus.routeId) : undefined;
       return {
         ...arrival,
-        bus: { ...bus, route },
-        route
+        bus: bus ? { ...bus, route: route! } : {} as BusWithRoute,
+        route: route!
       };
     });
   }
@@ -711,10 +465,10 @@ export class MemStorage implements IStorage {
       id, 
       busId: arrival.busId,
       stationId: arrival.stationId,
-      routeId: arrival.routeId,
+      scheduledArrival: arrival.scheduledArrival,
       estimatedArrival: arrival.estimatedArrival,
-      actualArrival: arrival.actualArrival ?? null,
-      status: arrival.status ?? "scheduled"
+      actualArrival: arrival.actualArrival || null,
+      status: arrival.status
     };
     this.busArrivals.set(id, newArrival);
     return newArrival;
@@ -731,27 +485,36 @@ export class MemStorage implements IStorage {
   }
 
   async getSystemStats(): Promise<SystemStats> {
-    const buses = Array.from(this.buses.values());
-    const routes = Array.from(this.routes.values()).filter(r => r.isActive);
-    
-    const onTimeBuses = buses.filter(b => b.status === "on_time").length;
-    const delayedBuses = buses.filter(b => b.status === "delayed").length;
-    const alertBuses = buses.filter(b => b.status === "alert").length;
-    
+    const totalBuses = this.buses.size;
+    const activeRoutes = this.routes.size;
+    const onTimeBuses = Array.from(this.buses.values()).filter(bus => bus.status === "on_time").length;
+    const delayedBuses = Array.from(this.buses.values()).filter(bus => bus.status === "delayed").length;
+    const alertBuses = Array.from(this.buses.values()).filter(bus => bus.status === "alert").length;
+    const onTimePercentage = totalBuses > 0 ? Math.round((onTimeBuses / totalBuses) * 100) : 0;
+
     return {
-      totalBuses: buses.length,
-      activeRoutes: routes.length,
-      onTimePercentage: Math.round((onTimeBuses / buses.length) * 100),
+      totalBuses,
+      activeRoutes,
+      onTimePercentage,
       onTimeBuses,
       delayedBuses,
       alertBuses
     };
   }
+
+  public simulateBusMovement() {
+    Array.from(this.buses.values()).forEach(bus => {
+      const variation = (Math.random() - 0.5) * 20;
+      const newX = Math.max(0, Math.min(1200, bus.currentX + variation));
+      const newY = Math.max(0, Math.min(900, bus.currentY + variation));
+      this.updateBusPosition(bus.id, newX, newY);
+    });
+  }
 }
 
 export const storage = new MemStorage();
 
-// Start bus movement simulation
+// Simulate bus movement every 3 seconds
 setInterval(() => {
   storage.simulateBusMovement();
-}, 1000); // Update bus positions every second
+}, 3000);

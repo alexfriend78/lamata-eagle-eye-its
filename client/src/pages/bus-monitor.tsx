@@ -8,12 +8,12 @@ import EmergencyAlert from "@/components/emergency-alert";
 import StationDetailsPanel from "@/components/station-details-panel";
 import RouteCustomizationPanel from "@/components/route-customization-panel";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [selectedRoutes, setSelectedRoutes] = useState<number[]>([]);
+  const [selectedRoutes, setSelectedRoutes] = useState<number[]>([1, 2, 3, 4, 5]); // Show all 5 routes by default
   const [selectedZone, setSelectedZone] = useState<number | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showMap, setShowMap] = useState(false);
@@ -23,6 +23,11 @@ export default function BusMonitor() {
   const [hoveredBus, setHoveredBus] = useState<any | null>(null);
   const [showLiveFeed, setShowLiveFeed] = useState(false);
   const [showRouteCustomization, setShowRouteCustomization] = useState(false);
+  
+  // Visibility controls for routes, bus stops, and buses
+  const [showRoutes, setShowRoutes] = useState(true);
+  const [showStations, setShowStations] = useState(true);
+  const [showBuses, setShowBuses] = useState(true);
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
   const { theme, setTheme } = useTheme();
 
