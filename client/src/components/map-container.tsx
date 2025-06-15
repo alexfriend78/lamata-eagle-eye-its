@@ -573,7 +573,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         {/* Route Lines */}
         {showRoutes && routes
           .filter(route => selectedRoutes.length === 0 || selectedRoutes.includes(route.id))
-          .map((route, index) => renderRouteLine(route, index))}
+          .map((route) => renderRouteLine(route, route.id - 1))}
 
         {/* Major Interchange Stations - London Underground style */}
         {(() => {
