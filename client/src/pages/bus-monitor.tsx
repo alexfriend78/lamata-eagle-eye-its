@@ -119,19 +119,6 @@ export default function BusMonitor() {
             </div>
             
             <div className="flex items-center space-x-6">
-              {/* Navigation Links */}
-              <div className="flex items-center space-x-4">
-                <a href="/" className="text-sm font-medium hover:text-blue-400 transition-colors">
-                  Live Monitor
-                </a>
-                <a href="/crowd-analytics" className="text-sm font-medium hover:text-blue-400 transition-colors">
-                  Crowd Analytics
-                </a>
-                <a href="/alert-simulator" className="text-sm font-medium hover:text-blue-400 transition-colors">
-                  Alert Simulator
-                </a>
-              </div>
-              
               {/* System Status */}
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
