@@ -5,12 +5,6 @@ import type {
   InsertCrowdDensityReading, InsertCrowdPrediction, InsertHistoricalPattern,
   BusWithRoute, AlertWithDetails, BusArrivalWithDetails, StationDetails, SystemStats, CrowdAnalytics
 } from "../shared/schema.js";
-import { db } from "./db.js";
-import { 
-  routes, stations, buses, alerts, routeStations, busArrivals,
-  crowdDensityReadings, crowdPredictions, historicalPatterns 
-} from "../shared/schema.js";
-import { eq, and, desc, asc, sql } from "drizzle-orm";
 
 export interface IStorage {
   // Routes
