@@ -10,9 +10,12 @@ interface MapContainerProps {
   selectedZone: number | null;
   onZoneSelect: (zone: number | null) => void;
   showMap: boolean;
+  showStationNames: boolean;
+  onStationClick: (station: Station) => void;
+  showLiveFeed: boolean;
 }
 
-export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap }: MapContainerProps) {
+export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, showLiveFeed }: MapContainerProps) {
   const getRoutePoints = (routeId: number) => {
     // Define route paths for Lagos BRT system - spread across full screen
     const routePaths: Record<number, { x: number; y: number }[]> = {
@@ -375,39 +378,65 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
           .filter(route => selectedRoutes.length === 0 || selectedRoutes.includes(route.id))
           .map((route, index) => renderRouteLine(route, index))}
         
-        {/* Major Stations */}
+        {/* Bus Stations */}
         {stations.map((station) => (
           <div 
             key={station.id}
-            className="absolute z-20"
+            className="absolute z-20 cursor-pointer"
             style={{ 
-              top: `${station.y - 4}px`, 
-              left: `${station.x - 4}px` 
+              top: `${station.y - 8}px`, 
+              left: `${station.x - 8}px` 
             }}
+            onClick={() => onStationClick(station)}
           >
-            <div 
-              className={`w-3 h-3 rounded-full border-2 ${
-                theme === 'dark' 
-                  ? 'bg-blue-400 border-white' 
-                  : 'bg-blue-600 border-gray-900'
-              }`}
-              title={station.name}
-            />
-            {/* Station name label */}
-            <div 
-              className={`absolute top-4 left-1/2 transform -translate-x-1/2 text-xs font-medium px-2 py-1 rounded ${
-                theme === 'dark' 
-                  ? 'bg-gray-800 text-white border border-gray-600' 
-                  : 'bg-white text-gray-900 border border-gray-300'
-              }`}
-              style={{
-                whiteSpace: 'nowrap',
-                fontSize: '10px',
-                filter: 'drop-shadow(0px 1px 2px rgba(0,0,0,0.3))'
-              }}
-            >
-              {station.name}
+            {/* Bus Stop Icon */}
+            <div className="relative">
+              <svg 
+                width="16" 
+                height="16" 
+                viewBox="0 0 24 24" 
+                className={`${theme === 'dark' ? 'text-blue-400' : 'text-blue-600'} hover:scale-110 transition-transform`}
+                fill="currentColor"
+              >
+                <path d="M12 2L13.09 8.26L22 9L17 14L18.18 22.82L12 19.77L5.82 22.82L7 14L2 9L10.91 8.26L12 2Z"/>
+              </svg>
+              
+              {/* Station indicator dot */}
+              <div 
+                className={`absolute -top-1 -right-1 w-3 h-3 rounded-full border-2 ${
+                  theme === 'dark' 
+                    ? 'bg-yellow-400 border-gray-800' 
+                    : 'bg-yellow-500 border-white'
+                }`}
+              />
+
+              {/* Live feed indicator */}
+              {showLiveFeed && (
+                <div 
+                  className={`absolute -bottom-1 -left-1 w-2 h-2 rounded-full ${
+                    Math.random() > 0.5 ? 'bg-green-500' : 'bg-red-500'
+                  } animate-pulse`}
+                />
+              )}
             </div>
+
+            {/* Station name label */}
+            {showStationNames && (
+              <div 
+                className={`absolute top-5 left-1/2 transform -translate-x-1/2 text-xs font-medium px-2 py-1 rounded ${
+                  theme === 'dark' 
+                    ? 'bg-gray-800 text-white border border-gray-600' 
+                    : 'bg-white text-gray-900 border border-gray-300'
+                }`}
+                style={{
+                  whiteSpace: 'nowrap',
+                  fontSize: '10px',
+                  filter: 'drop-shadow(0px 1px 2px rgba(0,0,0,0.3))'
+                }}
+              >
+                {station.name}
+              </div>
+            )}
           </div>
         ))}
 

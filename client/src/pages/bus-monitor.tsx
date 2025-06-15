@@ -5,7 +5,7 @@ import MapContainer from "@/components/map-container";
 import ControlPanel from "@/components/control-panel";
 import EmergencyAlert from "@/components/emergency-alert";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type } from "lucide-react";
 
 export default function BusMonitor() {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -13,6 +13,9 @@ export default function BusMonitor() {
   const [selectedZone, setSelectedZone] = useState<number | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showMap, setShowMap] = useState(false);
+  const [showStationNames, setShowStationNames] = useState(true);
+  const [selectedStation, setSelectedStation] = useState<any>(null);
+  const [showLiveFeed, setShowLiveFeed] = useState(false);
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
   const { theme, setTheme } = useTheme();
 
@@ -89,6 +92,17 @@ export default function BusMonitor() {
               </div>
             </div>
 
+            {/* Station Names Toggle */}
+            <Button
+              onClick={() => setShowStationNames(!showStationNames)}
+              variant={showStationNames ? "default" : "outline"}
+              size="sm"
+              className="h-8 w-8 p-0"
+              title="Toggle station names"
+            >
+              <Type className="h-4 w-4" />
+            </Button>
+
             {/* Map Toggle */}
             <Button
               onClick={() => setShowMap(!showMap)}
@@ -98,6 +112,17 @@ export default function BusMonitor() {
               title="Toggle background map"
             >
               <Map className="h-4 w-4" />
+            </Button>
+
+            {/* Live Feed Toggle */}
+            <Button
+              onClick={() => setShowLiveFeed(!showLiveFeed)}
+              variant={showLiveFeed ? "default" : "outline"}
+              size="sm"
+              className="h-8 w-8 p-0"
+              title="Toggle live feed"
+            >
+              <Video className="h-4 w-4" />
             </Button>
 
             {/* Theme Toggle */}
@@ -145,6 +170,9 @@ export default function BusMonitor() {
             selectedZone={selectedZone}
             onZoneSelect={setSelectedZone}
             showMap={showMap}
+            showStationNames={showStationNames}
+            onStationClick={setSelectedStation}
+            showLiveFeed={showLiveFeed}
           />
         </div>
 
@@ -158,6 +186,86 @@ export default function BusMonitor() {
               onRefresh={refetch}
               theme={theme}
             />
+          </div>
+        )}
+
+        {/* Station Details Modal */}
+        {selectedStation && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className={`${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'} rounded-lg p-6 max-w-md w-full mx-4 shadow-xl`}>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold flex items-center">
+                  <MapPin className="h-5 w-5 mr-2 text-blue-500" />
+                  {selectedStation.name}
+                </h3>
+                <Button
+                  onClick={() => setSelectedStation(null)}
+                  variant="outline"
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                >
+                  ×
+                </Button>
+              </div>
+              
+              <div className="space-y-4">
+                {/* Passenger Crowd */}
+                <div>
+                  <h4 className="font-medium text-sm mb-2">Passenger Crowd</h4>
+                  <div className="flex items-center space-x-2">
+                    <div className={`w-3 h-3 rounded-full ${Math.random() > 0.7 ? 'bg-red-500' : Math.random() > 0.4 ? 'bg-yellow-500' : 'bg-green-500'}`}></div>
+                    <span className="text-sm">
+                      {Math.random() > 0.7 ? 'High' : Math.random() > 0.4 ? 'Medium' : 'Low'} crowd level
+                    </span>
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    {Math.floor(Math.random() * 50 + 10)} people waiting
+                  </div>
+                </div>
+
+                {/* Next Arrivals */}
+                <div>
+                  <h4 className="font-medium text-sm mb-2">Next Arrivals</h4>
+                  <div className="space-y-1">
+                    {[1, 2, 3].map((_, i) => (
+                      <div key={i} className="flex justify-between text-sm">
+                        <span>Route {Math.floor(Math.random() * 9 + 1)}</span>
+                        <span className={i === 0 ? 'text-green-500' : 'text-gray-500'}>
+                          {i === 0 ? '2 min' : `${(i + 1) * 5 + Math.floor(Math.random() * 3)} min`}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Traffic Conditions */}
+                <div>
+                  <h4 className="font-medium text-sm mb-2">Traffic Conditions</h4>
+                  <div className="flex items-center space-x-2">
+                    <div className={`w-3 h-3 rounded-full ${Math.random() > 0.6 ? 'bg-red-500' : Math.random() > 0.3 ? 'bg-yellow-500' : 'bg-green-500'}`}></div>
+                    <span className="text-sm">
+                      {Math.random() > 0.6 ? 'Heavy traffic' : Math.random() > 0.3 ? 'Moderate traffic' : 'Light traffic'}
+                    </span>
+                  </div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    Average delay: {Math.floor(Math.random() * 8 + 1)} minutes
+                  </div>
+                </div>
+
+                {/* Live Feed Option */}
+                {showLiveFeed && (
+                  <div>
+                    <h4 className="font-medium text-sm mb-2">Live Feed</h4>
+                    <div className={`${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'} rounded p-4 text-center`}>
+                      <Video className="h-8 w-8 mx-auto mb-2 text-gray-500" />
+                      <div className="text-xs text-gray-500">
+                        Live camera feed would appear here
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>
