@@ -147,6 +147,25 @@ export class MemStorage implements IStorage {
       { name: "Super", x: 0.20, y: 0.30, zone: 1, routeId: 1 },
       { name: "Abule Egba", x: 0.18, y: 0.28, zone: 1, routeId: 1 },
 
+      // Route 2: Abule Egba - TBS/Obalende stations
+      { name: "Abule Egba Terminal", x: 0.18, y: 0.28, zone: 1, routeId: 2 },
+      { name: "Katangua", x: 0.22, y: 0.35, zone: 1, routeId: 2 },
+      { name: "Iyana Ipaja", x: 0.26, y: 0.42, zone: 1, routeId: 2 },
+      { name: "Ayobo", x: 0.30, y: 0.48, zone: 1, routeId: 2 },
+      { name: "Alagbado", x: 0.34, y: 0.54, zone: 1, routeId: 2 },
+      { name: "Iju", x: 0.38, y: 0.60, zone: 2, routeId: 2 },
+      { name: "Agege", x: 0.42, y: 0.66, zone: 2, routeId: 2 },
+      { name: "Pen Cinema", x: 0.46, y: 0.72, zone: 2, routeId: 2 },
+      { name: "Ogba", x: 0.50, y: 0.78, zone: 2, routeId: 2 },
+      { name: "Ikeja", x: 0.54, y: 0.82, zone: 2, routeId: 2 },
+      { name: "Maryland", x: 0.58, y: 0.86, zone: 3, routeId: 2 },
+      { name: "Palmgrove", x: 0.62, y: 0.88, zone: 3, routeId: 2 },
+      { name: "Onipanu", x: 0.66, y: 0.90, zone: 3, routeId: 2 },
+      { name: "Yaba", x: 0.70, y: 0.92, zone: 3, routeId: 2 },
+      { name: "Costain", x: 0.74, y: 0.94, zone: 3, routeId: 2 },
+      { name: "National Theatre", x: 0.78, y: 0.96, zone: 4, routeId: 2 },
+      { name: "TBS Terminal", x: 0.82, y: 0.98, zone: 4, routeId: 2 },
+
       // Route 3: Ikorodu - TBS stations 
       { name: "Ikorodu Terminal", x: 0.15, y: 0.85, zone: 4, routeId: 3 },
       { name: "Benson", x: 0.17, y: 0.83, zone: 4, routeId: 3 },
@@ -794,25 +813,55 @@ export class MemStorage implements IStorage {
   }
 
   async getCrowdAnalytics(stationId: number): Promise<CrowdAnalytics> {
-    const latestDensity = await this.getLatestCrowdDensity(stationId);
     const station = this.stations.get(stationId);
     
     if (!station) {
       throw new Error(`Station ${stationId} not found`);
     }
 
-    const predictions = Array.from(this.crowdPredictions.values())
-      .filter(p => p.stationId === stationId);
+    // Get or create current density reading
+    let latestDensity = await this.getLatestCrowdDensity(stationId);
+    if (!latestDensity) {
+      // Create a realistic current reading based on station passenger count
+      const capacity = 70;
+      const passengerCount = station.passengerCount;
+      const densityLevel = this.calculateDensityLevel(passengerCount, capacity);
+      
+      latestDensity = await this.createCrowdDensityReading({
+        stationId,
+        passengerCount,
+        capacity,
+        densityLevel,
+        timestamp: new Date(),
+        source: "station_sensor"
+      });
+    }
+
+    // Get predictions for this station
+    const routeId = stationId <= 17 ? 1 : stationId <= 34 ? 2 : 3;
+    const predictions = await this.getCrowdPredictions(stationId, routeId);
+
+    // Generate predictions if none exist
+    if (predictions.length === 0) {
+      await this.generateCrowdPredictions(stationId, routeId);
+      const newPredictions = await this.getCrowdPredictions(stationId, routeId);
+      predictions.push(...newPredictions);
+    }
+
+    const avgDensity = this.calculateHistoricalAverage(stationId);
+    const peakTimes = this.calculatePeakTimes(stationId);
+    const hourlyPattern = this.generateHourlyPattern(stationId);
 
     return {
-      stationId,
-      currentDensity: latestDensity?.densityLevel || "low",
-      passengerCount: latestDensity?.passengerCount || station.passengerCount,
-      capacity: latestDensity?.capacity || 70,
-      utilizationRate: latestDensity ? (latestDensity.passengerCount / (latestDensity.capacity || 70)) * 100 : 0,
-      predictions,
-      historicalAverage: this.calculateHistoricalAverage(stationId),
-      peakTimes: this.calculatePeakTimes(stationId)
+      avgDensity,
+      peakTimes,
+      hourlyPattern,
+      predictions: predictions.slice(0, 4).map(p => ({
+        timeMinutes: p.predictionTimeMinutes,
+        predictedCount: p.predictedPassengerCount,
+        confidence: p.confidenceLevel
+      })),
+      currentReading: latestDensity
     };
   }
 
@@ -820,9 +869,10 @@ export class MemStorage implements IStorage {
     const now = new Date();
     const predictions: CrowdPrediction[] = [];
     
-    // Generate predictions for next 6 hours
-    for (let i = 1; i <= 6; i++) {
-      const predictedTime = new Date(now.getTime() + (i * 60 * 60 * 1000));
+    // Generate predictions for next 4 time intervals (15, 30, 45, 60 minutes)
+    for (let i = 1; i <= 4; i++) {
+      const timeMinutes = i * 15;
+      const predictedTime = new Date(now.getTime() + (timeMinutes * 60 * 1000));
       const hour = predictedTime.getHours();
       
       // Simple prediction based on time patterns
@@ -840,8 +890,10 @@ export class MemStorage implements IStorage {
         routeId,
         predictedTime,
         expectedPassengers,
-        confidenceLevel: 80,
-        predictionType: "ml_model"
+        confidenceLevel: 85 - (i * 5), // Decreasing confidence over time
+        predictionType: "ml_model",
+        predictionTimeMinutes: timeMinutes,
+        predictedPassengerCount: expectedPassengers
       });
       
       predictions.push(prediction);
@@ -874,6 +926,29 @@ export class MemStorage implements IStorage {
       hour,
       avgDensity: hour >= 17 && hour <= 19 ? "high" : hour >= 7 && hour <= 9 ? "high" : "medium"
     }));
+  }
+
+  private generateHourlyPattern(stationId: number): Array<{ hour: number; density: number }> {
+    const pattern = [];
+    for (let hour = 0; hour < 24; hour++) {
+      let density = 20; // Base density
+      
+      // Morning rush (7-9 AM)
+      if (hour >= 7 && hour <= 9) density = 65;
+      // Lunch time (12-2 PM)
+      else if (hour >= 12 && hour <= 14) density = 45;
+      // Evening rush (5-7 PM)
+      else if (hour >= 17 && hour <= 19) density = 70;
+      // Late night (11 PM - 5 AM)
+      else if (hour >= 23 || hour <= 5) density = 10;
+      
+      // Add some variation
+      density += Math.floor(Math.random() * 10) - 5;
+      density = Math.max(5, Math.min(80, density));
+      
+      pattern.push({ hour, density });
+    }
+    return pattern;
   }
 }
 
