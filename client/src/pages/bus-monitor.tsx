@@ -23,7 +23,7 @@ export default function BusMonitor() {
   const { theme, setTheme } = useTheme();
 
   // Fetch station details when a station is selected
-  const { data: stationDetails } = useQuery({
+  const { data: stationDetails } = useQuery<StationDetails>({
     queryKey: ['/api/stations', selectedStation?.id],
     enabled: !!selectedStation?.id,
   });
@@ -208,7 +208,7 @@ export default function BusMonitor() {
 
         {/* Station Details Panel */}
         <StationDetailsPanel
-          stationDetails={stationDetails}
+          stationDetails={stationDetails || null}
           isOpen={!!selectedStation}
           onClose={handleCloseStationDetails}
         />

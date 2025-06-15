@@ -17,56 +17,54 @@ interface MapContainerProps {
 
 export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, showLiveFeed }: MapContainerProps) {
   const getRoutePoints = (routeId: number) => {
-    // Define route paths for Lagos BRT system - spread across full screen
+    // Define route paths for Lagos BRT system - utilizing full landscape screen (1280x720)
     const routePaths: Record<number, { x: number; y: number }[]> = {
-      1: [ // Oshodi - Abule-Egba (diagonal northwest)
-        { x: 800, y: 400 }, { x: 750, y: 370 }, { x: 700, y: 340 }, { x: 650, y: 310 },
-        { x: 600, y: 280 }, { x: 550, y: 250 }, { x: 500, y: 220 }, { x: 450, y: 190 },
-        { x: 400, y: 160 }, { x: 350, y: 130 }, { x: 300, y: 100 }, { x: 250, y: 70 },
-        { x: 200, y: 50 }, { x: 150, y: 30 }, { x: 100, y: 20 }, { x: 50, y: 15 }, { x: 20, y: 10 }
+      1: [ // Oshodi - Abule-Egba (northwest diagonal - full width)
+        { x: 1260, y: 680 }, { x: 1180, y: 620 }, { x: 1100, y: 560 }, { x: 1020, y: 500 },
+        { x: 940, y: 440 }, { x: 860, y: 380 }, { x: 780, y: 320 }, { x: 700, y: 260 },
+        { x: 620, y: 200 }, { x: 540, y: 140 }, { x: 460, y: 100 }, { x: 380, y: 80 },
+        { x: 300, y: 60 }, { x: 220, y: 50 }, { x: 140, y: 40 }, { x: 80, y: 30 }, { x: 20, y: 20 }
       ],
-      2: [ // Abule Egba - TBS/Obalende (northwest to southeast)
-        { x: 20, y: 10 }, { x: 50, y: 15 }, { x: 100, y: 20 }, { x: 150, y: 30 },
-        { x: 200, y: 50 }, { x: 250, y: 70 }, { x: 300, y: 100 }, { x: 350, y: 130 },
-        { x: 400, y: 160 }, { x: 450, y: 190 }, { x: 500, y: 220 }, { x: 550, y: 250 },
-        { x: 600, y: 280 }, { x: 650, y: 310 }, { x: 700, y: 340 }, { x: 750, y: 370 },
-        { x: 800, y: 400 }, { x: 900, y: 450 }, { x: 950, y: 470 }, { x: 1000, y: 490 },
-        { x: 1150, y: 480 }, { x: 1200, y: 500 }, { x: 1250, y: 520 }
+      2: [ // Abule Egba - TBS/Obalende (northwest to southeast - full screen)
+        { x: 20, y: 20 }, { x: 80, y: 30 }, { x: 140, y: 40 }, { x: 220, y: 50 },
+        { x: 300, y: 60 }, { x: 380, y: 80 }, { x: 460, y: 100 }, { x: 540, y: 140 },
+        { x: 620, y: 200 }, { x: 700, y: 260 }, { x: 780, y: 320 }, { x: 860, y: 380 },
+        { x: 940, y: 440 }, { x: 1020, y: 500 }, { x: 1100, y: 560 }, { x: 1180, y: 620 },
+        { x: 1260, y: 680 }
       ],
-      3: [ // Ikorodu - TBS (southwest to southeast)
-        { x: 50, y: 600 }, { x: 120, y: 580 }, { x: 200, y: 560 }, { x: 280, y: 540 },
-        { x: 360, y: 520 }, { x: 440, y: 500 }, { x: 520, y: 480 }, { x: 600, y: 460 },
-        { x: 680, y: 440 }, { x: 720, y: 420 }, { x: 800, y: 400 }, { x: 900, y: 450 },
-        { x: 1000, y: 490 }, { x: 1200, y: 500 }, { x: 1250, y: 520 }
+      3: [ // Ikorodu - TBS (southwest to southeast - bottom traverse)
+        { x: 40, y: 700 }, { x: 160, y: 680 }, { x: 280, y: 660 }, { x: 400, y: 640 },
+        { x: 520, y: 620 }, { x: 640, y: 600 }, { x: 760, y: 580 }, { x: 880, y: 560 },
+        { x: 1000, y: 540 }, { x: 1120, y: 520 }, { x: 1240, y: 500 }
       ],
-      4: [ // Ikorodu - Fadeyi (southwest to center)
-        { x: 50, y: 600 }, { x: 120, y: 580 }, { x: 200, y: 560 }, { x: 280, y: 540 },
-        { x: 360, y: 520 }, { x: 440, y: 500 }, { x: 520, y: 480 }, { x: 600, y: 460 },
-        { x: 680, y: 440 }, { x: 720, y: 420 }, { x: 800, y: 400 }, { x: 900, y: 450 },
-        { x: 1000, y: 490 }
+      4: [ // Berger - Lekki (horizontal traverse - upper middle)
+        { x: 30, y: 200 }, { x: 150, y: 190 }, { x: 270, y: 180 }, { x: 390, y: 170 },
+        { x: 510, y: 160 }, { x: 630, y: 150 }, { x: 750, y: 140 }, { x: 870, y: 130 },
+        { x: 990, y: 120 }, { x: 1110, y: 110 }, { x: 1230, y: 100 }
       ],
-      5: [ // Ikorodu - Oshodi (southwest to center)
-        { x: 50, y: 600 }, { x: 120, y: 580 }, { x: 200, y: 560 }, { x: 280, y: 540 },
-        { x: 360, y: 520 }, { x: 440, y: 500 }, { x: 520, y: 480 }, { x: 600, y: 460 },
-        { x: 680, y: 440 }, { x: 720, y: 420 }, { x: 800, y: 400 }
+      5: [ // Lagos Island - Mainland (east-west central)
+        { x: 1250, y: 360 }, { x: 1150, y: 350 }, { x: 1050, y: 340 }, { x: 950, y: 330 },
+        { x: 850, y: 320 }, { x: 750, y: 310 }, { x: 650, y: 300 }, { x: 550, y: 290 },
+        { x: 450, y: 280 }, { x: 350, y: 270 }, { x: 250, y: 260 }, { x: 150, y: 250 }, { x: 50, y: 240 }
       ],
-      6: [ // Berger - Ajah (west to east)
-        { x: 100, y: 350 }, { x: 200, y: 340 }, { x: 300, y: 330 }, { x: 400, y: 325 },
-        { x: 500, y: 320 }, { x: 600, y: 315 }, { x: 700, y: 310 }, { x: 800, y: 305 },
-        { x: 900, y: 300 }, { x: 1000, y: 295 }, { x: 1100, y: 290 }, { x: 1200, y: 285 }
+      6: [ // Victoria Island - Ajah (coastal route)
+        { x: 1260, y: 600 }, { x: 1180, y: 580 }, { x: 1100, y: 560 }, { x: 1020, y: 540 },
+        { x: 940, y: 520 }, { x: 860, y: 500 }, { x: 780, y: 480 }, { x: 700, y: 460 },
+        { x: 620, y: 440 }, { x: 540, y: 420 }
       ],
-      7: [ // Lekki - Victoria Island (east coast)
-        { x: 1200, y: 200 }, { x: 1150, y: 220 }, { x: 1100, y: 240 }, { x: 1050, y: 260 },
-        { x: 1000, y: 280 }, { x: 950, y: 300 }, { x: 900, y: 320 }, { x: 850, y: 340 }
+      7: [ // Yaba - Surulere (central north)
+        { x: 300, y: 150 }, { x: 420, y: 140 }, { x: 540, y: 130 }, { x: 660, y: 120 },
+        { x: 780, y: 110 }, { x: 900, y: 100 }, { x: 1020, y: 90 }, { x: 1140, y: 80 }
       ],
-      8: [ // Yaba - Surulere (central)
-        { x: 600, y: 150 }, { x: 650, y: 170 }, { x: 700, y: 190 }, { x: 750, y: 210 },
-        { x: 800, y: 230 }, { x: 850, y: 250 }, { x: 900, y: 270 }
+      8: [ // Ikeja - Airport (northwest curve)
+        { x: 200, y: 300 }, { x: 280, y: 280 }, { x: 360, y: 260 }, { x: 440, y: 240 },
+        { x: 520, y: 220 }, { x: 600, y: 200 }, { x: 680, y: 180 }, { x: 760, y: 160 },
+        { x: 840, y: 140 }, { x: 920, y: 120 }
       ],
-      9: [ // Ikeja - Lagos Island (central diagonal)
-        { x: 400, y: 250 }, { x: 450, y: 270 }, { x: 500, y: 290 }, { x: 550, y: 310 },
-        { x: 600, y: 330 }, { x: 650, y: 350 }, { x: 700, y: 370 }, { x: 750, y: 390 },
-        { x: 800, y: 410 }, { x: 850, y: 430 }
+      9: [ // Outer Ring Road (partial circle)
+        { x: 100, y: 500 }, { x: 200, y: 480 }, { x: 300, y: 460 }, { x: 400, y: 440 },
+        { x: 500, y: 420 }, { x: 600, y: 400 }, { x: 700, y: 420 }, { x: 800, y: 440 },
+        { x: 900, y: 460 }, { x: 1000, y: 480 }, { x: 1100, y: 500 }, { x: 1180, y: 520 }
       ]
     };
     return routePaths[routeId] || [];

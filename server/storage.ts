@@ -77,46 +77,70 @@ export class MemStorage implements IStorage {
   }
 
   private seedData() {
-    // Create stations based on Lagos BRT routes - spread across full screen
+    // Create stations based on Lagos BRT routes - utilizing full landscape screen (1280x720)
     const stationsData = [
-      // Route 1: Oshodi - Abule-Egba (diagonal northwest)
-      { name: "Oshodi Terminal 2", x: 800, y: 400 },
-      { name: "Bolade", x: 750, y: 370 },
-      { name: "Ladipo", x: 700, y: 340 },
-      { name: "Shogunle", x: 650, y: 310 },
-      { name: "PWD", x: 600, y: 280 },
-      { name: "Airport Junction", x: 550, y: 250 },
-      { name: "Ikeja Along", x: 500, y: 220 },
-      { name: "Ile Zik", x: 450, y: 190 },
-      { name: "Mangoro", x: 400, y: 160 },
-      { name: "Cement", x: 350, y: 130 },
-      { name: "Iyana Dopemu", x: 300, y: 100 },
-      { name: "Adealu", x: 250, y: 70 },
-      { name: "Iyana Ipaja Bus stop", x: 200, y: 50 },
-      { name: "Pleasure", x: 150, y: 30 },
-      { name: "Ile Epo", x: 100, y: 20 },
-      { name: "Super", x: 50, y: 15 },
-      { name: "Abule Egba", x: 20, y: 10 },
+      // Route 1: Main northwest diagonal across full screen
+      { name: "Oshodi Terminal 2", x: 940, y: 440 },
+      { name: "Bolade", x: 860, y: 380 },
+      { name: "Ladipo", x: 780, y: 320 },
+      { name: "Shogunle", x: 700, y: 260 },
+      { name: "PWD", x: 620, y: 200 },
+      { name: "Airport Junction", x: 540, y: 140 },
+      { name: "Ikeja Along", x: 460, y: 100 },
+      { name: "Ile Zik", x: 380, y: 80 },
+      { name: "Mangoro", x: 300, y: 60 },
+      { name: "Cement", x: 220, y: 50 },
+      { name: "Iyana Dopemu", x: 140, y: 40 },
+      { name: "Adealu", x: 80, y: 30 },
+      { name: "Abule Egba", x: 20, y: 20 },
       
-      // Route 2: Extends to island (southeast)
-      { name: "CMS Terminal", x: 1200, y: 500 },
-      { name: "Obalende", x: 1150, y: 480 },
-      { name: "TBS Terminal", x: 1250, y: 520 },
-      { name: "Anthony", x: 900, y: 450 },
-      { name: "Maryland", x: 950, y: 470 },
-      { name: "Fadeyi", x: 1000, y: 490 },
+      // Route 2: Southeast extension to full screen edge
+      { name: "CMS Terminal", x: 1180, y: 620 },
+      { name: "Obalende", x: 1100, y: 560 },
+      { name: "TBS Terminal", x: 1260, y: 680 },
+      { name: "Anthony", x: 1020, y: 500 },
+      { name: "Maryland", x: 1180, y: 620 },
+      { name: "Fadeyi", x: 1100, y: 560 },
       
-      // Route 3/4/5 Ikorodu line (southwest to center)
-      { name: "Ikorodu Terminal", x: 50, y: 600 },
-      { name: "Benson", x: 120, y: 580 },
-      { name: "AGRIC TERMINAL", x: 200, y: 560 },
-      { name: "OWUTU IDIROKO", x: 280, y: 540 },
-      { name: "OGOLONTO", x: 360, y: 520 },
-      { name: "MAJIDUN AWORI", x: 440, y: 500 },
-      { name: "MILE12 TERMINAL", x: 520, y: 480 },
-      { name: "Ketu", x: 600, y: 460 },
-      { name: "Ojota", x: 680, y: 440 },
-      { name: "Newgarage", x: 720, y: 420 },
+      // Route 3: Bottom horizontal traverse
+      { name: "Ikorodu Terminal", x: 40, y: 700 },
+      { name: "Benson", x: 160, y: 680 },
+      { name: "AGRIC TERMINAL", x: 280, y: 660 },
+      { name: "OWUTU IDIROKO", x: 400, y: 640 },
+      { name: "OGOLONTO", x: 520, y: 620 },
+      { name: "MAJIDUN AWORI", x: 640, y: 600 },
+      { name: "MILE12 TERMINAL", x: 760, y: 580 },
+      { name: "Ketu", x: 880, y: 560 },
+      { name: "Ojota", x: 1000, y: 540 },
+      { name: "Newgarage", x: 1120, y: 520 },
+      
+      // Route 4: Upper horizontal
+      { name: "Berger Terminal", x: 30, y: 200 },
+      { name: "Ogba", x: 150, y: 190 },
+      { name: "Agege", x: 270, y: 180 },
+      { name: "Pen Cinema", x: 390, y: 170 },
+      { name: "Ogba Junction", x: 510, y: 160 },
+      { name: "Allen Avenue", x: 630, y: 150 },
+      { name: "Computer Village", x: 750, y: 140 },
+      { name: "Underbridge", x: 870, y: 130 },
+      { name: "Lekki Phase 1", x: 990, y: 120 },
+      { name: "Lekki Toll Gate", x: 1110, y: 110 },
+      { name: "Lekki Terminal", x: 1230, y: 100 },
+      
+      // Route 5: Central east-west
+      { name: "Lagos Island", x: 1250, y: 360 },
+      { name: "Marina", x: 1150, y: 350 },
+      { name: "National Theatre", x: 1050, y: 340 },
+      { name: "Surulere", x: 950, y: 330 },
+      { name: "Yaba", x: 850, y: 320 },
+      { name: "Mushin", x: 750, y: 310 },
+      { name: "Papa Ajao", x: 650, y: 300 },
+      { name: "Isolo", x: 550, y: 290 },
+      { name: "Ejigbo", x: 450, y: 280 },
+      { name: "Igando", x: 350, y: 270 },
+      { name: "Alaba", x: 250, y: 260 },
+      { name: "Ojo", x: 150, y: 250 },
+      { name: "Badagry", x: 50, y: 240 }
     ];
 
     stationsData.forEach((station, index) => {
@@ -159,19 +183,19 @@ export class MemStorage implements IStorage {
       this.routes.set(id, { id, ...route, isActive: true });
     });
 
-    // Create buses on different routes - positioned on actual route paths
+    // Create buses on different routes - positioned on expanded route paths across full screen
     const busesData = [
-      { routeId: 1, busNumber: "LG-01-KXY", currentX: 600, currentY: 280, status: "on_time", direction: "forward" },
-      { routeId: 1, busNumber: "LG-01-MZB", currentX: 400, currentY: 160, status: "delayed", direction: "reverse" },
-      { routeId: 2, busNumber: "LG-02-ABC", currentX: 950, currentY: 470, status: "alert", direction: "forward" },
-      { routeId: 2, busNumber: "LG-02-DEF", currentX: 1150, currentY: 480, status: "on_time", direction: "reverse" },
-      { routeId: 3, busNumber: "LG-03-GHI", currentX: 200, currentY: 560, status: "on_time", direction: "forward" },
-      { routeId: 4, busNumber: "LG-04-JKL", currentX: 440, currentY: 500, status: "delayed", direction: "forward" },
-      { routeId: 5, busNumber: "LG-05-MNO", currentX: 680, currentY: 440, status: "on_time", direction: "reverse" },
-      { routeId: 6, busNumber: "LG-06-PQR", currentX: 300, currentY: 350, status: "on_time", direction: "forward" },
-      { routeId: 7, busNumber: "LG-07-STU", currentX: 1100, currentY: 300, status: "delayed", direction: "forward" },
-      { routeId: 8, busNumber: "LG-08-VWX", currentX: 700, currentY: 200, status: "on_time", direction: "reverse" },
-      { routeId: 9, busNumber: "LG-09-YZA", currentX: 500, currentY: 300, status: "on_time", direction: "forward" },
+      { routeId: 1, busNumber: "LG-01-KXY", currentX: 780, currentY: 320, status: "on_time", direction: "forward" },
+      { routeId: 1, busNumber: "LG-01-MZB", currentX: 540, currentY: 140, status: "delayed", direction: "reverse" },
+      { routeId: 2, busNumber: "LG-02-ABC", currentX: 1020, currentY: 500, status: "alert", direction: "forward" },
+      { routeId: 2, busNumber: "LG-02-DEF", currentX: 1180, currentY: 620, status: "on_time", direction: "reverse" },
+      { routeId: 3, busNumber: "LG-03-GHI", currentX: 520, currentY: 620, status: "on_time", direction: "forward" },
+      { routeId: 4, busNumber: "LG-04-JKL", currentX: 630, currentY: 150, status: "delayed", direction: "forward" },
+      { routeId: 5, busNumber: "LG-05-MNO", currentX: 950, currentY: 330, status: "on_time", direction: "reverse" },
+      { routeId: 6, busNumber: "LG-06-PQR", currentX: 940, currentY: 520, status: "on_time", direction: "forward" },
+      { routeId: 7, busNumber: "LG-07-STU", currentX: 780, currentY: 110, status: "delayed", direction: "forward" },
+      { routeId: 8, busNumber: "LG-08-VWX", currentX: 600, currentY: 200, status: "on_time", direction: "reverse" },
+      { routeId: 9, busNumber: "LG-09-YZA", currentX: 700, currentY: 420, status: "on_time", direction: "forward" },
     ];
 
     busesData.forEach(bus => {
