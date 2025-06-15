@@ -177,8 +177,7 @@ export class MemStorage implements IStorage {
       { routeNumber: "8", name: "Ikeja - Airport Express", color: "#D84315" },
       { routeNumber: "9", name: "Outer Ring Road Circuit", color: "#006064" },
       { routeNumber: "10", name: "North-South Connector", color: "#8E24AA" },
-      { routeNumber: "11", name: "East-West Expressway", color: "#00BCD4" },
-      { routeNumber: "12", name: "Metropolitan Circle", color: "#FF9800" }
+      { routeNumber: "11", name: "East-West Expressway", color: "#00BCD4" }
     ];
 
     routesData.forEach(route => {

@@ -121,6 +121,24 @@ export default function BusMonitor() {
               </div>
             </div>
 
+            {/* Zone Selection */}
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium">Zones:</span>
+              <div className="flex space-x-1 flex-wrap">
+                {Array.from({ length: 16 }, (_, i) => i + 1).map((zone) => (
+                  <Button
+                    key={zone}
+                    onClick={() => setSelectedZone(selectedZone === zone ? null : zone)}
+                    variant={selectedZone === zone ? "default" : "outline"}
+                    size="sm"
+                    className="h-7 px-2 text-xs"
+                  >
+                    Z{zone}
+                  </Button>
+                ))}
+              </div>
+            </div>
+
             {/* Station Names Toggle */}
             <Button
               onClick={() => setShowStationNames(!showStationNames)}

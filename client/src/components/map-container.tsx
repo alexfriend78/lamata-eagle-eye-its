@@ -77,12 +77,6 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         { x: 40, y: 400 }, { x: 140, y: 390 }, { x: 240, y: 380 }, { x: 340, y: 370 },
         { x: 440, y: 360 }, { x: 540, y: 350 }, { x: 640, y: 340 }, { x: 740, y: 330 },
         { x: 840, y: 320 }, { x: 940, y: 310 }, { x: 1040, y: 300 }, { x: 1140, y: 290 }, { x: 1240, y: 280 }
-      ],
-      12: [ // Metropolitan Circle (connecting outer zones)
-        { x: 100, y: 100 }, { x: 300, y: 80 }, { x: 500, y: 70 }, { x: 700, y: 80 }, { x: 900, y: 100 },
-        { x: 1100, y: 140 }, { x: 1200, y: 200 }, { x: 1250, y: 300 }, { x: 1200, y: 400 },
-        { x: 1100, y: 500 }, { x: 900, y: 600 }, { x: 700, y: 650 }, { x: 500, y: 680 },
-        { x: 300, y: 650 }, { x: 150, y: 600 }, { x: 80, y: 500 }, { x: 60, y: 400 }, { x: 80, y: 300 }, { x: 100, y: 200 }
       ]
     };
     return routePaths[routeId] || [];
@@ -177,24 +171,28 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     );
   };
 
-  // Calculate zoom parameters for selected zone
+  // Calculate zoom transform for selected zone
   const getZoomTransform = () => {
-    if (selectedZone === null) return "scale(1) translate(0, 0)";
+    if (!selectedZone) return 'scale(1) translate(0px, 0px)';
     
+    // Zone layout: 4x4 grid (zones 1-16)
     const row = Math.floor((selectedZone - 1) / 4);
     const col = (selectedZone - 1) % 4;
     
-    const zoneWidth = 1280 / 4;
-    const zoneHeight = 720 / 4;
+    // Each zone is 320x180 pixels (1280/4 x 720/4)
+    const zoneWidth = 320;
+    const zoneHeight = 180;
     
-    const centerX = col * zoneWidth + zoneWidth / 2;
-    const centerY = row * zoneHeight + zoneHeight / 2;
+    // Calculate center of the selected zone
+    const zoneCenterX = col * zoneWidth + zoneWidth / 2;
+    const zoneCenterY = row * zoneHeight + zoneHeight / 2;
     
-    const scale = 2;
-    const translateX = (640 - centerX);
-    const translateY = (360 - centerY);
+    // Zoom scale and translation to center the zone
+    const scale = 2.5;
+    const translateX = (640 - zoneCenterX); // 640 is half of 1280
+    const translateY = (360 - zoneCenterY); // 360 is half of 720
     
-    return `scale(${scale}) translate(${translateX}px, ${translateY}px)`;
+    return `scale(${scale}) translate(${translateX / scale}px, ${translateY / scale}px)`;
   };
 
   return (
