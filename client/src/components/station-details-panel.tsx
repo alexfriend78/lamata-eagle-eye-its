@@ -22,15 +22,15 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
 
   if (!isOpen || !stationDetails) return null;
 
-  // Station Live Feed - using station-specific video feed
-  const videoFiles = [
+  // Station Live Feed - restricted to P1 critical security emergencies only
+  const securityVideoFiles = [
     "/attached_assets/knife_Lagos_Bus_CCTV_Video_Ready_1750007661394.mp4",
     "/attached_assets/Bus_Fight_Video_Generated_1750007661396.mp4"
   ];
   
   const stationId = stationDetails?.id || 1;
-  const selectedIndex = stationId % videoFiles.length;
-  const videoSrc = videoFiles[selectedIndex];
+  const selectedIndex = stationId % securityVideoFiles.length;
+  const videoSrc = securityVideoFiles[selectedIndex];
   
 
 
@@ -263,6 +263,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                 <div className="flex items-center gap-2">
                   <Camera className="h-4 w-4" />
                   Live Video Feed
+                  <Badge variant="secondary" className="text-xs">Station CCTV</Badge>
                 </div>
                 <a 
                   href={videoSrc} 
@@ -340,54 +341,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
             </CardContent>
           </Card>
 
-          {/* Video Test Panel */}
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Video Diagnostics</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <div className="text-xs text-muted-foreground">
-                  Current video URL: {videoSrc}
-                </div>
-                <div className="flex gap-2">
-                  <a 
-                    href={videoSrc} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center px-3 py-2 text-xs font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer z-10 relative"
-                    style={{ pointerEvents: 'auto' }}
-                  >
-                    Open Video Direct
-                  </a>
-                  <button
-                    onClick={() => {
-                      const video = document.getElementById('station-video') as HTMLVideoElement;
-                      if (video) {
-                        console.log('Video element found:', {
-                          src: video.src,
-                          currentSrc: video.currentSrc,
-                          readyState: video.readyState,
-                          networkState: video.networkState,
-                          error: video.error,
-                          errorCode: video.error?.code,
-                          errorMessage: video.error?.message,
-                          canPlayType: video.canPlayType('video/mp4')
-                        });
-                        video.load();
-                        video.play().catch(e => console.log('Play failed:', e));
-                      } else {
-                        console.log('Video element not found');
-                      }
-                    }}
-                    className="inline-flex items-center px-3 py-2 text-xs font-medium text-white bg-green-600 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  >
-                    Debug Video
-                  </button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+
 
           {/* Upcoming Arrivals */}
           <Card>
