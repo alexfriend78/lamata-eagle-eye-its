@@ -167,22 +167,22 @@ export class MemStorage implements IStorage {
 
     // Create routes based on Lagos BRT system - comprehensive zone coverage
     const routesData = [
-      { routeNumber: "1", name: "Zone 1 Network - Agege-Ikeja", color: "#3B82F6" },
-      { routeNumber: "2", name: "Zone 2 Network - Ogba-Ikeja", color: "#EF4444" },
-      { routeNumber: "3", name: "Zone 3 Network - Allen-Opebi", color: "#10B981" },
-      { routeNumber: "4", name: "Zone 4 Network - GRA-Airport", color: "#F59E0B" },
-      { routeNumber: "5", name: "Zone 5 Network - Mushin-Isolo", color: "#8B5CF6" },
-      { routeNumber: "6", name: "Zone 6 Network - Surulere-Alaba", color: "#EC4899" },
-      { routeNumber: "7", name: "Zone 7 Network - Yaba-Ebute Metta", color: "#06B6D4" },
-      { routeNumber: "8", name: "Zone 8 Network - Apapa-Festac", color: "#84CC16" },
-      { routeNumber: "9", name: "Zone 9 Network - Ketu-Mile 12", color: "#F97316" },
-      { routeNumber: "10", name: "Zone 10 Network - Gbagada-Shomolu", color: "#14B8A6" },
-      { routeNumber: "11", name: "Zone 11 Network - Bariga-Somolu", color: "#A855F7" },
-      { routeNumber: "12", name: "Zone 12 Network - Lagos Island", color: "#DC2626" },
-      { routeNumber: "13", name: "Zone 13 Network - Ikorodu North", color: "#059669" },
-      { routeNumber: "14", name: "Zone 14 Network - Kosofe-Anthony", color: "#D97706" },
-      { routeNumber: "15", name: "Zone 15 Network - Victoria Island", color: "#7C3AED" },
-      { routeNumber: "16", name: "Zone 16 Network - Lekki-Ajah", color: "#BE185D" }
+      { routeNumber: "1", name: "Lagos Blue Line - Coastal Express", color: "#1E40AF" },
+      { routeNumber: "2", name: "Red Line - Metropolitan Diagonal", color: "#DC2626" },
+      { routeNumber: "3", name: "Green Line - Central Curve", color: "#059669" },
+      { routeNumber: "4", name: "Orange Line - Northern Arc", color: "#EA580C" },
+      { routeNumber: "5", name: "Purple Line - Riverside Route", color: "#7C3AED" },
+      { routeNumber: "6", name: "Teal Line - Metropolitan Loop", color: "#0D9488" },
+      { routeNumber: "7", name: "Yellow Line - Express Highway", color: "#CA8A04" },
+      { routeNumber: "8", name: "Pink Line - Northern Arterial", color: "#BE185D" },
+      { routeNumber: "9", name: "Cyan Line - Southern Express", color: "#0891B2" },
+      { routeNumber: "10", name: "Brown Line - Cross-City Connector", color: "#A16207" },
+      { routeNumber: "11", name: "Lime Line - Central Spine", color: "#65A30D" },
+      { routeNumber: "12", name: "Indigo Line - Eastern Corridor", color: "#4338CA" },
+      { routeNumber: "13", name: "Violet Line - Orbital Circuit", color: "#8B5CF6" },
+      { routeNumber: "14", name: "Gold Line - Luxury Express", color: "#D97706" },
+      { routeNumber: "15", name: "Silver Line - Island Hopper", color: "#6B7280" },
+      { routeNumber: "16", name: "Coral Line - Scenic Coastal", color: "#F97316" }
     ];
 
     routesData.forEach(route => {

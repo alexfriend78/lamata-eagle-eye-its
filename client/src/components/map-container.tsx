@@ -19,87 +19,72 @@ interface MapContainerProps {
 
 export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed }: MapContainerProps) {
   const getRoutePoints = (routeId: number) => {
-    // Define comprehensive route paths covering all 16 zones with internal connectivity
+    // Define aesthetically pleasing routes inspired by real transit systems
     const routePaths: Record<number, { x: number; y: number }[]> = {
-      1: [ // Zone 1 comprehensive coverage
-        { x: 20, y: 20 }, { x: 80, y: 30 }, { x: 140, y: 40 }, { x: 200, y: 50 }, { x: 260, y: 60 },
-        { x: 300, y: 80 }, { x: 280, y: 120 }, { x: 240, y: 160 }, { x: 180, y: 150 }, 
-        { x: 120, y: 140 }, { x: 60, y: 130 }, { x: 40, y: 100 }, { x: 20, y: 70 }
+      1: [ // Lagos Blue Line - Elegant coastal curve
+        { x: 50, y: 100 }, { x: 200, y: 80 }, { x: 400, y: 90 }, { x: 600, y: 120 }, 
+        { x: 800, y: 140 }, { x: 1000, y: 160 }, { x: 1200, y: 180 }
       ],
-      2: [ // Zone 2 comprehensive coverage  
-        { x: 320, y: 20 }, { x: 380, y: 30 }, { x: 440, y: 40 }, { x: 500, y: 50 }, { x: 560, y: 60 },
-        { x: 600, y: 80 }, { x: 580, y: 120 }, { x: 540, y: 160 }, { x: 480, y: 150 },
-        { x: 420, y: 140 }, { x: 360, y: 130 }, { x: 340, y: 100 }, { x: 320, y: 70 }
+      2: [ // Red Line - Dynamic diagonal sweep
+        { x: 100, y: 50 }, { x: 250, y: 150 }, { x: 450, y: 250 }, { x: 650, y: 350 }, 
+        { x: 850, y: 450 }, { x: 1050, y: 550 }, { x: 1200, y: 650 }
       ],
-      3: [ // Zone 3 comprehensive coverage
-        { x: 640, y: 20 }, { x: 700, y: 30 }, { x: 760, y: 40 }, { x: 820, y: 50 }, { x: 880, y: 60 },
-        { x: 920, y: 80 }, { x: 900, y: 120 }, { x: 860, y: 160 }, { x: 800, y: 150 },
-        { x: 740, y: 140 }, { x: 680, y: 130 }, { x: 660, y: 100 }, { x: 640, y: 70 }
+      3: [ // Green Line - Gentle S-curve through center
+        { x: 80, y: 360 }, { x: 200, y: 320 }, { x: 350, y: 300 }, { x: 500, y: 320 }, 
+        { x: 650, y: 340 }, { x: 800, y: 360 }, { x: 950, y: 380 }, { x: 1100, y: 400 }
       ],
-      4: [ // Zone 4 comprehensive coverage
-        { x: 960, y: 20 }, { x: 1020, y: 30 }, { x: 1080, y: 40 }, { x: 1140, y: 50 }, { x: 1200, y: 60 },
-        { x: 1240, y: 80 }, { x: 1220, y: 120 }, { x: 1180, y: 160 }, { x: 1120, y: 150 },
-        { x: 1060, y: 140 }, { x: 1000, y: 130 }, { x: 980, y: 100 }, { x: 960, y: 70 }
+      4: [ // Orange Line - Smooth arc across top
+        { x: 150, y: 200 }, { x: 300, y: 180 }, { x: 450, y: 170 }, { x: 600, y: 180 }, 
+        { x: 750, y: 190 }, { x: 900, y: 200 }, { x: 1050, y: 210 }
       ],
-      5: [ // Zone 5 comprehensive coverage
-        { x: 20, y: 200 }, { x: 80, y: 210 }, { x: 140, y: 220 }, { x: 200, y: 230 }, { x: 260, y: 240 },
-        { x: 300, y: 260 }, { x: 280, y: 300 }, { x: 240, y: 340 }, { x: 180, y: 330 },
-        { x: 120, y: 320 }, { x: 60, y: 310 }, { x: 40, y: 280 }, { x: 20, y: 250 }
+      5: [ // Purple Line - Flowing riverside route
+        { x: 40, y: 500 }, { x: 180, y: 480 }, { x: 320, y: 460 }, { x: 480, y: 450 }, 
+        { x: 640, y: 460 }, { x: 800, y: 480 }, { x: 960, y: 500 }, { x: 1120, y: 520 }
       ],
-      6: [ // Zone 6 comprehensive coverage
-        { x: 320, y: 200 }, { x: 380, y: 210 }, { x: 440, y: 220 }, { x: 500, y: 230 }, { x: 560, y: 240 },
-        { x: 600, y: 260 }, { x: 580, y: 300 }, { x: 540, y: 340 }, { x: 480, y: 330 },
-        { x: 420, y: 320 }, { x: 360, y: 310 }, { x: 340, y: 280 }, { x: 320, y: 250 }
+      6: [ // Teal Line - Metropolitan loop (partial)
+        { x: 200, y: 600 }, { x: 350, y: 580 }, { x: 500, y: 560 }, { x: 650, y: 580 }, 
+        { x: 800, y: 600 }, { x: 950, y: 620 }, { x: 1100, y: 640 }
       ],
-      7: [ // Zone 7 comprehensive coverage
-        { x: 640, y: 200 }, { x: 700, y: 210 }, { x: 760, y: 220 }, { x: 820, y: 230 }, { x: 880, y: 240 },
-        { x: 920, y: 260 }, { x: 900, y: 300 }, { x: 860, y: 340 }, { x: 800, y: 330 },
-        { x: 740, y: 320 }, { x: 680, y: 310 }, { x: 660, y: 280 }, { x: 640, y: 250 }
+      7: [ // Yellow Line - Express highway parallel
+        { x: 120, y: 300 }, { x: 280, y: 290 }, { x: 440, y: 280 }, { x: 600, y: 290 }, 
+        { x: 760, y: 300 }, { x: 920, y: 310 }, { x: 1080, y: 320 }
       ],
-      8: [ // Zone 8 comprehensive coverage
-        { x: 960, y: 200 }, { x: 1020, y: 210 }, { x: 1080, y: 220 }, { x: 1140, y: 230 }, { x: 1200, y: 240 },
-        { x: 1240, y: 260 }, { x: 1220, y: 300 }, { x: 1180, y: 340 }, { x: 1120, y: 330 },
-        { x: 1060, y: 320 }, { x: 1000, y: 310 }, { x: 980, y: 280 }, { x: 960, y: 250 }
+      8: [ // Pink Line - Northern arterial
+        { x: 60, y: 150 }, { x: 220, y: 140 }, { x: 380, y: 130 }, { x: 540, y: 140 }, 
+        { x: 700, y: 150 }, { x: 860, y: 160 }, { x: 1020, y: 170 }, { x: 1180, y: 180 }
       ],
-      9: [ // Zone 9 comprehensive coverage
-        { x: 20, y: 380 }, { x: 80, y: 390 }, { x: 140, y: 400 }, { x: 200, y: 410 }, { x: 260, y: 420 },
-        { x: 300, y: 440 }, { x: 280, y: 480 }, { x: 240, y: 520 }, { x: 180, y: 510 },
-        { x: 120, y: 500 }, { x: 60, y: 490 }, { x: 40, y: 460 }, { x: 20, y: 430 }
+      9: [ // Cyan Line - Southern express
+        { x: 80, y: 550 }, { x: 240, y: 540 }, { x: 400, y: 530 }, { x: 560, y: 540 }, 
+        { x: 720, y: 550 }, { x: 880, y: 560 }, { x: 1040, y: 570 }, { x: 1200, y: 580 }
       ],
-      10: [ // Zone 10 comprehensive coverage
-        { x: 320, y: 380 }, { x: 380, y: 390 }, { x: 440, y: 400 }, { x: 500, y: 410 }, { x: 560, y: 420 },
-        { x: 600, y: 440 }, { x: 580, y: 480 }, { x: 540, y: 520 }, { x: 480, y: 510 },
-        { x: 420, y: 500 }, { x: 360, y: 490 }, { x: 340, y: 460 }, { x: 320, y: 430 }
+      10: [ // Brown Line - Cross-city connector
+        { x: 160, y: 100 }, { x: 200, y: 200 }, { x: 240, y: 300 }, { x: 280, y: 400 }, 
+        { x: 320, y: 500 }, { x: 360, y: 600 }, { x: 400, y: 680 }
       ],
-      11: [ // Zone 11 comprehensive coverage
-        { x: 640, y: 380 }, { x: 700, y: 390 }, { x: 760, y: 400 }, { x: 820, y: 410 }, { x: 880, y: 420 },
-        { x: 920, y: 440 }, { x: 900, y: 480 }, { x: 860, y: 520 }, { x: 800, y: 510 },
-        { x: 740, y: 500 }, { x: 680, y: 490 }, { x: 660, y: 460 }, { x: 640, y: 430 }
+      11: [ // Lime Line - Central spine
+        { x: 640, y: 50 }, { x: 640, y: 150 }, { x: 640, y: 250 }, { x: 640, y: 350 }, 
+        { x: 640, y: 450 }, { x: 640, y: 550 }, { x: 640, y: 650 }
       ],
-      12: [ // Zone 12 comprehensive coverage
-        { x: 960, y: 380 }, { x: 1020, y: 390 }, { x: 1080, y: 400 }, { x: 1140, y: 410 }, { x: 1200, y: 420 },
-        { x: 1240, y: 440 }, { x: 1220, y: 480 }, { x: 1180, y: 520 }, { x: 1120, y: 510 },
-        { x: 1060, y: 500 }, { x: 1000, y: 490 }, { x: 980, y: 460 }, { x: 960, y: 430 }
+      12: [ // Indigo Line - Eastern corridor
+        { x: 900, y: 80 }, { x: 920, y: 180 }, { x: 940, y: 280 }, { x: 960, y: 380 }, 
+        { x: 980, y: 480 }, { x: 1000, y: 580 }, { x: 1020, y: 680 }
       ],
-      13: [ // Zone 13 comprehensive coverage
-        { x: 20, y: 560 }, { x: 80, y: 570 }, { x: 140, y: 580 }, { x: 200, y: 590 }, { x: 260, y: 600 },
-        { x: 300, y: 620 }, { x: 280, y: 660 }, { x: 240, y: 700 }, { x: 180, y: 690 },
-        { x: 120, y: 680 }, { x: 60, y: 670 }, { x: 40, y: 640 }, { x: 20, y: 610 }
+      13: [ // Violet Line - Orbital route
+        { x: 300, y: 200 }, { x: 400, y: 180 }, { x: 500, y: 200 }, { x: 580, y: 250 }, 
+        { x: 600, y: 350 }, { x: 580, y: 450 }, { x: 500, y: 500 }, { x: 400, y: 520 }, 
+        { x: 300, y: 500 }, { x: 220, y: 450 }, { x: 200, y: 350 }, { x: 220, y: 250 }
       ],
-      14: [ // Zone 14 comprehensive coverage
-        { x: 320, y: 560 }, { x: 380, y: 570 }, { x: 440, y: 580 }, { x: 500, y: 590 }, { x: 560, y: 600 },
-        { x: 600, y: 620 }, { x: 580, y: 660 }, { x: 540, y: 700 }, { x: 480, y: 690 },
-        { x: 420, y: 680 }, { x: 360, y: 670 }, { x: 340, y: 640 }, { x: 320, y: 610 }
+      14: [ // Gold Line - Luxury express
+        { x: 400, y: 120 }, { x: 500, y: 110 }, { x: 600, y: 100 }, { x: 700, y: 110 }, 
+        { x: 800, y: 120 }, { x: 900, y: 130 }, { x: 1000, y: 140 }
       ],
-      15: [ // Zone 15 comprehensive coverage
-        { x: 640, y: 560 }, { x: 700, y: 570 }, { x: 760, y: 580 }, { x: 820, y: 590 }, { x: 880, y: 600 },
-        { x: 920, y: 620 }, { x: 900, y: 660 }, { x: 860, y: 700 }, { x: 800, y: 690 },
-        { x: 740, y: 680 }, { x: 680, y: 670 }, { x: 660, y: 640 }, { x: 640, y: 610 }
+      15: [ // Silver Line - Island hopper
+        { x: 700, y: 400 }, { x: 800, y: 380 }, { x: 900, y: 400 }, { x: 1000, y: 420 }, 
+        { x: 1100, y: 400 }, { x: 1180, y: 420 }, { x: 1240, y: 450 }
       ],
-      16: [ // Zone 16 comprehensive coverage
-        { x: 960, y: 560 }, { x: 1020, y: 570 }, { x: 1080, y: 580 }, { x: 1140, y: 590 }, { x: 1200, y: 600 },
-        { x: 1240, y: 620 }, { x: 1220, y: 660 }, { x: 1180, y: 700 }, { x: 1120, y: 690 },
-        { x: 1060, y: 680 }, { x: 1000, y: 670 }, { x: 980, y: 640 }, { x: 960, y: 610 }
+      16: [ // Coral Line - Scenic coastal
+        { x: 500, y: 600 }, { x: 600, y: 620 }, { x: 700, y: 640 }, { x: 800, y: 660 }, 
+        { x: 900, y: 680 }, { x: 1000, y: 700 }, { x: 1100, y: 720 }
       ]
     };
     return routePaths[routeId] || [];
