@@ -15,9 +15,12 @@ interface MapContainerProps {
   onStationHover?: (station: Station | null) => void;
   onBusHover?: (bus: BusWithRoute | null) => void;
   showLiveFeed: boolean;
+  showRoutes: boolean;
+  showStations: boolean;
+  showBuses: boolean;
 }
 
-export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed }: MapContainerProps) {
+export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed, showRoutes, showStations, showBuses }: MapContainerProps) {
   // Dynamic screen dimensions accounting for header
   const mapWidth = typeof window !== 'undefined' ? window.innerWidth : 1920;
   const mapHeight = typeof window !== 'undefined' ? window.innerHeight - 64 : 1016; // Subtract header height
@@ -564,7 +567,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         </svg>
 
         {/* Route Lines */}
-        {routes
+        {showRoutes && routes
           .filter(route => selectedRoutes.length === 0 || selectedRoutes.includes(route.id))
           .map((route, index) => renderRouteLine(route, index))}
 
@@ -642,8 +645,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             ));
         })()}
         
-        {/* Bus Stations - only for selected routes or all if none selected */}
-        {stations.filter(station => {
+        {/* Bus Stations - only show if stations visibility is enabled */}
+        {showStations && stations.filter(station => {
           // Show all stations if no routes are selected
           if (selectedRoutes.length === 0) return true;
           // Show station if it belongs to any selected route (simplified - in real app would have route-station mapping)
@@ -710,8 +713,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
           </div>
         ))}
 
-        {/* Bus Icons with Animations */}
-        {buses
+        {/* Bus Icons with Animations - only show if buses visibility is enabled */}
+        {showBuses && buses
           .filter(bus => selectedRoutes.length === 0 || selectedRoutes.includes(bus.routeId))
           .map((bus) => (
             <div

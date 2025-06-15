@@ -145,6 +145,44 @@ export default function BusMonitor() {
 
 
 
+            {/* Visibility Controls */}
+            <div className="flex items-center space-x-1 border-l border-gray-300 dark:border-gray-600 pl-4 ml-4">
+              <span className="text-xs font-medium text-gray-600 dark:text-gray-400 mr-2">Show:</span>
+              
+              {/* Routes Toggle */}
+              <Button
+                onClick={() => setShowRoutes(!showRoutes)}
+                variant={showRoutes ? "default" : "outline"}
+                size="sm"
+                className="h-8 px-2 text-xs"
+                title="Toggle routes visibility"
+              >
+                Routes
+              </Button>
+
+              {/* Bus Stops Toggle */}
+              <Button
+                onClick={() => setShowStations(!showStations)}
+                variant={showStations ? "default" : "outline"}
+                size="sm"
+                className="h-8 px-2 text-xs"
+                title="Toggle bus stops visibility"
+              >
+                Stops
+              </Button>
+
+              {/* Buses Toggle */}
+              <Button
+                onClick={() => setShowBuses(!showBuses)}
+                variant={showBuses ? "default" : "outline"}
+                size="sm"
+                className="h-8 px-2 text-xs"
+                title="Toggle buses visibility"
+              >
+                Buses
+              </Button>
+            </div>
+
             {/* Station Names Toggle */}
             <Button
               onClick={() => setShowStationNames(!showStationNames)}
@@ -239,6 +277,9 @@ export default function BusMonitor() {
             onStationHover={handleStationHover}
             onBusHover={handleBusHover}
             showLiveFeed={showLiveFeed}
+            showRoutes={showRoutes}
+            showStations={showStations}
+            showBuses={showBuses}
           />
         </div>
 
