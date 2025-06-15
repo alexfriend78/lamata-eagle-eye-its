@@ -151,6 +151,14 @@ export class MemStorage implements IStorage {
       { name: "CMS", x: 0.70, y: 0.80, zone: 2, routeId: 2 },
       { name: "TBS Terminal", x: 0.72, y: 0.82, zone: 2, routeId: 2 },
       { name: "Obalende", x: 0.74, y: 0.84, zone: 2, routeId: 2 },
+      { name: "Falomo", x: 0.76, y: 0.86, zone: 3, routeId: 2 },
+      { name: "Ikoyi", x: 0.78, y: 0.88, zone: 3, routeId: 2 },
+      { name: "Victoria Island", x: 0.80, y: 0.90, zone: 3, routeId: 2 },
+      { name: "Admiralty Way", x: 0.82, y: 0.92, zone: 3, routeId: 2 },
+      { name: "Lekki Phase 1", x: 0.84, y: 0.94, zone: 3, routeId: 2 },
+      { name: "Lekki Toll Gate", x: 0.86, y: 0.96, zone: 3, routeId: 2 },
+      { name: "Chevron", x: 0.88, y: 0.98, zone: 3, routeId: 2 },
+      { name: "Lekki Phase 2 Terminal", x: 0.90, y: 1.00, zone: 3, routeId: 2 },
 
       // Route 3: Ikorodu - TBS stations 
       { name: "Ikorodu Terminal", x: 0.15, y: 0.85, zone: 4, routeId: 3 },
