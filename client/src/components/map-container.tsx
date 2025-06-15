@@ -11,32 +11,38 @@ interface MapContainerProps {
 
 export default function MapContainer({ buses, routes, stations, selectedRoutes, theme }: MapContainerProps) {
   const getRoutePoints = (routeId: number) => {
-    // Define route paths for Lagos BRT system
+    // Define route paths for Lagos BRT system - spread across full screen
     const routePaths: Record<number, { x: number; y: number }[]> = {
-      1: [ // Oshodi - Abule-Egba
-        { x: 400, y: 300 }, { x: 380, y: 280 }, { x: 360, y: 260 }, { x: 340, y: 240 },
-        { x: 320, y: 220 }, { x: 300, y: 200 }, { x: 280, y: 180 }, { x: 260, y: 160 },
-        { x: 240, y: 140 }, { x: 220, y: 120 }, { x: 200, y: 100 }, { x: 180, y: 80 },
-        { x: 160, y: 60 }, { x: 140, y: 40 }, { x: 120, y: 20 }, { x: 100, y: 10 }, { x: 80, y: 5 }
+      1: [ // Oshodi - Abule-Egba (diagonal northwest)
+        { x: 800, y: 400 }, { x: 750, y: 370 }, { x: 700, y: 340 }, { x: 650, y: 310 },
+        { x: 600, y: 280 }, { x: 550, y: 250 }, { x: 500, y: 220 }, { x: 450, y: 190 },
+        { x: 400, y: 160 }, { x: 350, y: 130 }, { x: 300, y: 100 }, { x: 250, y: 70 },
+        { x: 200, y: 50 }, { x: 150, y: 30 }, { x: 100, y: 20 }, { x: 50, y: 15 }, { x: 20, y: 10 }
       ],
-      2: [ // Abule Egba - TBS/Obalende
-        { x: 80, y: 5 }, { x: 100, y: 10 }, { x: 120, y: 20 }, { x: 140, y: 40 },
-        { x: 160, y: 60 }, { x: 180, y: 80 }, { x: 200, y: 100 }, { x: 220, y: 120 },
-        { x: 240, y: 140 }, { x: 260, y: 160 }, { x: 280, y: 180 }, { x: 300, y: 200 },
-        { x: 320, y: 220 }, { x: 340, y: 240 }, { x: 360, y: 260 }, { x: 380, y: 280 },
-        { x: 400, y: 300 }, { x: 420, y: 350 }, { x: 580, y: 480 }, { x: 600, y: 500 }, { x: 650, y: 520 }
+      2: [ // Abule Egba - TBS/Obalende (northwest to southeast)
+        { x: 20, y: 10 }, { x: 50, y: 15 }, { x: 100, y: 20 }, { x: 150, y: 30 },
+        { x: 200, y: 50 }, { x: 250, y: 70 }, { x: 300, y: 100 }, { x: 350, y: 130 },
+        { x: 400, y: 160 }, { x: 450, y: 190 }, { x: 500, y: 220 }, { x: 550, y: 250 },
+        { x: 600, y: 280 }, { x: 650, y: 310 }, { x: 700, y: 340 }, { x: 750, y: 370 },
+        { x: 800, y: 400 }, { x: 900, y: 450 }, { x: 950, y: 470 }, { x: 1000, y: 490 },
+        { x: 1150, y: 480 }, { x: 1200, y: 500 }, { x: 1250, y: 520 }
       ],
-      3: [ // Ikorodu - TBS
-        { x: 100, y: 600 }, { x: 200, y: 580 }, { x: 300, y: 500 }, { x: 350, y: 460 },
-        { x: 400, y: 420 }, { x: 460, y: 380 }, { x: 500, y: 420 }, { x: 600, y: 500 }, { x: 650, y: 520 }
+      3: [ // Ikorodu - TBS (southwest to southeast)
+        { x: 50, y: 600 }, { x: 120, y: 580 }, { x: 200, y: 560 }, { x: 280, y: 540 },
+        { x: 360, y: 520 }, { x: 440, y: 500 }, { x: 520, y: 480 }, { x: 600, y: 460 },
+        { x: 680, y: 440 }, { x: 720, y: 420 }, { x: 800, y: 400 }, { x: 900, y: 450 },
+        { x: 1000, y: 490 }, { x: 1200, y: 500 }, { x: 1250, y: 520 }
       ],
-      4: [ // Ikorodu - Fadeyi
-        { x: 100, y: 600 }, { x: 200, y: 580 }, { x: 300, y: 500 }, { x: 350, y: 460 },
-        { x: 400, y: 420 }, { x: 460, y: 380 }, { x: 500, y: 420 }
+      4: [ // Ikorodu - Fadeyi (southwest to center)
+        { x: 50, y: 600 }, { x: 120, y: 580 }, { x: 200, y: 560 }, { x: 280, y: 540 },
+        { x: 360, y: 520 }, { x: 440, y: 500 }, { x: 520, y: 480 }, { x: 600, y: 460 },
+        { x: 680, y: 440 }, { x: 720, y: 420 }, { x: 800, y: 400 }, { x: 900, y: 450 },
+        { x: 1000, y: 490 }
       ],
-      5: [ // Ikorodu - Oshodi
-        { x: 100, y: 600 }, { x: 200, y: 580 }, { x: 300, y: 500 }, { x: 350, y: 460 },
-        { x: 400, y: 420 }, { x: 420, y: 350 }, { x: 400, y: 300 }
+      5: [ // Ikorodu - Oshodi (southwest to center)
+        { x: 50, y: 600 }, { x: 120, y: 580 }, { x: 200, y: 560 }, { x: 280, y: 540 },
+        { x: 360, y: 520 }, { x: 440, y: 500 }, { x: 520, y: 480 }, { x: 600, y: 460 },
+        { x: 680, y: 440 }, { x: 720, y: 420 }, { x: 800, y: 400 }
       ]
     };
     return routePaths[routeId] || [];

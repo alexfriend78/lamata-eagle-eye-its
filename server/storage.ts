@@ -66,40 +66,46 @@ export class MemStorage implements IStorage {
   }
 
   private seedData() {
-    // Create stations based on Lagos BRT routes
+    // Create stations based on Lagos BRT routes - spread across full screen
     const stationsData = [
-      // Route 1: Oshodi - Abule-Egba
-      { name: "Oshodi Terminal 2", x: 400, y: 300 },
-      { name: "Bolade", x: 380, y: 280 },
-      { name: "Ladipo", x: 360, y: 260 },
-      { name: "Shogunle", x: 340, y: 240 },
-      { name: "PWD", x: 320, y: 220 },
-      { name: "Airport Junction", x: 300, y: 200 },
-      { name: "Ikeja Along", x: 280, y: 180 },
-      { name: "Ile Zik", x: 260, y: 160 },
-      { name: "Mangoro", x: 240, y: 140 },
-      { name: "Cement", x: 220, y: 120 },
-      { name: "Iyana Dopemu", x: 200, y: 100 },
-      { name: "Adealu", x: 180, y: 80 },
-      { name: "Iyana Ipaja Bus stop", x: 160, y: 60 },
-      { name: "Pleasure", x: 140, y: 40 },
-      { name: "Ile Epo", x: 120, y: 20 },
-      { name: "Super", x: 100, y: 10 },
-      { name: "Abule Egba", x: 80, y: 5 },
+      // Route 1: Oshodi - Abule-Egba (diagonal northwest)
+      { name: "Oshodi Terminal 2", x: 800, y: 400 },
+      { name: "Bolade", x: 750, y: 370 },
+      { name: "Ladipo", x: 700, y: 340 },
+      { name: "Shogunle", x: 650, y: 310 },
+      { name: "PWD", x: 600, y: 280 },
+      { name: "Airport Junction", x: 550, y: 250 },
+      { name: "Ikeja Along", x: 500, y: 220 },
+      { name: "Ile Zik", x: 450, y: 190 },
+      { name: "Mangoro", x: 400, y: 160 },
+      { name: "Cement", x: 350, y: 130 },
+      { name: "Iyana Dopemu", x: 300, y: 100 },
+      { name: "Adealu", x: 250, y: 70 },
+      { name: "Iyana Ipaja Bus stop", x: 200, y: 50 },
+      { name: "Pleasure", x: 150, y: 30 },
+      { name: "Ile Epo", x: 100, y: 20 },
+      { name: "Super", x: 50, y: 15 },
+      { name: "Abule Egba", x: 20, y: 10 },
       
-      // Route 2/3 additional stations
-      { name: "CMS Terminal", x: 600, y: 500 },
-      { name: "Obalende", x: 580, y: 480 },
-      { name: "TBS Terminal", x: 650, y: 520 },
-      { name: "Anthony", x: 420, y: 350 },
-      { name: "Maryland", x: 460, y: 380 },
-      { name: "Fadeyi", x: 500, y: 420 },
+      // Route 2: Extends to island (southeast)
+      { name: "CMS Terminal", x: 1200, y: 500 },
+      { name: "Obalende", x: 1150, y: 480 },
+      { name: "TBS Terminal", x: 1250, y: 520 },
+      { name: "Anthony", x: 900, y: 450 },
+      { name: "Maryland", x: 950, y: 470 },
+      { name: "Fadeyi", x: 1000, y: 490 },
       
-      // Route 3/4/5 Ikorodu line
-      { name: "Ikorodu Terminal", x: 100, y: 600 },
-      { name: "Mile12 Terminal", x: 300, y: 500 },
-      { name: "Ketu", x: 350, y: 460 },
-      { name: "Ojota", x: 400, y: 420 },
+      // Route 3/4/5 Ikorodu line (southwest to center)
+      { name: "Ikorodu Terminal", x: 50, y: 600 },
+      { name: "Benson", x: 120, y: 580 },
+      { name: "AGRIC TERMINAL", x: 200, y: 560 },
+      { name: "OWUTU IDIROKO", x: 280, y: 540 },
+      { name: "OGOLONTO", x: 360, y: 520 },
+      { name: "MAJIDUN AWORI", x: 440, y: 500 },
+      { name: "MILE12 TERMINAL", x: 520, y: 480 },
+      { name: "Ketu", x: 600, y: 460 },
+      { name: "Ojota", x: 680, y: 440 },
+      { name: "Newgarage", x: 720, y: 420 },
     ];
 
     stationsData.forEach(station => {
@@ -121,15 +127,15 @@ export class MemStorage implements IStorage {
       this.routes.set(id, { id, ...route, isActive: true });
     });
 
-    // Create buses on different routes
+    // Create buses on different routes - positioned on actual route paths
     const busesData = [
-      { routeId: 1, busNumber: "LG-01-KXY", currentX: 200, currentY: 150, status: "on_time", direction: "forward" },
-      { routeId: 1, busNumber: "LG-01-MZB", currentX: 300, currentY: 200, status: "delayed", direction: "reverse" },
-      { routeId: 2, busNumber: "LG-02-ABC", currentX: 180, currentY: 80, status: "alert", direction: "forward" },
-      { routeId: 2, busNumber: "LG-02-DEF", currentX: 500, currentY: 400, status: "on_time", direction: "reverse" },
-      { routeId: 3, busNumber: "LG-03-GHI", currentX: 200, currentY: 550, status: "on_time", direction: "forward" },
-      { routeId: 4, busNumber: "LG-04-JKL", currentX: 250, currentY: 500, status: "delayed", direction: "forward" },
-      { routeId: 5, busNumber: "LG-05-MNO", currentX: 150, currentY: 600, status: "on_time", direction: "reverse" },
+      { routeId: 1, busNumber: "LG-01-KXY", currentX: 600, currentY: 280, status: "on_time", direction: "forward" },
+      { routeId: 1, busNumber: "LG-01-MZB", currentX: 400, currentY: 160, status: "delayed", direction: "reverse" },
+      { routeId: 2, busNumber: "LG-02-ABC", currentX: 950, currentY: 470, status: "alert", direction: "forward" },
+      { routeId: 2, busNumber: "LG-02-DEF", currentX: 1150, currentY: 480, status: "on_time", direction: "reverse" },
+      { routeId: 3, busNumber: "LG-03-GHI", currentX: 200, currentY: 560, status: "on_time", direction: "forward" },
+      { routeId: 4, busNumber: "LG-04-JKL", currentX: 440, currentY: 500, status: "delayed", direction: "forward" },
+      { routeId: 5, busNumber: "LG-05-MNO", currentX: 680, currentY: 440, status: "on_time", direction: "reverse" },
     ];
 
     busesData.forEach(bus => {
@@ -254,6 +260,85 @@ export class MemStorage implements IStorage {
     return undefined;
   }
 
+  // Simulate bus movement along routes
+  public simulateBusMovement() {
+    const routePaths: Record<number, { x: number; y: number }[]> = {
+      1: [ // Oshodi - Abule-Egba (diagonal northwest)
+        { x: 800, y: 400 }, { x: 750, y: 370 }, { x: 700, y: 340 }, { x: 650, y: 310 },
+        { x: 600, y: 280 }, { x: 550, y: 250 }, { x: 500, y: 220 }, { x: 450, y: 190 },
+        { x: 400, y: 160 }, { x: 350, y: 130 }, { x: 300, y: 100 }, { x: 250, y: 70 },
+        { x: 200, y: 50 }, { x: 150, y: 30 }, { x: 100, y: 20 }, { x: 50, y: 15 }, { x: 20, y: 10 }
+      ],
+      2: [ // Abule Egba - TBS/Obalende (northwest to southeast)
+        { x: 20, y: 10 }, { x: 50, y: 15 }, { x: 100, y: 20 }, { x: 150, y: 30 },
+        { x: 200, y: 50 }, { x: 250, y: 70 }, { x: 300, y: 100 }, { x: 350, y: 130 },
+        { x: 400, y: 160 }, { x: 450, y: 190 }, { x: 500, y: 220 }, { x: 550, y: 250 },
+        { x: 600, y: 280 }, { x: 650, y: 310 }, { x: 700, y: 340 }, { x: 750, y: 370 },
+        { x: 800, y: 400 }, { x: 900, y: 450 }, { x: 950, y: 470 }, { x: 1000, y: 490 },
+        { x: 1150, y: 480 }, { x: 1200, y: 500 }, { x: 1250, y: 520 }
+      ],
+      3: [ // Ikorodu - TBS (southwest to southeast)
+        { x: 50, y: 600 }, { x: 120, y: 580 }, { x: 200, y: 560 }, { x: 280, y: 540 },
+        { x: 360, y: 520 }, { x: 440, y: 500 }, { x: 520, y: 480 }, { x: 600, y: 460 },
+        { x: 680, y: 440 }, { x: 720, y: 420 }, { x: 800, y: 400 }, { x: 900, y: 450 },
+        { x: 1000, y: 490 }, { x: 1200, y: 500 }, { x: 1250, y: 520 }
+      ],
+      4: [ // Ikorodu - Fadeyi (southwest to center)
+        { x: 50, y: 600 }, { x: 120, y: 580 }, { x: 200, y: 560 }, { x: 280, y: 540 },
+        { x: 360, y: 520 }, { x: 440, y: 500 }, { x: 520, y: 480 }, { x: 600, y: 460 },
+        { x: 680, y: 440 }, { x: 720, y: 420 }, { x: 800, y: 400 }, { x: 900, y: 450 },
+        { x: 1000, y: 490 }
+      ],
+      5: [ // Ikorodu - Oshodi (southwest to center)
+        { x: 50, y: 600 }, { x: 120, y: 580 }, { x: 200, y: 560 }, { x: 280, y: 540 },
+        { x: 360, y: 520 }, { x: 440, y: 500 }, { x: 520, y: 480 }, { x: 600, y: 460 },
+        { x: 680, y: 440 }, { x: 720, y: 420 }, { x: 800, y: 400 }
+      ]
+    };
+
+    this.buses.forEach((bus) => {
+      const routePoints = routePaths[bus.routeId] || [];
+      if (routePoints.length > 1) {
+        // Find nearest point on route
+        let nearestIndex = 0;
+        let minDistance = Infinity;
+        
+        routePoints.forEach((point, index) => {
+          const distance = Math.sqrt(
+            Math.pow(point.x - bus.currentX, 2) + Math.pow(point.y - bus.currentY, 2)
+          );
+          if (distance < minDistance) {
+            minDistance = distance;
+            nearestIndex = index;
+          }
+        });
+        
+        // Move to next point based on direction
+        let targetIndex;
+        if (bus.direction === "forward") {
+          targetIndex = nearestIndex < routePoints.length - 1 ? nearestIndex + 1 : 0;
+        } else {
+          targetIndex = nearestIndex > 0 ? nearestIndex - 1 : routePoints.length - 1;
+        }
+        
+        const targetPoint = routePoints[targetIndex];
+        const speed = bus.status === "delayed" ? 2 : bus.status === "alert" ? 1 : 4;
+        
+        // Calculate new position
+        const newX = bus.currentX + (targetPoint.x - bus.currentX) * (speed / 100);
+        const newY = bus.currentY + (targetPoint.y - bus.currentY) * (speed / 100);
+        
+        // Update bus position
+        this.buses.set(bus.id, {
+          ...bus,
+          currentX: newX,
+          currentY: newY,
+          lastUpdated: new Date()
+        });
+      }
+    });
+  }
+
   async updateBusStatus(id: number, status: string): Promise<Bus | undefined> {
     const bus = this.buses.get(id);
     if (bus) {
@@ -338,3 +423,8 @@ export class MemStorage implements IStorage {
 }
 
 export const storage = new MemStorage();
+
+// Start bus movement simulation
+setInterval(() => {
+  storage.simulateBusMovement();
+}, 1000); // Update bus positions every second
