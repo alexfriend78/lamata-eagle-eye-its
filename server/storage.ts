@@ -1,7 +1,9 @@
 import type { 
   Route, Station, Bus, Alert, RouteStation, BusArrival, 
+  CrowdDensityReading, CrowdPrediction, HistoricalPattern,
   InsertRoute, InsertStation, InsertBus, InsertAlert, InsertRouteStation, InsertBusArrival,
-  BusWithRoute, AlertWithDetails, BusArrivalWithDetails, StationDetails, SystemStats
+  InsertCrowdDensityReading, InsertCrowdPrediction, InsertHistoricalPattern,
+  BusWithRoute, AlertWithDetails, BusArrivalWithDetails, StationDetails, SystemStats, CrowdAnalytics
 } from "../shared/schema.js";
 
 export interface IStorage {
@@ -43,6 +45,23 @@ export interface IStorage {
   
   // System Stats
   getSystemStats(): Promise<SystemStats>;
+  
+  // Crowd Density Analytics
+  getCrowdDensityReadings(stationId?: number, busId?: number): Promise<CrowdDensityReading[]>;
+  getLatestCrowdDensity(stationId: number): Promise<CrowdDensityReading | undefined>;
+  createCrowdDensityReading(reading: InsertCrowdDensityReading): Promise<CrowdDensityReading>;
+  
+  // Crowd Predictions
+  getCrowdPredictions(stationId: number, routeId: number): Promise<CrowdPrediction[]>;
+  createCrowdPrediction(prediction: InsertCrowdPrediction): Promise<CrowdPrediction>;
+  
+  // Historical Patterns
+  getHistoricalPatterns(stationId: number, routeId: number): Promise<HistoricalPattern[]>;
+  updateHistoricalPattern(pattern: InsertHistoricalPattern): Promise<HistoricalPattern>;
+  
+  // Analytics
+  getCrowdAnalytics(stationId: number): Promise<CrowdAnalytics>;
+  generateCrowdPredictions(stationId: number, routeId: number): Promise<CrowdPrediction[]>;
 }
 
 export class MemStorage implements IStorage {
@@ -52,12 +71,18 @@ export class MemStorage implements IStorage {
   private alerts: Map<number, Alert>;
   private routeStations: Map<number, RouteStation>;
   private busArrivals: Map<number, BusArrival>;
+  private crowdDensityReadings: Map<number, CrowdDensityReading>;
+  private crowdPredictions: Map<number, CrowdPrediction>;
+  private historicalPatterns: Map<number, HistoricalPattern>;
   private currentRouteId: number;
   private currentStationId: number;
   private currentBusId: number;
   private currentAlertId: number;
   private currentRouteStationId: number;
   private currentBusArrivalId: number;
+  private currentCrowdDensityId: number;
+  private currentCrowdPredictionId: number;
+  private currentHistoricalPatternId: number;
 
   constructor() {
     this.routes = new Map();
