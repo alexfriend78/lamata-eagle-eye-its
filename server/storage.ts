@@ -720,8 +720,3 @@ export class DatabaseStorage implements IStorage {
 }
 
 export { storage } from "./storage-db.js";
-
-// Simulate bus movement every 3 seconds
-setInterval(() => {
-  storage.simulateBusMovement();
-}, 3000);

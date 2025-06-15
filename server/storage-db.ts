@@ -294,17 +294,21 @@ export class DatabaseStorage implements IStorage {
 
   // Crowd Density Analytics
   async getCrowdDensityReadings(stationId?: number, busId?: number): Promise<CrowdDensityReading[]> {
-    let query = db.select().from(crowdDensityReadings);
-    
     if (stationId && busId) {
-      query = query.where(and(eq(crowdDensityReadings.stationId, stationId), eq(crowdDensityReadings.busId, busId)));
+      return await db.select().from(crowdDensityReadings)
+        .where(and(eq(crowdDensityReadings.stationId, stationId), eq(crowdDensityReadings.busId, busId)))
+        .orderBy(desc(crowdDensityReadings.timestamp));
     } else if (stationId) {
-      query = query.where(eq(crowdDensityReadings.stationId, stationId));
+      return await db.select().from(crowdDensityReadings)
+        .where(eq(crowdDensityReadings.stationId, stationId))
+        .orderBy(desc(crowdDensityReadings.timestamp));
     } else if (busId) {
-      query = query.where(eq(crowdDensityReadings.busId, busId));
+      return await db.select().from(crowdDensityReadings)
+        .where(eq(crowdDensityReadings.busId, busId))
+        .orderBy(desc(crowdDensityReadings.timestamp));
     }
     
-    return await query.orderBy(desc(crowdDensityReadings.timestamp));
+    return await db.select().from(crowdDensityReadings).orderBy(desc(crowdDensityReadings.timestamp));
   }
 
   async getLatestCrowdDensity(stationId: number): Promise<CrowdDensityReading | undefined> {

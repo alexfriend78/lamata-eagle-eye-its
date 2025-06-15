@@ -8,6 +8,7 @@ import EmergencyAlert from "@/components/emergency-alert";
 import StationDetailsPanel from "@/components/station-details-panel";
 import RouteCustomizationPanel from "@/components/route-customization-panel";
 import RouteAestheticsPanel from "@/components/route-aesthetics-panel";
+import CrowdAnalyticsPanel from "@/components/crowd-analytics-panel";
 import { Button } from "@/components/ui/button";
 import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
