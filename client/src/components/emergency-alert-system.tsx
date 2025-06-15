@@ -320,50 +320,7 @@ export default function EmergencyAlertSystem({
               </Button>
             </div>
 
-            {/* Video Feed Section for P1 Alerts */}
-            {isPriorityOne && (
-              <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                  <Video className="w-5 h-5" />
-                  Live CCTV Feed
-                </h3>
-                <div className="relative bg-black rounded-lg overflow-hidden">
-                  <video
-                    id="triage-video"
-                    src={videoSrc}
-                    autoPlay
-                    loop
-                    muted={isVideoMuted}
-                    className="w-full h-80 object-cover"
-                  />
-                  <div className="absolute bottom-2 right-2 flex gap-2">
-                    <Button
-                      onClick={toggleVideoPlayback}
-                      size="sm"
-                      variant="secondary"
-                      className="bg-black/60 text-white hover:bg-black/80"
-                    >
-                      {isVideoPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-                    </Button>
-                    <Button
-                      onClick={toggleVideoMute}
-                      size="sm"
-                      variant="secondary"
-                      className="bg-black/60 text-white hover:bg-black/80"
-                    >
-                      {isVideoMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                    </Button>
-                  </div>
-                  <div className="absolute bottom-2 left-2">
-                    <span className="bg-red-600 text-white px-2 py-1 rounded text-xs font-bold">
-                      LIVE FEED - Bus {bus?.busNumber || 'Unknown'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className={`grid grid-cols-1 ${isPriorityOne ? 'lg:grid-cols-3' : 'md:grid-cols-2'} gap-6`}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
               {/* Alert Information */}
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold mb-3">Alert Details</h3>
@@ -481,6 +438,54 @@ export default function EmergencyAlertSystem({
                 <p className="text-sm text-gray-500 mt-2">Camera feed would be integrated here</p>
               </div>
             </div>
+
+            {/* Live Feed Section for P1 Alerts */}
+            {isPriorityOne && (
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+                  <Video className="w-5 h-5" />
+                  Live Feed
+                </h3>
+                <div className="relative bg-black rounded-lg overflow-hidden">
+                  <video
+                    id="triage-video"
+                    src={videoSrc}
+                    autoPlay
+                    loop
+                    muted={isVideoMuted}
+                    className="w-full h-64 object-cover"
+                  />
+                  <div className="absolute bottom-2 right-2 flex gap-2">
+                    <Button
+                      onClick={toggleVideoPlayback}
+                      size="sm"
+                      variant="secondary"
+                      className="bg-black/60 text-white hover:bg-black/80"
+                    >
+                      {isVideoPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                    </Button>
+                    <Button
+                      onClick={toggleVideoMute}
+                      size="sm"
+                      variant="secondary"
+                      className="bg-black/60 text-white hover:bg-black/80"
+                    >
+                      {isVideoMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                    </Button>
+                  </div>
+                  <div className="absolute bottom-2 left-2">
+                    <span className="bg-red-600 text-white px-2 py-1 rounded text-xs font-bold">
+                      LIVE FEED - Bus {bus?.busNumber || 'Unknown'}
+                    </span>
+                  </div>
+                  <div className="absolute top-2 left-2">
+                    <span className="bg-black/60 text-white px-2 py-1 rounded text-xs">
+                      CCTV Camera 1 - Interior
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Action Buttons */}
             <div className="mt-6 flex gap-4 justify-end">
