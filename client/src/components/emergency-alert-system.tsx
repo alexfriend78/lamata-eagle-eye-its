@@ -127,16 +127,24 @@ export default function EmergencyAlertSystem({
     return stations.find(s => s.id === stationId);
   };
 
-  // Helper function to get video for alert type
+  // Helper function to get random video for P1 alerts
   const getVideoForAlert = (alert: AlertWithDetails) => {
-    const alertMessage = alert.message.toLowerCase();
+    // For P1 alerts, randomly select from available emergency videos
+    if (alert.priority === 'P1') {
+      const p1Videos = [
+        EMERGENCY_VIDEOS.weapon,
+        EMERGENCY_VIDEOS.knife,
+        EMERGENCY_VIDEOS.gun,
+        EMERGENCY_VIDEOS.fight,
+        EMERGENCY_VIDEOS.emergency
+      ];
+      
+      // Use alert ID as seed for consistent video selection per alert
+      const videoIndex = alert.id % p1Videos.length;
+      return p1Videos[videoIndex];
+    }
     
-    if (alertMessage.includes('weapon') || alertMessage.includes('sword')) return EMERGENCY_VIDEOS.weapon;
-    if (alertMessage.includes('knife')) return EMERGENCY_VIDEOS.knife;
-    if (alertMessage.includes('gun') || alertMessage.includes('machine gun')) return EMERGENCY_VIDEOS.gun;
-    if (alertMessage.includes('fight')) return EMERGENCY_VIDEOS.fight;
-    
-    return EMERGENCY_VIDEOS.emergency; // Default
+    return EMERGENCY_VIDEOS.emergency; // Default for non-P1 alerts
   };
 
   // Video player controls
