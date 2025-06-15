@@ -247,7 +247,9 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         </svg>
 
         {/* Route Lines */}
-        {routes.map((route, index) => renderRouteLine(route, index))}
+        {routes
+          .filter(route => selectedRoutes.length === 0 || selectedRoutes.includes(route.id))
+          .map((route, index) => renderRouteLine(route, index))}
         
         {/* Major Stations */}
         {stations.map((station) => (
@@ -271,18 +273,20 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         ))}
 
         {/* Bus Icons with Animations */}
-        {buses.map((bus) => (
-          <BusIcon
-            key={bus.id}
-            bus={bus}
-            style={{
-              position: 'absolute',
-              top: `${bus.currentY - 12}px`,
-              left: `${bus.currentX - 12}px`,
-              zIndex: 30
-            }}
-          />
-        ))}
+        {buses
+          .filter(bus => selectedRoutes.length === 0 || selectedRoutes.includes(bus.routeId))
+          .map((bus) => (
+            <BusIcon
+              key={bus.id}
+              bus={bus}
+              style={{
+                position: 'absolute',
+                top: `${bus.currentY - 12}px`,
+                left: `${bus.currentX - 12}px`,
+                zIndex: 30
+              }}
+            />
+          ))}
       </div>
     </div>
   );
