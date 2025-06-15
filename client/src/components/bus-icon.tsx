@@ -20,16 +20,18 @@ function BusIcon({ bus, style }: BusIconProps) {
 
   return (
     <div
-      className={`text-2xl transition-all duration-1000 ease-linear ${
+      className={`text-2xl transition-all duration-500 ${
         isAlertBus ? "animate-pulse" : ""
       }`}
       style={{
         ...style,
         color: getBusColor(bus.status),
-        filter: isAlertBus ? "drop-shadow(0 0 8px currentColor)" : "drop-shadow(0 1px 2px rgba(0,0,0,0.3))",
+        filter: isAlertBus 
+          ? "drop-shadow(0 0 12px #ef4444) drop-shadow(0 0 20px #ef4444)" 
+          : "drop-shadow(0 1px 2px rgba(0,0,0,0.3))",
         zIndex: 30
       }}
-      title={`Bus ${bus.busNumber} - Route ${bus.route.routeNumber} - Status: ${bus.status}`}
+      title={`Bus ${bus.number} - Route ${bus.route.routeNumber} - Status: ${bus.status}`}
     >
       🚌
     </div>

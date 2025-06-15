@@ -342,7 +342,7 @@ export class MemStorage implements IStorage {
       
       const targetIndex = (closestIndex + 1) % routePoints.length;
       const targetPoint = routePoints[targetIndex];
-      const speed = bus.status === "delayed" ? 2 : bus.status === "alert" ? 1 : 4;
+      const speed = bus.status === "delayed" ? 6 : bus.status === "alert" ? 4 : 10;
       
       // Calculate new position
       const newX = bus.currentX + (targetPoint.x - bus.currentX) * (speed / 100);
