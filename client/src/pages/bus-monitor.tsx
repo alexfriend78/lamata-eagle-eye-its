@@ -242,13 +242,13 @@ export default function BusMonitor() {
                 <div>
                   <h4 className="font-medium text-sm mb-2">Traffic Conditions</h4>
                   <div className="flex items-center space-x-2">
-                    <div className={`w-3 h-3 rounded-full ${Math.random() > 0.6 ? 'bg-red-500' : Math.random() > 0.3 ? 'bg-yellow-500' : 'bg-green-500'}`}></div>
+                    <div className={`w-3 h-3 rounded-full ${selectedStation.id % 5 === 0 ? 'bg-red-500' : selectedStation.id % 5 <= 2 ? 'bg-yellow-500' : 'bg-green-500'}`}></div>
                     <span className="text-sm">
-                      {Math.random() > 0.6 ? 'Heavy traffic' : Math.random() > 0.3 ? 'Moderate traffic' : 'Light traffic'}
+                      {selectedStation.id % 5 === 0 ? 'Heavy traffic' : selectedStation.id % 5 <= 2 ? 'Moderate traffic' : 'Light traffic'}
                     </span>
                   </div>
                   <div className="text-xs text-gray-500 mt-1">
-                    Average delay: {Math.floor(Math.random() * 8 + 1)} minutes
+                    Average delay: {(selectedStation.id % 8) + 1} minutes
                   </div>
                 </div>
 
