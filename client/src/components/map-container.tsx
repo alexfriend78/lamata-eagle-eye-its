@@ -21,71 +21,72 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   const getRoutePoints = (routeId: number) => {
     // Define comprehensive routes using full 3456x2234 resolution with complete coverage
     const routePaths: Record<number, { x: number; y: number }[]> = {
-      1: [ // Blue Line - Ultra-wide northern express corridor
-        { x: 0, y: 200 }, { x: 432, y: 180 }, { x: 864, y: 185 }, { x: 1296, y: 190 }, { x: 1728, y: 195 }, 
-        { x: 2160, y: 200 }, { x: 2592, y: 205 }, { x: 3024, y: 210 }, { x: 3456, y: 215 }
+      1: [ // Northern Line - Main north-south spine (London style)
+        { x: 800, y: 0 }, { x: 820, y: 300 }, { x: 850, y: 600 }, { x: 880, y: 900 }, 
+        { x: 900, y: 1200 }, { x: 920, y: 1500 }, { x: 950, y: 1800 }, { x: 980, y: 2100 }
       ],
-      2: [ // Red Line - Full diagonal transcontinental
-        { x: 0, y: 100 }, { x: 432, y: 320 }, { x: 864, y: 540 }, { x: 1296, y: 760 }, { x: 1728, y: 980 }, 
-        { x: 2160, y: 1200 }, { x: 2592, y: 1420 }, { x: 3024, y: 1640 }, { x: 3456, y: 1860 }
+      2: [ // Central Line - Main east-west artery
+        { x: 0, y: 1000 }, { x: 500, y: 980 }, { x: 1000, y: 1000 }, { x: 1500, y: 1020 }, 
+        { x: 2000, y: 1000 }, { x: 2500, y: 980 }, { x: 3000, y: 1000 }, { x: 3456, y: 1020 }
       ],
-      3: [ // Green Line - Mid-latitude express spine
-        { x: 0, y: 450 }, { x: 345, y: 440 }, { x: 690, y: 445 }, { x: 1035, y: 450 }, { x: 1380, y: 455 }, 
-        { x: 1725, y: 460 }, { x: 2070, y: 465 }, { x: 2415, y: 470 }, { x: 2760, y: 475 }, { x: 3105, y: 480 }, { x: 3456, y: 485 }
+      3: [ // Circle Line - Inner ring for connections
+        { x: 1200, y: 600 }, { x: 1800, y: 650 }, { x: 2200, y: 900 }, { x: 2250, y: 1300 }, 
+        { x: 2000, y: 1600 }, { x: 1500, y: 1650 }, { x: 1000, y: 1600 }, { x: 750, y: 1300 }, 
+        { x: 800, y: 900 }, { x: 1200, y: 600 }
       ],
-      4: [ // Orange Line - Continental central backbone
-        { x: 0, y: 800 }, { x: 384, y: 790 }, { x: 768, y: 810 }, { x: 1152, y: 800 }, { x: 1536, y: 820 }, 
-        { x: 1920, y: 810 }, { x: 2304, y: 830 }, { x: 2688, y: 820 }, { x: 3072, y: 840 }, { x: 3456, y: 830 }
+      4: [ // District Line - Southern cross-city
+        { x: 0, y: 1600 }, { x: 600, y: 1580 }, { x: 1200, y: 1600 }, { x: 1800, y: 1620 }, 
+        { x: 2400, y: 1600 }, { x: 3000, y: 1580 }, { x: 3456, y: 1600 }
       ],
-      5: [ // Purple Line - Northwestern mountain route
-        { x: 0, y: 450 }, { x: 300, y: 400 }, { x: 600, y: 350 }, { x: 900, y: 300 }, { x: 1200, y: 280 }, 
-        { x: 1500, y: 300 }, { x: 1800, y: 350 }, { x: 2100, y: 400 }, { x: 2400, y: 450 }, { x: 2700, y: 500 }, { x: 3000, y: 550 }
+      5: [ // Piccadilly Line - Northwest diagonal
+        { x: 0, y: 400 }, { x: 400, y: 500 }, { x: 800, y: 600 }, { x: 1200, y: 700 }, 
+        { x: 1600, y: 800 }, { x: 2000, y: 900 }, { x: 2400, y: 1000 }
       ],
-      6: [ // Teal Line - Coastal ultra-route
-        { x: 0, y: 1800 }, { x: 345, y: 1790 }, { x: 690, y: 1795 }, { x: 1035, y: 1800 }, { x: 1380, y: 1805 }, 
-        { x: 1725, y: 1810 }, { x: 2070, y: 1815 }, { x: 2415, y: 1820 }, { x: 2760, y: 1825 }, { x: 3105, y: 1830 }, { x: 3456, y: 1835 }
+      6: [ // Metropolitan Line - Northern express
+        { x: 0, y: 600 }, { x: 500, y: 550 }, { x: 1000, y: 500 }, { x: 1500, y: 450 }, 
+        { x: 2000, y: 400 }, { x: 2500, y: 350 }, { x: 3000, y: 300 }
       ],
-      7: [ // Yellow Line - Western mega-spine (full height)
-        { x: 430, y: 0 }, { x: 435, y: 279 }, { x: 440, y: 558 }, { x: 445, y: 837 }, { x: 450, y: 1116 }, 
-        { x: 455, y: 1395 }, { x: 460, y: 1674 }, { x: 465, y: 1953 }, { x: 470, y: 2234 }
+      7: [ // Jubilee Line - Southeast curve
+        { x: 600, y: 1200 }, { x: 1000, y: 1300 }, { x: 1400, y: 1400 }, { x: 1800, y: 1500 }, 
+        { x: 2200, y: 1600 }, { x: 2600, y: 1700 }, { x: 3000, y: 1800 }
       ],
-      8: [ // Pink Line - Central ultra-axis (full height)
-        { x: 1728, y: 0 }, { x: 1733, y: 248 }, { x: 1738, y: 496 }, { x: 1743, y: 744 }, { x: 1748, y: 992 }, 
-        { x: 1753, y: 1240 }, { x: 1758, y: 1488 }, { x: 1763, y: 1736 }, { x: 1768, y: 1984 }, { x: 1773, y: 2234 }
+      8: [ // Victoria Line - Express north-south
+        { x: 1500, y: 0 }, { x: 1520, y: 400 }, { x: 1540, y: 800 }, { x: 1560, y: 1200 }, 
+        { x: 1580, y: 1600 }, { x: 1600, y: 2000 }, { x: 1620, y: 2234 }
       ],
-      9: [ // Cyan Line - Eastern mega-spine (full height)  
-        { x: 3000, y: 0 }, { x: 3005, y: 279 }, { x: 3010, y: 558 }, { x: 3015, y: 837 }, { x: 3020, y: 1116 }, 
-        { x: 3025, y: 1395 }, { x: 3030, y: 1674 }, { x: 3035, y: 1953 }, { x: 3040, y: 2234 }
+      9: [ // Waterloo & City - Short connector
+        { x: 1200, y: 950 }, { x: 1400, y: 980 }, { x: 1600, y: 1010 }, { x: 1800, y: 1040 }
       ],
-      10: [ // Brown Line - Ultra diagonal (northwest to southeast)
-        { x: 3456, y: 200 }, { x: 3024, y: 450 }, { x: 2592, y: 700 }, { x: 2160, y: 950 }, { x: 1728, y: 1200 }, 
-        { x: 1296, y: 1450 }, { x: 864, y: 1700 }, { x: 432, y: 1950 }, { x: 0, y: 2200 }
+      10: [ // Hammersmith & City - Western branch
+        { x: 0, y: 800 }, { x: 400, y: 780 }, { x: 800, y: 800 }, { x: 1200, y: 820 }, 
+        { x: 1600, y: 800 }, { x: 2000, y: 780 }
       ],
-      11: [ // Lime Line - Eastern vertical spine
-        { x: 2800, y: 200 }, { x: 2850, y: 400 }, { x: 2900, y: 600 }, { x: 2950, y: 800 }, { x: 3000, y: 1000 }, 
-        { x: 3050, y: 1200 }, { x: 3100, y: 1400 }, { x: 3150, y: 1600 }, { x: 3200, y: 1800 }, { x: 3250, y: 2000 }, { x: 3300, y: 2200 }
+      11: [ // Bakerloo Line - Southwest diagonal
+        { x: 400, y: 400 }, { x: 700, y: 600 }, { x: 1000, y: 800 }, { x: 1300, y: 1000 }, 
+        { x: 1600, y: 1200 }, { x: 1900, y: 1400 }, { x: 2200, y: 1600 }
       ],
-      12: [ // Indigo Line - Continental figure-8 pattern
-        { x: 864, y: 450 }, { x: 1296, y: 600 }, { x: 1728, y: 750 }, { x: 2160, y: 900 }, { x: 2592, y: 1050 },
-        { x: 2160, y: 1200 }, { x: 1728, y: 1350 }, { x: 1296, y: 1500 }, { x: 864, y: 1650 },
-        { x: 1296, y: 1800 }, { x: 1728, y: 1950 }, { x: 2160, y: 2100 }, { x: 2592, y: 2234 }
+      12: [ // DLR - Eastern branch network
+        { x: 2000, y: 800 }, { x: 2300, y: 850 }, { x: 2600, y: 900 }, { x: 2900, y: 950 }, 
+        { x: 3200, y: 1000 }, { x: 3456, y: 1050 }
       ],
-      13: [ // Violet Line - Central cross axis
-        { x: 1728, y: 0 }, { x: 1700, y: 200 }, { x: 1680, y: 400 }, { x: 1650, y: 600 }, { x: 1620, y: 800 }, 
-        { x: 1600, y: 1000 }, { x: 1580, y: 1200 }, { x: 1550, y: 1400 }, { x: 1520, y: 1600 }, { x: 1500, y: 1800 }, 
-        { x: 1480, y: 2000 }, { x: 1450, y: 2200 }
+      13: [ // Elizabeth Line - East-west express
+        { x: 0, y: 1200 }, { x: 600, y: 1180 }, { x: 1200, y: 1200 }, { x: 1800, y: 1220 }, 
+        { x: 2400, y: 1200 }, { x: 3000, y: 1180 }, { x: 3456, y: 1200 }
       ],
-      14: [ // Gold Line - Continental mountain range
-        { x: 0, y: 350 }, { x: 432, y: 250 }, { x: 864, y: 400 }, { x: 1296, y: 200 }, { x: 1728, y: 450 }, 
-        { x: 2160, y: 300 }, { x: 2592, y: 500 }, { x: 3024, y: 350 }, { x: 3456, y: 550 }
+      14: [ // GO Transit Outer Ring - Suburban orbital
+        { x: 200, y: 200 }, { x: 800, y: 150 }, { x: 1400, y: 200 }, { x: 2000, y: 250 }, 
+        { x: 2600, y: 300 }, { x: 3200, y: 400 }, { x: 3400, y: 800 }, { x: 3300, y: 1200 }, 
+        { x: 3000, y: 1600 }, { x: 2400, y: 1900 }, { x: 1800, y: 2000 }, { x: 1200, y: 1950 }, 
+        { x: 600, y: 1800 }, { x: 200, y: 1400 }, { x: 100, y: 1000 }, { x: 200, y: 600 }
       ],
-      15: [ // Silver Line - Continental river meander
-        { x: 250, y: 1000 }, { x: 650, y: 1050 }, { x: 1050, y: 1150 }, { x: 1450, y: 1200 }, { x: 1850, y: 1250 }, 
-        { x: 2250, y: 1350 }, { x: 2650, y: 1400 }, { x: 3050, y: 1500 }, { x: 3400, y: 1550 }
+      15: [ // GO Transit Radial - Airport express
+        { x: 1728, y: 1000 }, { x: 2200, y: 800 }, { x: 2600, y: 600 }, { x: 3000, y: 400 }, { x: 3456, y: 200 }
       ],
-      16: [ // Coral Line - Western boundary corridor
-        { x: 100, y: 0 }, { x: 150, y: 250 }, { x: 200, y: 500 }, { x: 250, y: 750 }, { x: 300, y: 1000 }, 
-        { x: 350, y: 1250 }, { x: 400, y: 1500 }, { x: 450, y: 1750 }, { x: 500, y: 2000 }, { x: 550, y: 2234 }
+      16: [ // Overground - Orbital connector
+        { x: 400, y: 1000 }, { x: 600, y: 800 }, { x: 900, y: 650 }, { x: 1300, y: 600 }, 
+        { x: 1700, y: 650 }, { x: 2100, y: 800 }, { x: 2400, y: 1000 }, { x: 2600, y: 1300 }, 
+        { x: 2400, y: 1600 }, { x: 2000, y: 1800 }, { x: 1500, y: 1850 }, { x: 1000, y: 1800 }, 
+        { x: 600, y: 1600 }, { x: 400, y: 1300 }
       ]
     };
     return routePaths[routeId] || [];
@@ -504,49 +505,82 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
           .filter(route => selectedRoutes.length === 0 || selectedRoutes.includes(route.id))
           .map((route, index) => renderRouteLine(route, index))}
 
-        {/* Route Intersections */}
-        {routes
-          .filter(route => selectedRoutes.length === 0 || selectedRoutes.includes(route.id))
-          .map(route => {
-            const routePoints = getRoutePoints(route.id);
-            const intersections = [];
-            
-            // Find intersections with other routes
-            routes.forEach(otherRoute => {
-              if (otherRoute.id === route.id) return;
-              if (selectedRoutes.length > 0 && !selectedRoutes.includes(otherRoute.id)) return;
-              
-              const otherPoints = getRoutePoints(otherRoute.id);
-              
-              routePoints.forEach(p1 => {
-                otherPoints.forEach(p2 => {
-                  const distance = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
-                  if (distance < 80) { // Intersection threshold
-                    intersections.push({
-                      x: (p1.x + p2.x) / 2,
-                      y: (p1.y + p2.y) / 2,
-                      routes: [route.id, otherRoute.id]
-                    });
-                  }
-                });
-              });
-            });
-            
-            return intersections.map((intersection, index) => (
+        {/* Major Interchange Stations - London Underground style */}
+        {(() => {
+          const interchanges = [
+            // King's Cross / St. Pancras equivalent - Major north-south hub
+            { x: 900, y: 800, routes: [1, 2, 8, 10], name: "Lagos Central" },
+            // Oxford Circus equivalent - Central interchange  
+            { x: 1500, y: 1000, routes: [2, 8, 13], name: "Victoria Island Hub" },
+            // Liverpool Street equivalent - Eastern interchange
+            { x: 2000, y: 900, routes: [2, 5, 12], name: "Mainland Terminal" },
+            // Waterloo equivalent - Southern hub
+            { x: 1200, y: 1600, routes: [3, 4, 7], name: "Ikorodu Interchange" },
+            // Paddington equivalent - Western terminus
+            { x: 400, y: 800, routes: [2, 6, 10, 11], name: "Ikeja Gateway" },
+            // Bank/Monument equivalent - Financial district
+            { x: 1600, y: 1200, routes: [2, 8, 9, 13], name: "Business District" },
+            // Circle Line connections
+            { x: 1200, y: 600, routes: [3, 6], name: "Northern Gate" },
+            { x: 2200, y: 900, routes: [3, 12], name: "Eastern Cross" },
+            { x: 1500, y: 1650, routes: [3, 4], name: "Southern Bridge" },
+            { x: 800, y: 900, routes: [1, 3, 10], name: "Western Junction" }
+          ];
+
+          return interchanges
+            .filter(interchange => {
+              // Show only if at least one route is selected or no routes selected
+              if (selectedRoutes.length === 0) return true;
+              return interchange.routes.some(routeId => selectedRoutes.includes(routeId));
+            })
+            .map((interchange, index) => (
               <div
-                key={`intersection-${route.id}-${index}`}
-                className="absolute z-25"
+                key={`interchange-${index}`}
+                className="absolute z-30"
                 style={{
-                  left: `${intersection.x - 6}px`,
-                  top: `${intersection.y - 6}px`,
+                  left: `${interchange.x - 8}px`,
+                  top: `${interchange.y - 8}px`,
                 }}
               >
-                <div className={`w-3 h-3 rounded-full border-2 ${
-                  theme === 'dark' ? 'bg-gray-200 border-gray-800' : 'bg-gray-800 border-white'
+                {/* Interchange circle */}
+                <div className={`w-4 h-4 rounded-full border-3 ${
+                  theme === 'dark' 
+                    ? 'bg-white border-gray-900 shadow-lg' 
+                    : 'bg-gray-900 border-white shadow-lg'
                 }`} />
+                
+                {/* Route count indicator */}
+                <div 
+                  className={`absolute -top-1 -right-1 w-3 h-3 rounded-full text-xs flex items-center justify-center ${
+                    theme === 'dark' 
+                      ? 'bg-blue-400 text-white' 
+                      : 'bg-blue-600 text-white'
+                  }`}
+                  style={{ fontSize: '8px' }}
+                >
+                  {interchange.routes.filter(routeId => 
+                    selectedRoutes.length === 0 || selectedRoutes.includes(routeId)
+                  ).length}
+                </div>
+
+                {/* Station name on hover */}
+                <div 
+                  className={`absolute top-6 left-1/2 transform -translate-x-1/2 text-xs font-medium px-2 py-1 rounded opacity-0 hover:opacity-100 transition-opacity ${
+                    theme === 'dark' 
+                      ? 'bg-gray-800 text-white border border-gray-600' 
+                      : 'bg-white text-gray-900 border border-gray-300'
+                  }`}
+                  style={{
+                    whiteSpace: 'nowrap',
+                    fontSize: '9px',
+                    filter: 'drop-shadow(0px 1px 2px rgba(0,0,0,0.3))'
+                  }}
+                >
+                  {interchange.name}
+                </div>
               </div>
             ));
-          })}
+        })()}
         
         {/* Bus Stations - only for selected routes or all if none selected */}
         {stations.filter(station => {
