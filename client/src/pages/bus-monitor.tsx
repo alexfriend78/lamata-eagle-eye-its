@@ -11,7 +11,7 @@ import RouteCustomizationPanel from "@/components/route-customization-panel";
 import RouteAestheticsPanel from "@/components/route-aesthetics-panel";
 import CrowdAnalyticsPanel from "@/components/crowd-analytics-panel";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, Circle } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
@@ -33,6 +33,7 @@ export default function BusMonitor() {
   const [showStations, setShowStations] = useState(true);
   const [showBuses, setShowBuses] = useState(true);
   const [showHeatMap, setShowHeatMap] = useState(false);
+  const [showCrowdBubbles, setShowCrowdBubbles] = useState(false);
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
   const { theme, setTheme } = useTheme();
 
@@ -226,6 +227,17 @@ export default function BusMonitor() {
               <MapPin className="h-4 w-4" />
             </Button>
 
+            {/* Crowd Bubbles Toggle */}
+            <Button
+              onClick={() => setShowCrowdBubbles(!showCrowdBubbles)}
+              variant={showCrowdBubbles ? "default" : "outline"}
+              size="sm"
+              className="h-8 w-8 p-0"
+              title="Toggle crowd prediction bubbles"
+            >
+              <Circle className="h-4 w-4" />
+            </Button>
+
 
 
             {/* Theme Toggle */}
@@ -297,6 +309,7 @@ export default function BusMonitor() {
             showStations={showStations}
             showBuses={showBuses}
             showHeatMap={showHeatMap}
+            showCrowdBubbles={showCrowdBubbles}
           />
         </div>
 
