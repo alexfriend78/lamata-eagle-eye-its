@@ -129,18 +129,22 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                {stationDetails.activeRoutes.map((route, index) => (
-                  <div key={route.id} className="flex items-center gap-3">
-                    <div 
-                      className="w-3 h-3 rounded-full" 
-                      style={{ backgroundColor: route.color }}
-                    />
-                    <div>
-                      <div className="text-sm font-medium">Route {route.routeNumber}</div>
-                      <div className="text-xs text-muted-foreground">{route.name}</div>
+                {stationDetails.activeRoutes && stationDetails.activeRoutes.length > 0 ? (
+                  stationDetails.activeRoutes.map((route, index) => (
+                    <div key={route.id} className="flex items-center gap-3">
+                      <div 
+                        className="w-3 h-3 rounded-full" 
+                        style={{ backgroundColor: route.color }}
+                      />
+                      <div>
+                        <div className="text-sm font-medium">Route {route.routeNumber}</div>
+                        <div className="text-xs text-muted-foreground">{route.name}</div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <span className="text-sm text-muted-foreground">No active routes</span>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -154,7 +158,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {stationDetails.upcomingArrivals.length > 0 ? (
+              {stationDetails.upcomingArrivals && stationDetails.upcomingArrivals.length > 0 ? (
                 <div className="space-y-3">
                   {stationDetails.upcomingArrivals.map((arrival, index) => {
                     const minutesUntil = getMinutesUntilArrival(arrival.estimatedArrival);

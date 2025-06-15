@@ -19,88 +19,75 @@ interface MapContainerProps {
 
 export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed }: MapContainerProps) {
   const getRoutePoints = (routeId: number) => {
-    // Define extended routes that go beyond 1280x720 for a larger transit network
+    // Define stable routes that cover the full monitoring screen area (1600x1000 viewBox)
     const routePaths: Record<number, { x: number; y: number }[]> = {
-      1: [ // Blue Line - Extended northern corridor
-        { x: -200, y: 80 }, { x: -50, y: 75 }, { x: 160, y: 70 }, { x: 320, y: 85 }, { x: 480, y: 90 }, 
-        { x: 640, y: 95 }, { x: 800, y: 100 }, { x: 960, y: 105 }, { x: 1120, y: 110 }, { x: 1280, y: 115 },
-        { x: 1450, y: 120 }, { x: 1600, y: 125 }
+      1: [ // Blue Line - Northern corridor spanning full width
+        { x: 0, y: 100 }, { x: 200, y: 90 }, { x: 400, y: 95 }, { x: 600, y: 100 }, { x: 800, y: 105 }, 
+        { x: 1000, y: 110 }, { x: 1200, y: 115 }, { x: 1400, y: 120 }, { x: 1600, y: 125 }
       ],
-      2: [ // Red Line - Extended diagonal from far northwest to far southeast
-        { x: -150, y: -100 }, { x: 40, y: 40 }, { x: 180, y: 120 }, { x: 320, y: 200 }, { x: 460, y: 280 }, 
-        { x: 600, y: 360 }, { x: 740, y: 440 }, { x: 880, y: 520 }, { x: 1020, y: 600 }, { x: 1160, y: 680 },
-        { x: 1320, y: 780 }, { x: 1480, y: 880 }
+      2: [ // Red Line - Full diagonal coverage
+        { x: 0, y: 50 }, { x: 200, y: 150 }, { x: 400, y: 250 }, { x: 600, y: 350 }, { x: 800, y: 450 }, 
+        { x: 1000, y: 550 }, { x: 1200, y: 650 }, { x: 1400, y: 750 }, { x: 1600, y: 850 }
       ],
-      3: [ // Green Line - Extended upper horizontal with suburban reach
-        { x: -300, y: 180 }, { x: -100, y: 175 }, { x: 200, y: 170 }, { x: 370, y: 175 }, { x: 540, y: 180 }, 
-        { x: 710, y: 185 }, { x: 880, y: 190 }, { x: 1050, y: 195 }, { x: 1220, y: 200 }, { x: 1400, y: 205 },
-        { x: 1580, y: 210 }
+      3: [ // Green Line - Upper horizontal express
+        { x: 0, y: 200 }, { x: 230, y: 190 }, { x: 460, y: 195 }, { x: 690, y: 200 }, { x: 920, y: 205 }, 
+        { x: 1150, y: 210 }, { x: 1380, y: 215 }, { x: 1600, y: 220 }
       ],
-      4: [ // Orange Line - Extended central spine coast to coast
-        { x: -250, y: 300 }, { x: -80, y: 295 }, { x: 180, y: 295 }, { x: 335, y: 305 }, { x: 490, y: 300 }, 
-        { x: 645, y: 310 }, { x: 800, y: 305 }, { x: 955, y: 315 }, { x: 1110, y: 310 }, { x: 1280, y: 320 },
-        { x: 1450, y: 325 }, { x: 1620, y: 330 }
+      4: [ // Orange Line - Central spine coast to coast
+        { x: 0, y: 350 }, { x: 230, y: 345 }, { x: 460, y: 355 }, { x: 690, y: 350 }, { x: 920, y: 360 }, 
+        { x: 1150, y: 355 }, { x: 1380, y: 365 }, { x: 1600, y: 370 }
       ],
-      5: [ // Purple Line - Extended southern corridor
-        { x: -180, y: 520 }, { x: 35, y: 520 }, { x: 190, y: 515 }, { x: 345, y: 525 }, { x: 500, y: 520 }, 
-        { x: 655, y: 530 }, { x: 810, y: 525 }, { x: 965, y: 535 }, { x: 1120, y: 530 }, { x: 1280, y: 540 },
-        { x: 1440, y: 545 }, { x: 1600, y: 550 }
+      5: [ // Purple Line - Southern express corridor
+        { x: 0, y: 600 }, { x: 200, y: 590 }, { x: 400, y: 595 }, { x: 600, y: 600 }, { x: 800, y: 605 }, 
+        { x: 1000, y: 610 }, { x: 1200, y: 615 }, { x: 1400, y: 620 }, { x: 1600, y: 625 }
       ],
-      6: [ // Teal Line - Extended coastal edge
-        { x: -100, y: 650 }, { x: 50, y: 650 }, { x: 220, y: 640 }, { x: 390, y: 645 }, { x: 560, y: 650 }, 
-        { x: 730, y: 655 }, { x: 900, y: 660 }, { x: 1070, y: 665 }, { x: 1240, y: 670 }, { x: 1410, y: 675 },
-        { x: 1580, y: 680 }
+      6: [ // Teal Line - Bottom edge route
+        { x: 0, y: 800 }, { x: 230, y: 790 }, { x: 460, y: 795 }, { x: 690, y: 800 }, { x: 920, y: 805 }, 
+        { x: 1150, y: 810 }, { x: 1380, y: 815 }, { x: 1600, y: 820 }
       ],
-      7: [ // Yellow Line - Extended western spine
-        { x: 120, y: -150 }, { x: 125, y: 30 }, { x: 130, y: 140 }, { x: 135, y: 250 }, { x: 140, y: 360 }, 
-        { x: 145, y: 470 }, { x: 150, y: 580 }, { x: 155, y: 690 }, { x: 160, y: 800 }, { x: 165, y: 920 }
+      7: [ // Yellow Line - Western vertical spine
+        { x: 200, y: 0 }, { x: 205, y: 125 }, { x: 210, y: 250 }, { x: 215, y: 375 }, { x: 220, y: 500 }, 
+        { x: 225, y: 625 }, { x: 230, y: 750 }, { x: 235, y: 875 }, { x: 240, y: 1000 }
       ],
-      8: [ // Pink Line - Extended central axis
-        { x: 640, y: -200 }, { x: 642, y: 25 }, { x: 645, y: 130 }, { x: 648, y: 235 }, { x: 650, y: 340 }, 
-        { x: 652, y: 445 }, { x: 655, y: 550 }, { x: 658, y: 655 }, { x: 660, y: 720 }, { x: 662, y: 850 },
-        { x: 665, y: 980 }
+      8: [ // Pink Line - Central vertical axis
+        { x: 800, y: 0 }, { x: 805, y: 125 }, { x: 810, y: 250 }, { x: 815, y: 375 }, { x: 820, y: 500 }, 
+        { x: 825, y: 625 }, { x: 830, y: 750 }, { x: 835, y: 875 }, { x: 840, y: 1000 }
       ],
-      9: [ // Cyan Line - Extended eastern spine
-        { x: 1100, y: -120 }, { x: 1102, y: 35 }, { x: 1105, y: 145 }, { x: 1108, y: 255 }, { x: 1110, y: 365 }, 
-        { x: 1112, y: 475 }, { x: 1115, y: 585 }, { x: 1118, y: 695 }, { x: 1120, y: 800 }, { x: 1122, y: 920 }
+      9: [ // Cyan Line - Eastern vertical spine
+        { x: 1400, y: 0 }, { x: 1405, y: 125 }, { x: 1410, y: 250 }, { x: 1415, y: 375 }, { x: 1420, y: 500 }, 
+        { x: 1425, y: 625 }, { x: 1430, y: 750 }, { x: 1435, y: 875 }, { x: 1440, y: 1000 }
       ],
-      10: [ // Brown Line - Extended cross diagonal
-        { x: 1400, y: -80 }, { x: 1200, y: 60 }, { x: 1050, y: 140 }, { x: 900, y: 220 }, { x: 750, y: 300 }, 
-        { x: 600, y: 380 }, { x: 450, y: 460 }, { x: 300, y: 540 }, { x: 150, y: 620 }, { x: 0, y: 700 },
-        { x: -150, y: 780 }, { x: -300, y: 860 }
+      10: [ // Brown Line - Cross diagonal northwest to southeast
+        { x: 1600, y: 100 }, { x: 1400, y: 200 }, { x: 1200, y: 300 }, { x: 1000, y: 400 }, { x: 800, y: 500 }, 
+        { x: 600, y: 600 }, { x: 400, y: 700 }, { x: 200, y: 800 }, { x: 0, y: 900 }
       ],
-      11: [ // Lime Line - Extended orbital ring
-        { x: 100, y: -50 }, { x: 200, y: 100 }, { x: 400, y: 80 }, { x: 600, y: 90 }, { x: 800, y: 100 }, { x: 1000, y: 120 }, 
-        { x: 1200, y: 150 }, { x: 1350, y: 200 }, { x: 1450, y: 350 }, { x: 1400, y: 500 }, { x: 1300, y: 620 }, 
-        { x: 1100, y: 720 }, { x: 900, y: 780 }, { x: 700, y: 770 }, { x: 500, y: 760 }, { x: 300, y: 750 }, 
-        { x: 100, y: 720 }, { x: -50, y: 580 }, { x: -100, y: 450 }, { x: -80, y: 300 }, { x: 0, y: 180 }
+      11: [ // Lime Line - Large orbital ring
+        { x: 300, y: 150 }, { x: 600, y: 100 }, { x: 900, y: 120 }, { x: 1200, y: 180 }, { x: 1400, y: 300 }, 
+        { x: 1450, y: 500 }, { x: 1350, y: 700 }, { x: 1100, y: 850 }, { x: 800, y: 900 }, 
+        { x: 500, y: 880 }, { x: 200, y: 750 }, { x: 100, y: 500 }, { x: 150, y: 300 }
       ],
-      12: [ // Indigo Line - Extended figure-8 pattern
-        { x: 100, y: 150 }, { x: 320, y: 150 }, { x: 480, y: 180 }, { x: 640, y: 220 }, { x: 800, y: 260 }, { x: 960, y: 300 },
-        { x: 1150, y: 340 }, { x: 960, y: 380 }, { x: 800, y: 340 }, { x: 640, y: 380 }, { x: 480, y: 420 }, { x: 320, y: 460 },
-        { x: 150, y: 500 }, { x: 320, y: 540 }, { x: 480, y: 500 }, { x: 640, y: 540 }, { x: 800, y: 580 }, { x: 960, y: 620 },
-        { x: 1150, y: 660 }
+      12: [ // Indigo Line - Figure-8 through center
+        { x: 400, y: 200 }, { x: 600, y: 250 }, { x: 800, y: 300 }, { x: 1000, y: 350 }, { x: 1200, y: 400 },
+        { x: 1000, y: 450 }, { x: 800, y: 500 }, { x: 600, y: 550 }, { x: 400, y: 600 },
+        { x: 600, y: 650 }, { x: 800, y: 700 }, { x: 1000, y: 750 }, { x: 1200, y: 800 }
       ],
-      13: [ // Violet Line - Extended complex curve
-        { x: -80, y: 200 }, { x: 60, y: 200 }, { x: 180, y: 160 }, { x: 320, y: 140 }, { x: 480, y: 160 }, { x: 640, y: 200 },
-        { x: 800, y: 250 }, { x: 960, y: 320 }, { x: 1100, y: 400 }, { x: 1250, y: 500 }, { x: 1350, y: 600 },
-        { x: 1250, y: 700 }, { x: 1100, y: 750 }, { x: 900, y: 780 }, { x: 700, y: 770 }, { x: 500, y: 760 },
-        { x: 300, y: 740 }, { x: 150, y: 680 }, { x: 50, y: 580 }, { x: 0, y: 480 }, { x: -50, y: 350 }
+      13: [ // Violet Line - Complex curved route through all quadrants
+        { x: 100, y: 250 }, { x: 300, y: 200 }, { x: 500, y: 180 }, { x: 700, y: 220 }, { x: 900, y: 280 },
+        { x: 1100, y: 350 }, { x: 1300, y: 450 }, { x: 1500, y: 600 }, { x: 1400, y: 750 },
+        { x: 1200, y: 850 }, { x: 1000, y: 900 }, { x: 800, y: 880 }, { x: 600, y: 820 },
+        { x: 400, y: 750 }, { x: 200, y: 650 }, { x: 50, y: 500 }, { x: 80, y: 350 }
       ],
-      14: [ // Gold Line - Extended mountain range
-        { x: -150, y: 120 }, { x: 100, y: 120 }, { x: 250, y: 80 }, { x: 400, y: 130 }, { x: 550, y: 70 }, 
-        { x: 700, y: 140 }, { x: 850, y: 90 }, { x: 1000, y: 150 }, { x: 1150, y: 100 }, { x: 1300, y: 160 },
-        { x: 1450, y: 110 }
+      14: [ // Gold Line - Mountain range pattern
+        { x: 0, y: 160 }, { x: 200, y: 120 }, { x: 400, y: 180 }, { x: 600, y: 100 }, { x: 800, y: 190 }, 
+        { x: 1000, y: 130 }, { x: 1200, y: 200 }, { x: 1400, y: 140 }, { x: 1600, y: 210 }
       ],
-      15: [ // Silver Line - Extended river meander
-        { x: -120, y: 400 }, { x: 80, y: 400 }, { x: 220, y: 420 }, { x: 360, y: 450 }, { x: 500, y: 480 }, 
-        { x: 640, y: 500 }, { x: 780, y: 520 }, { x: 920, y: 550 }, { x: 1060, y: 580 }, { x: 1200, y: 600 },
-        { x: 1340, y: 620 }, { x: 1480, y: 640 }
+      15: [ // Silver Line - River meander
+        { x: 100, y: 450 }, { x: 300, y: 470 }, { x: 500, y: 510 }, { x: 700, y: 530 }, { x: 900, y: 550 }, 
+        { x: 1100, y: 580 }, { x: 1300, y: 610 }, { x: 1500, y: 640 }
       ],
-      16: [ // Coral Line - Extended wave pattern
-        { x: -160, y: 580 }, { x: 40, y: 580 }, { x: 160, y: 600 }, { x: 280, y: 620 }, { x: 400, y: 640 }, 
-        { x: 520, y: 660 }, { x: 640, y: 680 }, { x: 760, y: 700 }, { x: 880, y: 690 }, { x: 1000, y: 680 }, 
-        { x: 1120, y: 670 }, { x: 1240, y: 660 }, { x: 1360, y: 650 }, { x: 1480, y: 640 }
+      16: [ // Coral Line - Wave pattern along bottom
+        { x: 0, y: 700 }, { x: 200, y: 720 }, { x: 400, y: 740 }, { x: 600, y: 760 }, { x: 800, y: 780 }, 
+        { x: 1000, y: 760 }, { x: 1200, y: 740 }, { x: 1400, y: 720 }, { x: 1600, y: 700 }
       ]
     };
     return routePaths[routeId] || [];
@@ -147,8 +134,10 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
       <svg
         key={route.id}
         className="absolute inset-0 pointer-events-none"
-        width="1280"
-        height="720"
+        width="100%"
+        height="100%"
+        viewBox="0 0 1600 1000"
+        preserveAspectRatio="xMidYMid slice"
         style={{ zIndex: 10 + routeIndex }}
       >
         {/* Create gradients and filters for aesthetic effects */}
