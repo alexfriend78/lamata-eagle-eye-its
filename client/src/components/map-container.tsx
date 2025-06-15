@@ -188,6 +188,33 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     };
   };
 
+  // Function to get heat map intensity for a route segment
+  const getHeatMapIntensity = (routeId: number, segmentIndex: number) => {
+    if (!showHeatMap || !crowdData.length) return 0;
+    
+    // Find crowd density readings for stations on this route
+    const routeStationsData = stations.filter(station => {
+      // Check if station belongs to this route (simplified logic)
+      return routeStations.some(rs => rs.id === station.id);
+    });
+    
+    // Calculate average density for this route segment
+    const segmentDensity = crowdData
+      .filter(reading => routeStationsData.some(station => station.id === reading.stationId))
+      .reduce((sum, reading) => sum + reading.passengerCount, 0) / Math.max(routeStationsData.length, 1);
+    
+    // Normalize to 0-1 range (assuming max capacity of 100)
+    return Math.min(segmentDensity / 100, 1);
+  };
+
+  // Function to get heat map color based on intensity
+  const getHeatMapColor = (intensity: number) => {
+    if (intensity < 0.3) return 'rgba(0, 255, 0, 0.4)'; // Green - low density
+    if (intensity < 0.6) return 'rgba(255, 255, 0, 0.5)'; // Yellow - medium density
+    if (intensity < 0.8) return 'rgba(255, 165, 0, 0.6)'; // Orange - high density
+    return 'rgba(255, 0, 0, 0.7)'; // Red - very high density
+  };
+
   const renderRouteLine = (route: Route, routeIndex: number) => {
     // Only render if route is selected or no specific routes are selected
     if (selectedRoutes.length > 0 && !selectedRoutes.includes(route.id)) {
@@ -305,6 +332,29 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 opacity={opacity}
                 filter={route.glowColor ? `url(#glow-${route.id})` : undefined}
               />
+
+              {/* Heat map overlay */}
+              {showHeatMap && offsetPoints.length > 1 && offsetPoints.slice(0, -1).map((point, index) => {
+                const nextPoint = offsetPoints[index + 1];
+                const intensity = getHeatMapIntensity(route.id, index);
+                
+                if (intensity === 0) return null;
+                
+                return (
+                  <line
+                    key={`heatmap-${index}`}
+                    x1={point.x}
+                    y1={point.y}
+                    x2={nextPoint.x}
+                    y2={nextPoint.y}
+                    stroke={getHeatMapColor(intensity)}
+                    strokeWidth={lineWidth + 6}
+                    strokeLinecap="round"
+                    opacity={0.8}
+                    style={{ zIndex: 15 }}
+                  />
+                );
+              })}
 
               {/* Pattern overlays */}
               {route.pattern === "arrows" && offsetPoints.map((point, index) => {
@@ -761,6 +811,31 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             </div>
           ))}
       </div>
+
+      {/* Heat Map Legend */}
+      {showHeatMap && (
+        <div className={`absolute bottom-4 right-4 ${theme === 'dark' ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'} border rounded-lg p-3 shadow-lg z-40`}>
+          <div className="text-sm font-semibold mb-2">Crowd Density</div>
+          <div className="space-y-1">
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-2 rounded" style={{ backgroundColor: 'rgba(0, 255, 0, 0.4)' }}></div>
+              <span className="text-xs">Low (0-30%)</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-2 rounded" style={{ backgroundColor: 'rgba(255, 255, 0, 0.5)' }}></div>
+              <span className="text-xs">Medium (30-60%)</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-2 rounded" style={{ backgroundColor: 'rgba(255, 165, 0, 0.6)' }}></div>
+              <span className="text-xs">High (60-80%)</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-2 rounded" style={{ backgroundColor: 'rgba(255, 0, 0, 0.7)' }}></div>
+              <span className="text-xs">Very High (80%+)</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
