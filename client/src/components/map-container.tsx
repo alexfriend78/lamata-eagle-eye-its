@@ -18,75 +18,95 @@ interface MapContainerProps {
 }
 
 export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed }: MapContainerProps) {
+  // Dynamic screen dimensions
+  const mapWidth = typeof window !== 'undefined' ? window.innerWidth : 1920;
+  const mapHeight = typeof window !== 'undefined' ? window.innerHeight : 1080;
+
   const getRoutePoints = (routeId: number) => {
-    // Define comprehensive routes using full 3456x2234 resolution with complete coverage
+    // Define routes using dynamic resolution for consistent coverage
     const routePaths: Record<number, { x: number; y: number }[]> = {
-      1: [ // Northern Line - Main north-south spine (London style)
-        { x: 800, y: 0 }, { x: 820, y: 300 }, { x: 850, y: 600 }, { x: 880, y: 900 }, 
-        { x: 900, y: 1200 }, { x: 920, y: 1500 }, { x: 950, y: 1800 }, { x: 980, y: 2100 }
+      1: [ // Northern Line - Main north-south spine
+        { x: mapWidth * 0.4, y: 0 }, { x: mapWidth * 0.42, y: mapHeight * 0.2 }, 
+        { x: mapWidth * 0.44, y: mapHeight * 0.4 }, { x: mapWidth * 0.46, y: mapHeight * 0.6 }, 
+        { x: mapWidth * 0.48, y: mapHeight * 0.8 }, { x: mapWidth * 0.5, y: mapHeight }
       ],
       2: [ // Central Line - Main east-west artery
-        { x: 0, y: 1000 }, { x: 500, y: 980 }, { x: 1000, y: 1000 }, { x: 1500, y: 1020 }, 
-        { x: 2000, y: 1000 }, { x: 2500, y: 980 }, { x: 3000, y: 1000 }, { x: 3456, y: 1020 }
+        { x: 0, y: mapHeight * 0.5 }, { x: mapWidth * 0.2, y: mapHeight * 0.48 }, 
+        { x: mapWidth * 0.4, y: mapHeight * 0.5 }, { x: mapWidth * 0.6, y: mapHeight * 0.52 }, 
+        { x: mapWidth * 0.8, y: mapHeight * 0.5 }, { x: mapWidth, y: mapHeight * 0.52 }
       ],
-      3: [ // Circle Line - Inner ring for connections
-        { x: 1200, y: 600 }, { x: 1800, y: 650 }, { x: 2200, y: 900 }, { x: 2250, y: 1300 }, 
-        { x: 2000, y: 1600 }, { x: 1500, y: 1650 }, { x: 1000, y: 1600 }, { x: 750, y: 1300 }, 
-        { x: 800, y: 900 }, { x: 1200, y: 600 }
+      3: [ // Circle Line - Inner ring
+        { x: mapWidth * 0.35, y: mapHeight * 0.25 }, { x: mapWidth * 0.6, y: mapHeight * 0.3 }, 
+        { x: mapWidth * 0.7, y: mapHeight * 0.5 }, { x: mapWidth * 0.6, y: mapHeight * 0.7 }, 
+        { x: mapWidth * 0.35, y: mapHeight * 0.75 }, { x: mapWidth * 0.25, y: mapHeight * 0.5 }
       ],
       4: [ // District Line - Southern cross-city
-        { x: 0, y: 1600 }, { x: 600, y: 1580 }, { x: 1200, y: 1600 }, { x: 1800, y: 1620 }, 
-        { x: 2400, y: 1600 }, { x: 3000, y: 1580 }, { x: 3456, y: 1600 }
+        { x: 0, y: mapHeight * 0.75 }, { x: mapWidth * 0.25, y: mapHeight * 0.74 }, 
+        { x: mapWidth * 0.5, y: mapHeight * 0.75 }, { x: mapWidth * 0.75, y: mapHeight * 0.76 }, 
+        { x: mapWidth, y: mapHeight * 0.75 }
       ],
       5: [ // Piccadilly Line - Northwest diagonal
-        { x: 0, y: 400 }, { x: 400, y: 500 }, { x: 800, y: 600 }, { x: 1200, y: 700 }, 
-        { x: 1600, y: 800 }, { x: 2000, y: 900 }, { x: 2400, y: 1000 }
+        { x: 0, y: mapHeight * 0.2 }, { x: mapWidth * 0.2, y: mapHeight * 0.3 }, 
+        { x: mapWidth * 0.4, y: mapHeight * 0.4 }, { x: mapWidth * 0.6, y: mapHeight * 0.5 }, 
+        { x: mapWidth * 0.8, y: mapHeight * 0.6 }
       ],
       6: [ // Metropolitan Line - Northern express
-        { x: 0, y: 600 }, { x: 500, y: 550 }, { x: 1000, y: 500 }, { x: 1500, y: 450 }, 
-        { x: 2000, y: 400 }, { x: 2500, y: 350 }, { x: 3000, y: 300 }
+        { x: 0, y: mapHeight * 0.3 }, { x: mapWidth * 0.25, y: mapHeight * 0.25 }, 
+        { x: mapWidth * 0.5, y: mapHeight * 0.2 }, { x: mapWidth * 0.75, y: mapHeight * 0.15 }, 
+        { x: mapWidth, y: mapHeight * 0.1 }
       ],
       7: [ // Jubilee Line - Southeast curve
-        { x: 600, y: 1200 }, { x: 1000, y: 1300 }, { x: 1400, y: 1400 }, { x: 1800, y: 1500 }, 
-        { x: 2200, y: 1600 }, { x: 2600, y: 1700 }, { x: 3000, y: 1800 }
+        { x: mapWidth * 0.3, y: mapHeight * 0.6 }, { x: mapWidth * 0.45, y: mapHeight * 0.65 }, 
+        { x: mapWidth * 0.6, y: mapHeight * 0.7 }, { x: mapWidth * 0.75, y: mapHeight * 0.75 }, 
+        { x: mapWidth * 0.9, y: mapHeight * 0.8 }
       ],
       8: [ // Victoria Line - Express north-south
-        { x: 1500, y: 0 }, { x: 1520, y: 400 }, { x: 1540, y: 800 }, { x: 1560, y: 1200 }, 
-        { x: 1580, y: 1600 }, { x: 1600, y: 2000 }, { x: 1620, y: 2234 }
+        { x: mapWidth * 0.6, y: 0 }, { x: mapWidth * 0.61, y: mapHeight * 0.25 }, 
+        { x: mapWidth * 0.62, y: mapHeight * 0.5 }, { x: mapWidth * 0.63, y: mapHeight * 0.75 }, 
+        { x: mapWidth * 0.64, y: mapHeight }
       ],
       9: [ // Waterloo & City - Short connector
-        { x: 1200, y: 950 }, { x: 1400, y: 980 }, { x: 1600, y: 1010 }, { x: 1800, y: 1040 }
+        { x: mapWidth * 0.5, y: mapHeight * 0.48 }, { x: mapWidth * 0.55, y: mapHeight * 0.49 }, 
+        { x: mapWidth * 0.6, y: mapHeight * 0.51 }, { x: mapWidth * 0.65, y: mapHeight * 0.52 }
       ],
       10: [ // Hammersmith & City - Western branch
-        { x: 0, y: 800 }, { x: 400, y: 780 }, { x: 800, y: 800 }, { x: 1200, y: 820 }, 
-        { x: 1600, y: 800 }, { x: 2000, y: 780 }
+        { x: 0, y: mapHeight * 0.4 }, { x: mapWidth * 0.2, y: mapHeight * 0.39 }, 
+        { x: mapWidth * 0.4, y: mapHeight * 0.4 }, { x: mapWidth * 0.6, y: mapHeight * 0.41 }, 
+        { x: mapWidth * 0.8, y: mapHeight * 0.4 }
       ],
       11: [ // Bakerloo Line - Southwest diagonal
-        { x: 400, y: 400 }, { x: 700, y: 600 }, { x: 1000, y: 800 }, { x: 1300, y: 1000 }, 
-        { x: 1600, y: 1200 }, { x: 1900, y: 1400 }, { x: 2200, y: 1600 }
+        { x: mapWidth * 0.15, y: mapHeight * 0.2 }, { x: mapWidth * 0.3, y: mapHeight * 0.35 }, 
+        { x: mapWidth * 0.45, y: mapHeight * 0.5 }, { x: mapWidth * 0.6, y: mapHeight * 0.65 }, 
+        { x: mapWidth * 0.75, y: mapHeight * 0.8 }
       ],
       12: [ // DLR - Eastern branch network
-        { x: 2000, y: 800 }, { x: 2300, y: 850 }, { x: 2600, y: 900 }, { x: 2900, y: 950 }, 
-        { x: 3200, y: 1000 }, { x: 3456, y: 1050 }
+        { x: mapWidth * 0.7, y: mapHeight * 0.4 }, { x: mapWidth * 0.75, y: mapHeight * 0.42 }, 
+        { x: mapWidth * 0.8, y: mapHeight * 0.45 }, { x: mapWidth * 0.9, y: mapHeight * 0.48 }, 
+        { x: mapWidth, y: mapHeight * 0.5 }
       ],
       13: [ // Elizabeth Line - East-west express
-        { x: 0, y: 1200 }, { x: 600, y: 1180 }, { x: 1200, y: 1200 }, { x: 1800, y: 1220 }, 
-        { x: 2400, y: 1200 }, { x: 3000, y: 1180 }, { x: 3456, y: 1200 }
+        { x: 0, y: mapHeight * 0.6 }, { x: mapWidth * 0.2, y: mapHeight * 0.59 }, 
+        { x: mapWidth * 0.4, y: mapHeight * 0.6 }, { x: mapWidth * 0.6, y: mapHeight * 0.61 }, 
+        { x: mapWidth * 0.8, y: mapHeight * 0.6 }, { x: mapWidth, y: mapHeight * 0.61 }
       ],
       14: [ // GO Transit Outer Ring - Suburban orbital
-        { x: 200, y: 200 }, { x: 800, y: 150 }, { x: 1400, y: 200 }, { x: 2000, y: 250 }, 
-        { x: 2600, y: 300 }, { x: 3200, y: 400 }, { x: 3400, y: 800 }, { x: 3300, y: 1200 }, 
-        { x: 3000, y: 1600 }, { x: 2400, y: 1900 }, { x: 1800, y: 2000 }, { x: 1200, y: 1950 }, 
-        { x: 600, y: 1800 }, { x: 200, y: 1400 }, { x: 100, y: 1000 }, { x: 200, y: 600 }
+        { x: mapWidth * 0.1, y: mapHeight * 0.1 }, { x: mapWidth * 0.4, y: mapHeight * 0.05 }, 
+        { x: mapWidth * 0.7, y: mapHeight * 0.1 }, { x: mapWidth * 0.9, y: mapHeight * 0.3 }, 
+        { x: mapWidth * 0.95, y: mapHeight * 0.6 }, { x: mapWidth * 0.9, y: mapHeight * 0.9 }, 
+        { x: mapWidth * 0.6, y: mapHeight * 0.95 }, { x: mapWidth * 0.3, y: mapHeight * 0.9 }, 
+        { x: mapWidth * 0.05, y: mapHeight * 0.6 }, { x: mapWidth * 0.1, y: mapHeight * 0.3 }
       ],
       15: [ // GO Transit Radial - Airport express
-        { x: 1728, y: 1000 }, { x: 2200, y: 800 }, { x: 2600, y: 600 }, { x: 3000, y: 400 }, { x: 3456, y: 200 }
+        { x: mapWidth * 0.5, y: mapHeight * 0.5 }, { x: mapWidth * 0.65, y: mapHeight * 0.35 }, 
+        { x: mapWidth * 0.8, y: mapHeight * 0.2 }, { x: mapWidth * 0.95, y: mapHeight * 0.05 }
       ],
       16: [ // Overground - Orbital connector
-        { x: 400, y: 1000 }, { x: 600, y: 800 }, { x: 900, y: 650 }, { x: 1300, y: 600 }, 
-        { x: 1700, y: 650 }, { x: 2100, y: 800 }, { x: 2400, y: 1000 }, { x: 2600, y: 1300 }, 
-        { x: 2400, y: 1600 }, { x: 2000, y: 1800 }, { x: 1500, y: 1850 }, { x: 1000, y: 1800 }, 
-        { x: 600, y: 1600 }, { x: 400, y: 1300 }
+        { x: mapWidth * 0.2, y: mapHeight * 0.5 }, { x: mapWidth * 0.25, y: mapHeight * 0.35 }, 
+        { x: mapWidth * 0.35, y: mapHeight * 0.25 }, { x: mapWidth * 0.5, y: mapHeight * 0.2 }, 
+        { x: mapWidth * 0.65, y: mapHeight * 0.25 }, { x: mapWidth * 0.75, y: mapHeight * 0.35 }, 
+        { x: mapWidth * 0.8, y: mapHeight * 0.5 }, { x: mapWidth * 0.75, y: mapHeight * 0.65 }, 
+        { x: mapWidth * 0.65, y: mapHeight * 0.75 }, { x: mapWidth * 0.5, y: mapHeight * 0.8 }, 
+        { x: mapWidth * 0.35, y: mapHeight * 0.75 }, { x: mapWidth * 0.25, y: mapHeight * 0.65 }
       ]
     };
     return routePaths[routeId] || [];
@@ -311,7 +331,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   };
 
   return (
-    <div className="relative w-full h-full overflow-hidden border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900">
+    <div className="fixed inset-0 w-full h-full overflow-hidden bg-white dark:bg-gray-900"
+         style={{ width: mapWidth, height: mapHeight }}>
       {/* Grid zones overlay */}
       <div className="absolute inset-0 pointer-events-none z-40">
         {Array.from({ length: 16 }, (_, i) => {
@@ -350,8 +371,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
       <div 
         className="relative transition-all duration-500 ease-in-out"
         style={{ 
-          width: '1280px',
-          height: '720px',
+          width: `${mapWidth}px`,
+          height: `${mapHeight}px`,
           transform: getZoomTransform(),
           transformOrigin: 'center center'
         }}
@@ -481,8 +502,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
 
         {/* Background grid */}
         <svg
-          width="1280"
-          height="720"
+          width={mapWidth}
+          height={mapHeight}
           className="absolute inset-0"
           style={{ background: theme === "dark" ? "#1f2937" : "#f9fafb" }}
         >
@@ -509,22 +530,22 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         {(() => {
           const interchanges = [
             // King's Cross / St. Pancras equivalent - Major north-south hub
-            { x: 900, y: 800, routes: [1, 2, 8, 10], name: "Lagos Central" },
+            { x: mapWidth * 0.42, y: mapHeight * 0.4, routes: [1, 2, 8, 10], name: "Lagos Central" },
             // Oxford Circus equivalent - Central interchange  
-            { x: 1500, y: 1000, routes: [2, 8, 13], name: "Victoria Island Hub" },
+            { x: mapWidth * 0.5, y: mapHeight * 0.5, routes: [2, 8, 13], name: "Victoria Island Hub" },
             // Liverpool Street equivalent - Eastern interchange
-            { x: 2000, y: 900, routes: [2, 5, 12], name: "Mainland Terminal" },
+            { x: mapWidth * 0.7, y: mapHeight * 0.45, routes: [2, 5, 12], name: "Mainland Terminal" },
             // Waterloo equivalent - Southern hub
-            { x: 1200, y: 1600, routes: [3, 4, 7], name: "Ikorodu Interchange" },
+            { x: mapWidth * 0.45, y: mapHeight * 0.7, routes: [3, 4, 7], name: "Ikorodu Interchange" },
             // Paddington equivalent - Western terminus
-            { x: 400, y: 800, routes: [2, 6, 10, 11], name: "Ikeja Gateway" },
+            { x: mapWidth * 0.2, y: mapHeight * 0.4, routes: [2, 6, 10, 11], name: "Ikeja Gateway" },
             // Bank/Monument equivalent - Financial district
-            { x: 1600, y: 1200, routes: [2, 8, 9, 13], name: "Business District" },
+            { x: mapWidth * 0.6, y: mapHeight * 0.55, routes: [2, 8, 9, 13], name: "Business District" },
             // Circle Line connections
-            { x: 1200, y: 600, routes: [3, 6], name: "Northern Gate" },
-            { x: 2200, y: 900, routes: [3, 12], name: "Eastern Cross" },
-            { x: 1500, y: 1650, routes: [3, 4], name: "Southern Bridge" },
-            { x: 800, y: 900, routes: [1, 3, 10], name: "Western Junction" }
+            { x: mapWidth * 0.35, y: mapHeight * 0.25, routes: [3, 6], name: "Northern Gate" },
+            { x: mapWidth * 0.7, y: mapHeight * 0.5, routes: [3, 12], name: "Eastern Cross" },
+            { x: mapWidth * 0.5, y: mapHeight * 0.75, routes: [3, 4], name: "Southern Bridge" },
+            { x: mapWidth * 0.3, y: mapHeight * 0.45, routes: [1, 3, 10], name: "Western Junction" }
           ];
 
           return interchanges
