@@ -103,7 +103,7 @@ export class MemStorage implements IStorage {
 
     // Create authentic Lagos BRT stations positioned exactly on route paths
     const stationsData = [
-      // Route 1: Oshodi - Abule-Egba stations (exact route coordinates)
+      // Route 1: Oshodi - Abule-Egba stations (matching exact route coordinates)
       { name: "Oshodi Terminal 2", x: 0.50, y: 0.60, zone: 2, routeId: 1 },
       { name: "Bolade", x: 0.48, y: 0.58, zone: 2, routeId: 1 },
       { name: "Ladipo", x: 0.46, y: 0.56, zone: 2, routeId: 1 },
@@ -122,19 +122,19 @@ export class MemStorage implements IStorage {
       { name: "Super", x: 0.20, y: 0.30, zone: 1, routeId: 1 },
       { name: "Abule Egba", x: 0.18, y: 0.28, zone: 1, routeId: 1 },
 
-      // Route 2: Abule Egba - TBS/Obalende stations
-      { name: "Abule Egba Terminal", x: 0.18, y: 0.28, zone: 1, routeId: 2 },
-      { name: "Anthony", x: 0.49, y: 0.51, zone: 2, routeId: 2 },
-      { name: "Westex", x: 0.51, y: 0.49, zone: 2, routeId: 2 },
-      { name: "First Pedro", x: 0.53, y: 0.47, zone: 3, routeId: 2 },
-      { name: "Charley Boy", x: 0.55, y: 0.45, zone: 3, routeId: 2 },
-      { name: "Gbagada Phase 1", x: 0.57, y: 0.43, zone: 3, routeId: 2 },
-      { name: "Iyana Oworo", x: 0.59, y: 0.41, zone: 3, routeId: 2 },
-      { name: "Adeniji", x: 0.61, y: 0.39, zone: 3, routeId: 2 },
-      { name: "Obalende", x: 0.63, y: 0.37, zone: 3, routeId: 2 },
-      { name: "CMS Terminal", x: 0.65, y: 0.35, zone: 3, routeId: 2 },
+      // Route 2: Abule Egba - TBS/Obalende stations (matching route coordinates)
+      { name: "LASMA", x: 0.52, y: 0.62, zone: 2, routeId: 2 },
+      { name: "Anthony", x: 0.54, y: 0.64, zone: 2, routeId: 2 },
+      { name: "Westex", x: 0.56, y: 0.66, zone: 2, routeId: 2 },
+      { name: "First Pedro", x: 0.58, y: 0.68, zone: 3, routeId: 2 },
+      { name: "Charley Boy", x: 0.60, y: 0.70, zone: 3, routeId: 2 },
+      { name: "Gbagada Phase 1", x: 0.62, y: 0.72, zone: 3, routeId: 2 },
+      { name: "Iyana Oworo", x: 0.64, y: 0.74, zone: 3, routeId: 2 },
+      { name: "Adeniji", x: 0.66, y: 0.76, zone: 3, routeId: 2 },
+      { name: "Obalende", x: 0.68, y: 0.78, zone: 3, routeId: 2 },
+      { name: "CMS Terminal", x: 0.70, y: 0.80, zone: 3, routeId: 2 },
 
-      // Route 3: Ikorodu - TBS stations
+      // Route 3: Ikorodu - TBS stations (matching route coordinates)  
       { name: "Ikorodu Terminal", x: 0.15, y: 0.85, zone: 4, routeId: 3 },
       { name: "Benson", x: 0.17, y: 0.83, zone: 4, routeId: 3 },
       { name: "ARUNA", x: 0.19, y: 0.81, zone: 4, routeId: 3 },
@@ -152,6 +152,7 @@ export class MemStorage implements IStorage {
       { name: "NEWGARAGE", x: 0.43, y: 0.57, zone: 2, routeId: 3 },
       { name: "Maryland", x: 0.45, y: 0.55, zone: 2, routeId: 3 },
       { name: "Idiroko", x: 0.47, y: 0.53, zone: 2, routeId: 3 },
+      { name: "Anthony Route 3", x: 0.49, y: 0.51, zone: 2, routeId: 3 },
       { name: "Obanikoro", x: 0.51, y: 0.49, zone: 2, routeId: 3 },
       { name: "Palmgroove", x: 0.53, y: 0.47, zone: 2, routeId: 3 },
       { name: "Onipanu", x: 0.55, y: 0.45, zone: 2, routeId: 3 },
@@ -162,15 +163,9 @@ export class MemStorage implements IStorage {
       { name: "Iponri", x: 0.65, y: 0.35, zone: 2, routeId: 3 },
       { name: "Costain", x: 0.67, y: 0.33, zone: 2, routeId: 3 },
       { name: "Leventis", x: 0.69, y: 0.31, zone: 2, routeId: 3 },
-      { name: "CMS Terminal Alt", x: 0.71, y: 0.29, zone: 2, routeId: 3 },
+      { name: "CMS Terminal Route 3", x: 0.71, y: 0.29, zone: 2, routeId: 3 },
       { name: "MARINA TRAIN STATION", x: 0.73, y: 0.27, zone: 2, routeId: 3 },
-      { name: "TBS Terminal", x: 0.75, y: 0.25, zone: 2, routeId: 3 },
-
-      // Route 4: Ikorodu - Fadeyi stations (reuses many Route 3 stations)
-      { name: "Fadeyi Terminal", x: 0.57, y: 0.43, zone: 2, routeId: 4 },
-
-      // Route 5: Ikorodu - Oshodi stations 
-      { name: "Oshodi Terminal 3", x: 0.50, y: 0.60, zone: 2, routeId: 5 }
+      { name: "TBS Terminal", x: 0.75, y: 0.25, zone: 2, routeId: 3 }
     ];
 
     stationsData.forEach(stationData => {
