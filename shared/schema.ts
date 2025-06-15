@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, real, timestamp, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, real, timestamp } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -81,10 +81,10 @@ export const crowdDensityReadings = pgTable("crowd_density_readings", {
   busId: integer("bus_id").references(() => buses.id),
   stationId: integer("station_id").references(() => stations.id),
   passengerCount: integer("passenger_count").notNull(),
-  capacity: integer("capacity").default(70),
+  capacity: integer("capacity").notNull(),
   densityLevel: text("density_level").notNull(), // low, medium, high, critical
   timestamp: timestamp("timestamp").notNull().defaultNow(),
-  source: text("source").default("sensor"), // sensor, manual, estimated
+  sensorType: text("sensor_type").notNull(), // manual, automatic, estimated
 });
 
 export const crowdPredictions = pgTable("crowd_predictions", {
@@ -92,9 +92,10 @@ export const crowdPredictions = pgTable("crowd_predictions", {
   stationId: integer("station_id").notNull().references(() => stations.id),
   routeId: integer("route_id").notNull().references(() => routes.id),
   predictedTime: timestamp("predicted_time").notNull(),
-  expectedPassengers: integer("expected_passengers").notNull(),
-  confidenceLevel: integer("confidence_level").default(75),
-  predictionType: text("prediction_type").default("ml_model"),
+  predictedDensity: text("predicted_density").notNull(),
+  predictedPassengerCount: integer("predicted_passenger_count").notNull(),
+  confidence: real("confidence").notNull(), // 0.0 to 1.0
+  modelVersion: text("model_version").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -176,5 +177,3 @@ export type CrowdAnalytics = {
   historicalAverage: number;
   peakTimes: Array<{ hour: number; avgDensity: string }>;
 };
-
-

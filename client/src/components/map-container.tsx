@@ -1,9 +1,6 @@
-import { type BusWithRoute, type Route, type Station, type CrowdDensityReading } from "@shared/schema";
+import { type BusWithRoute, type Route, type Station } from "@shared/schema";
 import BusIcon from "./bus-icon";
 import { useRouteStations } from "@/hooks/use-route-stations";
-import { useQuery } from "@tanstack/react-query";
-import CrowdAnalyticsPopup from "./crowd-analytics-popup";
-import { useState } from "react";
 
 interface MapContainerProps {
   buses: BusWithRoute[];
@@ -22,55 +19,15 @@ interface MapContainerProps {
   showRoutes: boolean;
   showStations: boolean;
   showBuses: boolean;
-
-  showCrowdBubbles?: boolean;
-  showDensityBubbles?: boolean;
 }
 
-export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed, showRoutes, showStations, showBuses, showCrowdBubbles, showDensityBubbles }: MapContainerProps) {
-  const [selectedStation, setSelectedStation] = useState<Station | null>(null);
-  const [showAnalyticsPopup, setShowAnalyticsPopup] = useState(false);
+export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed, showRoutes, showStations, showBuses }: MapContainerProps) {
   // Dynamic screen dimensions accounting for header
   const mapWidth = typeof window !== 'undefined' ? window.innerWidth : 1920;
   const mapHeight = typeof window !== 'undefined' ? window.innerHeight - 64 : 1016; // Subtract header height
   
   // Fetch stations for selected routes
   const { data: routeStations = [] } = useRouteStations(selectedRoutes);
-
-
-
-  // Fetch crowd predictions for bubbles
-  const { data: crowdPredictions = [] } = useQuery<any[]>({
-    queryKey: ['/api/crowd/predictions'],
-    enabled: !!showCrowdBubbles,
-    refetchInterval: showCrowdBubbles ? 10000 : false, // Refresh every 10 seconds when bubbles are active
-  });
-
-  // Fetch crowd density readings for density bubbles
-  const { data: densityReadings = [] } = useQuery<CrowdDensityReading[]>({
-    queryKey: ['/api/crowd/density-readings'],
-    enabled: !!showDensityBubbles,
-    refetchInterval: showDensityBubbles ? 5000 : false, // Refresh every 5 seconds when density bubbles are active
-  });
-
-  const handleStationAnalyticsClick = (station: Station) => {
-    setSelectedStation(station);
-    setShowAnalyticsPopup(true);
-  };
-
-  const getDensityColor = (level: string) => {
-    switch (level?.toLowerCase()) {
-      case 'low': return '#22c55e'; // green
-      case 'medium': return '#eab308'; // yellow
-      case 'high': return '#f97316'; // orange
-      case 'critical': return '#ef4444'; // red
-      default: return '#6b7280'; // gray
-    }
-  };
-
-  const getDensityByStationId = (stationId: number) => {
-    return densityReadings.find(reading => reading.stationId === stationId);
-  };
 
   const getRoutePoints = (routeId: number) => {
     // Define routes using dynamic resolution for consistent coverage
@@ -222,10 +179,6 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     };
   };
 
-
-
-
-
   const renderRouteLine = (route: Route, routeIndex: number) => {
     // Only render if route is selected or no specific routes are selected
     if (selectedRoutes.length > 0 && !selectedRoutes.includes(route.id)) {
@@ -343,8 +296,6 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 opacity={opacity}
                 filter={route.glowColor ? `url(#glow-${route.id})` : undefined}
               />
-
-
 
               {/* Pattern overlays */}
               {route.pattern === "arrows" && offsetPoints.map((point, index) => {
@@ -800,162 +751,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
               />
             </div>
           ))}
-
-        {/* Crowd Prediction Bubbles */}
-        {showCrowdBubbles && crowdPredictions.map((stationPrediction) => {
-          const station = stations.find(s => s.id === stationPrediction.stationId);
-          if (!station) return null;
-
-          // Get the latest prediction for display
-          const latestPrediction = stationPrediction.predictions[0];
-          if (!latestPrediction) return null;
-
-          // Calculate bubble size based on predicted passenger count
-          const maxCapacity = 150; // Typical BRT station capacity
-          const percentage = Math.min((latestPrediction.predictedPassengerCount / maxCapacity) * 100, 100);
-          const bubbleSize = Math.max(20, Math.min(60, percentage * 0.6)); // Size between 20-60px
-
-          // Color based on crowding level
-          const getBubbleColor = (percentage: number) => {
-            if (percentage < 30) return 'rgba(34, 197, 94, 0.6)'; // Green - Low
-            if (percentage < 60) return 'rgba(234, 179, 8, 0.6)'; // Yellow - Medium
-            if (percentage < 80) return 'rgba(249, 115, 22, 0.6)'; // Orange - High
-            return 'rgba(239, 68, 68, 0.6)'; // Red - Very High
-          };
-
-          const getBorderColor = (percentage: number) => {
-            if (percentage < 30) return 'rgb(34, 197, 94)'; // Green
-            if (percentage < 60) return 'rgb(234, 179, 8)'; // Yellow
-            if (percentage < 80) return 'rgb(249, 115, 22)'; // Orange
-            return 'rgb(239, 68, 68)'; // Red
-          };
-
-          return (
-            <div
-              key={`bubble-${stationPrediction.stationId}`}
-              className="absolute rounded-full border-2 flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110"
-              style={{
-                left: `${(station.x * mapWidth) - (bubbleSize / 2)}px`,
-                top: `${(station.y * mapHeight) - (bubbleSize / 2)}px`,
-                width: `${bubbleSize}px`,
-                height: `${bubbleSize}px`,
-                backgroundColor: getBubbleColor(percentage),
-                borderColor: getBorderColor(percentage),
-                zIndex: 25,
-                boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-              }}
-              title={`${station.name}: ${latestPrediction.predictedPassengerCount} passengers predicted (${percentage.toFixed(0)}% capacity)`}
-              onClick={() => onStationClick(station)}
-            >
-              <div className="text-xs font-bold text-white drop-shadow-md">
-                {latestPrediction.predictedPassengerCount}
-              </div>
-            </div>
-          );
-        })}
-
-        {/* Crowd Density Bubbles */}
-        {showDensityBubbles && stations.map((station) => {
-          const densityReading = getDensityByStationId(station.id);
-          if (!densityReading) return null;
-
-          // Calculate bubble size based on passenger count
-          const maxCapacity = densityReading.capacity || 70;
-          const percentage = Math.min((densityReading.passengerCount / maxCapacity) * 100, 100);
-          const bubbleSize = Math.max(18, Math.min(45, percentage * 0.5 + 20)); // Size between 18-45px
-
-          return (
-            <div
-              key={`density-${station.id}`}
-              className="absolute rounded-full border-2 flex items-center justify-center cursor-pointer transition-all duration-300 hover:scale-110 hover:shadow-lg"
-              style={{
-                left: `${(station.x * mapWidth) - (bubbleSize / 2)}px`,
-                top: `${(station.y * mapHeight) - (bubbleSize / 2) - 25}px`, // Offset above station
-                width: `${bubbleSize}px`,
-                height: `${bubbleSize}px`,
-                backgroundColor: getDensityColor(densityReading.densityLevel) + '99', // Add transparency
-                borderColor: getDensityColor(densityReading.densityLevel),
-                zIndex: 30,
-                boxShadow: '0 2px 6px rgba(0,0,0,0.15)'
-              }}
-              title={`${station.name}: ${densityReading.passengerCount}/${densityReading.capacity} passengers (${densityReading.densityLevel})`}
-              onClick={() => handleStationAnalyticsClick(station)}
-            >
-              <div className="text-xs font-bold text-white drop-shadow-md">
-                {densityReading.passengerCount}
-              </div>
-            </div>
-          );
-        })}
       </div>
-
-
-
-      {/* Crowd Prediction Bubbles Legend */}
-      {showCrowdBubbles && (
-        <div className={`absolute bottom-4 left-4 ${theme === 'dark' ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'} border rounded-lg p-3 shadow-lg z-40`}>
-          <div className="text-sm font-semibold mb-2">Crowd Predictions</div>
-          <div className="space-y-1">
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded-full border-2" style={{ backgroundColor: 'rgba(34, 197, 94, 0.6)', borderColor: 'rgb(34, 197, 94)' }}></div>
-              <span className="text-xs">Low (&lt;30%)</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded-full border-2" style={{ backgroundColor: 'rgba(234, 179, 8, 0.6)', borderColor: 'rgb(234, 179, 8)' }}></div>
-              <span className="text-xs">Medium (30-60%)</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded-full border-2" style={{ backgroundColor: 'rgba(249, 115, 22, 0.6)', borderColor: 'rgb(249, 115, 22)' }}></div>
-              <span className="text-xs">High (60-80%)</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded-full border-2" style={{ backgroundColor: 'rgba(239, 68, 68, 0.6)', borderColor: 'rgb(239, 68, 68)' }}></div>
-              <span className="text-xs">Critical (80%+)</span>
-            </div>
-            <div className="text-xs text-gray-500 mt-2 border-t pt-1">
-              Bubble size = passenger count
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Crowd Density Bubbles Legend */}
-      {showDensityBubbles && (
-        <div className={`absolute top-4 left-4 ${theme === 'dark' ? 'bg-gray-800 border-gray-600' : 'bg-white border-gray-300'} border rounded-lg p-3 shadow-lg z-40`}>
-          <div className="text-sm font-semibold mb-2">Crowd Density (Real-time)</div>
-          <div className="space-y-1">
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded-full border-2" style={{ backgroundColor: '#22c55e99', borderColor: '#22c55e' }}></div>
-              <span className="text-xs">Low</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded-full border-2" style={{ backgroundColor: '#eab30899', borderColor: '#eab308' }}></div>
-              <span className="text-xs">Medium</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded-full border-2" style={{ backgroundColor: '#f9731699', borderColor: '#f97316' }}></div>
-              <span className="text-xs">High</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded-full border-2" style={{ backgroundColor: '#ef444499', borderColor: '#ef4444' }}></div>
-              <span className="text-xs">Critical</span>
-            </div>
-            <div className="text-xs text-gray-500 mt-2 border-t pt-1">
-              Click for detailed analytics
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Crowd Analytics Popup */}
-      <CrowdAnalyticsPopup
-        station={selectedStation}
-        isOpen={showAnalyticsPopup}
-        onClose={() => {
-          setShowAnalyticsPopup(false);
-          setSelectedStation(null);
-        }}
-      />
     </div>
   );
 }

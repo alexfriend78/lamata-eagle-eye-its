@@ -1,6 +1,6 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage-fixed";
+import { storage } from "./storage";
 import { insertAlertSchema, insertBusSchema } from "@shared/schema";
 import { z } from "zod";
 import path from "path";
@@ -270,61 +270,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all crowd predictions for active stations
-  app.get("/api/crowd/predictions", async (req, res) => {
-    try {
-      const stations = await storage.getStations();
-      const predictions = [];
-      
-      for (const station of stations) {
-        // Get predictions for station's primary route
-        const routeId = station.id <= 17 ? 1 : 3; // Route assignment logic
-        const stationPredictions = await storage.getCrowdPredictions(station.id, routeId);
-        
-        if (stationPredictions.length > 0) {
-          predictions.push({
-            stationId: station.id,
-            stationName: station.name,
-            x: station.x,
-            y: station.y,
-            routeId,
-            predictions: stationPredictions
-          });
-        }
-      }
-      
-      res.json(predictions);
-    } catch (error) {
-      console.error('Error fetching crowd predictions:', error);
-      res.status(500).json({ error: "Failed to fetch crowd predictions" });
-    }
-  });
-
-  app.get("/api/crowd/predictions/:stationId", async (req, res) => {
-    try {
-      const stationId = parseInt(req.params.stationId);
-      const routeId = stationId <= 17 ? 1 : 3; // Route assignment logic
-      const predictions = await storage.getCrowdPredictions(stationId, routeId);
-      res.json(predictions);
-    } catch (error) {
-      console.error('Error fetching station predictions:', error);
-      res.status(500).json({ error: "Failed to fetch station predictions" });
-    }
-  });
-
-  // Get crowd density readings
-  app.get("/api/crowd/density-readings", async (req, res) => {
-    try {
-      const stationId = req.query.stationId ? parseInt(req.query.stationId as string) : undefined;
-      const busId = req.query.busId ? parseInt(req.query.busId as string) : undefined;
-      const readings = await storage.getCrowdDensityReadings(stationId, busId);
-      res.json(readings);
-    } catch (error) {
-      console.error('Error fetching crowd density readings:', error);
-      res.status(500).json({ error: "Failed to fetch crowd density readings" });
-    }
-  });
-
   app.post("/api/crowd-density", async (req, res) => {
     try {
       const reading = await storage.createCrowdDensityReading(req.body);
@@ -343,28 +288,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error generating predictions:', error);
       res.status(500).json({ error: "Failed to generate predictions" });
-    }
-  });
-
-  app.get("/api/crowd/latest/:stationId", async (req: Request, res: Response) => {
-    try {
-      const stationId = Number(req.params.stationId);
-      const reading = await storage.getLatestCrowdDensity(stationId);
-      res.json(reading);
-    } catch (error) {
-      console.error("Error fetching latest crowd density:", error);
-      res.status(500).json({ error: "Failed to fetch latest crowd density" });
-    }
-  });
-
-  app.get("/api/crowd/analytics/:stationId", async (req: Request, res: Response) => {
-    try {
-      const stationId = Number(req.params.stationId);
-      const analytics = await storage.getCrowdAnalytics(stationId);
-      res.json(analytics);
-    } catch (error) {
-      console.error("Error fetching crowd analytics:", error);
-      res.status(500).json({ error: "Failed to fetch crowd analytics" });
     }
   });
 
