@@ -1,4 +1,5 @@
-import { X, Users, Clock, AlertTriangle, CheckCircle, MapPin } from "lucide-react";
+import { X, Users, Clock, AlertTriangle, CheckCircle, MapPin, Video, Wifi, Shield, PlayCircle, VolumeX, Volume2, Camera, Activity } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +14,40 @@ interface StationDetailsPanelProps {
 }
 
 export default function StationDetailsPanel({ stationDetails, isOpen, onClose }: StationDetailsPanelProps) {
+  const [isVideoMuted, setIsVideoMuted] = useState(true);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(true);
+
   if (!isOpen || !stationDetails) return null;
+
+  // Station Live Feed - using station-specific video feed
+  const getStationVideoSrc = () => {
+    // Use station ID as seed for consistent video selection
+    const videoFiles = [
+      '/src/assets/BRT_Bus_with_Machine_Gun_1750007661395.mp4',
+      '/src/assets/Bus_Fight_Video_Generated_1750007661396.mp4',
+      '/src/assets/Sword_Lagos_Bus_CCTV_Video_Ready (1)_1750007599619.mp4',
+      '/src/assets/knife_Lagos_Bus_CCTV_Video_Ready_1750007661394.mp4'
+    ];
+    
+    const selectedIndex = stationDetails.id % videoFiles.length;
+    return videoFiles[selectedIndex];
+  };
+
+  const toggleVideoPlayback = () => {
+    const video = document.getElementById('station-video') as HTMLVideoElement;
+    if (video) {
+      if (isVideoPlaying) {
+        video.pause();
+      } else {
+        video.play();
+      }
+      setIsVideoPlaying(!isVideoPlaying);
+    }
+  };
+
+  const toggleVideoMute = () => {
+    setIsVideoMuted(!isVideoMuted);
+  };
 
   const getTrafficBadgeColor = (condition: string) => {
     switch (condition) {
@@ -58,10 +92,10 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
 
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-6">
-          {/* Station Overview */}
+          {/* Bus Stop Overview */}
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium">Station Overview</CardTitle>
+              <CardTitle className="text-sm font-medium">Bus Stop Overview</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center justify-between">
@@ -98,6 +132,93 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                 <Badge variant={stationDetails.accessibility ? "default" : "secondary"}>
                   {stationDetails.accessibility ? "Accessible" : "Limited"}
                 </Badge>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Wifi className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">WiFi Available</span>
+                </div>
+                <Badge variant="default" className="bg-green-600">
+                  Active
+                </Badge>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">Security Status</span>
+                </div>
+                <Badge variant="default" className="bg-blue-600">
+                  Monitored
+                </Badge>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Activity className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">Crowd Level</span>
+                </div>
+                <Badge variant={stationDetails.passengerCount > 15 ? "destructive" : stationDetails.passengerCount > 8 ? "secondary" : "default"}>
+                  {stationDetails.passengerCount > 15 ? "High" : stationDetails.passengerCount > 8 ? "Medium" : "Low"}
+                </Badge>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Live Video Feed */}
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium flex items-center gap-2">
+                <Camera className="h-4 w-4" />
+                Live Video Feed
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="relative bg-black rounded-lg overflow-hidden">
+                <video
+                  id="station-video"
+                  src={getStationVideoSrc()}
+                  autoPlay
+                  loop
+                  muted={isVideoMuted}
+                  className="w-full h-48 object-cover"
+                  style={{ minHeight: '192px' }}
+                />
+                <div className="absolute bottom-2 right-2 flex gap-2">
+                  <Button
+                    onClick={toggleVideoPlayback}
+                    size="sm"
+                    variant="secondary"
+                    className="h-8 w-8 p-0 bg-black/50 hover:bg-black/70"
+                  >
+                    {isVideoPlaying ? (
+                      <div className="w-2 h-2 bg-white" />
+                    ) : (
+                      <PlayCircle className="h-4 w-4 text-white" />
+                    )}
+                  </Button>
+                  <Button
+                    onClick={toggleVideoMute}
+                    size="sm"
+                    variant="secondary"
+                    className="h-8 w-8 p-0 bg-black/50 hover:bg-black/70"
+                  >
+                    {isVideoMuted ? (
+                      <VolumeX className="h-4 w-4 text-white" />
+                    ) : (
+                      <Volume2 className="h-4 w-4 text-white" />
+                    )}
+                  </Button>
+                </div>
+                <div className="absolute top-2 left-2">
+                  <Badge variant="destructive" className="text-xs">
+                    ● LIVE
+                  </Badge>
+                </div>
+              </div>
+              <div className="mt-2 text-xs text-muted-foreground">
+                Bus Stop Security Camera - Real-time monitoring
               </div>
             </CardContent>
           </Card>
