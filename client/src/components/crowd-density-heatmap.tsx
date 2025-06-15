@@ -241,8 +241,20 @@ export default function CrowdDensityHeatmap({
           <Button
             variant="outline"
             size="sm"
+            onClick={() => {
+              // Open analytics panel - this will be handled by parent component
+              const event = new CustomEvent('showCrowdAnalytics');
+              window.dispatchEvent(event);
+            }}
+            className="flex items-center gap-2"
+          >
+            <BarChart3 className="h-4 w-4" />
+            Analytics
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
             onClick={onToggle}
-            className="ml-auto"
           >
             Hide
           </Button>

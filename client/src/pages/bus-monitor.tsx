@@ -317,16 +317,26 @@ export default function BusMonitor() {
             />
           </div>
         )}
+      </div>
 
-        {/* Station Details Panel */}
-        <StationDetailsPanel
-          stationDetails={stationDetails || null}
-          isOpen={!!activeStation}
-          onClose={handleCloseStationDetails}
-        />
+      {/* Crowd Analytics Panel */}
+      <CrowdAnalyticsPanel
+        stations={stations || []}
+        routes={routes || []}
+        theme={theme}
+        isOpen={showCrowdAnalytics}
+        onClose={() => setShowCrowdAnalytics(false)}
+      />
 
-        {/* Bus Details Panel */}
-        {hoveredBus && (
+      {/* Station Details Panel */}
+      <StationDetailsPanel
+        stationDetails={stationDetails || null}
+        isOpen={!!activeStation}
+        onClose={handleCloseStationDetails}
+      />
+
+      {/* Bus Details Panel */}
+      {hoveredBus && (
           <div className={`fixed right-4 top-24 w-80 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-300'} border rounded-lg shadow-lg p-4 z-50`}>
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-lg font-semibold">Bus Details</h3>
@@ -389,7 +399,6 @@ export default function BusMonitor() {
         onClose={() => setShowRouteCustomization(false)}
         theme={theme}
       />
-      </div>
     </div>
   );
 }
