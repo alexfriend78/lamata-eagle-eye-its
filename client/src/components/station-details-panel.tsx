@@ -277,6 +277,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
             <CardContent>
               <div className="relative bg-black rounded-lg overflow-hidden">
                 <video
+                  id="station-video"
                   key={stationDetails.id}
                   src={getStationVideoSrc()}
                   loop
@@ -367,9 +368,13 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                           currentSrc: video.currentSrc,
                           readyState: video.readyState,
                           networkState: video.networkState,
-                          error: video.error
+                          error: video.error,
+                          errorCode: video.error?.code,
+                          errorMessage: video.error?.message,
+                          canPlayType: video.canPlayType('video/mp4')
                         });
                         video.load();
+                        video.play().catch(e => console.log('Play failed:', e));
                       } else {
                         console.log('Video element not found');
                       }
