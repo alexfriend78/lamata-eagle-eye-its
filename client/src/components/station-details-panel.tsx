@@ -7,12 +7,6 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { StationDetails } from "@shared/schema";
 
-// Import video assets
-import busIncidentVideo from "@assets/knife_Lagos_Bus_CCTV_Video_Ready_1750007661394.mp4";
-import passengerQueueVideo from "@assets/Passengers Queuing at BRT_Bus_Video_Generated_1750009404918.mp4";
-import delayedBusVideo from "@assets/Delayed Bus_Passenger At Bus Stop_1750009404917.mp4";
-import busFightVideo from "@assets/Bus_Fight_Video_Generated_1750007661396.mp4";
-
 interface StationDetailsPanelProps {
   stationDetails: StationDetails | null;
   isOpen: boolean;
@@ -29,10 +23,8 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
   const getStationVideoSrc = () => {
     // Use station ID as seed for consistent video selection
     const videoFiles = [
-      busIncidentVideo,
-      busFightVideo,
-      delayedBusVideo,
-      passengerQueueVideo
+      "/attached_assets/knife_Lagos_Bus_CCTV_Video_Ready_1750007661394.mp4",
+      "/attached_assets/Bus_Fight_Video_Generated_1750007661396.mp4"
     ];
     
     const selectedIndex = stationDetails.id % videoFiles.length;
