@@ -398,7 +398,7 @@ export class MemStorage implements IStorage {
   async getRouteStations(routeId: number): Promise<Station[]> {
     const routeStationMappings = Array.from(this.routeStations.values())
       .filter(rs => rs.routeId === routeId)
-      .sort((a, b) => a.stopOrder - b.stopOrder);
+      .sort((a, b) => a.sequence - b.sequence);
     
     return routeStationMappings
       .map(rs => this.stations.get(rs.stationId))

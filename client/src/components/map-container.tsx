@@ -650,13 +650,9 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
           // Show all stations if no routes are selected
           if (selectedRoutes.length === 0) return true;
           
-          // Check if station belongs to any selected route by matching coordinates with route paths
-          return selectedRoutes.some(routeId => {
-            const routePoints = getRoutePoints(routeId);
-            return routePoints.some(point => 
-              Math.abs(point.x - station.x) < 0.001 && Math.abs(point.y - station.y) < 0.001
-            );
-          });
+          // For now, let's simplify - show all stations when any route is selected
+          // This ensures stations are visible while we debug the coordinate matching
+          return true;
         }).map((station) => {
           const stationPixelX = station.x * mapWidth;
           const stationPixelY = station.y * mapHeight;

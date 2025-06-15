@@ -70,6 +70,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get stations for a specific route
+  app.get("/api/routes/:id/stations", async (req, res) => {
+    try {
+      const stations = await storage.getRouteStations(parseInt(req.params.id));
+      res.json(stations);
+    } catch (error) {
+      console.error("Error fetching route stations:", error);
+      res.status(500).json({ error: "Failed to fetch route stations" });
+    }
+  });
+
   // Create alert
   app.post("/api/alerts", async (req, res) => {
     try {
