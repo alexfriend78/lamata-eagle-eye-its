@@ -624,6 +624,8 @@ export class MemStorage implements IStorage {
     const newAlert: Alert = { 
       id, 
       ...alert,
+      isActive: true,
+      status: alert.status || "active",
       createdAt: new Date()
     };
     this.alerts.set(id, newAlert);
