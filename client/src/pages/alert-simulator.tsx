@@ -429,6 +429,15 @@ export default function AlertSimulator() {
                   </Button>
 
                   <Button
+                    onClick={() => handleQuickAlert("security", "P1", "CRITICAL: Security threat - armed incident reported")}
+                    className="w-full bg-red-600 hover:bg-red-700"
+                    disabled={createAlertMutation.isPending}
+                  >
+                    <AlertTriangle className="h-4 w-4 mr-2" />
+                    P1 Security Emergency
+                  </Button>
+
+                  <Button
                     onClick={() => handleQuickAlert("security", "P3", "Security incident reported - passenger disturbance")}
                     className="w-full bg-amber-600 hover:bg-amber-700"
                     disabled={createAlertMutation.isPending}

@@ -93,11 +93,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get active alerts
-  app.get("/api/alerts", async (_req, res) => {
+  // Get all alerts (including closed ones)
+  app.get("/api/alerts", async (req, res) => {
     try {
-      const alerts = await storage.getActiveAlerts();
-      res.json(alerts);
+      const includeAll = req.query.includeAll === 'true';
+      if (includeAll) {
+        // For alert center, we need all alerts including closed ones
+        const alerts = await storage.getAllAlerts();
+        res.json(alerts);
+      } else {
+        // For dashboard, only active alerts
+        const alerts = await storage.getActiveAlerts();
+        res.json(alerts);
+      }
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch alerts" });
     }
