@@ -4,7 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { X, Phone, User, Users, MapPin, Gauge, Camera, Play, Pause, Volume2, VolumeX, AlertTriangle, Navigation, CheckCircle, AlertOctagon } from "lucide-react";
-import { type BusWithRoute } from "@shared/schema";
+import { type BusWithRoute, type AlertWithDetails } from "@shared/schema";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 
 // Import CCTV video feeds for buses
 import driverVideoPath from "@assets/knife_Lagos_Bus_CCTV_Video_Ready_1750007661394.mp4";
@@ -23,6 +25,27 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
   const [isDriverVideoMuted, setIsDriverVideoMuted] = useState(true);
   const [isPassengerVideoMuted, setIsPassengerVideoMuted] = useState(true);
   const [isEscalated, setIsEscalated] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  // Fetch active alerts for this bus
+  const { data: alerts = [] } = useQuery<AlertWithDetails[]>({
+    queryKey: ['/api/alerts'],
+    refetchInterval: 2000
+  });
+
+  // Filter alerts for this specific bus
+  const busAlerts = alerts.filter(alert => alert.busId === bus.id && alert.isActive);
+  const hasEmergencyAlerts = busAlerts.length > 0;
+
+  // Mutation to clear alert
+  const clearAlertMutation = useMutation({
+    mutationFn: (alertId: number) => apiRequest(`/api/alerts/${alertId}/acknowledge`, { method: "PATCH" }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
+    }
+  });
 
   // Simulate real-time bus data
   const [busData, setBusData] = useState({
@@ -390,6 +413,126 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                   </div>
                 )}
               </div>
+            </div>
+          )}
+
+          {/* Emergency Alerts Section */}
+          {hasEmergencyAlerts && (
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <AlertTriangle className="w-6 h-6 text-red-600" />
+                <h3 className="text-lg font-semibold text-red-800 dark:text-red-200">Emergency Alerts</h3>
+                <Badge variant="destructive" className="animate-pulse">
+                  {busAlerts.length} ACTIVE
+                </Badge>
+              </div>
+              
+              {busAlerts.map((alert, index) => (
+                <div key={alert.id} className="mb-4 last:mb-0">
+                  <div className="bg-white dark:bg-gray-800 border border-red-300 dark:border-red-700 rounded-lg p-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <Badge 
+                          variant="destructive" 
+                          className={`
+                            ${alert.priority === 'critical' ? 'bg-red-600' : 
+                              alert.priority === 'high' ? 'bg-orange-600' : 
+                              alert.priority === 'medium' ? 'bg-yellow-600' : 'bg-blue-600'}
+                          `}
+                        >
+                          {alert.priority?.toUpperCase() || 'MEDIUM'} PRIORITY
+                        </Badge>
+                        <span className="text-sm text-gray-500">
+                          {new Date(alert.timestamp).toLocaleTimeString()}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <p className="text-gray-800 dark:text-gray-200 mb-3 font-medium">
+                      {alert.message}
+                    </p>
+                    
+                    {alert.driverName && (
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        Driver: {alert.driverName}
+                      </p>
+                    )}
+                    
+                    <div className="flex gap-3">
+                      {!isEscalated ? (
+                        <>
+                          <Button
+                            onClick={() => clearAlertMutation.mutate(alert.id)}
+                            disabled={clearAlertMutation.isPending}
+                            className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
+                          >
+                            <CheckCircle className="w-4 h-4" />
+                            {clearAlertMutation.isPending ? 'Clearing...' : 'Clear Alert'}
+                          </Button>
+                          <Button
+                            onClick={async () => {
+                              try {
+                                const response = await fetch(`/api/alerts`, {
+                                  method: 'POST',
+                                  headers: {
+                                    'Content-Type': 'application/json'
+                                  },
+                                  body: JSON.stringify({
+                                    type: 'escalated_emergency',
+                                    message: `ESCALATED: Emergency alert for Bus ${bus.busNumber}. Critical intervention required.`,
+                                    busId: bus.id,
+                                    routeId: bus.routeId,
+                                    priority: 'critical',
+                                    severity: 'high'
+                                  })
+                                });
+                                if (response.ok) {
+                                  setIsEscalated(true);
+                                }
+                              } catch (error) {
+                                console.error('Failed to escalate alert:', error);
+                              }
+                            }}
+                            className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
+                          >
+                            <AlertOctagon className="w-4 h-4" />
+                            Escalate
+                          </Button>
+                        </>
+                      ) : (
+                        <div className="flex flex-col gap-3 w-full">
+                          <div className="bg-green-100 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 text-center">
+                            <div className="flex items-center justify-center gap-2 mb-1">
+                              <CheckCircle className="w-4 h-4 text-green-600" />
+                              <span className="font-semibold text-green-800 dark:text-green-200">Security Team Alerted</span>
+                            </div>
+                            <p className="text-xs text-green-700 dark:text-green-300">
+                              Emergency response team has been notified and is en route.
+                            </p>
+                          </div>
+                          <div className="flex gap-3">
+                            <Button
+                              onClick={() => clearAlertMutation.mutate(alert.id)}
+                              disabled={clearAlertMutation.isPending}
+                              className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
+                            >
+                              <CheckCircle className="w-4 h-4" />
+                              {clearAlertMutation.isPending ? 'Clearing...' : 'Clear Alert'}
+                            </Button>
+                            <Button
+                              onClick={onClose}
+                              className="bg-gray-600 hover:bg-gray-700 text-white flex items-center gap-2"
+                            >
+                              <X className="w-4 h-4" />
+                              Close Panel
+                            </Button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
 
