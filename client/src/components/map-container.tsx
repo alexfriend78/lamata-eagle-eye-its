@@ -1,6 +1,7 @@
 import { type BusWithRoute, type Route, type Station } from "@shared/schema";
 import BusIcon from "./bus-icon";
 import { useRouteStations } from "@/hooks/use-route-stations";
+import { useQuery } from "@tanstack/react-query";
 
 interface MapContainerProps {
   buses: BusWithRoute[];
@@ -28,21 +29,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   
   // Fetch stations for selected routes
   const { data: routeStations = [] } = useRouteStations(selectedRoutes);
-
+  
   const getRoutePoints = (routeId: number) => {
-    // Filter stations that belong to this route using the routeId property
-    const stationsForRoute = stations.filter(station => station.routeId === routeId);
-    
-    if (stationsForRoute.length > 0) {
-      // Convert station coordinates to pixel coordinates and center them
-      const centerOffsetX = mapWidth * 0.1; // Center horizontally  
-      const centerOffsetY = mapHeight * 0.05; // Center vertically
-      
-      return stationsForRoute.map(station => ({
-        x: (station.x * mapWidth * 0.8) + centerOffsetX,
-        y: (station.y * mapHeight * 0.9) + centerOffsetY
-      }));
-    }
     
     // Fallback to hardcoded paths if no station data available
     const routePaths: Record<number, { x: number; y: number }[]> = {
@@ -694,7 +682,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
           
           // Show only stations that belong to selected routes
           if (routeStations.length > 0) {
-            const routeStationIds = new Set(routeStations.map(rs => rs.id));
+            const routeStationIds = new Set(routeStations.map((rs: any) => rs.id));
             return stations.filter(station => routeStationIds.has(station.id));
           }
           
