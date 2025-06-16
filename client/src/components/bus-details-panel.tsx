@@ -19,6 +19,44 @@ interface BusDetailsPanelProps {
   onClose: () => void;
 }
 
+// Helper function to generate next stops for a bus based on its route
+function getNextStopsForBus(bus: BusWithRoute) {
+  const routeStops = {
+    1: [
+      { name: "Bolade", distance: "0.8 km", eta: "12:35 PM", status: "on-time", delay: 0 },
+      { name: "Oshodi Interchange", distance: "2.1 km", eta: "12:42 PM", status: "on-time", delay: 0 },
+      { name: "PWD", distance: "3.4 km", eta: "12:51 PM", status: "delayed", delay: 3 }
+    ],
+    2: [
+      { name: "Ikeja Terminal", distance: "1.2 km", eta: "12:38 PM", status: "on-time", delay: 0 },
+      { name: "Allen Avenue", distance: "2.8 km", eta: "12:46 PM", status: "on-time", delay: 0 },
+      { name: "Computer Village", distance: "4.1 km", eta: "12:55 PM", status: "delayed", delay: 2 }
+    ],
+    3: [
+      { name: "Mile 12", distance: "1.5 km", eta: "12:40 PM", status: "on-time", delay: 0 },
+      { name: "Ketu", distance: "3.2 km", eta: "12:48 PM", status: "delayed", delay: 1 },
+      { name: "Ojota", distance: "5.7 km", eta: "1:02 PM", status: "delayed", delay: 4 }
+    ],
+    4: [
+      { name: "Maryland", distance: "0.9 km", eta: "12:33 PM", status: "on-time", delay: 0 },
+      { name: "Palmgrove", distance: "2.3 km", eta: "12:41 PM", status: "on-time", delay: 0 },
+      { name: "Yaba", distance: "4.8 km", eta: "12:56 PM", status: "delayed", delay: 5 }
+    ],
+    5: [
+      { name: "Costain", distance: "1.1 km", eta: "12:36 PM", status: "on-time", delay: 0 },
+      { name: "National Theatre", distance: "2.9 km", eta: "12:44 PM", status: "on-time", delay: 0 },
+      { name: "Marina", distance: "5.2 km", eta: "1:01 PM", status: "delayed", delay: 2 }
+    ]
+  };
+
+  const routeId = bus.route.id;
+  return routeStops[routeId as keyof typeof routeStops] || [
+    { name: "Next Station", distance: "1.0 km", eta: "12:35 PM", status: "on-time", delay: 0 },
+    { name: "Terminal", distance: "2.5 km", eta: "12:45 PM", status: "on-time", delay: 0 },
+    { name: "Final Stop", distance: "4.0 km", eta: "12:58 PM", status: "delayed", delay: 1 }
+  ];
+}
+
 export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) {
   const [isDriverVideoPlaying, setIsDriverVideoPlaying] = useState(true);
   const [isPassengerVideoPlaying, setIsPassengerVideoPlaying] = useState(true);
@@ -517,14 +555,113 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
             </div>
           )}
 
+          {/* Alert Management Section - Show only if there are emergency alerts */}
+          {hasEmergencyAlerts && (
+            <Card className="border-red-200 dark:border-red-800">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-red-800 dark:text-red-200">
+                  <AlertTriangle className="w-5 h-5" />
+                  Alert Management - {busAlerts.length} Active Alert{busAlerts.length > 1 ? 's' : ''}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {busAlerts.map((alert) => (
+                  <div key={alert.id} className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-4 mb-4 last:mb-0">
+                    <div className="flex items-start justify-between mb-3">
+                      <div>
+                        <Badge variant="destructive" className="mb-2">
+                          {alert.priority?.toUpperCase() || 'HIGH'} PRIORITY
+                        </Badge>
+                        <p className="font-medium text-red-800 dark:text-red-200">
+                          {alert.message}
+                        </p>
+                        <p className="text-sm text-red-600 dark:text-red-400 mt-1">
+                          {new Date(alert.timestamp).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex gap-3 flex-wrap">
+                      <Button
+                        onClick={() => acknowledgeAlertMutation.mutate(alert.id)}
+                        disabled={acknowledgeAlertMutation.isPending}
+                        className="bg-yellow-600 hover:bg-yellow-700 text-white flex items-center gap-2"
+                        size="sm"
+                      >
+                        <CheckCircle className="w-4 h-4" />
+                        {acknowledgeAlertMutation.isPending ? 'Acknowledging...' : 'Acknowledge'}
+                      </Button>
+                      <Button
+                        onClick={() => escalateAlertMutation.mutate(alert.id)}
+                        disabled={escalateAlertMutation.isPending}
+                        className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
+                        size="sm"
+                      >
+                        <AlertOctagon className="w-4 h-4" />
+                        {escalateAlertMutation.isPending ? 'Escalating...' : 'Escalate'}
+                      </Button>
+                      <Button
+                        onClick={() => closeAlertMutation.mutate(alert.id)}
+                        disabled={closeAlertMutation.isPending}
+                        className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
+                        size="sm"
+                      >
+                        <X className="w-4 h-4" />
+                        {closeAlertMutation.isPending ? 'Closing...' : 'Close Alert'}
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          )}
+
           {/* Bus Information Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Basic Information */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Driver Information */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <User className="w-5 h-5" />
-                  Basic Information
+                  Driver Details
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Name:</span>
+                  <span className="font-semibold">{bus.driverName || 'Not assigned'}</span>
+                </div>
+                {bus.driverPhone && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Phone:</span>
+                    <Button variant="ghost" size="sm" className="h-auto p-0 font-semibold text-blue-600">
+                      <Phone className="w-4 h-4 mr-1" />
+                      {bus.driverPhone}
+                    </Button>
+                  </div>
+                )}
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">License:</span>
+                  <span className="font-semibold">{bus.driverLicense || 'DL-' + Math.random().toString(36).substr(2, 6).toUpperCase()}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Shift Start:</span>
+                  <span className="font-semibold">06:00 AM</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Hours Today:</span>
+                  <span className="font-semibold">
+                    {Math.floor((Date.now() - new Date().setHours(6, 0, 0, 0)) / (1000 * 60 * 60))}h {Math.floor(((Date.now() - new Date().setHours(6, 0, 0, 0)) % (1000 * 60 * 60)) / (1000 * 60))}m
+                  </span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Basic Bus Information */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MapPin className="w-5 h-5" />
+                  Bus Information
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -549,18 +686,13 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                   </Badge>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Driver:</span>
-                  <span className="font-semibold">{bus.driverName || 'Not assigned'}</span>
+                  <span className="text-gray-600 dark:text-gray-400">Vehicle ID:</span>
+                  <span className="font-semibold">VH-{bus.id.toString().padStart(4, '0')}</span>
                 </div>
-                {bus.driverPhone && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Driver Phone:</span>
-                    <Button variant="ghost" size="sm" className="h-auto p-0 font-semibold text-blue-600">
-                      <Phone className="w-4 h-4 mr-1" />
-                      {bus.driverPhone}
-                    </Button>
-                  </div>
-                )}
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Fleet Type:</span>
+                  <span className="font-semibold">BRT Standard</span>
+                </div>
               </CardContent>
             </Card>
 
@@ -575,31 +707,81 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
               <CardContent className="space-y-4">
                 <div>
                   <div className="flex justify-between mb-2">
-                    <span className="text-gray-600 dark:text-gray-400">Passenger Capacity:</span>
-                    <span className="font-semibold">{bus.currentPassengers || 0}/{bus.capacity || 50}</span>
+                    <span className="text-gray-600 dark:text-gray-400">Passenger Load:</span>
+                    <span className="font-semibold">
+                      {bus.currentPassengers || 32}/{bus.capacity || 50}
+                    </span>
                   </div>
                   <Progress 
-                    value={((bus.currentPassengers || 0) / (bus.capacity || 50)) * 100} 
+                    value={((bus.currentPassengers || 32) / (bus.capacity || 50)) * 100} 
                     className="h-2"
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    {Math.round(((bus.currentPassengers || 32) / (bus.capacity || 50)) * 100)}% capacity
+                  </p>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">On-Time Performance:</span>
-                  <span className="font-semibold text-green-600">
-                    {bus.onTimePercentage || 85}%
+                  <span className={`font-semibold ${(bus.onTimePercentage || 87) >= 85 ? 'text-green-600' : (bus.onTimePercentage || 87) >= 70 ? 'text-yellow-600' : 'text-red-600'}`}>
+                    {bus.onTimePercentage || 87}%
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Total Trips Today:</span>
-                  <span className="font-semibold">{bus.tripsToday || 12}</span>
+                  <span className="text-gray-600 dark:text-gray-400">Trips Completed:</span>
+                  <span className="font-semibold">{bus.tripsToday || 8}/12</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Next Stop:</span>
-                  <span className="font-semibold">{bus.nextStop || 'Determining...'}</span>
+                  <span className="text-gray-600 dark:text-gray-400">Current Speed:</span>
+                  <span className="font-semibold">
+                    {bus.currentSpeed || 42} km/h
+                  </span>
                 </div>
               </CardContent>
             </Card>
           </div>
+
+          {/* Next Stops Schedule */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Navigation className="w-5 h-5" />
+                Next 3 Stops Schedule
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {getNextStopsForBus(bus).map((stop, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-3 h-3 rounded-full ${
+                        stop.status === 'on-time' ? 'bg-green-500' : 'bg-red-500'
+                      }`} />
+                      <div>
+                        <p className="font-semibold">{stop.name}</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          Stop {index + 1} • {stop.distance}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-semibold">{stop.eta}</p>
+                      <div className="flex items-center gap-1">
+                        {stop.status === 'on-time' ? (
+                          <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs">
+                            On Time
+                          </Badge>
+                        ) : (
+                          <Badge variant="destructive" className="text-xs">
+                            +{stop.delay}min delay
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
           {/* CCTV Feeds */}
           <Card>
