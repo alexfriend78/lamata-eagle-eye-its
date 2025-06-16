@@ -13,6 +13,7 @@ import driverVideoPath from "@assets/knife_Lagos_Bus_CCTV_Video_Ready_1750007661
 import passengersVideoPath from "@assets/Bus_Fight_Video_Generated_1750007661396.mp4";
 import emergencyVideoPath from "@assets/Bus_Passenger_Medical_Emergency_Video_1750056149435.mp4";
 import machineGunVideoPath from "@assets/BRT_Bus_with_Machine_Gun_1750007661395.mp4";
+import erraticDriveVideoPath from "@assets/Lagos_Bus_Driver_s_Erratic_Drive_1750105118549.mp4";
 
 interface BusDetailsPanelProps {
   bus: BusWithRoute;
@@ -200,8 +201,14 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
 
   // Select appropriate video feeds based on bus status and conditions
   const getDriverVideoSrc = () => {
-    if (bus.status === "off-route" || bus.status === "alert") {
+    if (bus.status === "off-route") {
+      return erraticDriveVideoPath; // Shows erratic driving behavior
+    }
+    if (bus.status === "alert") {
       return driverVideoPath; // Shows knife incident
+    }
+    if (busData.currentSpeed > 55) {
+      return erraticDriveVideoPath; // Shows speeding/erratic driving
     }
     return emergencyVideoPath; // Normal operations
   };
@@ -815,16 +822,29 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                   </div>
                   <div className="relative bg-black rounded-lg overflow-hidden">
                     <video
-                      src={driverVideoPath}
+                      src={getDriverVideoSrc()}
                       className="w-full h-48 object-cover"
                       autoPlay={isDriverVideoPlaying}
                       muted={isDriverVideoMuted}
                       loop
                       controls={false}
+                      onLoadStart={() => console.log('Video load started')}
+                      onLoadedMetadata={() => console.log('Video metadata loaded')}
+                      onCanPlay={() => console.log('Video can play')}
                     />
                     <div className="absolute bottom-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
                       CAM-01 • DRIVER
                     </div>
+                    {(bus.status === "off-route" || busData.currentSpeed > 55) && (
+                      <div className="absolute top-2 left-2 bg-orange-600 text-white px-2 py-1 rounded text-xs animate-pulse">
+                        ERRATIC DRIVING DETECTED
+                      </div>
+                    )}
+                    {bus.status === "alert" && (
+                      <div className="absolute top-2 left-2 bg-red-600 text-white px-2 py-1 rounded text-xs animate-pulse">
+                        SECURITY ALERT
+                      </div>
+                    )}
                   </div>
                 </div>
 
