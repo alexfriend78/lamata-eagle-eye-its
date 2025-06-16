@@ -951,10 +951,14 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 {/* Deep blue pulsing glow effect for emergency alerts and off-route buses */}
                 {(isOffRoute || hasEmergencyAlert) && (
                   <>
-                    {/* Main blue glow */}
+                    {/* Main blue glow - positioned behind bus icon */}
                     <div
-                      className="absolute inset-0 rounded-full animate-pulse"
+                      className="absolute animate-pulse pointer-events-none"
                       style={{
+                        top: '-20px',
+                        left: '-20px',
+                        right: '-20px',
+                        bottom: '-20px',
                         background: `radial-gradient(circle, rgba(30, 64, 175, ${0.8 + glowIntensity * 0.2}) 0%, rgba(30, 64, 175, ${0.6 + glowIntensity * 0.3}) 30%, rgba(30, 64, 175, ${0.4 + glowIntensity * 0.4}) 60%, rgba(30, 64, 175, 0) 100%)`,
                         boxShadow: `
                           0 0 ${25 + glowIntensity * 50}px ${20 + glowIntensity * 30}px rgba(30, 64, 175, ${0.6 + glowIntensity * 0.4}),
@@ -962,30 +966,38 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                           0 0 ${60 + glowIntensity * 90}px ${40 + glowIntensity * 60}px rgba(17, 24, 39, ${0.2 + glowIntensity * 0.2})
                         `,
                         transform: `scale(${2.2 + glowIntensity * 1.0})`,
-                        zIndex: -1,
+                        zIndex: 0,
+                        borderRadius: '50%',
                         animationDuration: `${1.5 - glowIntensity * 0.5}s`
                       }}
                     />
                     {/* Inner intense blue core */}
                     <div
-                      className="absolute inset-0 rounded-full animate-pulse"
+                      className="absolute animate-pulse pointer-events-none"
                       style={{
+                        top: '-10px',
+                        left: '-10px',
+                        right: '-10px',
+                        bottom: '-10px',
                         background: `radial-gradient(circle, rgba(59, 130, 246, ${0.9 + glowIntensity * 0.1}) 0%, rgba(30, 64, 175, ${0.7 + glowIntensity * 0.2}) 50%, rgba(30, 64, 175, 0) 100%)`,
                         transform: `scale(${1.5 + glowIntensity * 0.5})`,
-                        zIndex: -1,
+                        zIndex: 1,
+                        borderRadius: '50%',
                         animationDuration: `${1.2 - glowIntensity * 0.3}s`
                       }}
                     />
                   </>
                 )}
                 
-                <BusIcon
-                  bus={bus}
-                  alerts={alerts}
-                  style={{
-                    filter: (isOffRoute || hasEmergencyAlert) ? `drop-shadow(0 0 12px rgba(30, 64, 175, ${0.7 + glowIntensity * 0.3}))` : undefined
-                  }}
-                />
+                <div style={{ position: 'relative', zIndex: 10 }}>
+                  <BusIcon
+                    bus={bus}
+                    alerts={alerts}
+                    style={{
+                      filter: (isOffRoute || hasEmergencyAlert) ? `drop-shadow(0 0 12px rgba(30, 64, 175, ${0.7 + glowIntensity * 0.3}))` : undefined
+                    }}
+                  />
+                </div>
               </div>
             );
           })}
