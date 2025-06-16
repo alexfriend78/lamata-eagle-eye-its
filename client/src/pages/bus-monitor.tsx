@@ -125,12 +125,12 @@ export default function BusMonitor() {
         <div className="flex flex-col space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="text-3xl animate-pulse">🚌</div>
+              <div className="text-2xl animate-pulse">🚌</div>
               <div>
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-green-800 via-green-600 to-green-800 bg-clip-text text-transparent drop-shadow-lg">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-green-800 via-green-600 to-green-800 bg-clip-text text-transparent drop-shadow-lg">
                   LAMATA - Eagle Eye ITS 🦅
                 </h1>
-                <p className="text-sm font-medium text-green-700 dark:text-green-400 mt-1">
+                <p className="text-xs font-medium text-green-700 dark:text-green-400">
                   Lagos Metropolitan Area Transport Authority
                 </p>
               </div>
@@ -154,13 +154,13 @@ export default function BusMonitor() {
               </Button>
 
               {/* System Status */}
-              <div className="flex flex-col items-end space-y-1">
-                <div className="flex items-center space-x-3 bg-green-100 dark:bg-green-900 px-4 py-2 rounded-lg border border-green-300 dark:border-green-700">
-                  <div className="w-4 h-4 bg-green-500 rounded-full animate-pulse shadow-lg"></div>
-                  <span className="text-lg font-bold text-green-800 dark:text-green-200">System Online</span>
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2 bg-green-100 dark:bg-green-900 px-3 py-1 rounded-lg border border-green-300 dark:border-green-700">
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-bold text-green-800 dark:text-green-200">System Online</span>
                 </div>
                 
-                <div className="text-base font-semibold text-green-700 dark:text-green-300 bg-white/80 dark:bg-gray-800/80 px-3 py-1 rounded-md shadow-sm">
+                <div className="text-sm font-semibold text-green-700 dark:text-green-300 bg-white/80 dark:bg-gray-800/80 px-2 py-1 rounded shadow-sm">
                   {formatTime(currentTime)}
                 </div>
               </div>
