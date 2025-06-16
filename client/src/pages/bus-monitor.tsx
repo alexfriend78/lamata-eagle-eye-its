@@ -402,6 +402,11 @@ export default function BusMonitor() {
         onAlertDismiss={() => setActiveAlert(null)}
         onAlertCreate={(alert) => setActiveAlert(alert)}
       />
+
+      {/* Alerts Manager */}
+      {showAlertsManager && (
+        <AlertsManager onClose={() => setShowAlertsManager(false)} />
+      )}
       </div>
     </div>
   );
