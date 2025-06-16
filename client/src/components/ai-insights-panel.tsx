@@ -112,10 +112,67 @@ export default function AIInsightsPanel({ buses, stations, alerts, stats }: AIIn
       priority: 'low',
       title: 'Route Efficiency Optimization',
       description: 'AI analysis suggests minor route adjustments for Route 4',
-      recommendation: 'Adjust stop timing at Ketu Station by +2 minutes',
+      recommendation: 'Adjust stop timing at Ketu Station by +2 minutes with driver Olumide Ogundipe',
       impact: 'Improve overall route punctuality by 12%',
       confidence: 83,
       route: 'Route 4 (Ketu-Ikorodu)'
+    });
+
+    // Maintenance scheduling insight
+    insights.push({
+      id: 'maintenance-schedule-1',
+      type: 'optimization',
+      priority: 'medium',
+      title: 'Preventive Maintenance Scheduling',
+      description: '4 buses approaching scheduled maintenance intervals',
+      recommendation: 'Schedule maintenance for BRT005, BRT009, BRT011, and BRT013 during off-peak hours with backup drivers Fatima Yusuf, Chidi Okwu, Blessing Ikenna, and Uche Okafor',
+      impact: 'Prevent unexpected breakdowns and maintain 99% fleet availability',
+      confidence: 95,
+      location: 'Maintenance Depot',
+      route: 'Routes 2, 3, 4, 5',
+      eta: '48-72 hours'
+    });
+
+    // Driver performance optimization
+    insights.push({
+      id: 'driver-performance-1',
+      type: 'optimization',
+      priority: 'medium',
+      title: 'Driver Performance Enhancement',
+      description: 'Identified opportunities for fuel efficiency improvements',
+      recommendation: 'Deploy eco-driving training for drivers Kelechi Nwachukwu, Aisha Mohammed, Rotimi Adebayo, and Hauwa Ibrahim to reduce fuel consumption',
+      impact: 'Reduce fuel costs by 15% and improve passenger comfort',
+      confidence: 88,
+      location: 'Training Center',
+      route: 'All Routes'
+    });
+
+    // Weather impact analysis
+    insights.push({
+      id: 'weather-impact-1',
+      type: 'prediction',
+      priority: 'medium',
+      title: 'Weather Impact Assessment',
+      description: 'Afternoon heat expected to affect passenger comfort and AC load',
+      recommendation: 'Deploy additional buses with enhanced AC systems and assign experienced drivers Maryam Bello, Victor Eze, Grace Okonkwo, and Segun Ogundimu',
+      impact: 'Maintain passenger satisfaction during peak heat hours',
+      confidence: 82,
+      location: 'All Air-Conditioned Routes',
+      eta: '2-3 hours'
+    });
+
+    // Security enhancement insight
+    insights.push({
+      id: 'security-enhancement-1',
+      type: 'alert',
+      priority: 'high',
+      title: 'Security Protocol Enhancement',
+      description: 'Enhanced security measures recommended for evening operations',
+      recommendation: 'Deploy security-trained drivers Bukola Adeyemi, Chioma Nwachukwu, and Tunde Bakare for night shifts with emergency response protocols',
+      impact: 'Ensure passenger safety and driver confidence during evening hours',
+      confidence: 92,
+      location: 'All Night Routes',
+      route: 'Routes 1, 2, 3'
     });
 
     // Weather-based insights
