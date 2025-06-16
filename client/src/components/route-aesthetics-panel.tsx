@@ -76,11 +76,7 @@ export default function RouteAestheticsPanel({ routes, theme }: RouteAestheticsP
   const updateRouteMutation = useMutation({
     mutationFn: async (updates: Partial<Route>) => {
       if (!selectedRoute) throw new Error("No route selected");
-      return apiRequest(`/api/routes/${selectedRoute.id}/aesthetics`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updates)
-      });
+      return apiRequest("PATCH", `/api/routes/${selectedRoute.id}/aesthetics`, updates);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/routes'] });

@@ -44,13 +44,7 @@ export default function RouteCustomizationPanel({ routes, isOpen, onClose, theme
   const updateRouteMutation = useMutation({
     mutationFn: async (updatedRoute: Partial<Route>) => {
       if (!selectedRoute) return;
-      return await apiRequest(`/api/routes/${selectedRoute.id}/aesthetics`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(updatedRoute)
-      });
+      return await apiRequest("PATCH", `/api/routes/${selectedRoute.id}/aesthetics`, updatedRoute);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/routes"] });
