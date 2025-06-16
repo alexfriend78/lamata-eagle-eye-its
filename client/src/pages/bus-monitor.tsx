@@ -336,11 +336,9 @@ export default function BusMonitor() {
             >
               <Settings className="h-4 w-4" />
             </Button>
-          </div>
 
-          <div className="flex items-center justify-between">
             {/* Zone Selection */}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 border-l border-gray-300 dark:border-gray-600 pl-4 ml-4">
               <span className="text-sm font-medium">Zones:</span>
               <div className="flex space-x-1 flex-wrap">
                 {Array.from({ length: 16 }, (_, i) => i + 1).map((zone) => (
