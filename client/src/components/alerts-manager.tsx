@@ -29,7 +29,7 @@ export default function AlertsManager({ onClose }: AlertsManagerProps) {
 
   // Mutations for alert actions
   const clearAlertMutation = useMutation({
-    mutationFn: (alertId: number) => apiRequest(`/api/alerts/${alertId}/clear`, "PATCH"),
+    mutationFn: (alertId: number) => apiRequest("PATCH", `/api/alerts/${alertId}/clear`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
@@ -37,7 +37,7 @@ export default function AlertsManager({ onClose }: AlertsManagerProps) {
   });
 
   const escalateAlertMutation = useMutation({
-    mutationFn: (alertId: number) => apiRequest(`/api/alerts/${alertId}/escalate`, "PATCH"),
+    mutationFn: (alertId: number) => apiRequest("PATCH", `/api/alerts/${alertId}/escalate`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
@@ -45,7 +45,7 @@ export default function AlertsManager({ onClose }: AlertsManagerProps) {
   });
 
   const acknowledgeAlertMutation = useMutation({
-    mutationFn: (alertId: number) => apiRequest(`/api/alerts/${alertId}/acknowledge`, "PATCH"),
+    mutationFn: (alertId: number) => apiRequest("PATCH", `/api/alerts/${alertId}/acknowledge`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
