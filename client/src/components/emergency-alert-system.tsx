@@ -320,10 +320,7 @@ export default function EmergencyAlertSystem({
             
             <div className="flex gap-4 justify-center">
               <Button
-                onClick={() => {
-                  closeAlertMutation.mutate(activeAlert.id);
-                  onAlertDismiss(); // Immediately close the alert window
-                }}
+                onClick={() => closeAlertMutation.mutate(activeAlert.id)}
                 variant="secondary"
                 size="lg"
                 className="bg-white/20 text-white border-white/30 hover:bg-white/30"
