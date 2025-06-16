@@ -172,6 +172,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Close alert
+  app.patch("/api/alerts/:id/close", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const alert = await storage.closeAlert(id);
+      if (!alert) {
+        res.status(404).json({ error: "Alert not found" });
+        return;
+      }
+      res.json(alert);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to close alert" });
+    }
+  });
+
+  // Clear alert
+  app.patch("/api/alerts/:id/clear", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const alert = await storage.clearAlert(id);
+      if (!alert) {
+        res.status(404).json({ error: "Alert not found" });
+        return;
+      }
+      res.json(alert);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to clear alert" });
+    }
+  });
+
   // Update route aesthetics
   app.patch("/api/routes/:id", async (req, res) => {
     try {

@@ -50,12 +50,14 @@ export const alerts = pgTable("alerts", {
   priority: text("priority").notNull().default("P3"), // P1, P2, P3, P4, P5
   severity: text("severity").notNull().default("medium"), // low, medium, high, critical
   isActive: boolean("is_active").notNull().default(true),
+  status: text("status").notNull().default("open"), // open, closed, cleared
   driverName: text("driver_name"),
   driverNumber: text("driver_number"),
   lastStopId: integer("last_stop_id"),
   nextStopId: integer("next_stop_id"),
   zoneNumber: text("zone_number"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  timestamp: timestamp("timestamp").notNull().defaultNow(),
 });
 
 export const routeStations = pgTable("route_stations", {
