@@ -51,34 +51,43 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         { x: mapWidth * 0.20, y: mapHeight * 0.30 }, // Super
         { x: mapWidth * 0.18, y: mapHeight * 0.28 }  // Abule Egba
       ],
-      2: [ // Route 2: Abule Egba - TBS/Obalende (Full north-south-central)
-        { x: mapWidth * 0.18, y: mapHeight * 0.28 }, // Abule Egba
-        { x: mapWidth * 0.20, y: mapHeight * 0.30 }, // Super
+      2: [ // Route 2: Abule Egba - Lekki Phase 2 Terminal (Complete north-south-east)
+        { x: mapWidth * 0.18, y: mapHeight * 0.28 }, // Abule Egba Terminal
         { x: mapWidth * 0.22, y: mapHeight * 0.32 }, // Ile Epo
-        { x: mapWidth * 0.24, y: mapHeight * 0.34 }, // Pleasure
-        { x: mapWidth * 0.26, y: mapHeight * 0.36 }, // Iyana Ipaja Bus stop
-        { x: mapWidth * 0.28, y: mapHeight * 0.38 }, // Adealu
-        { x: mapWidth * 0.30, y: mapHeight * 0.40 }, // Iyana Dopemu
-        { x: mapWidth * 0.32, y: mapHeight * 0.42 }, // Cement
-        { x: mapWidth * 0.34, y: mapHeight * 0.44 }, // Mangoro
-        { x: mapWidth * 0.36, y: mapHeight * 0.46 }, // Ile Zik
-        { x: mapWidth * 0.38, y: mapHeight * 0.48 }, // Ikeja Along
-        { x: mapWidth * 0.40, y: mapHeight * 0.50 }, // Airport Junction
-        { x: mapWidth * 0.42, y: mapHeight * 0.52 }, // PWD
-        { x: mapWidth * 0.44, y: mapHeight * 0.54 }, // Shogunle
-        { x: mapWidth * 0.46, y: mapHeight * 0.56 }, // Ladipo
-        { x: mapWidth * 0.48, y: mapHeight * 0.58 }, // Bolade
-        { x: mapWidth * 0.50, y: mapHeight * 0.60 }, // Oshodi Terminal 2
-        { x: mapWidth * 0.52, y: mapHeight * 0.62 }, // LASMA
-        { x: mapWidth * 0.54, y: mapHeight * 0.64 }, // Anthony
-        { x: mapWidth * 0.56, y: mapHeight * 0.66 }, // Westex
-        { x: mapWidth * 0.58, y: mapHeight * 0.68 }, // First Pedro
-        { x: mapWidth * 0.60, y: mapHeight * 0.70 }, // Charley Boy
-        { x: mapWidth * 0.62, y: mapHeight * 0.72 }, // Gbagada Phase 1
-        { x: mapWidth * 0.64, y: mapHeight * 0.74 }, // Iyana Oworo
-        { x: mapWidth * 0.66, y: mapHeight * 0.76 }, // Adeniji
-        { x: mapWidth * 0.68, y: mapHeight * 0.78 }, // Obalende
-        { x: mapWidth * 0.70, y: mapHeight * 0.80 }  // CMS Terminal
+        { x: mapWidth * 0.24, y: mapHeight * 0.34 }, // Command
+        { x: mapWidth * 0.26, y: mapHeight * 0.36 }, // Canaan Land
+        { x: mapWidth * 0.28, y: mapHeight * 0.38 }, // Iyana Ipaja
+        { x: mapWidth * 0.30, y: mapHeight * 0.40 }, // Alimosho
+        { x: mapWidth * 0.32, y: mapHeight * 0.42 }, // Iyana Dopemu
+        { x: mapWidth * 0.34, y: mapHeight * 0.44 }, // Agege
+        { x: mapWidth * 0.36, y: mapHeight * 0.46 }, // Pen Cinema
+        { x: mapWidth * 0.38, y: mapHeight * 0.48 }, // Ogba
+        { x: mapWidth * 0.40, y: mapHeight * 0.50 }, // Berger
+        { x: mapWidth * 0.42, y: mapHeight * 0.52 }, // Ketu
+        { x: mapWidth * 0.44, y: mapHeight * 0.54 }, // Ojota
+        { x: mapWidth * 0.46, y: mapHeight * 0.56 }, // Ogudu
+        { x: mapWidth * 0.48, y: mapHeight * 0.58 }, // Palmgroove
+        { x: mapWidth * 0.50, y: mapHeight * 0.60 }, // Yaba
+        { x: mapWidth * 0.52, y: mapHeight * 0.62 }, // Jibowu
+        { x: mapWidth * 0.54, y: mapHeight * 0.64 }, // Oyingbo
+        { x: mapWidth * 0.56, y: mapHeight * 0.66 }, // Ebute Metta
+        { x: mapWidth * 0.58, y: mapHeight * 0.68 }, // National Theatre
+        { x: mapWidth * 0.60, y: mapHeight * 0.70 }, // Costain
+        { x: mapWidth * 0.62, y: mapHeight * 0.72 }, // Alaka
+        { x: mapWidth * 0.64, y: mapHeight * 0.74 }, // Iponri
+        { x: mapWidth * 0.66, y: mapHeight * 0.76 }, // Stadium
+        { x: mapWidth * 0.68, y: mapHeight * 0.78 }, // Lagos Island
+        { x: mapWidth * 0.70, y: mapHeight * 0.80 }, // CMS
+        { x: mapWidth * 0.72, y: mapHeight * 0.82 }, // TBS Terminal
+        { x: mapWidth * 0.74, y: mapHeight * 0.84 }, // Obalende
+        { x: mapWidth * 0.76, y: mapHeight * 0.86 }, // Falomo
+        { x: mapWidth * 0.78, y: mapHeight * 0.88 }, // Ikoyi
+        { x: mapWidth * 0.80, y: mapHeight * 0.90 }, // Victoria Island
+        { x: mapWidth * 0.82, y: mapHeight * 0.92 }, // Admiralty Way
+        { x: mapWidth * 0.84, y: mapHeight * 0.94 }, // Lekki Phase 1
+        { x: mapWidth * 0.86, y: mapHeight * 0.96 }, // Lekki Toll Gate
+        { x: mapWidth * 0.88, y: mapHeight * 0.98 }, // Chevron
+        { x: mapWidth * 0.90, y: mapHeight * 1.00 }  // Lekki Phase 2 Terminal
       ],
       3: [ // Route 3: Ikorodu - TBS (Southwest to Central)
         { x: mapWidth * 0.15, y: mapHeight * 0.85 }, // Ikorodu Terminal
