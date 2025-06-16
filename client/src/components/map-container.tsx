@@ -192,18 +192,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     const points = getRoutePoints(route.id);
     const isHighlighted = selectedRoutes.includes(route.id);
     
-    // Debug routing props
-    console.log(`Rendering route ${route.id}: showRoutes=${showRoutes}, selectedRoutes=${JSON.stringify(selectedRoutes)}, routesLength=${routes.length}`);
-    
     if (points.length < 2) return null;
-
-    // Debug Route 1 SVG path and viewport bounds
-    if (route.id === 1) {
-      const pathString = points.map(p => `${p.x},${p.y}`).join(' ');
-      console.log(`Route 1 SVG path: ${pathString.substring(0, 100)}...`);
-      console.log(`Route 1 SVG properties: stroke=${route.color}, strokeWidth=${route.lineWidth || 6}, opacity=${route.opacity || 1}`);
-      console.log(`Viewport bounds: ${mapWidth}x${mapHeight}, First point: ${points[0].x},${points[0].y}`);
-    }
     
 
 
@@ -306,24 +295,12 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 />
               )}
 
-              {/* Test circle for Route 1 to verify SVG coordinates */}
-              {route.id === 1 && (
-                <circle
-                  cx="500"
-                  cy="400" 
-                  r="20"
-                  fill="purple"
-                  stroke="yellow"
-                  strokeWidth="3"
-                />
-              )}
-
               {/* Main route line */}
               <polyline
                 points={offsetPoints.map(p => `${p.x},${p.y}`).join(' ')}
                 fill="none"
-                stroke={route.id === 1 ? "#00FF00" : strokeColor} // Force green for Route 1 debugging
-                strokeWidth={route.id === 1 ? 50 : lineWidth} // Force thick line for Route 1
+                stroke={strokeColor}
+                strokeWidth={lineWidth}
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeDasharray={getStrokePattern()}
@@ -604,25 +581,13 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
           </defs>
           <rect width="100%" height="100%" fill="url(#grid)" />
           
-          {/* Route Lines - moved inside main SVG */}
-          {(() => {
-            console.log(`Route rendering: showRoutes=${showRoutes}, routes.length=${routes.length}, selectedRoutes=${JSON.stringify(selectedRoutes)}`);
-            const filteredRoutes = routes.filter(route => selectedRoutes.length === 0 || selectedRoutes.includes(route.id));
-            console.log(`Filtered routes: ${filteredRoutes.map(r => r.id).join(',')}`);
-            return showRoutes && filteredRoutes.map((route, index) => renderRouteLine(route, index));
-          })()}
+          {/* Route Lines */}
+          {showRoutes && routes
+            .filter(route => selectedRoutes.length === 0 || selectedRoutes.includes(route.id))
+            .map((route, index) => renderRouteLine(route, index))}
         </svg>
 
-        {/* Test visible element */}
-        <svg
-          width={mapWidth}
-          height={mapHeight}
-          className="absolute inset-0 pointer-events-none"
-          style={{ zIndex: 1000 }}
-        >
-          <circle cx="100" cy="100" r="30" fill="red" stroke="yellow" strokeWidth="5" />
-          <text x="150" y="110" fill="blue" fontSize="20" fontWeight="bold">TEST VISIBLE</text>
-        </svg>
+
 
         {/* Major Interchange Stations - London Underground style */}
         {(() => {
