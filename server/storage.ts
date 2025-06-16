@@ -288,7 +288,7 @@ export class MemStorage implements IStorage {
           isActive: true,
           driverName: bus.driverName,
           driverNumber: bus.driverPhone,
-          location: `${bus.currentX}, ${bus.currentY}`,
+
           estimatedResolution: new Date(Date.now() + Math.random() * 3600000),
           createdAt: new Date(),
           timestamp: new Date()

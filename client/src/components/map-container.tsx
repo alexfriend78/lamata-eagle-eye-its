@@ -261,14 +261,14 @@ export default function MapContainer({
         {/* Stations Layer */}
         {showStations && (
           <div className="absolute inset-0" style={{ zIndex: 3 }}>
-            {(selectedRoutes.length > 0 ? routeStations : stations)
-              .map((station) => (
+            {(Array.isArray(stations) ? stations : [])
+              .map((station: any) => (
                 <div
                   key={station.id}
                   className="absolute cursor-pointer transition-all duration-200 hover:scale-110"
                   style={{
-                    left: `${station.x * mapWidth}px`,
-                    top: `${station.y * mapHeight}px`,
+                    left: `${station.x}px`,
+                    top: `${station.y}px`,
                     transform: 'translate(-50%, -50%)',
                   }}
                   onClick={() => onStationClick?.(station)}
@@ -319,10 +319,10 @@ export default function MapContainer({
                     key={bus.id}
                     className="absolute cursor-pointer transition-all duration-200 hover:scale-110"
                     style={{
-                      left: `${bus.currentX * mapWidth}px`,
-                      top: `${bus.currentY * mapHeight}px`,
+                      left: `${bus.currentX}px`,
+                      top: `${bus.currentY}px`,
                       transform: 'translate(-50%, -50%)',
-                      filter: bus.status === "off-route" 
+                      filter: bus.status === "delayed" 
                         ? `drop-shadow(0 0 ${12 * glowIntensity}px rgba(239, 68, 68, ${glowIntensity}))` 
                         : hasEmergencyAlert 
                         ? 'drop-shadow(0 0 15px rgba(59, 130, 246, 0.8))' 
@@ -333,9 +333,7 @@ export default function MapContainer({
                     onClick={() => handleBusClick(bus)}
                   >
                     <BusIcon 
-                      bus={bus} 
-                      isEmergency={hasEmergencyAlert}
-                      theme={theme}
+                      bus={bus}
                     />
                     
                     {/* Driver video feed overlay */}
@@ -427,7 +425,7 @@ export default function MapContainer({
                       size="sm"
                       variant="ghost"
                       onClick={() => {
-                        setDismissedAlerts(prev => new Set([...prev, geofencingAlert.busId]));
+                        setDismissedAlerts(prev => new Set([...Array.from(prev), geofencingAlert.busId]));
                         setGeofencingAlert(null);
                       }}
                       className="text-xs"
