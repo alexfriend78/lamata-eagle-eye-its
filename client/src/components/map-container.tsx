@@ -568,33 +568,45 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             {(() => {
               const roads = [];
               
-              // Major A-roads and arterials (based on actual London road network)
+              // Major A-roads and arterials (extended to cover entire screen)
               const majorRoads = [
-                // A4 - Great West Road
-                "M0,380 L200,375 L400,370 L600,368 L800,365 L1000,362 L1200,360",
-                // A40 - Western Avenue / Oxford Street
-                "M0,320 L180,315 L360,312 L540,310 L720,308 L900,305 L1080,302 L1200,300",
-                // A1 - Great North Road
-                "M600,0 L595,150 L590,300 L585,450 L580,600 L575,750",
-                // A3 - Kingston Road / Old Kent Road
-                "M400,0 L420,180 L440,360 L460,540 L480,720",
-                // A205 - South Circular
-                "M50,500 Q200,520 350,515 Q500,510 650,515 Q800,520 950,515 Q1100,510 1150,520",
-                // A406 - North Circular
-                "M100,200 Q250,180 400,185 Q550,190 700,185 Q850,180 1000,185 Q1100,190 1150,180",
-                // M25 orbital (partial)
-                "M50,100 Q300,80 550,85 Q800,90 1050,85 Q1150,80 1200,90",
-                "M50,650 Q300,670 550,665 Q800,660 1050,665 Q1150,670 1200,660",
-                // East-West connectors
-                "M0,250 L1200,255",
-                "M0,450 L1200,455",
-                // Radial roads from center
-                "M600,300 L200,150",
-                "M600,300 L1000,150",
-                "M600,300 L200,450",
-                "M600,300 L1000,450",
-                "M600,300 L400,600",
-                "M600,300 L800,600"
+                // A4 - Great West Road (extended)
+                "M0,380 L200,375 L400,370 L600,368 L800,365 L1000,362 L1200,360 L1400,358",
+                // A40 - Western Avenue / Oxford Street (extended)
+                "M0,320 L180,315 L360,312 L540,310 L720,308 L900,305 L1080,302 L1200,300 L1400,298",
+                // A1 - Great North Road (extended)
+                "M600,0 L595,120 L590,240 L585,360 L580,480 L575,600 L570,720 L565,800",
+                // A3 - Kingston Road / Old Kent Road (extended)
+                "M400,0 L410,120 L420,240 L430,360 L440,480 L450,600 L460,720 L470,800",
+                // A205 - South Circular (extended)
+                "M0,500 Q150,520 300,515 Q450,510 600,515 Q750,520 900,515 Q1050,510 1200,520 Q1350,515 1400,520",
+                // A406 - North Circular (extended)
+                "M0,200 Q150,180 300,185 Q450,190 600,185 Q750,180 900,185 Q1050,190 1200,180 Q1350,185 1400,180",
+                // M25 orbital (extended)
+                "M0,100 Q200,80 400,85 Q600,90 800,85 Q1000,80 1200,90 Q1300,85 1400,90",
+                "M0,650 Q200,670 400,665 Q600,660 800,665 Q1000,670 1200,660 Q1300,665 1400,660",
+                "M0,750 Q200,770 400,765 Q600,760 800,765 Q1000,770 1200,760 Q1300,765 1400,760",
+                // East-West connectors (full screen width)
+                "M0,150 L1400,155",
+                "M0,250 L1400,255",
+                "M0,350 L1400,355",
+                "M0,450 L1400,455",
+                "M0,550 L1400,555",
+                // Radial roads from center (extended)
+                "M600,300 L0,50",
+                "M600,300 L1400,50",
+                "M600,300 L0,550",
+                "M600,300 L1400,550",
+                "M600,300 L200,800",
+                "M600,300 L1000,800",
+                "M600,300 L100,0",
+                "M600,300 L1300,0",
+                // Additional major routes
+                "M0,50 L1400,60",
+                "M0,700 L1400,710",
+                "M200,0 L220,800",
+                "M800,0 L820,800",
+                "M1000,0 L1020,800"
               ];
               
               majorRoads.forEach((path, index) => {
@@ -603,40 +615,58 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                     key={`major-${index}`}
                     d={path}
                     fill="none"
-                    stroke={theme === 'dark' ? '#4b5563' : '#d1d5db'}
+                    stroke="#dc2626"
                     strokeWidth="2.5"
                     opacity="0.8"
                   />
                 );
               });
               
-              // B-roads and minor arterials
+              // B-roads and minor arterials (extended to cover entire screen)
               const minorRoads = [
-                // Grid pattern in central London
-                "M200,200 L1000,205",
-                "M150,250 L1050,255",
-                "M180,350 L1020,355",
-                "M220,400 L980,405",
-                "M160,500 L1040,505",
-                "M190,550 L1010,555",
-                // North-South connectors
-                "M300,100 L320,650",
-                "M500,80 L520,670",
-                "M700,90 L720,660",
-                "M900,85 L920,665",
-                // Diagonal connectors
-                "M150,150 L850,550",
-                "M250,550 L950,150",
-                "M100,400 L500,200",
-                "M700,200 L1100,400",
-                // Inner ring roads
-                "M300,250 Q600,230 900,250 Q600,270 300,250",
-                "M250,400 Q600,380 950,400 Q600,420 250,400",
-                // Additional connectors
-                "M400,150 L600,350 L800,150",
-                "M200,300 L600,500 L1000,300",
-                "M350,100 L450,300 L550,100",
-                "M650,100 L750,300 L850,100"
+                // Grid pattern covering full screen width
+                "M0,200 L1400,205",
+                "M0,240 L1400,245",
+                "M0,280 L1400,285",
+                "M0,400 L1400,405",
+                "M0,440 L1400,445",
+                "M0,480 L1400,485",
+                "M0,520 L1400,525",
+                "M0,560 L1400,565",
+                "M0,600 L1400,605",
+                "M0,640 L1400,645",
+                // North-South connectors covering full screen height
+                "M150,0 L170,800",
+                "M250,0 L270,800",
+                "M350,0 L370,800",
+                "M450,0 L470,800",
+                "M550,0 L570,800",
+                "M650,0 L670,800",
+                "M750,0 L770,800",
+                "M850,0 L870,800",
+                "M950,0 L970,800",
+                "M1050,0 L1070,800",
+                "M1150,0 L1170,800",
+                "M1250,0 L1270,800",
+                "M1350,0 L1370,800",
+                // Diagonal connectors across full screen
+                "M0,0 L1400,800",
+                "M0,800 L1400,0",
+                "M0,200 L1400,600",
+                "M0,600 L1400,200",
+                "M200,0 L1200,800",
+                "M200,800 L1200,0",
+                // Inner ring roads (extended)
+                "M100,250 Q700,230 1300,250 Q700,270 100,250",
+                "M100,400 Q700,380 1300,400 Q700,420 100,400",
+                "M100,550 Q700,530 1300,550 Q700,570 100,550",
+                // Additional cross connectors
+                "M0,120 L1400,125",
+                "M0,180 L1400,185",
+                "M0,580 L1400,585",
+                "M0,620 L1400,625",
+                "M0,680 L1400,685",
+                "M0,720 L1400,725"
               ];
               
               minorRoads.forEach((path, index) => {
@@ -645,28 +675,40 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                     key={`minor-${index}`}
                     d={path}
                     fill="none"
-                    stroke={theme === 'dark' ? '#374151' : '#e5e7eb'}
+                    stroke="#dc2626"
                     strokeWidth="1.5"
                     opacity="0.6"
                   />
                 );
               });
               
-              // Local streets and residential roads
+              // Local streets and residential roads (covering entire screen)
               const localStreets = [
-                // Dense grid in central areas
-                ...Array.from({length: 15}, (_, i) => `M${150 + i * 60},150 L${150 + i * 60},550`),
-                ...Array.from({length: 8}, (_, i) => `M200,${200 + i * 50} L900,${200 + i * 50}`),
-                // Curved residential streets
-                "M100,180 Q300,160 500,180 Q700,200 900,180",
-                "M120,220 Q320,200 520,220 Q720,240 920,220",
-                "M140,420 Q340,400 540,420 Q740,440 940,420",
-                "M160,460 Q360,440 560,460 Q760,480 960,460",
-                // Connecting local roads
-                "M250,180 L350,280 L450,180",
-                "M550,180 L650,280 L750,180",
-                "M250,420 L350,520 L450,420",
-                "M550,420 L650,520 L750,420"
+                // Dense vertical grid covering full screen
+                ...Array.from({length: 35}, (_, i) => `M${50 + i * 40},0 L${50 + i * 40},800`),
+                // Dense horizontal grid covering full screen  
+                ...Array.from({length: 25}, (_, i) => `M0,${50 + i * 30} L1400,${50 + i * 30}`),
+                // Curved residential streets across screen
+                "M0,80 Q350,60 700,80 Q1050,100 1400,80",
+                "M0,130 Q350,110 700,130 Q1050,150 1400,130",
+                "M0,220 Q350,200 700,220 Q1050,240 1400,220",
+                "M0,270 Q350,250 700,270 Q1050,290 1400,270",
+                "M0,360 Q350,340 700,360 Q1050,380 1400,360",
+                "M0,410 Q350,390 700,410 Q1050,430 1400,410",
+                "M0,460 Q350,440 700,460 Q1050,480 1400,460",
+                "M0,510 Q350,490 700,510 Q1050,530 1400,510",
+                "M0,570 Q350,550 700,570 Q1050,590 1400,570",
+                "M0,630 Q350,610 700,630 Q1050,650 1400,630",
+                "M0,690 Q350,670 700,690 Q1050,710 1400,690",
+                "M0,740 Q350,720 700,740 Q1050,760 1400,740",
+                // Zigzag connecting local roads across screen
+                "M0,100 L200,200 L400,100 L600,200 L800,100 L1000,200 L1200,100 L1400,200",
+                "M0,300 L200,400 L400,300 L600,400 L800,300 L1000,400 L1200,300 L1400,400",
+                "M0,500 L200,600 L400,500 L600,600 L800,500 L1000,600 L1200,500 L1400,600",
+                "M0,700 L200,780 L400,700 L600,780 L800,700 L1000,780 L1200,700 L1400,780",
+                // Additional residential connectors
+                "M100,0 L150,800", "M300,0 L350,800", "M500,0 L550,800", 
+                "M700,0 L750,800", "M900,0 L950,800", "M1100,0 L1150,800", "M1300,0 L1350,800"
               ];
               
               localStreets.forEach((path, index) => {
@@ -675,7 +717,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                     key={`local-${index}`}
                     d={path}
                     fill="none"
-                    stroke={theme === 'dark' ? '#1f2937' : '#f3f4f6'}
+                    stroke="#dc2626"
                     strokeWidth="0.8"
                     opacity="0.4"
                   />
