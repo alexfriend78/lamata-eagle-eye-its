@@ -168,7 +168,7 @@ export class MemStorage implements IStorage {
       { name: "Marina", x: 0.86, y: 0.65, zone: 2, routeId: 2 },
       { name: "Victoria Island Terminal", x: 0.90, y: 0.65, zone: 3, routeId: 2 },
 
-      // Route 3: Straight segments only stations - Ikorodu to TBS
+      // Route 3: Diagonal segments only stations - no 90-degree angles
       // Segment 1 stations: Northeast diagonal
       { name: "Ikorodu Terminal", x: 0.15, y: 0.85, zone: 4, routeId: 3 },
       { name: "Benson", x: 0.20, y: 0.80, zone: 4, routeId: 3 },
@@ -176,29 +176,31 @@ export class MemStorage implements IStorage {
       { name: "Mile 12", x: 0.30, y: 0.70, zone: 3, routeId: 3 },
       { name: "Ketu Junction", x: 0.35, y: 0.65, zone: 3, routeId: 3 },
       
-      // Segment 2 stations: East straight
-      { name: "Ojota", x: 0.40, y: 0.65, zone: 2, routeId: 3 },
-      { name: "Maryland", x: 0.45, y: 0.65, zone: 2, routeId: 3 },
-      { name: "Anthony", x: 0.50, y: 0.65, zone: 2, routeId: 3 },
-      { name: "Gbagada", x: 0.55, y: 0.65, zone: 2, routeId: 3 },
+      // Segment 2 stations: Southeast diagonal
+      { name: "Ojota", x: 0.40, y: 0.62, zone: 2, routeId: 3 },
+      { name: "Maryland", x: 0.45, y: 0.59, zone: 2, routeId: 3 },
+      { name: "Anthony", x: 0.50, y: 0.57, zone: 2, routeId: 3 },
+      { name: "Gbagada", x: 0.55, y: 0.55, zone: 2, routeId: 3 },
       
-      // Segment 3 stations: North straight
-      { name: "Palmgroove", x: 0.55, y: 0.60, zone: 2, routeId: 3 },
-      { name: "Yaba", x: 0.55, y: 0.55, zone: 2, routeId: 3 },
-      { name: "Jibowu", x: 0.55, y: 0.50, zone: 2, routeId: 3 },
-      { name: "Mushin", x: 0.55, y: 0.45, zone: 2, routeId: 3 },
+      // Segment 3 stations: Northeast diagonal
+      { name: "Palmgroove", x: 0.58, y: 0.52, zone: 2, routeId: 3 },
+      { name: "Yaba", x: 0.61, y: 0.49, zone: 2, routeId: 3 },
+      { name: "Jibowu", x: 0.64, y: 0.46, zone: 2, routeId: 3 },
+      { name: "Mushin", x: 0.67, y: 0.43, zone: 2, routeId: 3 },
+      { name: "Ikeja", x: 0.70, y: 0.40, zone: 2, routeId: 3 },
       
-      // Segment 4 stations: East straight
-      { name: "Papa Ajao", x: 0.60, y: 0.45, zone: 2, routeId: 3 },
-      { name: "Ikeja", x: 0.65, y: 0.45, zone: 2, routeId: 3 },
-      { name: "Allen", x: 0.70, y: 0.45, zone: 2, routeId: 3 },
-      { name: "Computer Village", x: 0.75, y: 0.45, zone: 2, routeId: 3 },
+      // Segment 4 stations: Northwest diagonal
+      { name: "Allen", x: 0.67, y: 0.37, zone: 2, routeId: 3 },
+      { name: "Computer Village", x: 0.64, y: 0.34, zone: 2, routeId: 3 },
+      { name: "Papa Ajao", x: 0.61, y: 0.31, zone: 2, routeId: 3 },
+      { name: "Stadium", x: 0.58, y: 0.28, zone: 2, routeId: 3 },
+      { name: "Surulere", x: 0.55, y: 0.25, zone: 2, routeId: 3 },
       
-      // Segment 5 stations: South straight
-      { name: "Stadium", x: 0.75, y: 0.40, zone: 2, routeId: 3 },
-      { name: "Surulere", x: 0.75, y: 0.35, zone: 2, routeId: 3 },
-      { name: "National Theatre", x: 0.75, y: 0.30, zone: 2, routeId: 3 },
-      { name: "Tafawa Balewa Square", x: 0.75, y: 0.25, zone: 2, routeId: 3 },
+      // Segment 5 stations: Southeast diagonal to terminal
+      { name: "National Theatre", x: 0.60, y: 0.21, zone: 2, routeId: 3 },
+      { name: "Lagos Island", x: 0.65, y: 0.18, zone: 2, routeId: 3 },
+      { name: "Tafawa Balewa Square", x: 0.70, y: 0.16, zone: 2, routeId: 3 },
+      { name: "Marina Terminal", x: 0.75, y: 0.15, zone: 2, routeId: 3 },
 
       // Route 4: Realistic Lagos BRT stations - Ikorodu to Victoria Island
       // Segment 1 stations: Northeast from Ikorodu towards Mile 12
@@ -823,22 +825,22 @@ export class MemStorage implements IStorage {
         // Segment 7: Final east stretch
         { x: 0.90, y: 0.65 }
       ],
-      3: [ // Route 3: Straight segments only - Ikorodu to TBS
+      3: [ // Route 3: Diagonal segments only - no 90-degree angles
         // Segment 1: Northeast diagonal
         { x: 0.15, y: 0.85 },
         { x: 0.35, y: 0.65 },
         
-        // Segment 2: East straight
-        { x: 0.55, y: 0.65 },
+        // Segment 2: Southeast diagonal
+        { x: 0.55, y: 0.55 },
         
-        // Segment 3: North straight
-        { x: 0.55, y: 0.45 },
+        // Segment 3: Northeast diagonal
+        { x: 0.70, y: 0.40 },
         
-        // Segment 4: East straight
-        { x: 0.75, y: 0.45 },
+        // Segment 4: Northwest diagonal
+        { x: 0.55, y: 0.25 },
         
-        // Segment 5: South straight
-        { x: 0.75, y: 0.25 }
+        // Segment 5: Southeast diagonal to terminal
+        { x: 0.75, y: 0.15 }
       ],
       4: [ // Route 4: Realistic Lagos BRT - Ikorodu to Victoria Island
         // Segment 1: Northeast from Ikorodu towards Mile 12
