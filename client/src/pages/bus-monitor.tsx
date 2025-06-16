@@ -318,8 +318,8 @@ export default function BusMonitor() {
                                 </span>
                               </div>
                               <p className="font-medium">{alert.message}</p>
-                              {alert.busNumber && (
-                                <p className="text-sm text-gray-600">Bus: {alert.busNumber}</p>
+                              {alert.bus && (
+                                <p className="text-sm text-gray-600">Bus: {alert.bus.busNumber}</p>
                               )}
                               {alert.driverName && (
                                 <p className="text-sm text-gray-600">Driver: {alert.driverName}</p>
@@ -375,8 +375,8 @@ export default function BusMonitor() {
                                 </span>
                               </div>
                               <p className="font-medium">{alert.message}</p>
-                              {alert.busNumber && (
-                                <p className="text-sm text-gray-600">Bus: {alert.busNumber}</p>
+                              {alert.bus && (
+                                <p className="text-sm text-gray-600">Bus: {alert.bus.busNumber}</p>
                               )}
                             </div>
                             <div className="flex gap-2">
@@ -413,8 +413,8 @@ export default function BusMonitor() {
                                 </span>
                               </div>
                               <p className="font-medium">{alert.message}</p>
-                              {alert.busNumber && (
-                                <p className="text-sm text-gray-600">Bus: {alert.busNumber}</p>
+                              {alert.bus && (
+                                <p className="text-sm text-gray-600">Bus: {alert.bus.busNumber}</p>
                               )}
                             </div>
                           </div>
