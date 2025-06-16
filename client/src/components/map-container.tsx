@@ -603,6 +603,14 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid)" />
+          
+          {/* Route Lines - moved inside main SVG */}
+          {(() => {
+            console.log(`Route rendering: showRoutes=${showRoutes}, routes.length=${routes.length}, selectedRoutes=${JSON.stringify(selectedRoutes)}`);
+            const filteredRoutes = routes.filter(route => selectedRoutes.length === 0 || selectedRoutes.includes(route.id));
+            console.log(`Filtered routes: ${filteredRoutes.map(r => r.id).join(',')}`);
+            return showRoutes && filteredRoutes.map((route, index) => renderRouteLine(route, index));
+          })()}
         </svg>
 
         {/* Test visible element */}
@@ -615,14 +623,6 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
           <circle cx="100" cy="100" r="30" fill="red" stroke="yellow" strokeWidth="5" />
           <text x="150" y="110" fill="blue" fontSize="20" fontWeight="bold">TEST VISIBLE</text>
         </svg>
-
-        {/* Route Lines */}
-        {(() => {
-          console.log(`Route rendering: showRoutes=${showRoutes}, routes.length=${routes.length}, selectedRoutes=${JSON.stringify(selectedRoutes)}`);
-          const filteredRoutes = routes.filter(route => selectedRoutes.length === 0 || selectedRoutes.includes(route.id));
-          console.log(`Filtered routes: ${filteredRoutes.map(r => r.id).join(',')}`);
-          return showRoutes && filteredRoutes.map((route, index) => renderRouteLine(route, index));
-        })()}
 
         {/* Major Interchange Stations - London Underground style */}
         {(() => {
