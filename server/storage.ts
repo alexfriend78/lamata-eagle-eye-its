@@ -245,8 +245,13 @@ export class DatabaseStorage implements IStorage {
       const id = this.currentBusId++;
       this.buses.set(id, {
         id,
-        lastUpdated: new Date(),
-        ...busData
+        routeId: busData.routeId,
+        busNumber: busData.busNumber,
+        currentX: busData.currentX,
+        currentY: busData.currentY,
+        status: busData.status,
+        direction: busData.direction,
+        lastUpdated: new Date()
       });
     });
 
@@ -266,6 +271,9 @@ export class DatabaseStorage implements IStorage {
         ...alertData
       });
     });
+
+    // Start bus movement simulation
+    setInterval(() => this.simulateBusMovement(), 3000);
   }
 
   // Rest of the interface methods remain the same...
