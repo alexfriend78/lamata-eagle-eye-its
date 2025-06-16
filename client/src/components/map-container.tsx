@@ -920,6 +920,10 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
           .map((bus) => {
             const glowIntensity = getOffRouteGlowIntensity(bus);
             const isOffRoute = bus.status === "off-route";
+            const hasEmergencyAlert = alerts.some(alert => 
+              alert.busId === bus.id && alert.isActive && 
+              (alert.type === 'emergency' || alert.type === 'geofencing' || alert.type === 'escalated_geofencing' || alert.severity === 'high' || alert.priority === 'critical')
+            );
             
             return (
               <div
@@ -935,8 +939,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 onClick={() => handleBusClick(bus)}
                 className="cursor-pointer hover:scale-110 transition-transform"
               >
-                {/* Deep blue pulsing glow effect for off-route buses */}
-                {isOffRoute && (
+                {/* Deep blue pulsing glow effect for emergency alerts and off-route buses */}
+                {(isOffRoute || hasEmergencyAlert) && (
                   <>
                     {/* Main blue glow */}
                     <div
@@ -970,7 +974,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                   bus={bus}
                   alerts={alerts}
                   style={{
-                    filter: isOffRoute ? `drop-shadow(0 0 12px rgba(30, 64, 175, ${0.7 + glowIntensity * 0.3}))` : undefined
+                    filter: (isOffRoute || hasEmergencyAlert) ? `drop-shadow(0 0 12px rgba(30, 64, 175, ${0.7 + glowIntensity * 0.3}))` : undefined
                   }}
                 />
               </div>
