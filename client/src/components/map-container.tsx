@@ -195,6 +195,13 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
 
     
     if (points.length < 2) return null;
+
+    // Debug Route 1 SVG path
+    if (route.id === 1) {
+      const pathString = points.map(p => `${p.x},${p.y}`).join(' ');
+      console.log(`Route 1 SVG path: ${pathString.substring(0, 100)}...`);
+      console.log(`Route 1 SVG properties: stroke=${route.color}, strokeWidth=${route.lineWidth || 6}, opacity=${route.opacity || 1}`);
+    }
     
 
 
@@ -301,8 +308,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
               <polyline
                 points={offsetPoints.map(p => `${p.x},${p.y}`).join(' ')}
                 fill="none"
-                stroke={strokeColor}
-                strokeWidth={lineWidth}
+                stroke={route.id === 1 ? "#00FF00" : strokeColor} // Force green for Route 1 debugging
+                strokeWidth={route.id === 1 ? 50 : lineWidth} // Force thick line for Route 1
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeDasharray={getStrokePattern()}
