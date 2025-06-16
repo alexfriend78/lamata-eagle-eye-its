@@ -216,10 +216,10 @@ export class MemStorage implements IStorage {
 
     // Create buses for each route with direction of travel - 2 buses per route
     const busesData = [
-      // Route 1 buses - positioned on current route coordinates
-      { number: "BRT001", routeId: 1, status: "active", capacity: 70, direction: "Outbound", currentX: 0.385, currentY: 0.58 },
-      { number: "BRT002", routeId: 1, status: "active", capacity: 70, direction: "Inbound", currentX: 0.245, currentY: 0.42 },
-      { number: "BRT009", routeId: 1, status: "delayed", capacity: 70, direction: "Outbound", currentX: 0.325, currentY: 0.50 },
+      // Route 1 buses - positioned on current route coordinates (matching frontend path)
+      { number: "BRT001", routeId: 1, status: "active", capacity: 70, direction: "Outbound", currentX: 0.385, currentY: 0.67 },
+      { number: "BRT002", routeId: 1, status: "active", capacity: 70, direction: "Inbound", currentX: 0.245, currentY: 0.53 },
+      { number: "BRT009", routeId: 1, status: "delayed", capacity: 70, direction: "Outbound", currentX: 0.185, currentY: 0.47 },
       
       // Route 2 buses
       { number: "BRT003", routeId: 2, status: "delayed", capacity: 70, direction: "Southbound" },
@@ -601,23 +601,23 @@ export class MemStorage implements IStorage {
   private getRoutePoints(routeId: number): Array<{x: number, y: number}> {
     // Define the same route paths used in the frontend
     const routePaths: Record<number, Array<{x: number, y: number}>> = {
-      1: [ // Route 1: Oshodi - Abule-Egba (Current positioning at x=0.385)
-        { x: 0.385, y: 0.60 }, // Oshodi Terminal 2
-        { x: 0.385, y: 0.58 }, // Bolade
-        { x: 0.385, y: 0.56 }, // Ladipo
-        { x: 0.385, y: 0.54 }, // Shogunle
-        { x: 0.385, y: 0.52 }, // PWD
-        { x: 0.385, y: 0.50 }, // Airport Junction
-        { x: 0.385, y: 0.48 }, // Ikeja Along
-        { x: 0.385, y: 0.46 }, // Ile Zik
-        { x: 0.385, y: 0.44 }, // Mangoro
-        { x: 0.385, y: 0.42 }, // Cement
-        { x: 0.385, y: 0.40 }, // Iyana Dopemu
-        { x: 0.385, y: 0.38 }, // Adealu
-        { x: 0.385, y: 0.36 }, // Iyana Ipaja Bus stop
-        { x: 0.385, y: 0.34 }, // Pleasure
-        { x: 0.385, y: 0.32 }, // Ile Epo
-        { x: 0.385, y: 0.30 }, // Super
+      1: [ // Route 1: Oshodi - Abule-Egba (matching frontend coordinates)
+        { x: 0.385, y: 0.67 }, // Right of Oshodi Terminal 2
+        { x: 0.365, y: 0.65 }, // Right of Bolade
+        { x: 0.345, y: 0.63 }, // Right of Ladipo
+        { x: 0.325, y: 0.61 }, // Right of Shogunle
+        { x: 0.305, y: 0.59 }, // Right of PWD
+        { x: 0.285, y: 0.57 }, // Right of Airport Junction
+        { x: 0.265, y: 0.55 }, // Right of Ikeja Along
+        { x: 0.245, y: 0.53 }, // Right of Ile Zik
+        { x: 0.225, y: 0.51 }, // Right of Mangoro
+        { x: 0.205, y: 0.49 }, // Right of Cement
+        { x: 0.185, y: 0.47 }, // Right of Iyana Dopemu
+        { x: 0.165, y: 0.45 }, // Right of Adealu
+        { x: 0.145, y: 0.43 }, // Right of Iyana Ipaja Bus stop
+        { x: 0.125, y: 0.41 }, // Right of Pleasure
+        { x: 0.105, y: 0.39 }, // Right of Ile Epo
+        { x: 0.085, y: 0.37 }, // Right of Super
         { x: 0.18, y: 0.28 }  // Abule Egba
       ],
       2: [ // Route 2: Abule Egba - Lekki Phase 2 Terminal (Complete north-south-east)
