@@ -555,177 +555,134 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
       {showBackgroundMap && (
         <svg width={mapWidth} height={mapHeight} className="absolute inset-0" style={{ zIndex: 1 }}>
           <g opacity={backgroundMapOpacity}>
-            {/* Lagos State outline */}
+            {/* Thames River */}
             <path
-              d="M100,150 L200,120 L350,140 L450,160 L500,200 L480,300 L420,350 L300,380 L200,360 L150,300 L100,250 Z"
-              fill="none"
-              stroke={theme === 'dark' ? '#6b7280' : '#9ca3af'}
-              strokeWidth="2"
-            />
-            
-            {/* Lagos Island */}
-            <ellipse
-              cx="1000"
-              cy="400"
-              rx="80"
-              ry="40"
-              fill={theme === 'dark' ? '#374151' : '#f3f4f6'}
-              stroke={theme === 'dark' ? '#6b7280' : '#9ca3af'}
-              strokeWidth="1"
-              opacity="0.3"
-            />
-            
-            {/* Victoria Island */}
-            <ellipse
-              cx="1050"
-              cy="450"
-              rx="60"
-              ry="30"
-              fill={theme === 'dark' ? '#374151' : '#f3f4f6'}
-              stroke={theme === 'dark' ? '#6b7280' : '#9ca3af'}
-              strokeWidth="1"
-              opacity="0.3"
-            />
-            
-            {/* Major waterways - Lagos Lagoon */}
-            <path
-              d="M600,350 Q750,370 900,360 Q1000,350 1100,380"
+              d="M0,350 Q150,330 300,340 Q450,355 600,345 Q750,330 900,340 Q1050,355 1200,350"
               fill="none"
               stroke={theme === 'dark' ? '#1e40af' : '#3b82f6'}
-              strokeWidth="8"
-              opacity="0.3"
+              strokeWidth="12"
+              opacity="0.4"
             />
             
-            {/* Random Road Network */}
+            {/* Central London Road Network */}
             {(() => {
-              // Stable seed for consistent random generation
-              const seed = 12345;
-              let seedValue = seed;
-              const seededRandom = () => {
-                seedValue = (seedValue * 9301 + 49297) % 233280;
-                return seedValue / 233280;
-              };
+              const roads = [];
               
-              const majorRoads = [];
-              const minorRoads = [];
-              
-              // Major road network - primary arterials
-              const majorPoints = [
-                {x: 80, y: 120}, {x: 220, y: 90}, {x: 380, y: 140}, {x: 520, y: 100},
-                {x: 680, y: 160}, {x: 840, y: 130}, {x: 980, y: 150}, {x: 1150, y: 120},
-                {x: 120, y: 280}, {x: 300, y: 250}, {x: 480, y: 290}, {x: 640, y: 260},
-                {x: 800, y: 300}, {x: 970, y: 270}, {x: 1080, y: 310},
-                {x: 100, y: 420}, {x: 270, y: 400}, {x: 440, y: 440}, {x: 600, y: 410},
-                {x: 760, y: 450}, {x: 920, y: 420}, {x: 1100, y: 460},
-                {x: 140, y: 570}, {x: 320, y: 550}, {x: 500, y: 590}, {x: 680, y: 560},
-                {x: 840, y: 600}, {x: 1000, y: 570}, {x: 1140, y: 610}
+              // Major A-roads and arterials (based on actual London road network)
+              const majorRoads = [
+                // A4 - Great West Road
+                "M0,380 L200,375 L400,370 L600,368 L800,365 L1000,362 L1200,360",
+                // A40 - Western Avenue / Oxford Street
+                "M0,320 L180,315 L360,312 L540,310 L720,308 L900,305 L1080,302 L1200,300",
+                // A1 - Great North Road
+                "M600,0 L595,150 L590,300 L585,450 L580,600 L575,750",
+                // A3 - Kingston Road / Old Kent Road
+                "M400,0 L420,180 L440,360 L460,540 L480,720",
+                // A205 - South Circular
+                "M50,500 Q200,520 350,515 Q500,510 650,515 Q800,520 950,515 Q1100,510 1150,520",
+                // A406 - North Circular
+                "M100,200 Q250,180 400,185 Q550,190 700,185 Q850,180 1000,185 Q1100,190 1150,180",
+                // M25 orbital (partial)
+                "M50,100 Q300,80 550,85 Q800,90 1050,85 Q1150,80 1200,90",
+                "M50,650 Q300,670 550,665 Q800,660 1050,665 Q1150,670 1200,660",
+                // East-West connectors
+                "M0,250 L1200,255",
+                "M0,450 L1200,455",
+                // Radial roads from center
+                "M600,300 L200,150",
+                "M600,300 L1000,150",
+                "M600,300 L200,450",
+                "M600,300 L1000,450",
+                "M600,300 L400,600",
+                "M600,300 L800,600"
               ];
               
-              // Connect major points with curved paths
-              for (let i = 0; i < majorPoints.length - 1; i++) {
-                const p1 = majorPoints[i];
-                const p2 = majorPoints[i + 1];
-                
-                // Use seeded randomness for consistent connections
-                const shouldConnect = seededRandom() > 0.3;
-                if (shouldConnect) {
-                  const midX = (p1.x + p2.x) / 2 + (seededRandom() - 0.5) * 100;
-                  const midY = (p1.y + p2.y) / 2 + (seededRandom() - 0.5) * 50;
-                  
-                  majorRoads.push(
-                    <path
-                      key={`major-${i}`}
-                      d={`M${p1.x},${p1.y} Q${midX},${midY} ${p2.x},${p2.y}`}
-                      fill="none"
-                      stroke={theme === 'dark' ? '#4b5563' : '#d1d5db'}
-                      strokeWidth="2"
-                      opacity="0.8"
-                    />
-                  );
-                }
-              }
+              majorRoads.forEach((path, index) => {
+                roads.push(
+                  <path
+                    key={`major-${index}`}
+                    d={path}
+                    fill="none"
+                    stroke={theme === 'dark' ? '#4b5563' : '#d1d5db'}
+                    strokeWidth="2.5"
+                    opacity="0.8"
+                  />
+                );
+              });
               
-              // Add cross-connections between major roads
-              for (let i = 0; i < majorPoints.length; i += 3) {
-                for (let j = i + 2; j < Math.min(i + 6, majorPoints.length); j++) {
-                  const shouldConnect = seededRandom() > 0.6;
-                  if (shouldConnect) {
-                    const p1 = majorPoints[i];
-                    const p2 = majorPoints[j];
-                    const midX = (p1.x + p2.x) / 2 + (seededRandom() - 0.5) * 80;
-                    const midY = (p1.y + p2.y) / 2 + (seededRandom() - 0.5) * 80;
-                    
-                    majorRoads.push(
-                      <path
-                        key={`major-cross-${i}-${j}`}
-                        d={`M${p1.x},${p1.y} Q${midX},${midY} ${p2.x},${p2.y}`}
-                        fill="none"
-                        stroke={theme === 'dark' ? '#4b5563' : '#d1d5db'}
-                        strokeWidth="1.8"
-                        opacity="0.7"
-                      />
-                    );
-                  }
-                }
-              }
+              // B-roads and minor arterials
+              const minorRoads = [
+                // Grid pattern in central London
+                "M200,200 L1000,205",
+                "M150,250 L1050,255",
+                "M180,350 L1020,355",
+                "M220,400 L980,405",
+                "M160,500 L1040,505",
+                "M190,550 L1010,555",
+                // North-South connectors
+                "M300,100 L320,650",
+                "M500,80 L520,670",
+                "M700,90 L720,660",
+                "M900,85 L920,665",
+                // Diagonal connectors
+                "M150,150 L850,550",
+                "M250,550 L950,150",
+                "M100,400 L500,200",
+                "M700,200 L1100,400",
+                // Inner ring roads
+                "M300,250 Q600,230 900,250 Q600,270 300,250",
+                "M250,400 Q600,380 950,400 Q600,420 250,400",
+                // Additional connectors
+                "M400,150 L600,350 L800,150",
+                "M200,300 L600,500 L1000,300",
+                "M350,100 L450,300 L550,100",
+                "M650,100 L750,300 L850,100"
+              ];
               
-              // Minor road network - secondary streets with seeded positions
-              const minorPoints = [];
-              for (let i = 0; i < 150; i++) {
-                minorPoints.push({
-                  x: seededRandom() * mapWidth,
-                  y: seededRandom() * mapHeight
-                });
-              }
+              minorRoads.forEach((path, index) => {
+                roads.push(
+                  <path
+                    key={`minor-${index}`}
+                    d={path}
+                    fill="none"
+                    stroke={theme === 'dark' ? '#374151' : '#e5e7eb'}
+                    strokeWidth="1.5"
+                    opacity="0.6"
+                  />
+                );
+              });
               
-              // Connect nearby minor points
-              for (let i = 0; i < minorPoints.length; i++) {
-                const p1 = minorPoints[i];
-                for (let j = i + 1; j < minorPoints.length; j++) {
-                  const p2 = minorPoints[j];
-                  const distance = Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
-                  
-                  if (distance < 120 && seededRandom() > 0.4) {
-                    minorRoads.push(
-                      <line
-                        key={`minor-${i}-${j}`}
-                        x1={p1.x}
-                        y1={p1.y}
-                        x2={p2.x}
-                        y2={p2.y}
-                        stroke={theme === 'dark' ? '#374151' : '#e5e7eb'}
-                        strokeWidth="1"
-                        opacity="0.6"
-                      />
-                    );
-                  }
-                }
-              }
+              // Local streets and residential roads
+              const localStreets = [
+                // Dense grid in central areas
+                ...Array.from({length: 15}, (_, i) => `M${150 + i * 60},150 L${150 + i * 60},550`),
+                ...Array.from({length: 8}, (_, i) => `M200,${200 + i * 50} L900,${200 + i * 50}`),
+                // Curved residential streets
+                "M100,180 Q300,160 500,180 Q700,200 900,180",
+                "M120,220 Q320,200 520,220 Q720,240 920,220",
+                "M140,420 Q340,400 540,420 Q740,440 940,420",
+                "M160,460 Q360,440 560,460 Q760,480 960,460",
+                // Connecting local roads
+                "M250,180 L350,280 L450,180",
+                "M550,180 L650,280 L750,180",
+                "M250,420 L350,520 L450,420",
+                "M550,420 L650,520 L750,420"
+              ];
               
-              // Connect minor roads to major roads
-              for (let i = 0; i < 80; i++) {
-                const minorIndex = Math.floor(seededRandom() * minorPoints.length);
-                const majorIndex = Math.floor(seededRandom() * majorPoints.length);
-                const minorPoint = minorPoints[minorIndex];
-                const majorPoint = majorPoints[majorIndex];
-                
-                if (seededRandom() > 0.5) {
-                  minorRoads.push(
-                    <line
-                      key={`connector-${i}`}
-                      x1={minorPoint.x}
-                      y1={minorPoint.y}
-                      x2={majorPoint.x}
-                      y2={majorPoint.y}
-                      stroke={theme === 'dark' ? '#374151' : '#e5e7eb'}
-                      strokeWidth="0.8"
-                      opacity="0.5"
-                    />
-                  );
-                }
-              }
+              localStreets.forEach((path, index) => {
+                roads.push(
+                  <path
+                    key={`local-${index}`}
+                    d={path}
+                    fill="none"
+                    stroke={theme === 'dark' ? '#1f2937' : '#f3f4f6'}
+                    strokeWidth="0.8"
+                    opacity="0.4"
+                  />
+                );
+              });
               
-              return [...majorRoads, ...minorRoads];
+              return roads;
             })()}
             
             {/* Major highways */}
