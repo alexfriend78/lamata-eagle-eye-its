@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { AlertTriangle, CheckCircle, XCircle, Clock, Info, ArrowLeft, Monitor } from "lucide-react";
+import { AlertTriangle, CheckCircle, XCircle, Clock, Info, ArrowLeft, Monitor, MapPin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient, apiRequest } from "@/lib/queryClient";
 import type { Route, Bus, Station, AlertWithDetails } from "@shared/schema";
@@ -150,6 +150,15 @@ export default function AlertSimulator() {
       zoneNumber: ZONES[Math.floor(Math.random() * ZONES.length)],
       isActive: true
     };
+
+    // Special handling for geofencing alerts - trigger bus to go off-route
+    if (type === "geofencing" && randomBus) {
+      // Send request to simulate bus going off-route
+      fetch(`/api/buses/${randomBus.id}/simulate-offroute`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      }).catch(console.error);
+    }
 
     createAlertMutation.mutate(alertData);
   };
@@ -435,6 +444,15 @@ export default function AlertSimulator() {
                   >
                     <XCircle className="h-4 w-4 mr-2" />
                     P4 Breakdown Alert
+                  </Button>
+
+                  <Button
+                    onClick={() => handleQuickAlert("geofencing", "P2", "GEOFENCING ALERT: Bus has deviated from designated route")}
+                    className="w-full bg-orange-600 hover:bg-orange-700"
+                    disabled={createAlertMutation.isPending}
+                  >
+                    <MapPin className="h-4 w-4 mr-2" />
+                    P2 Geofencing Alert
                   </Button>
                 </div>
               </CardContent>

@@ -188,6 +188,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Simulate bus going off-route (for geofencing alerts)
+  app.post("/api/buses/:id/simulate-offroute", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const bus = await storage.getBus(id);
+      
+      if (!bus) {
+        res.status(404).json({ error: "Bus not found" });
+        return;
+      }
+
+      // Set bus status to indicate it's off-route
+      await storage.updateBusStatus(id, "off-route");
+      
+      // Simulate bus moving significantly off its designated route
+      if (storage.simulateOffRouteMovement) {
+        (storage as any).simulateOffRouteMovement(id);
+      }
+      
+      res.json({ success: true, message: "Bus simulation started" });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to simulate off-route movement" });
+    }
+  });
+
+  // Return bus to route
+  app.post("/api/buses/:id/return-to-route", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const bus = await storage.getBus(id);
+      
+      if (!bus) {
+        res.status(404).json({ error: "Bus not found" });
+        return;
+      }
+
+      await storage.updateBusStatus(id, "active");
+      
+      if (storage instanceof MemStorage) {
+        (storage as any).returnBusToRoute(id);
+      }
+      
+      res.json({ success: true, message: "Bus returned to route" });
+    } catch (error) {
+      res.status(500).json({ error: "Failed to return bus to route" });
+    }
+  });
+
   // Update bus position (for simulation)
   app.patch("/api/buses/:id/position", async (req, res) => {
     try {

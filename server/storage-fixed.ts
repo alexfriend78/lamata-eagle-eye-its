@@ -524,6 +524,74 @@ export class MemStorage implements IStorage {
     });
   }
 
+  // Simulate bus going off-route for geofencing alerts
+  public simulateOffRouteMovement(busId: number) {
+    const bus = this.buses.get(busId);
+    if (!bus) return;
+
+    // Mark bus as off-route
+    this.buses.set(busId, { ...bus, status: "off-route" });
+
+    // Create interval to move bus away from route
+    const offRouteInterval = setInterval(() => {
+      const currentBus = this.buses.get(busId);
+      if (!currentBus || currentBus.status !== "off-route") {
+        clearInterval(offRouteInterval);
+        return;
+      }
+
+      // Move bus in random direction away from route
+      const randomAngle = Math.random() * 2 * Math.PI;
+      const speed = 0.008; // Faster off-route movement
+      
+      const newX = currentBus.currentX + Math.cos(randomAngle) * speed;
+      const newY = currentBus.currentY + Math.sin(randomAngle) * speed;
+
+      // Keep within bounds
+      const boundedX = Math.max(0.1, Math.min(0.9, newX));
+      const boundedY = Math.max(0.1, Math.min(0.9, newY));
+
+      this.buses.set(busId, {
+        ...currentBus,
+        currentX: boundedX,
+        currentY: boundedY,
+        lastUpdated: new Date()
+      });
+    }, 3000); // Update every 3 seconds for more dramatic effect
+  }
+
+  // Return bus to its designated route
+  public returnBusToRoute(busId: number) {
+    const bus = this.buses.get(busId);
+    if (!bus) return;
+
+    // Find closest route point and snap back to route
+    const routePoints = this.getRoutePoints(bus.routeId);
+    if (routePoints.length === 0) return;
+
+    let closestPoint = routePoints[0];
+    let closestDistance = Infinity;
+
+    routePoints.forEach(point => {
+      const distance = Math.sqrt(
+        Math.pow(point.x - bus.currentX, 2) + Math.pow(point.y - bus.currentY, 2)
+      );
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestPoint = point;
+      }
+    });
+
+    // Snap bus back to closest route point
+    this.buses.set(busId, {
+      ...bus,
+      currentX: closestPoint.x,
+      currentY: closestPoint.y,
+      status: "active",
+      lastUpdated: new Date()
+    });
+  }
+
   async updateBusStatus(id: number, status: string): Promise<Bus | undefined> {
     const bus = this.buses.get(id);
     if (bus) {
