@@ -98,6 +98,20 @@ export default function EmergencyAlertSystem({
     },
   });
 
+  const closeAlertMutation = useMutation({
+    mutationFn: async (alertId: number) => {
+      const response = await fetch(`/api/alerts/${alertId}/close`, {
+        method: "PATCH",
+      });
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
+      onAlertDismiss();
+    },
+  });
+
   const handleSimulateAlert = () => {
     const bus = buses.find(b => b.id === parseInt(selectedBus));
     if (!bus || !alertMessage) return;
@@ -298,13 +312,13 @@ export default function EmergencyAlertSystem({
             
             <div className="flex gap-4 justify-center">
               <Button
-                onClick={() => acknowledgeAlertMutation.mutate(activeAlert.id)}
+                onClick={() => closeAlertMutation.mutate(activeAlert.id)}
                 variant="secondary"
                 size="lg"
                 className="bg-white/20 text-white border-white/30 hover:bg-white/30"
-                disabled={acknowledgeAlertMutation.isPending}
+                disabled={closeAlertMutation.isPending}
               >
-                Acknowledge Alert
+                Close Alert
               </Button>
               
               <Button

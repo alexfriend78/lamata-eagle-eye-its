@@ -8,10 +8,19 @@ interface BusIconProps {
 }
 
 function BusIcon({ bus, style, alerts = [] }: BusIconProps) {
-  // Check if this bus has any active emergency alerts
-  const busAlerts = alerts.filter(alert => alert.busId === bus.id && alert.isActive);
-  const highestPriorityAlert = busAlerts.sort((a, b) => {
-    const priorityOrder = { critical: 3, high: 2, medium: 1, low: 0 };
+  // Check for different alert states
+  const busAlerts = alerts.filter(alert => alert.busId === bus.id);
+  const activeAlerts = busAlerts.filter(alert => alert.isActive);
+  const closedAlerts = busAlerts.filter(alert => alert.status === "closed" && alert.isActive);
+  
+  const highestPriorityAlert = activeAlerts.sort((a, b) => {
+    const priorityOrder = { P1: 5, P2: 4, P3: 3, P4: 2, P5: 1, critical: 5, high: 4, medium: 3, low: 2 };
+    return (priorityOrder[b.priority as keyof typeof priorityOrder] || 0) - 
+           (priorityOrder[a.priority as keyof typeof priorityOrder] || 0);
+  })[0];
+
+  const highestClosedAlert = closedAlerts.sort((a, b) => {
+    const priorityOrder = { P1: 5, P2: 4, P3: 3, P4: 2, P5: 1, critical: 5, high: 4, medium: 3, low: 2 };
     return (priorityOrder[b.priority as keyof typeof priorityOrder] || 0) - 
            (priorityOrder[a.priority as keyof typeof priorityOrder] || 0);
   })[0];
@@ -29,6 +38,12 @@ function BusIcon({ bus, style, alerts = [] }: BusIconProps) {
 
   const getAlertColor = (priority: string) => {
     switch (priority) {
+      case "P1": return "#dc2626"; // red-600 - critical
+      case "P2": return "#ea580c"; // orange-600 - high
+      case "P3": return "#eab308"; // yellow-500 - medium
+      case "P4": return "#3b82f6"; // blue-500 - low
+      case "P5": return "#6b7280"; // gray-500 - very low
+      // Legacy support
       case "critical": return "#dc2626"; // red-600
       case "high": return "#ea580c"; // orange-600
       case "medium": return "#eab308"; // yellow-500
@@ -39,16 +54,22 @@ function BusIcon({ bus, style, alerts = [] }: BusIconProps) {
 
   const isAlertBus = bus.status === "alert";
   const hasEmergencyAlert = highestPriorityAlert !== undefined;
+  const hasClosedAlert = highestClosedAlert !== undefined;
 
   // Determine if bus should show off-route glow or emergency alert glow
   const showOffRouteGlow = bus.status === "off-route";
   const showEmergencyGlow = hasEmergencyAlert;
+  const showClosedAlertGlow = hasClosedAlert;
 
-  // Priority: Emergency alerts override off-route glows
-  const activeGlow = showEmergencyGlow ? "emergency" : showOffRouteGlow ? "off-route" : "none";
+  // Priority: Closed alerts override everything, then emergency alerts, then off-route glows
+  const activeGlow = showClosedAlertGlow ? "closed-alert" : showEmergencyGlow ? "emergency" : showOffRouteGlow ? "off-route" : "none";
 
   const getGlowEffect = () => {
-    if (activeGlow === "emergency" && highestPriorityAlert) {
+    if (activeGlow === "closed-alert" && highestClosedAlert) {
+      // Bright, intense pulsing glow for closed alerts until cleared
+      const color = getAlertColor(highestClosedAlert.priority || "medium");
+      return `drop-shadow(0 0 12px ${color}) drop-shadow(0 0 24px ${color}) drop-shadow(0 0 36px ${color}) drop-shadow(0 0 48px ${color})`;
+    } else if (activeGlow === "emergency" && highestPriorityAlert) {
       const color = getAlertColor(highestPriorityAlert.priority || "medium");
       return `drop-shadow(0 0 8px ${color}) drop-shadow(0 0 16px ${color}) drop-shadow(0 0 24px ${color})`;
     } else if (activeGlow === "off-route") {
