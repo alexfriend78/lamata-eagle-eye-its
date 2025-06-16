@@ -32,7 +32,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   const getRoutePoints = (routeId: number) => {
     // Define routes using dynamic resolution for consistent coverage
     const routePaths: Record<number, { x: number; y: number }[]> = {
-      1: [ // Route 1: Oshodi - Abule-Egba (North-South line)
+      1: [ // Route 1: Oshodi - Abule-Egba (North-South line) - Matches exact station coordinates
         { x: mapWidth * 0.37, y: mapHeight * 0.67 }, // Oshodi Terminal 2
         { x: mapWidth * 0.35, y: mapHeight * 0.65 }, // Bolade
         { x: mapWidth * 0.33, y: mapHeight * 0.63 }, // Ladipo
