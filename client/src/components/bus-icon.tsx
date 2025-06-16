@@ -79,12 +79,11 @@ function BusIcon({ bus, style, alerts = [] }: BusIconProps) {
   };
 
   const shouldPulse = activeGlow !== "none";
+  const pulseAnimation = activeGlow === "closed-alert" ? "animate-pulse-intense" : shouldPulse ? "animate-pulse" : "";
 
   return (
     <div
-      className={`text-2xl transition-all duration-500 ${
-        shouldPulse ? "animate-pulse" : ""
-      }`}
+      className={`text-2xl transition-all duration-500 ${pulseAnimation}`}
       style={{
         ...style,
         color: getBusColor(bus.status),
@@ -92,6 +91,7 @@ function BusIcon({ bus, style, alerts = [] }: BusIconProps) {
         zIndex: 30
       }}
       title={`Bus ${bus.busNumber} - Route ${bus.route.routeNumber} - Direction: ${bus.direction || 'Unknown'} - Status: ${
+        hasClosedAlert ? `Closed Alert (${highestClosedAlert?.priority}) - Awaiting Clearance` :
         hasEmergencyAlert ? `Emergency Alert (${highestPriorityAlert?.priority})` :
         bus.status === "off-route" ? "Off Route" :
         bus.status === "alert" ? "Active (with alerts)" : 
