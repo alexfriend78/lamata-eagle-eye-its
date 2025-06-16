@@ -197,21 +197,6 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     const points = getRoutePoints(route.id);
     const isHighlighted = selectedRoutes.includes(route.id);
     
-    // Debug logging for Route 1
-    if (route.id === 1) {
-      console.log('Route 1 rendering:', { 
-        routeId: route.id, 
-        pointsLength: points.length, 
-        selectedRoutes, 
-        isHighlighted,
-        color: route.color,
-        firstPoint: points[0],
-        lastPoint: points[points.length - 1],
-        routeIndex,
-        offsetDistance: (routeIndex % 5 - 2) * 12
-      });
-    }
-    
     if (points.length < 2) return null;
 
     // Calculate offset for overlapping routes - spread them more
@@ -227,6 +212,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
       return calculatePerpendicularOffset(point, points[i+1], offsetDistance);
     });
 
+
+
     return (
       <svg
         key={route.id}
@@ -235,7 +222,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         height="100%"
         viewBox={`0 0 ${mapWidth} ${mapHeight}`}
         preserveAspectRatio="xMidYMid slice"
-        style={{ zIndex: route.id === 1 ? 100 : 10 + routeIndex }}
+        style={{ zIndex: 10 + routeIndex }}
       >
         {/* Create gradients and filters for aesthetic effects */}
         <defs>
@@ -277,9 +264,9 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
 
           const strokeColor = (route.pattern === "gradient" && route.gradientEnd) 
             ? `url(#gradient-${route.id})` 
-            : (route.id === 1 ? "#FF0000" : route.color); // Make Route 1 bright red for debugging
+            : (route.id === 1 ? "#FF0000" : route.color); // Make Route 1 bright red for visibility
 
-          const lineWidth = route.id === 1 ? 8 : (route.lineWidth || 6);
+          const lineWidth = route.id === 1 ? 8 : (route.lineWidth || 6); // Make Route 1 thicker
           const opacity = route.opacity || (isHighlighted ? 1 : 0.9);
 
           return (
