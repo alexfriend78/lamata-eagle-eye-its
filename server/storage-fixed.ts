@@ -645,7 +645,7 @@ export class MemStorage implements IStorage {
   async closeAlert(id: number): Promise<Alert | undefined> {
     const alert = this.alerts.get(id);
     if (alert) {
-      const updatedAlert = { ...alert, status: "closed" };
+      const updatedAlert = { ...alert, status: "closed", isActive: false };
       this.alerts.set(id, updatedAlert);
       return updatedAlert;
     }
