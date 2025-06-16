@@ -235,7 +235,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         height="100%"
         viewBox={`0 0 ${mapWidth} ${mapHeight}`}
         preserveAspectRatio="xMidYMid slice"
-        style={{ zIndex: 10 + routeIndex }}
+        style={{ zIndex: route.id === 1 ? 100 : 10 + routeIndex }}
       >
         {/* Create gradients and filters for aesthetic effects */}
         <defs>
@@ -277,9 +277,9 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
 
           const strokeColor = (route.pattern === "gradient" && route.gradientEnd) 
             ? `url(#gradient-${route.id})` 
-            : route.color;
+            : (route.id === 1 ? "#FF0000" : route.color); // Make Route 1 bright red for debugging
 
-          const lineWidth = route.lineWidth || 6;
+          const lineWidth = route.id === 1 ? 8 : (route.lineWidth || 6);
           const opacity = route.opacity || (isHighlighted ? 1 : 0.9);
 
           return (
