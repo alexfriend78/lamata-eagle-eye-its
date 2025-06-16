@@ -73,15 +73,54 @@ function BusIcon({ bus, style, alerts = [] }: BusIconProps) {
   // Priority: Closed alerts override everything, then emergency alerts, then acknowledged alerts, then off-route glows
   const activeGlow = showClosedAlertGlow ? "closed-alert" : showEmergencyGlow ? "emergency" : showAcknowledgedAlertGlow ? "acknowledged-alert" : showOffRouteGlow ? "off-route" : "none";
 
+  const getTimeBasedIntensity = (alert: AlertWithDetails) => {
+    const now = new Date();
+    const alertTime = new Date(alert.createdAt);
+    const timeDiffMinutes = (now.getTime() - alertTime.getTime()) / (1000 * 60);
+    
+    // Escalating intensity based on time since alert was created
+    if (timeDiffMinutes < 2) return 1; // First 2 minutes: normal intensity
+    if (timeDiffMinutes < 5) return 1.5; // 2-5 minutes: 50% increase
+    if (timeDiffMinutes < 10) return 2; // 5-10 minutes: 2x intensity
+    if (timeDiffMinutes < 20) return 2.5; // 10-20 minutes: 2.5x intensity
+    return 3; // 20+ minutes: 3x intensity (maximum)
+  };
+
+  const getDeeperColor = (baseColor: string, intensity: number) => {
+    // Convert hex to RGB and make it deeper/more saturated
+    const hex = baseColor.replace('#', '');
+    const r = parseInt(hex.substr(0, 2), 16);
+    const g = parseInt(hex.substr(2, 2), 16);
+    const b = parseInt(hex.substr(4, 2), 16);
+    
+    // Make color deeper by reducing brightness while maintaining saturation
+    const deepR = Math.max(0, Math.floor(r * (0.7 - (intensity - 1) * 0.1)));
+    const deepG = Math.max(0, Math.floor(g * (0.7 - (intensity - 1) * 0.1)));
+    const deepB = Math.max(0, Math.floor(b * (0.7 - (intensity - 1) * 0.1)));
+    
+    return `rgb(${deepR}, ${deepG}, ${deepB})`;
+  };
+
   const getGlowEffect = () => {
     if (activeGlow === "closed-alert" && highestClosedAlert) {
       // Bright, intense pulsing glow for closed alerts until cleared
       const color = getAlertColor(highestClosedAlert.priority || "medium");
       return `drop-shadow(0 0 12px ${color}) drop-shadow(0 0 24px ${color}) drop-shadow(0 0 36px ${color}) drop-shadow(0 0 48px ${color})`;
     } else if (activeGlow === "acknowledged-alert" && highestAcknowledgedAlert) {
-      // Large pulsing glow for acknowledged alerts until cleared
-      const color = getAlertColor(highestAcknowledgedAlert.priority || "medium");
-      return `drop-shadow(0 0 16px ${color}) drop-shadow(0 0 32px ${color}) drop-shadow(0 0 48px ${color}) drop-shadow(0 0 64px ${color})`;
+      // Time-based escalating glow for acknowledged alerts
+      const baseColor = getAlertColor(highestAcknowledgedAlert.priority || "medium");
+      const intensity = getTimeBasedIntensity(highestAcknowledgedAlert);
+      const deepColor = getDeeperColor(baseColor, intensity);
+      
+      // Escalating glow size based on time
+      const baseSize = 16;
+      const size1 = baseSize * intensity;
+      const size2 = baseSize * 2 * intensity;
+      const size3 = baseSize * 3 * intensity;
+      const size4 = baseSize * 4 * intensity;
+      const size5 = baseSize * 5 * intensity;
+      
+      return `drop-shadow(0 0 ${size1}px ${deepColor}) drop-shadow(0 0 ${size2}px ${deepColor}) drop-shadow(0 0 ${size3}px ${deepColor}) drop-shadow(0 0 ${size4}px ${deepColor}) drop-shadow(0 0 ${size5}px ${deepColor})`;
     } else if (activeGlow === "emergency" && highestPriorityAlert) {
       const color = getAlertColor(highestPriorityAlert.priority || "medium");
       return `drop-shadow(0 0 8px ${color}) drop-shadow(0 0 16px ${color}) drop-shadow(0 0 24px ${color})`;
@@ -92,9 +131,24 @@ function BusIcon({ bus, style, alerts = [] }: BusIconProps) {
   };
 
   const shouldPulse = activeGlow !== "none";
-  const pulseAnimation = activeGlow === "closed-alert" ? "animate-pulse-intense" : 
-                        activeGlow === "acknowledged-alert" ? "animate-pulse-intense" : 
-                        shouldPulse ? "animate-pulse" : "";
+  
+  const getPulseAnimation = () => {
+    if (activeGlow === "closed-alert") {
+      return "animate-pulse-intense";
+    } else if (activeGlow === "acknowledged-alert" && highestAcknowledgedAlert) {
+      const intensity = getTimeBasedIntensity(highestAcknowledgedAlert);
+      if (intensity >= 3) return "animate-pulse-mega"; // 20+ minutes
+      if (intensity >= 2.5) return "animate-pulse-ultra"; // 10-20 minutes
+      if (intensity >= 2) return "animate-pulse-super"; // 5-10 minutes
+      if (intensity >= 1.5) return "animate-pulse-intense"; // 2-5 minutes
+      return "animate-pulse-strong"; // 0-2 minutes
+    } else if (shouldPulse) {
+      return "animate-pulse";
+    }
+    return "";
+  };
+  
+  const pulseAnimation = getPulseAnimation();
 
   return (
     <div

@@ -43,6 +43,50 @@
   }
 }
 
+@keyframes pulse-strong {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes pulse-super {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.3);
+  }
+}
+
+@keyframes pulse-ultra {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.45);
+  }
+}
+
+@keyframes pulse-mega {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.6);
+  }
+}
+
 .route-flow {
   animation: flow 2s linear infinite;
 }
@@ -57,6 +101,22 @@
 
 .animate-pulse-intense {
   animation: pulse-intense 1s ease-in-out infinite;
+}
+
+.animate-pulse-strong {
+  animation: pulse-strong 0.9s ease-in-out infinite;
+}
+
+.animate-pulse-super {
+  animation: pulse-super 0.8s ease-in-out infinite;
+}
+
+.animate-pulse-ultra {
+  animation: pulse-ultra 0.7s ease-in-out infinite;
+}
+
+.animate-pulse-mega {
+  animation: pulse-mega 0.6s ease-in-out infinite;
 }
 
 :root {
