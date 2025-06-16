@@ -635,7 +635,7 @@ export class MemStorage implements IStorage {
   async acknowledgeAlert(id: number): Promise<Alert | undefined> {
     const alert = this.alerts.get(id);
     if (alert) {
-      const updatedAlert = { ...alert, isActive: false, status: "cleared" };
+      const updatedAlert = { ...alert, isActive: false, status: "acknowledged" };
       this.alerts.set(id, updatedAlert);
       return updatedAlert;
     }

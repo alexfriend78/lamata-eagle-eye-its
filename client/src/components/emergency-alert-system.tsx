@@ -95,14 +95,23 @@ export default function EmergencyAlertSystem({
 
   const acknowledgeAlertMutation = useMutation({
     mutationFn: async (alertId: number) => {
+      console.log("Making acknowledge alert API call for alert:", alertId);
       const response = await fetch(`/api/alerts/${alertId}/acknowledge`, {
         method: "PATCH",
       });
-      return response.json();
+      const result = await response.json();
+      console.log("Acknowledge alert API response:", result);
+      return result;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("Acknowledge alert mutation succeeded:", data);
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
-      onAlertDismiss();
+      queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
+      console.log("Calling onAlertDismiss to return to monitoring dashboard");
+      onAlertDismiss(); // Return to monitoring dashboard
+    },
+    onError: (error) => {
+      console.error("Acknowledge alert mutation failed:", error);
     },
   });
 
@@ -327,6 +336,19 @@ export default function EmergencyAlertSystem({
             )}
             
             <div className="flex gap-4 justify-center">
+              <Button
+                onClick={() => {
+                  console.log("Acknowledge button clicked for alert:", activeAlert.id);
+                  acknowledgeAlertMutation.mutate(activeAlert.id);
+                }}
+                variant="secondary"
+                size="lg"
+                className="bg-blue-600/80 text-white border-blue-400/30 hover:bg-blue-500/80"
+                disabled={acknowledgeAlertMutation.isPending}
+              >
+                {acknowledgeAlertMutation.isPending ? "Acknowledging..." : "Acknowledge"}
+              </Button>
+              
               <Button
                 onClick={() => {
                   console.log("Close Alert button clicked for alert:", activeAlert.id);
