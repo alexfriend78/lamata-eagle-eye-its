@@ -22,6 +22,7 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
   const [isPassengerVideoPlaying, setIsPassengerVideoPlaying] = useState(true);
   const [isDriverVideoMuted, setIsDriverVideoMuted] = useState(true);
   const [isPassengerVideoMuted, setIsPassengerVideoMuted] = useState(true);
+  const [isEscalated, setIsEscalated] = useState(false);
 
   // Simulate real-time bus data
   const [busData, setBusData] = useState({
@@ -296,55 +297,77 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
               
               {/* Alert Action Buttons */}
               <div className="mt-4 flex gap-3 justify-center">
-                <Button
-                  onClick={async () => {
-                    try {
-                      const response = await fetch(`/api/buses/${bus.id}/return-to-route`, {
-                        method: 'POST'
-                      });
-                      if (response.ok) {
-                        // Close the panel after successful clear
-                        onClose();
-                      }
-                    } catch (error) {
-                      console.error('Failed to clear alert:', error);
-                    }
-                  }}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 flex items-center gap-2"
-                >
-                  <CheckCircle className="w-4 h-4" />
-                  Clear Alert
-                </Button>
-                <Button
-                  onClick={async () => {
-                    try {
-                      const response = await fetch(`/api/alerts`, {
-                        method: 'POST',
-                        headers: {
-                          'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                          type: 'escalated_geofencing',
-                          message: `ESCALATED: Bus ${bus.busNumber} has been off-route for extended period. Immediate intervention required.`,
-                          busId: bus.id,
-                          routeId: bus.routeId,
-                          priority: 'critical',
-                          severity: 'high'
-                        })
-                      });
-                      if (response.ok) {
-                        // Keep panel open to show escalation was successful
-                        console.log('Alert escalated successfully');
-                      }
-                    } catch (error) {
-                      console.error('Failed to escalate alert:', error);
-                    }
-                  }}
-                  className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 flex items-center gap-2"
-                >
-                  <AlertOctagon className="w-4 h-4" />
-                  Escalate
-                </Button>
+                {!isEscalated ? (
+                  <>
+                    <Button
+                      onClick={async () => {
+                        try {
+                          const response = await fetch(`/api/buses/${bus.id}/return-to-route`, {
+                            method: 'POST'
+                          });
+                          if (response.ok) {
+                            // Close the panel after successful clear
+                            onClose();
+                          }
+                        } catch (error) {
+                          console.error('Failed to clear alert:', error);
+                        }
+                      }}
+                      className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 flex items-center gap-2"
+                    >
+                      <CheckCircle className="w-4 h-4" />
+                      Clear Alert
+                    </Button>
+                    <Button
+                      onClick={async () => {
+                        try {
+                          const response = await fetch(`/api/alerts`, {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                              type: 'escalated_geofencing',
+                              message: `ESCALATED: Bus ${bus.busNumber} has been off-route for extended period. Immediate intervention required.`,
+                              busId: bus.id,
+                              routeId: bus.routeId,
+                              priority: 'critical',
+                              severity: 'high'
+                            })
+                          });
+                          if (response.ok) {
+                            setIsEscalated(true);
+                          }
+                        } catch (error) {
+                          console.error('Failed to escalate alert:', error);
+                        }
+                      }}
+                      className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 flex items-center gap-2"
+                    >
+                      <AlertOctagon className="w-4 h-4" />
+                      Escalate
+                    </Button>
+                  </>
+                ) : (
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="bg-green-100 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 text-center">
+                      <div className="flex items-center justify-center gap-2 mb-2">
+                        <CheckCircle className="w-5 h-5 text-green-600" />
+                        <span className="font-semibold text-green-800 dark:text-green-200">Security Team Alerted</span>
+                      </div>
+                      <p className="text-sm text-green-700 dark:text-green-300">
+                        Critical alert has been escalated to security personnel. Response team has been notified.
+                      </p>
+                    </div>
+                    <Button
+                      onClick={onClose}
+                      className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 flex items-center gap-2"
+                    >
+                      <X className="w-4 h-4" />
+                      Close Panel
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
           )}
