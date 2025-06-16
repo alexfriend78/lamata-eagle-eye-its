@@ -595,28 +595,84 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
               opacity="0.3"
             />
             
-            {/* Road network grid */}
-            {Array.from({length: 15}, (_, i) => (
+            {/* Dense Road Network Grid */}
+            {/* Major roads - horizontal */}
+            {Array.from({length: 25}, (_, i) => (
               <line
-                key={`h-${i}`}
+                key={`major-h-${i}`}
                 x1="0"
-                y1={50 + i * 40}
+                y1={30 + i * 25}
                 x2={mapWidth}
-                y2={50 + i * 40}
+                y2={30 + i * 25}
+                stroke={theme === 'dark' ? '#4b5563' : '#d1d5db'}
+                strokeWidth="1.5"
+                opacity="0.8"
+              />
+            ))}
+            {/* Major roads - vertical */}
+            {Array.from({length: 50}, (_, i) => (
+              <line
+                key={`major-v-${i}`}
+                x1={25 + i * 25}
+                y1="0"
+                x2={25 + i * 25}
+                y2={mapHeight}
+                stroke={theme === 'dark' ? '#4b5563' : '#d1d5db'}
+                strokeWidth="1.5"
+                opacity="0.8"
+              />
+            ))}
+            
+            {/* Minor roads - horizontal */}
+            {Array.from({length: 50}, (_, i) => (
+              <line
+                key={`minor-h-${i}`}
+                x1="0"
+                y1={15 + i * 12.5}
+                x2={mapWidth}
+                y2={15 + i * 12.5}
                 stroke={theme === 'dark' ? '#374151' : '#e5e7eb'}
-                strokeWidth="0.5"
+                strokeWidth="0.8"
+                opacity="0.6"
+              />
+            ))}
+            {/* Minor roads - vertical */}
+            {Array.from({length: 100}, (_, i) => (
+              <line
+                key={`minor-v-${i}`}
+                x1={12.5 + i * 12.5}
+                y1="0"
+                x2={12.5 + i * 12.5}
+                y2={mapHeight}
+                stroke={theme === 'dark' ? '#374151' : '#e5e7eb'}
+                strokeWidth="0.8"
+                opacity="0.6"
+              />
+            ))}
+            
+            {/* Street-level roads - horizontal */}
+            {Array.from({length: 100}, (_, i) => (
+              <line
+                key={`street-h-${i}`}
+                x1="0"
+                y1={7.5 + i * 6.25}
+                x2={mapWidth}
+                y2={7.5 + i * 6.25}
+                stroke={theme === 'dark' ? '#1f2937' : '#f3f4f6'}
+                strokeWidth="0.4"
                 opacity="0.4"
               />
             ))}
-            {Array.from({length: 25}, (_, i) => (
+            {/* Street-level roads - vertical */}
+            {Array.from({length: 200}, (_, i) => (
               <line
-                key={`v-${i}`}
-                x1={i * 50}
+                key={`street-v-${i}`}
+                x1={6.25 + i * 6.25}
                 y1="0"
-                x2={i * 50}
+                x2={6.25 + i * 6.25}
                 y2={mapHeight}
-                stroke={theme === 'dark' ? '#374151' : '#e5e7eb'}
-                strokeWidth="0.5"
+                stroke={theme === 'dark' ? '#1f2937' : '#f3f4f6'}
+                strokeWidth="0.4"
                 opacity="0.4"
               />
             ))}
