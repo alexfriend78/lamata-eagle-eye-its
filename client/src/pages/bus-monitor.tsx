@@ -10,8 +10,9 @@ import StationDetailsPanel from "@/components/station-details-panel";
 import RouteCustomizationPanel from "@/components/route-customization-panel";
 import RouteAestheticsPanel from "@/components/route-aesthetics-panel";
 import CrowdAnalyticsPanel from "@/components/crowd-analytics-panel";
+import AlertsManager from "@/components/alerts-manager";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
@@ -27,6 +28,7 @@ export default function BusMonitor() {
   const [showLiveFeed, setShowLiveFeed] = useState(false);
   const [showRouteCustomization, setShowRouteCustomization] = useState(false);
   const [activeAlert, setActiveAlert] = useState<any | null>(null);
+  const [showAlertsManager, setShowAlertsManager] = useState(false);
   
   // Visibility controls for routes, bus stops, and buses
   const [showRoutes, setShowRoutes] = useState(true);
@@ -119,6 +121,22 @@ export default function BusMonitor() {
             </div>
             
             <div className="flex items-center space-x-6">
+              {/* Alerts Button */}
+              <Button
+                onClick={() => setShowAlertsManager(true)}
+                variant="outline"
+                size="sm"
+                className="h-8 px-3 text-xs relative"
+              >
+                <AlertTriangle className="h-4 w-4 mr-1" />
+                Alerts
+                {alerts && alerts.length > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {alerts.length}
+                  </span>
+                )}
+              </Button>
+
               {/* System Status */}
               <div className="flex items-center space-x-2">
                 <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>

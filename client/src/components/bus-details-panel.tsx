@@ -40,7 +40,16 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
 
   // Mutation to clear alert
   const clearAlertMutation = useMutation({
-    mutationFn: (alertId: number) => apiRequest(`/api/alerts/${alertId}/acknowledge`, { method: "PATCH" }),
+    mutationFn: (alertId: number) => apiRequest(`/api/alerts/${alertId}/clear`, { method: "PATCH" }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
+    }
+  });
+
+  // Mutation to escalate alert
+  const escalateAlertMutation = useMutation({
+    mutationFn: (alertId: number) => apiRequest(`/api/alerts/${alertId}/escalate`, { method: "PATCH" }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
