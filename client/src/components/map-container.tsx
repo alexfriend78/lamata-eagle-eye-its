@@ -288,11 +288,13 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeDasharray={getStrokePattern()}
-
                 className={getAnimationClass()}
                 opacity={opacity}
                 filter={route.glowColor ? `url(#glow-${route.id})` : undefined}
               />
+              {route.id === 1 && (
+                <text x="300" y="300" fill="red" fontSize="20">Route 1 Test</text>
+              )}
 
               {/* Pattern overlays */}
               {route.pattern === "arrows" && offsetPoints.map((point, index) => {
