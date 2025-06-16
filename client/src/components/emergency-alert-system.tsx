@@ -82,6 +82,7 @@ export default function EmergencyAlertSystem({
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       onAlertCreate(newAlert);
       setShowSimulator(false);
+      setShowTriage(false); // Show alert first, not triage
     },
   });
 
@@ -108,7 +109,6 @@ export default function EmergencyAlertSystem({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
-      onAlertDismiss();
     },
   });
 
@@ -312,7 +312,10 @@ export default function EmergencyAlertSystem({
             
             <div className="flex gap-4 justify-center">
               <Button
-                onClick={() => closeAlertMutation.mutate(activeAlert.id)}
+                onClick={() => {
+                  closeAlertMutation.mutate(activeAlert.id);
+                  onAlertDismiss(); // Immediately close the alert window
+                }}
                 variant="secondary"
                 size="lg"
                 className="bg-white/20 text-white border-white/30 hover:bg-white/30"
