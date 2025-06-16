@@ -209,13 +209,9 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
       return calculatePerpendicularOffset(point, points[i+1], offsetDistance);
     });
 
-    // Create subtle curves around stations to avoid text overlap while staying visible
+    // Create consistent curves for all routes around stations
     const curvedPoints = offsetPoints.map((point, i) => {
-      if (i === 0 || i === offsetPoints.length - 1) {
-        return point; // Keep endpoints as-is
-      }
-      
-      // Add small offset to avoid station text but keep routes visible
+      // Apply consistent curve to all points including endpoints for uniform appearance
       const textOffset = 8; // Small offset to avoid text overlap
       const routeOffset = routeIndex * 4; // Additional offset for multiple routes
       
