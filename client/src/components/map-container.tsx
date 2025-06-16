@@ -34,24 +34,24 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     
     // Fallback to hardcoded paths if no station data available
     const routePaths: Record<number, { x: number; y: number }[]> = {
-      1: [ // Route 1: Oshodi - Abule-Egba (parallel to stations, offset to avoid text)
-        { x: mapWidth * 0.34, y: mapHeight * 0.67 }, // Near Oshodi Terminal 2
-        { x: mapWidth * 0.32, y: mapHeight * 0.65 }, // Near Bolade
-        { x: mapWidth * 0.30, y: mapHeight * 0.63 }, // Near Ladipo
-        { x: mapWidth * 0.28, y: mapHeight * 0.61 }, // Near Shogunle
-        { x: mapWidth * 0.26, y: mapHeight * 0.59 }, // Near PWD
-        { x: mapWidth * 0.24, y: mapHeight * 0.57 }, // Near Airport Junction
-        { x: mapWidth * 0.22, y: mapHeight * 0.55 }, // Near Ikeja Along
-        { x: mapWidth * 0.20, y: mapHeight * 0.53 }, // Near Ile Zik
-        { x: mapWidth * 0.18, y: mapHeight * 0.51 }, // Near Mangoro
-        { x: mapWidth * 0.16, y: mapHeight * 0.49 }, // Near Cement
-        { x: mapWidth * 0.14, y: mapHeight * 0.47 }, // Near Iyana Dopemu
-        { x: mapWidth * 0.12, y: mapHeight * 0.45 }, // Near Adealu
-        { x: mapWidth * 0.10, y: mapHeight * 0.43 }, // Near Iyana Ipaja Bus stop
-        { x: mapWidth * 0.08, y: mapHeight * 0.41 }, // Near Pleasure
-        { x: mapWidth * 0.06, y: mapHeight * 0.39 }, // Near Ile Epo
-        { x: mapWidth * 0.04, y: mapHeight * 0.37 }, // Near Super
-        { x: mapWidth * 0.02, y: mapHeight * 0.35 }  // Near Abule Egba
+      1: [ // Route 1: Oshodi - Abule-Egba (positioned to left of stations)
+        { x: mapWidth * 0.35, y: mapHeight * 0.67 }, // Left of Oshodi Terminal 2
+        { x: mapWidth * 0.33, y: mapHeight * 0.65 }, // Left of Bolade
+        { x: mapWidth * 0.31, y: mapHeight * 0.63 }, // Left of Ladipo
+        { x: mapWidth * 0.29, y: mapHeight * 0.61 }, // Left of Shogunle
+        { x: mapWidth * 0.27, y: mapHeight * 0.59 }, // Left of PWD
+        { x: mapWidth * 0.25, y: mapHeight * 0.57 }, // Left of Airport Junction
+        { x: mapWidth * 0.23, y: mapHeight * 0.55 }, // Left of Ikeja Along
+        { x: mapWidth * 0.21, y: mapHeight * 0.53 }, // Left of Ile Zik
+        { x: mapWidth * 0.19, y: mapHeight * 0.51 }, // Left of Mangoro
+        { x: mapWidth * 0.17, y: mapHeight * 0.49 }, // Left of Cement
+        { x: mapWidth * 0.15, y: mapHeight * 0.47 }, // Left of Iyana Dopemu
+        { x: mapWidth * 0.13, y: mapHeight * 0.45 }, // Left of Adealu
+        { x: mapWidth * 0.11, y: mapHeight * 0.43 }, // Left of Iyana Ipaja Bus stop
+        { x: mapWidth * 0.09, y: mapHeight * 0.41 }, // Left of Pleasure
+        { x: mapWidth * 0.07, y: mapHeight * 0.39 }, // Left of Ile Epo
+        { x: mapWidth * 0.05, y: mapHeight * 0.37 }, // Left of Super
+        { x: mapWidth * 0.03, y: mapHeight * 0.35 }  // Left of Abule Egba
       ],
       2: [ // Route 2: Abule Egba - Lekki Phase 2 Terminal (Complete north-south-east)
         { x: mapWidth * 0.18, y: mapHeight * 0.28 }, // Abule Egba Terminal
@@ -198,33 +198,14 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     
 
 
-    // Calculate offset for overlapping routes - target specific positioning for Route 1
-    let offsetDistance: number;
-    if (route.id === 1) {
-      offsetDistance = -50; // Move Route 1 further to the left
-    } else if (route.id === 2) {
-      offsetDistance = 30; // Slight right offset for Route 2
-    } else if (route.id === 3) {
-      offsetDistance = -30; // Slight left offset for Route 3
-    } else if (route.id === 4) {
-      offsetDistance = 50; // Further right for Route 4
-    } else {
-      offsetDistance = 0; // Route 5 remains centered
-    }
+    // Simple offset calculation - no complex positioning
+    const offsetDistance = (routeIndex % 5 - 2) * 8; // -16, -8, 0, 8, 16 pixel offset
     
-    // Apply both horizontal and vertical offset to position routes strategically
+    // Apply minimal offset to separate overlapping routes
     const offsetPoints = points.map((point) => {
-      let xOffset = offsetDistance;
-      let yOffset = 0;
-      
-      // For Route 1, add additional vertical offset to avoid station text completely
-      if (route.id === 1) {
-        yOffset = -15; // Move Route 1 slightly up as well
-      }
-      
       return {
-        x: point.x + xOffset,
-        y: point.y + yOffset
+        x: point.x + offsetDistance,
+        y: point.y
       };
     });
 
