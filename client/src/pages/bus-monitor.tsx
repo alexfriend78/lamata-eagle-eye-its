@@ -43,6 +43,7 @@ export default function BusMonitor() {
   const [showRoutes, setShowRoutes] = useState(true);
   const [showStations, setShowStations] = useState(true);
   const [showBuses, setShowBuses] = useState(true);
+  const [showBackgroundMap, setShowBackgroundMap] = useState(false);
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
   const { theme, setTheme } = useTheme();
 
