@@ -40,7 +40,7 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
 
   // Mutation to clear alert
   const clearAlertMutation = useMutation({
-    mutationFn: (alertId: number) => apiRequest(`/api/alerts/${alertId}/clear`, { method: "PATCH" }),
+    mutationFn: (alertId: number) => apiRequest("PATCH", `/api/alerts/${alertId}/clear`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
@@ -49,7 +49,25 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
 
   // Mutation to escalate alert
   const escalateAlertMutation = useMutation({
-    mutationFn: (alertId: number) => apiRequest(`/api/alerts/${alertId}/escalate`, { method: "PATCH" }),
+    mutationFn: (alertId: number) => apiRequest("PATCH", `/api/alerts/${alertId}/escalate`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
+    }
+  });
+
+  // Mutation to acknowledge alert
+  const acknowledgeAlertMutation = useMutation({
+    mutationFn: (alertId: number) => apiRequest("PATCH", `/api/alerts/${alertId}/acknowledge`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
+    }
+  });
+
+  // Mutation to close alert
+  const closeAlertMutation = useMutation({
+    mutationFn: (alertId: number) => apiRequest("PATCH", `/api/alerts/${alertId}/close`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
@@ -468,51 +486,220 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                     )}
                     
                     <div className="flex gap-3">
-                      {!isEscalated ? (
-                        <>
-                          <Button
-                            onClick={() => clearAlertMutation.mutate(alert.id)}
-                            disabled={clearAlertMutation.isPending}
-                            className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
-                          >
-                            <CheckCircle className="w-4 h-4" />
-                            {clearAlertMutation.isPending ? 'Clearing...' : 'Clear Alert'}
-                          </Button>
-                          <Button
-                            onClick={async () => {
-                              try {
-                                const response = await fetch(`/api/alerts`, {
-                                  method: 'POST',
-                                  headers: {
-                                    'Content-Type': 'application/json'
-                                  },
-                                  body: JSON.stringify({
-                                    type: 'escalated_emergency',
-                                    message: `ESCALATED: Emergency alert for Bus ${bus.busNumber}. Critical intervention required.`,
-                                    busId: bus.id,
-                                    routeId: bus.routeId,
-                                    priority: 'critical',
-                                    severity: 'high'
-                                  })
-                                });
-                                if (response.ok) {
-                                  setIsEscalated(true);
-                                }
-                              } catch (error) {
-                                console.error('Failed to escalate alert:', error);
-                              }
-                            }}
-                            className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
-                          >
-                            <AlertOctagon className="w-4 h-4" />
-                            Escalate
-                          </Button>
-                        </>
-                      ) : (
-                        <div className="flex flex-col gap-3 w-full">
-                          <div className="bg-green-100 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 text-center">
-                            <div className="flex items-center justify-center gap-2 mb-1">
-                              <CheckCircle className="w-4 h-4 text-green-600" />
+                      <Button
+                        onClick={() => acknowledgeAlertMutation.mutate(alert.id)}
+                        disabled={acknowledgeAlertMutation.isPending}
+                        className="bg-yellow-600 hover:bg-yellow-700 text-white flex items-center gap-2"
+                      >
+                        <CheckCircle className="w-4 h-4" />
+                        {acknowledgeAlertMutation.isPending ? 'Acknowledging...' : 'Acknowledge'}
+                      </Button>
+                      <Button
+                        onClick={() => escalateAlertMutation.mutate(alert.id)}
+                        disabled={escalateAlertMutation.isPending}
+                        className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
+                      >
+                        <AlertOctagon className="w-4 h-4" />
+                        {escalateAlertMutation.isPending ? 'Escalating...' : 'Escalate'}
+                      </Button>
+                      <Button
+                        onClick={() => closeAlertMutation.mutate(alert.id)}
+                        disabled={closeAlertMutation.isPending}
+                        className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
+                      >
+                        <X className="w-4 h-4" />
+                        {closeAlertMutation.isPending ? 'Closing...' : 'Close'}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Bus Information Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Basic Information */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <User className="w-5 h-5" />
+                  Basic Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Bus Number:</span>
+                  <span className="font-semibold">{bus.busNumber}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Route:</span>
+                  <span className="font-semibold">Route {bus.route.routeNumber}: {bus.route.name}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Status:</span>
+                  <Badge 
+                    className={`
+                      ${bus.status === 'in-service' ? 'bg-green-500' : 
+                        bus.status === 'off-route' ? 'bg-red-500' : 
+                        bus.status === 'maintenance' ? 'bg-yellow-500' : 'bg-gray-500'}
+                    `}
+                  >
+                    {bus.status?.toUpperCase()}
+                  </Badge>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Driver:</span>
+                  <span className="font-semibold">{bus.driverName || 'Not assigned'}</span>
+                </div>
+                {bus.driverPhone && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Driver Phone:</span>
+                    <Button variant="ghost" size="sm" className="h-auto p-0 font-semibold text-blue-600">
+                      <Phone className="w-4 h-4 mr-1" />
+                      {bus.driverPhone}
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Performance Metrics */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Gauge className="w-5 h-5" />
+                  Performance Metrics
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <div className="flex justify-between mb-2">
+                    <span className="text-gray-600 dark:text-gray-400">Passenger Capacity:</span>
+                    <span className="font-semibold">{bus.currentPassengers || 0}/{bus.capacity || 50}</span>
+                  </div>
+                  <Progress 
+                    value={((bus.currentPassengers || 0) / (bus.capacity || 50)) * 100} 
+                    className="h-2"
+                  />
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">On-Time Performance:</span>
+                  <span className="font-semibold text-green-600">
+                    {bus.onTimePercentage || 85}%
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Total Trips Today:</span>
+                  <span className="font-semibold">{bus.tripsToday || 12}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600 dark:text-gray-400">Next Stop:</span>
+                  <span className="font-semibold">{bus.nextStop || 'Determining...'}</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* CCTV Feeds */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Camera className="w-5 h-5" />
+                Live CCTV Feeds
+                {hasEmergencyAlerts && (
+                  <Badge variant="destructive" className="animate-pulse ml-2">
+                    EMERGENCY MONITORING
+                  </Badge>
+                )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Driver Area Feed */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-semibold">Driver Area</h4>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setIsDriverVideoPlaying(!isDriverVideoPlaying)}
+                      >
+                        {isDriverVideoPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setIsDriverVideoMuted(!isDriverVideoMuted)}
+                      >
+                        {isDriverVideoMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="relative bg-black rounded-lg overflow-hidden">
+                    <video
+                      src={driverVideoPath}
+                      className="w-full h-48 object-cover"
+                      autoPlay={isDriverVideoPlaying}
+                      muted={isDriverVideoMuted}
+                      loop
+                      controls={false}
+                    />
+                    <div className="absolute bottom-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
+                      CAM-01 • DRIVER
+                    </div>
+                  </div>
+                </div>
+
+                {/* Passenger Area Feed */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-semibold">Passenger Area</h4>
+                    <div className="flex gap-2">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setIsPassengerVideoPlaying(!isPassengerVideoPlaying)}
+                      >
+                        {isPassengerVideoPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setIsPassengerVideoMuted(!isPassengerVideoMuted)}
+                      >
+                        {isPassengerVideoMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="relative bg-black rounded-lg overflow-hidden">
+                    <video
+                      src={hasEmergencyAlerts ? emergencyVideoPath : passengersVideoPath}
+                      className="w-full h-48 object-cover"
+                      autoPlay={isPassengerVideoPlaying}
+                      muted={isPassengerVideoMuted}
+                      loop
+                      controls={false}
+                    />
+                    <div className="absolute bottom-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
+                      CAM-02 • PASSENGERS
+                    </div>
+                    {hasEmergencyAlerts && (
+                      <div className="absolute top-2 left-2 bg-red-600 text-white px-2 py-1 rounded text-xs animate-pulse">
+                        EMERGENCY DETECTED
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
                               <span className="font-semibold text-green-800 dark:text-green-200">Security Team Alerted</span>
                             </div>
                             <p className="text-xs text-green-700 dark:text-green-300">

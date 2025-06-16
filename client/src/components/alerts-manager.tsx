@@ -299,6 +299,26 @@ export default function AlertsManager({ onClose }: AlertsManagerProps) {
                 )}
               </div>
             </TabsContent>
+
+            <TabsContent value="closed" className="mt-6">
+              <div className="space-y-4">
+                {closedAlerts.length === 0 ? (
+                  <div className="text-center py-8">
+                    <X className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                      No Closed Alerts
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      Closed alerts will appear here
+                    </p>
+                  </div>
+                ) : (
+                  closedAlerts
+                    .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
+                    .map(alert => <AlertCard key={alert.id} alert={alert} showActions={false} />)
+                )}
+              </div>
+            </TabsContent>
           </Tabs>
         </CardContent>
       </Card>
