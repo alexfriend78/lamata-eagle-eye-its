@@ -168,38 +168,62 @@ export class MemStorage implements IStorage {
       { name: "Marina", x: 0.86, y: 0.65, zone: 2, routeId: 2 },
       { name: "Victoria Island Terminal", x: 0.90, y: 0.65, zone: 3, routeId: 2 },
 
-      // Route 3: Ikorodu - TBS stations 
+      // Route 3: Complex path with 8 straight segments and 2 curves
+      // Segment 1 stations: Northeast from Ikorodu
       { name: "Ikorodu Terminal", x: 0.15, y: 0.85, zone: 4, routeId: 3 },
-      { name: "Benson", x: 0.17, y: 0.83, zone: 4, routeId: 3 },
-      { name: "ARUNA", x: 0.19, y: 0.81, zone: 4, routeId: 3 },
-      { name: "AGRIC TERMINAL", x: 0.21, y: 0.79, zone: 4, routeId: 3 },
-      { name: "OWUTU IDIROKO", x: 0.23, y: 0.77, zone: 4, routeId: 3 },
-      { name: "OGOLONTO", x: 0.25, y: 0.75, zone: 3, routeId: 3 },
-      { name: "MAJIDUN AWORI", x: 0.27, y: 0.73, zone: 3, routeId: 3 },
-      { name: "AJEGUNLE", x: 0.29, y: 0.71, zone: 3, routeId: 3 },
-      { name: "IRAWO", x: 0.31, y: 0.69, zone: 3, routeId: 3 },
-      { name: "IDERA", x: 0.33, y: 0.67, zone: 3, routeId: 3 },
-      { name: "OWODEONIRIN", x: 0.35, y: 0.65, zone: 3, routeId: 3 },
-      { name: "MILE12 TERMINAL", x: 0.37, y: 0.63, zone: 3, routeId: 3 },
-      { name: "KETU", x: 0.39, y: 0.61, zone: 2, routeId: 3 },
-      { name: "OJOTA", x: 0.41, y: 0.59, zone: 2, routeId: 3 },
-      { name: "NEWGARAGE", x: 0.43, y: 0.57, zone: 2, routeId: 3 },
-      { name: "Maryland", x: 0.45, y: 0.55, zone: 2, routeId: 3 },
-      { name: "Idiroko", x: 0.47, y: 0.53, zone: 2, routeId: 3 },
-      { name: "Anthony", x: 0.49, y: 0.51, zone: 2, routeId: 3 },
-      { name: "Obanikoro", x: 0.51, y: 0.49, zone: 2, routeId: 3 },
-      { name: "Palmgroove", x: 0.53, y: 0.47, zone: 2, routeId: 3 },
-      { name: "Onipanu", x: 0.55, y: 0.45, zone: 2, routeId: 3 },
-      { name: "Fadeyi", x: 0.57, y: 0.43, zone: 2, routeId: 3 },
-      { name: "MOSALASI TERMINAL", x: 0.59, y: 0.41, zone: 2, routeId: 3 },
-      { name: "BARRAKS", x: 0.61, y: 0.39, zone: 2, routeId: 3 },
-      { name: "Stadium", x: 0.63, y: 0.37, zone: 2, routeId: 3 },
-      { name: "Iponri", x: 0.65, y: 0.35, zone: 2, routeId: 3 },
-      { name: "Costain", x: 0.67, y: 0.33, zone: 2, routeId: 3 },
-      { name: "Leventis", x: 0.69, y: 0.31, zone: 2, routeId: 3 },
-      { name: "CMS Terminal", x: 0.71, y: 0.29, zone: 2, routeId: 3 },
-      { name: "MARINA TRAIN STATION", x: 0.73, y: 0.27, zone: 2, routeId: 3 },
-      { name: "TBS Terminal", x: 0.75, y: 0.25, zone: 2, routeId: 3 },
+      { name: "Benson", x: 0.18, y: 0.82, zone: 4, routeId: 3 },
+      { name: "Agric", x: 0.21, y: 0.79, zone: 4, routeId: 3 },
+      { name: "Owutu", x: 0.25, y: 0.75, zone: 3, routeId: 3 },
+      
+      // Segment 2 stations: Sharp east turn
+      { name: "Ogolonto", x: 0.30, y: 0.75, zone: 3, routeId: 3 },
+      { name: "Mile 12", x: 0.35, y: 0.75, zone: 3, routeId: 3 },
+      { name: "Ketu", x: 0.40, y: 0.75, zone: 2, routeId: 3 },
+      { name: "Ojota", x: 0.45, y: 0.75, zone: 2, routeId: 3 },
+      
+      // Segment 3 stations: Southeast diagonal
+      { name: "Maryland", x: 0.50, y: 0.70, zone: 2, routeId: 3 },
+      { name: "Anthony", x: 0.55, y: 0.65, zone: 2, routeId: 3 },
+      { name: "Obanikoro", x: 0.60, y: 0.60, zone: 2, routeId: 3 },
+      
+      // CURVE 1 stations: Smooth arc turning north
+      { name: "Palmgroove", x: 0.63, y: 0.57, zone: 2, routeId: 3 },
+      { name: "Onipanu", x: 0.66, y: 0.52, zone: 2, routeId: 3 },
+      { name: "Yaba", x: 0.68, y: 0.48, zone: 2, routeId: 3 },
+      { name: "Fadeyi", x: 0.70, y: 0.40, zone: 2, routeId: 3 },
+      
+      // Segment 4 stations: North continuation
+      { name: "Jibowu", x: 0.70, y: 0.35, zone: 2, routeId: 3 },
+      { name: "Mushin", x: 0.70, y: 0.30, zone: 2, routeId: 3 },
+      { name: "Papa Ajao", x: 0.70, y: 0.25, zone: 2, routeId: 3 },
+      
+      // Segment 5 stations: Sharp west turn
+      { name: "Ikeja", x: 0.65, y: 0.25, zone: 2, routeId: 3 },
+      { name: "Allen Avenue", x: 0.60, y: 0.25, zone: 2, routeId: 3 },
+      { name: "Computer Village", x: 0.55, y: 0.25, zone: 2, routeId: 3 },
+      { name: "Ogba", x: 0.50, y: 0.25, zone: 2, routeId: 3 },
+      
+      // Segment 6 stations: Southwest diagonal
+      { name: "Agege", x: 0.45, y: 0.30, zone: 2, routeId: 3 },
+      { name: "Pen Cinema", x: 0.40, y: 0.35, zone: 2, routeId: 3 },
+      { name: "Ijaiye", x: 0.35, y: 0.40, zone: 2, routeId: 3 },
+      
+      // CURVE 2 stations: Smooth arc turning east
+      { name: "Alakuko", x: 0.33, y: 0.43, zone: 2, routeId: 3 },
+      { name: "Alagbado", x: 0.36, y: 0.48, zone: 2, routeId: 3 },
+      { name: "Iju", x: 0.40, y: 0.52, zone: 2, routeId: 3 },
+      
+      // Segment 7 stations: East continuation
+      { name: "Ifako", x: 0.45, y: 0.52, zone: 2, routeId: 3 },
+      { name: "Gbagada", x: 0.50, y: 0.52, zone: 2, routeId: 3 },
+      { name: "Shomolu", x: 0.55, y: 0.52, zone: 2, routeId: 3 },
+      { name: "Bariga", x: 0.60, y: 0.52, zone: 2, routeId: 3 },
+      { name: "Five Star", x: 0.65, y: 0.52, zone: 2, routeId: 3 },
+      
+      // Segment 8 stations: Final northeast to terminal
+      { name: "Ikoyi", x: 0.70, y: 0.47, zone: 2, routeId: 3 },
+      { name: "Victoria Island", x: 0.75, y: 0.41, zone: 2, routeId: 3 },
+      { name: "Lagos Island", x: 0.80, y: 0.35, zone: 2, routeId: 3 },
 
       // Route 4: Ikorodu - Fadeyi stations
       { name: "Ikorodu Terminal", x: 0.15, y: 0.85, zone: 4, routeId: 4 },
@@ -818,38 +842,41 @@ export class MemStorage implements IStorage {
         // Segment 7: Final east stretch
         { x: 0.90, y: 0.65 }
       ],
-      3: [ // Route 3: Ikorodu - TBS (Southwest to Central)
-        { x: 0.15, y: 0.85 }, // Ikorodu Terminal
-        { x: 0.17, y: 0.83 }, // Benson
-        { x: 0.19, y: 0.81 }, // ARUNA
-        { x: 0.21, y: 0.79 }, // AGRIC TERMINAL
-        { x: 0.23, y: 0.77 }, // OWUTU IDIROKO
-        { x: 0.25, y: 0.75 }, // OGOLONTO
-        { x: 0.27, y: 0.73 }, // MAJIDUN AWORI
-        { x: 0.29, y: 0.71 }, // AJEGUNLE
-        { x: 0.31, y: 0.69 }, // IRAWO
-        { x: 0.33, y: 0.67 }, // IDERA
-        { x: 0.35, y: 0.65 }, // OWODEONIRIN
-        { x: 0.37, y: 0.63 }, // MILE12 TERMINAL
-        { x: 0.39, y: 0.61 }, // KETU
-        { x: 0.41, y: 0.59 }, // OJOTA
-        { x: 0.43, y: 0.57 }, // NEWGARAGE
-        { x: 0.45, y: 0.55 }, // Maryland
-        { x: 0.47, y: 0.53 }, // Idiroko
-        { x: 0.49, y: 0.51 }, // Anthony
-        { x: 0.51, y: 0.49 }, // Obanikoro
-        { x: 0.53, y: 0.47 }, // Palmgroove
-        { x: 0.55, y: 0.45 }, // Onipanu
-        { x: 0.57, y: 0.43 }, // Fadeyi
-        { x: 0.59, y: 0.41 }, // MOSALASI TERMINAL
-        { x: 0.61, y: 0.39 }, // BARRAKS
-        { x: 0.63, y: 0.37 }, // Stadium
-        { x: 0.65, y: 0.35 }, // Iponri
-        { x: 0.67, y: 0.33 }, // Costain
-        { x: 0.69, y: 0.31 }, // Leventis
-        { x: 0.71, y: 0.29 }, // CMS Terminal
-        { x: 0.73, y: 0.27 }, // MARINA TRAIN STATION
-        { x: 0.75, y: 0.25 }  // TBS Terminal
+      3: [ // Route 3: Complex path with 8 straight segments and 2 curves
+        // Segment 1: Northeast from Ikorodu
+        { x: 0.15, y: 0.85 },
+        { x: 0.25, y: 0.75 },
+        
+        // Segment 2: Sharp east turn
+        { x: 0.45, y: 0.75 },
+        
+        // Segment 3: Southeast diagonal
+        { x: 0.60, y: 0.60 },
+        
+        // CURVE 1: Smooth arc turning north
+        { x: 0.65, y: 0.55 },
+        { x: 0.68, y: 0.48 },
+        { x: 0.70, y: 0.40 },
+        
+        // Segment 4: North continuation
+        { x: 0.70, y: 0.25 },
+        
+        // Segment 5: Sharp west turn
+        { x: 0.50, y: 0.25 },
+        
+        // Segment 6: Southwest diagonal
+        { x: 0.35, y: 0.40 },
+        
+        // CURVE 2: Smooth arc turning east
+        { x: 0.32, y: 0.45 },
+        { x: 0.35, y: 0.50 },
+        { x: 0.40, y: 0.52 },
+        
+        // Segment 7: East continuation
+        { x: 0.65, y: 0.52 },
+        
+        // Segment 8: Final northeast to terminal
+        { x: 0.80, y: 0.35 }
       ],
       4: [ // Route 4: Ikorodu - Fadeyi (Southwest to Mid-Central)
         { x: 0.15, y: 0.85 }, // Ikorodu Terminal

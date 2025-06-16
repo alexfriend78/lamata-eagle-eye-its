@@ -175,38 +175,41 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         // Segment 7: Final east stretch
         { x: mapWidth * 0.90, y: mapHeight * 0.65 }
       ],
-      3: [ // Route 3: Ikorodu - TBS (Southwest to Central)
-        { x: mapWidth * 0.15, y: mapHeight * 0.85 }, // Ikorodu Terminal
-        { x: mapWidth * 0.17, y: mapHeight * 0.83 }, // Benson
-        { x: mapWidth * 0.19, y: mapHeight * 0.81 }, // ARUNA
-        { x: mapWidth * 0.21, y: mapHeight * 0.79 }, // AGRIC TERMINAL
-        { x: mapWidth * 0.23, y: mapHeight * 0.77 }, // OWUTU IDIROKO
-        { x: mapWidth * 0.25, y: mapHeight * 0.75 }, // OGOLONTO
-        { x: mapWidth * 0.27, y: mapHeight * 0.73 }, // MAJIDUN AWORI
-        { x: mapWidth * 0.29, y: mapHeight * 0.71 }, // AJEGUNLE
-        { x: mapWidth * 0.31, y: mapHeight * 0.69 }, // IRAWO
-        { x: mapWidth * 0.33, y: mapHeight * 0.67 }, // IDERA
-        { x: mapWidth * 0.35, y: mapHeight * 0.65 }, // OWODEONIRIN
-        { x: mapWidth * 0.37, y: mapHeight * 0.63 }, // MILE12 TERMINAL
-        { x: mapWidth * 0.39, y: mapHeight * 0.61 }, // KETU
-        { x: mapWidth * 0.41, y: mapHeight * 0.59 }, // OJOTA
-        { x: mapWidth * 0.43, y: mapHeight * 0.57 }, // NEWGARAGE
-        { x: mapWidth * 0.45, y: mapHeight * 0.55 }, // Maryland
-        { x: mapWidth * 0.47, y: mapHeight * 0.53 }, // Idiroko
-        { x: mapWidth * 0.49, y: mapHeight * 0.51 }, // Anthony
-        { x: mapWidth * 0.51, y: mapHeight * 0.49 }, // Obanikoro
-        { x: mapWidth * 0.53, y: mapHeight * 0.47 }, // Palmgroove
-        { x: mapWidth * 0.55, y: mapHeight * 0.45 }, // Onipanu
-        { x: mapWidth * 0.57, y: mapHeight * 0.43 }, // Fadeyi
-        { x: mapWidth * 0.59, y: mapHeight * 0.41 }, // MOSALASI TERMINAL
-        { x: mapWidth * 0.61, y: mapHeight * 0.39 }, // BARRAKS
-        { x: mapWidth * 0.63, y: mapHeight * 0.37 }, // Stadium
-        { x: mapWidth * 0.65, y: mapHeight * 0.35 }, // Iponri
-        { x: mapWidth * 0.67, y: mapHeight * 0.33 }, // Costain
-        { x: mapWidth * 0.69, y: mapHeight * 0.31 }, // Leventis
-        { x: mapWidth * 0.71, y: mapHeight * 0.29 }, // CMS Terminal
-        { x: mapWidth * 0.73, y: mapHeight * 0.27 }, // MARINA TRAIN STATION
-        { x: mapWidth * 0.75, y: mapHeight * 0.25 }  // TBS Terminal
+      3: [ // Route 3: Complex path with 8 straight segments and 2 curves
+        // Segment 1: Northeast from Ikorodu
+        { x: mapWidth * 0.15, y: mapHeight * 0.85 },
+        { x: mapWidth * 0.25, y: mapHeight * 0.75 },
+        
+        // Segment 2: Sharp east turn
+        { x: mapWidth * 0.45, y: mapHeight * 0.75 },
+        
+        // Segment 3: Southeast diagonal
+        { x: mapWidth * 0.60, y: mapHeight * 0.60 },
+        
+        // CURVE 1: Smooth arc turning north
+        { x: mapWidth * 0.65, y: mapHeight * 0.55 },
+        { x: mapWidth * 0.68, y: mapHeight * 0.48 },
+        { x: mapWidth * 0.70, y: mapHeight * 0.40 },
+        
+        // Segment 4: North continuation
+        { x: mapWidth * 0.70, y: mapHeight * 0.25 },
+        
+        // Segment 5: Sharp west turn
+        { x: mapWidth * 0.50, y: mapHeight * 0.25 },
+        
+        // Segment 6: Southwest diagonal
+        { x: mapWidth * 0.35, y: mapHeight * 0.40 },
+        
+        // CURVE 2: Smooth arc turning east
+        { x: mapWidth * 0.32, y: mapHeight * 0.45 },
+        { x: mapWidth * 0.35, y: mapHeight * 0.50 },
+        { x: mapWidth * 0.40, y: mapHeight * 0.52 },
+        
+        // Segment 7: East continuation
+        { x: mapWidth * 0.65, y: mapHeight * 0.52 },
+        
+        // Segment 8: Final northeast to terminal
+        { x: mapWidth * 0.80, y: mapHeight * 0.35 }
       ],
       4: [ // Route 4: Ikorodu - Fadeyi (Southwest to Mid-Central)
         { x: mapWidth * 0.15, y: mapHeight * 0.85 }, // Ikorodu Terminal
