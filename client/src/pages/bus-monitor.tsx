@@ -44,8 +44,6 @@ export default function BusMonitor() {
   const [showStations, setShowStations] = useState(true);
   const [showBuses, setShowBuses] = useState(true);
   const [showBackgroundMap, setShowBackgroundMap] = useState(false);
-  const [backgroundMapOpacity, setBackgroundMapOpacity] = useState(0.4);
-  const [selectedBackgroundStyle, setSelectedBackgroundStyle] = useState('grid');
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
   const { theme, setTheme } = useTheme();
 
@@ -191,6 +189,8 @@ export default function BusMonitor() {
               </div>
             </div>
 
+
+
             {/* Visibility Controls */}
             <div className="flex items-center space-x-1 border-l border-gray-300 dark:border-gray-600 pl-4 ml-4">
               <span className="text-xs font-medium text-gray-600 dark:text-gray-400 mr-2">Show:</span>
@@ -240,43 +240,6 @@ export default function BusMonitor() {
               </Button>
             </div>
 
-            {/* Background Controls */}
-            {showBackgroundMap && (
-              <div className="flex items-center space-x-4 border-l border-gray-300 dark:border-gray-600 pl-4 ml-4">
-                {/* Background Style Selection */}
-                <div className="flex items-center space-x-2">
-                  <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Style:</span>
-                  <select
-                    value={selectedBackgroundStyle}
-                    onChange={(e) => setSelectedBackgroundStyle(e.target.value)}
-                    className="text-xs border rounded px-2 py-1 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
-                  >
-                    <option value="grid">Grid</option>
-                    <option value="minimal">Minimal</option>
-                    <option value="topographic">Topographic</option>
-                    <option value="network">Network</option>
-                    <option value="transit">Transit</option>
-                  </select>
-                </div>
-                
-                {/* Opacity Slider */}
-                <div className="flex items-center space-x-2">
-                  <span className="text-xs font-medium text-gray-600 dark:text-gray-400">Opacity:</span>
-                  <input
-                    type="range"
-                  min="0.1"
-                  max="1"
-                  step="0.1"
-                  value={backgroundMapOpacity}
-                  onChange={(e) => setBackgroundMapOpacity(parseFloat(e.target.value))}
-                  className="w-20 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
-                />
-                <span className="text-xs text-gray-500 dark:text-gray-400 w-8">
-                  {Math.round(backgroundMapOpacity * 100)}%
-                </span>
-              </div>
-            )}
-
             {/* Station Names Toggle */}
             <Button
               onClick={() => setShowStationNames(!showStationNames)}
@@ -298,6 +261,8 @@ export default function BusMonitor() {
             >
               <Map className="h-4 w-4" />
             </Button>
+
+
 
             {/* Theme Toggle */}
             <Button
@@ -336,9 +301,10 @@ export default function BusMonitor() {
             >
               <Settings className="h-4 w-4" />
             </Button>
-
+            </div>
+            
             {/* Zone Selection */}
-            <div className="flex items-center space-x-2 border-l border-gray-300 dark:border-gray-600 pl-4 ml-4">
+            <div className="flex items-center space-x-2">
               <span className="text-sm font-medium">Zones:</span>
               <div className="flex space-x-1 flex-wrap">
                 {Array.from({ length: 16 }, (_, i) => i + 1).map((zone) => (
@@ -379,8 +345,6 @@ export default function BusMonitor() {
             showStations={showStations}
             showBuses={showBuses}
             showBackgroundMap={showBackgroundMap}
-            backgroundMapOpacity={backgroundMapOpacity}
-            selectedBackgroundStyle={selectedBackgroundStyle}
           />
         </div>
 
