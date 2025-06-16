@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { type BusWithRoute, type Route, type Station } from "@shared/schema";
+import { type BusWithRoute, type Route, type Station, type AlertWithDetails } from "@shared/schema";
 import BusIcon from "./bus-icon";
 import BusDetailsPanel from "./bus-details-panel";
 import { useRouteStations } from "@/hooks/use-route-stations";
@@ -31,6 +31,12 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   const [geofencingAlert, setGeofencingAlert] = useState<{busId: number, busNumber: string} | null>(null);
   const [dismissedAlerts, setDismissedAlerts] = useState<Set<number>>(new Set());
   const [showReturnDialog, setShowReturnDialog] = useState(false);
+
+  // Fetch active alerts to determine which buses have emergency alerts
+  const { data: alerts = [] } = useQuery<AlertWithDetails[]>({
+    queryKey: ['/api/alerts'],
+    refetchInterval: 2000
+  });
 
   // Check for off-route buses and show geofencing alerts
   useEffect(() => {
@@ -962,6 +968,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 
                 <BusIcon
                   bus={bus}
+                  alerts={alerts}
                   style={{
                     filter: isOffRoute ? `drop-shadow(0 0 12px rgba(30, 64, 175, ${0.7 + glowIntensity * 0.3}))` : undefined
                   }}
