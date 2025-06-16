@@ -192,6 +192,12 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     const points = getRoutePoints(route.id);
     const isHighlighted = selectedRoutes.includes(route.id);
     
+    // Debug Route 1 specifically
+    if (route.id === 1) {
+      console.log(`Route 1 color: ${route.color}, opacity: ${route.opacity}, lineWidth: ${route.lineWidth}`);
+      console.log(`Route 1 pattern: ${route.pattern}, lineStyle: ${route.lineStyle}`);
+    }
+    
     if (points.length < 2) return null;
     
 
