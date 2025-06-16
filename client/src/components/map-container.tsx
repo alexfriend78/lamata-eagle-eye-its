@@ -929,7 +929,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             const isOffRoute = bus.status === "off-route";
             const hasEmergencyAlert = alerts.some(alert => 
               alert.busId === bus.id && alert.isActive && 
-              (alert.type === 'emergency' || alert.type === 'geofencing' || alert.type === 'escalated_geofencing' || alert.severity === 'high' || alert.priority === 'critical')
+              (alert.type === 'emergency' || alert.type === 'security' || alert.type === 'geofencing' || alert.type === 'escalated_geofencing' || alert.severity === 'high' || alert.priority === 'critical' || alert.priority === 'P1')
             );
             // Apply glow intensity for both off-route and emergency alerts
             const glowIntensity = (isOffRoute || hasEmergencyAlert) ? getOffRouteGlowIntensity(bus) : 0;
