@@ -189,15 +189,12 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   };
 
   const renderRouteLine = (route: Route, routeIndex: number) => {
-    // Only render if route is selected or no specific routes are selected
-    if (selectedRoutes.length > 0 && !selectedRoutes.includes(route.id)) {
-      return null;
-    }
-
     const points = getRoutePoints(route.id);
     const isHighlighted = selectedRoutes.includes(route.id);
     
     if (points.length < 2) return null;
+    
+    console.log(`Rendering route ${route.id} (${route.name}) with ${points.length} points, highlighted: ${isHighlighted}`);
 
     // Calculate offset for overlapping routes - spread them more
     const offsetDistance = (routeIndex % 5 - 2) * 12; // -24, -12, 0, 12, 24 pixel offset
@@ -211,6 +208,12 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
       // Use current segment direction
       return calculatePerpendicularOffset(point, points[i+1], offsetDistance);
     });
+
+    // Debug log for Route 1 specifically
+    if (route.id === 1) {
+      console.log(`Route 1 debug - color: ${route.color}, points: ${points.length}, offset: ${offsetDistance}`);
+      console.log(`Route 1 offset points:`, offsetPoints.slice(0, 3).map(p => `${Math.round(p.x)},${Math.round(p.y)}`));
+    }
 
 
 
@@ -267,6 +270,12 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             : route.color;
 
           const lineWidth = route.lineWidth || 6;
+          
+          // Debug log for Route 1 specifically
+          if (route.id === 1) {
+            console.log(`Route 1 debug - color: ${route.color}, strokeColor: ${strokeColor}, lineWidth: ${lineWidth}, opacity: ${route.opacity}`);
+            console.log(`Route 1 offset points:`, offsetPoints.map(p => `${p.x},${p.y}`).join(' '));
+          }
           const opacity = route.opacity || (isHighlighted ? 1 : 0.9);
 
           return (
