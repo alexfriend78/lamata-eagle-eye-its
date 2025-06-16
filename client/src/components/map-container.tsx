@@ -90,6 +90,14 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
 
   // Calculate distance from route for off-route glow intensity
   const getOffRouteGlowIntensity = (bus: BusWithRoute): number => {
+    // Check for emergency alerts first - give maximum intensity
+    const hasEmergencyAlert = alerts.some(alert => 
+      alert.busId === bus.id && alert.isActive && 
+      (alert.type === 'emergency' || alert.type === 'geofencing' || alert.type === 'escalated_geofencing' || alert.severity === 'high' || alert.priority === 'critical')
+    );
+    
+    if (hasEmergencyAlert) return 1.0; // Maximum glow for emergency alerts
+    
     if (bus.status !== "off-route") return 0;
     
     const routePoints = getRoutePoints(bus.routeId);
@@ -918,12 +926,13 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         {showBuses && buses
           .filter(bus => selectedRoutes.length === 0 || selectedRoutes.includes(bus.routeId))
           .map((bus) => {
-            const glowIntensity = getOffRouteGlowIntensity(bus);
             const isOffRoute = bus.status === "off-route";
             const hasEmergencyAlert = alerts.some(alert => 
               alert.busId === bus.id && alert.isActive && 
               (alert.type === 'emergency' || alert.type === 'geofencing' || alert.type === 'escalated_geofencing' || alert.severity === 'high' || alert.priority === 'critical')
             );
+            // Apply glow intensity for both off-route and emergency alerts
+            const glowIntensity = (isOffRoute || hasEmergencyAlert) ? getOffRouteGlowIntensity(bus) : 0;
             
             return (
               <div
