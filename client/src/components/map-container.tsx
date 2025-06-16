@@ -192,11 +192,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     const points = getRoutePoints(route.id);
     const isHighlighted = selectedRoutes.includes(route.id);
     
-    // Debug Route 1 specifically
-    if (route.id === 1) {
-      console.log(`Route 1 color: ${route.color}, opacity: ${route.opacity}, lineWidth: ${route.lineWidth}`);
-      console.log(`Route 1 pattern: ${route.pattern}, lineStyle: ${route.lineStyle}`);
-    }
+
     
     if (points.length < 2) return null;
     
@@ -271,7 +267,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             ? `url(#gradient-${route.id})` 
             : route.color;
 
-          const lineWidth = route.id === 1 ? 12 : (route.lineWidth || 6); // Make Route 1 thicker for debugging
+          const lineWidth = route.lineWidth || 6;
           
 
           const opacity = route.opacity || (isHighlighted ? 1 : 0.9);
@@ -305,7 +301,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
               <polyline
                 points={offsetPoints.map(p => `${p.x},${p.y}`).join(' ')}
                 fill="none"
-                stroke={route.id === 1 ? "#FF0000" : strokeColor} // Force red for Route 1 debugging
+                stroke={strokeColor}
                 strokeWidth={lineWidth}
                 strokeLinecap="round"
                 strokeLinejoin="round"

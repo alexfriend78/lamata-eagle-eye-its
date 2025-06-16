@@ -78,8 +78,8 @@ export class MemStorage implements IStorage {
   private seedData() {
     // Create only the 5 Lagos BRT routes
     const routesData = [
-      { routeNumber: "1", name: "Oshodi - Abule-Egba", color: "#0066CC" },
-      { routeNumber: "2", name: "Abule Egba - TBS/Obalende", color: "#CC0000" },
+      { routeNumber: "1", name: "Oshodi - Abule-Egba", color: "#FF0000" },
+      { routeNumber: "2", name: "Abule Egba - TBS/Obalende", color: "#0066CC" },
       { routeNumber: "3", name: "Ikorodu - TBS", color: "#00AA44" },
       { routeNumber: "4", name: "Ikorodu - Fadeyi", color: "#FFD700" },
       { routeNumber: "5", name: "Ikorodu - Oshodi", color: "#8A2BE2" }
