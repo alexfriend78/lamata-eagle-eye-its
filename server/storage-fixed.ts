@@ -491,21 +491,36 @@ export class MemStorage implements IStorage {
         }
       });
       
-      const targetIndex = (closestIndex + 1) % routePoints.length;
+      // Check if bus is very close to current target (within 0.01 units)
+      const currentTarget = routePoints[closestIndex];
+      const distanceToTarget = Math.sqrt(
+        Math.pow(currentTarget.x - bus.currentX, 2) + Math.pow(currentTarget.y - bus.currentY, 2)
+      );
+      
+      // If close enough to current point, move to next point
+      const targetIndex = distanceToTarget < 0.015 ? (closestIndex + 1) % routePoints.length : closestIndex;
       const targetPoint = routePoints[targetIndex];
-      const speed = bus.status === "delayed" ? 6 : bus.status === "alert" ? 4 : 10;
       
-      // Calculate new position
-      const newX = bus.currentX + (targetPoint.x - bus.currentX) * (speed / 100);
-      const newY = bus.currentY + (targetPoint.y - bus.currentY) * (speed / 100);
+      const speed = bus.status === "delayed" ? 0.004 : bus.status === "alert" ? 0.002 : 0.006;
       
-      // Update bus position
-      this.buses.set(bus.id, {
-        ...bus,
-        currentX: newX,
-        currentY: newY,
-        lastUpdated: new Date()
-      });
+      // Calculate direction vector
+      const deltaX = targetPoint.x - bus.currentX;
+      const deltaY = targetPoint.y - bus.currentY;
+      const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+      
+      if (distance > 0.001) {
+        // Normalize and apply speed
+        const newX = bus.currentX + (deltaX / distance) * speed;
+        const newY = bus.currentY + (deltaY / distance) * speed;
+        
+        // Update bus position
+        this.buses.set(bus.id, {
+          ...bus,
+          currentX: newX,
+          currentY: newY,
+          lastUpdated: new Date()
+        });
+      }
     });
   }
 
@@ -663,7 +678,7 @@ export class MemStorage implements IStorage {
   private getRoutePoints(routeId: number): Array<{x: number, y: number}> {
     // Define the same route paths used in the frontend
     const routePaths: Record<number, Array<{x: number, y: number}>> = {
-      1: [ // Route 1: Oshodi - Abule-Egba (matching frontend coordinates)
+      1: [ // Route 1: Oshodi - Abule-Egba (matching frontend coordinates exactly)
         { x: 0.385, y: 0.67 }, // Right of Oshodi Terminal 2
         { x: 0.365, y: 0.65 }, // Right of Bolade
         { x: 0.345, y: 0.63 }, // Right of Ladipo
@@ -680,7 +695,7 @@ export class MemStorage implements IStorage {
         { x: 0.125, y: 0.41 }, // Right of Pleasure
         { x: 0.105, y: 0.39 }, // Right of Ile Epo
         { x: 0.085, y: 0.37 }, // Right of Super
-        { x: 0.18, y: 0.28 }  // Abule Egba
+        { x: 0.065, y: 0.35 }  // Right of Abule Egba (corrected endpoint)
       ],
       2: [ // Route 2: Abule Egba - Lekki Phase 2 Terminal (Complete north-south-east)
         { x: 0.18, y: 0.28 }, // Abule Egba Terminal
