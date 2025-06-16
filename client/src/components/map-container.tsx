@@ -211,29 +211,25 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         // Segment 8: Final northeast to terminal
         { x: mapWidth * 0.80, y: mapHeight * 0.35 }
       ],
-      4: [ // Route 4: Ikorodu - Fadeyi (Southwest to Mid-Central)
-        { x: mapWidth * 0.15, y: mapHeight * 0.85 }, // Ikorodu Terminal
-        { x: mapWidth * 0.17, y: mapHeight * 0.83 }, // Benson
-        { x: mapWidth * 0.19, y: mapHeight * 0.81 }, // ARUNA
-        { x: mapWidth * 0.21, y: mapHeight * 0.79 }, // AGRIC TERMINAL
-        { x: mapWidth * 0.23, y: mapHeight * 0.77 }, // OWUTU IDIROKO
-        { x: mapWidth * 0.25, y: mapHeight * 0.75 }, // OGOLONTO
-        { x: mapWidth * 0.27, y: mapHeight * 0.73 }, // MAJIDUN AWORI
-        { x: mapWidth * 0.29, y: mapHeight * 0.71 }, // AJEGUNLE
-        { x: mapWidth * 0.31, y: mapHeight * 0.69 }, // IRAWO
-        { x: mapWidth * 0.33, y: mapHeight * 0.67 }, // IDERA
-        { x: mapWidth * 0.35, y: mapHeight * 0.65 }, // OWODEONIRIN
-        { x: mapWidth * 0.37, y: mapHeight * 0.63 }, // MILE12 TERMINAL
-        { x: mapWidth * 0.39, y: mapHeight * 0.61 }, // KETU
-        { x: mapWidth * 0.41, y: mapHeight * 0.59 }, // OJOTA
-        { x: mapWidth * 0.43, y: mapHeight * 0.57 }, // NEWGARAGE
-        { x: mapWidth * 0.45, y: mapHeight * 0.55 }, // Maryland
-        { x: mapWidth * 0.47, y: mapHeight * 0.53 }, // Idiroko
-        { x: mapWidth * 0.49, y: mapHeight * 0.51 }, // Anthony
-        { x: mapWidth * 0.51, y: mapHeight * 0.49 }, // Obanikoro
-        { x: mapWidth * 0.53, y: mapHeight * 0.47 }, // Palmgroove
-        { x: mapWidth * 0.55, y: mapHeight * 0.45 }, // Onipanu
-        { x: mapWidth * 0.57, y: mapHeight * 0.43 }  // Fadeyi
+      4: [ // Route 4: Straight segments only - Ikorodu to Fadeyi
+        // Segment 1: Northeast diagonal
+        { x: mapWidth * 0.15, y: mapHeight * 0.85 },
+        { x: mapWidth * 0.25, y: mapHeight * 0.75 },
+        
+        // Segment 2: East straight
+        { x: mapWidth * 0.40, y: mapHeight * 0.75 },
+        
+        // Segment 3: North straight
+        { x: mapWidth * 0.40, y: mapHeight * 0.60 },
+        
+        // Segment 4: East straight
+        { x: mapWidth * 0.55, y: mapHeight * 0.60 },
+        
+        // Segment 5: South straight
+        { x: mapWidth * 0.55, y: mapHeight * 0.75 },
+        
+        // Segment 6: East straight to terminal
+        { x: mapWidth * 0.70, y: mapHeight * 0.75 }
       ],
       5: [ // Route 5: Random multi-segment path with 7 distinct segments
         // Segment 1: Start at random point, go northwest

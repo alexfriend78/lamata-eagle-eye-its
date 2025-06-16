@@ -225,29 +225,38 @@ export class MemStorage implements IStorage {
       { name: "Victoria Island", x: 0.75, y: 0.41, zone: 2, routeId: 3 },
       { name: "Lagos Island", x: 0.80, y: 0.35, zone: 2, routeId: 3 },
 
-      // Route 4: Ikorodu - Fadeyi stations
+      // Route 4: Straight segments only stations
+      // Segment 1 stations: Northeast diagonal
       { name: "Ikorodu Terminal", x: 0.15, y: 0.85, zone: 4, routeId: 4 },
-      { name: "Benson", x: 0.17, y: 0.83, zone: 4, routeId: 4 },
-      { name: "ARUNA", x: 0.19, y: 0.81, zone: 4, routeId: 4 },
-      { name: "AGRIC TERMINAL", x: 0.21, y: 0.79, zone: 4, routeId: 4 },
-      { name: "OWUTU IDIROKO", x: 0.23, y: 0.77, zone: 4, routeId: 4 },
-      { name: "OGOLONTO", x: 0.25, y: 0.75, zone: 3, routeId: 4 },
-      { name: "MAJIDUN AWORI", x: 0.27, y: 0.73, zone: 3, routeId: 4 },
-      { name: "AJEGUNLE", x: 0.29, y: 0.71, zone: 3, routeId: 4 },
-      { name: "IRAWO", x: 0.31, y: 0.69, zone: 3, routeId: 4 },
-      { name: "IDERA", x: 0.33, y: 0.67, zone: 3, routeId: 4 },
-      { name: "OWODEONIRIN", x: 0.35, y: 0.65, zone: 3, routeId: 4 },
-      { name: "MILE12 TERMINAL", x: 0.37, y: 0.63, zone: 3, routeId: 4 },
-      { name: "KETU", x: 0.39, y: 0.61, zone: 2, routeId: 4 },
-      { name: "OJOTA", x: 0.41, y: 0.59, zone: 2, routeId: 4 },
-      { name: "NEWGARAGE", x: 0.43, y: 0.57, zone: 2, routeId: 4 },
-      { name: "Maryland", x: 0.45, y: 0.55, zone: 2, routeId: 4 },
-      { name: "Idiroko", x: 0.47, y: 0.53, zone: 2, routeId: 4 },
-      { name: "Anthony", x: 0.49, y: 0.51, zone: 2, routeId: 4 },
-      { name: "Obanikoro", x: 0.51, y: 0.49, zone: 2, routeId: 4 },
-      { name: "Palmgroove", x: 0.53, y: 0.47, zone: 2, routeId: 4 },
-      { name: "Onipanu", x: 0.55, y: 0.45, zone: 2, routeId: 4 },
-      { name: "Fadeyi", x: 0.57, y: 0.43, zone: 2, routeId: 4 },
+      { name: "Benson", x: 0.18, y: 0.82, zone: 4, routeId: 4 },
+      { name: "Agric", x: 0.21, y: 0.79, zone: 4, routeId: 4 },
+      { name: "Owutu", x: 0.25, y: 0.75, zone: 3, routeId: 4 },
+      
+      // Segment 2 stations: East straight
+      { name: "Mile 12", x: 0.28, y: 0.75, zone: 3, routeId: 4 },
+      { name: "Ketu", x: 0.32, y: 0.75, zone: 3, routeId: 4 },
+      { name: "Ojota", x: 0.36, y: 0.75, zone: 2, routeId: 4 },
+      { name: "Maryland", x: 0.40, y: 0.75, zone: 2, routeId: 4 },
+      
+      // Segment 3 stations: North straight
+      { name: "Anthony", x: 0.40, y: 0.70, zone: 2, routeId: 4 },
+      { name: "Gbagada", x: 0.40, y: 0.65, zone: 2, routeId: 4 },
+      { name: "Yaba", x: 0.40, y: 0.60, zone: 2, routeId: 4 },
+      
+      // Segment 4 stations: East straight
+      { name: "Fadeyi", x: 0.45, y: 0.60, zone: 2, routeId: 4 },
+      { name: "Jibowu", x: 0.50, y: 0.60, zone: 2, routeId: 4 },
+      { name: "Mushin", x: 0.55, y: 0.60, zone: 2, routeId: 4 },
+      
+      // Segment 5 stations: South straight
+      { name: "Papa Ajao", x: 0.55, y: 0.65, zone: 2, routeId: 4 },
+      { name: "Ikeja", x: 0.55, y: 0.70, zone: 2, routeId: 4 },
+      { name: "Ogba", x: 0.55, y: 0.75, zone: 2, routeId: 4 },
+      
+      // Segment 6 stations: East straight to terminal
+      { name: "Agege", x: 0.60, y: 0.75, zone: 2, routeId: 4 },
+      { name: "Pen Cinema", x: 0.65, y: 0.75, zone: 2, routeId: 4 },
+      { name: "Alimosho Terminal", x: 0.70, y: 0.75, zone: 2, routeId: 4 },
 
       // Route 5: Random path stations positioned along 7 segments
       // Segment 1 stations: Northwest from random start
@@ -878,29 +887,25 @@ export class MemStorage implements IStorage {
         // Segment 8: Final northeast to terminal
         { x: 0.80, y: 0.35 }
       ],
-      4: [ // Route 4: Ikorodu - Fadeyi (Southwest to Mid-Central)
-        { x: 0.15, y: 0.85 }, // Ikorodu Terminal
-        { x: 0.17, y: 0.83 }, // Benson
-        { x: 0.19, y: 0.81 }, // ARUNA
-        { x: 0.21, y: 0.79 }, // AGRIC TERMINAL
-        { x: 0.23, y: 0.77 }, // OWUTU IDIROKO
-        { x: 0.25, y: 0.75 }, // OGOLONTO
-        { x: 0.27, y: 0.73 }, // MAJIDUN AWORI
-        { x: 0.29, y: 0.71 }, // AJEGUNLE
-        { x: 0.31, y: 0.69 }, // IRAWO
-        { x: 0.33, y: 0.67 }, // IDERA
-        { x: 0.35, y: 0.65 }, // OWODEONIRIN
-        { x: 0.37, y: 0.63 }, // MILE12 TERMINAL
-        { x: 0.39, y: 0.61 }, // KETU
-        { x: 0.41, y: 0.59 }, // OJOTA
-        { x: 0.43, y: 0.57 }, // NEWGARAGE
-        { x: 0.45, y: 0.55 }, // Maryland
-        { x: 0.47, y: 0.53 }, // Idiroko
-        { x: 0.49, y: 0.51 }, // Anthony
-        { x: 0.51, y: 0.49 }, // Obanikoro
-        { x: 0.53, y: 0.47 }, // Palmgroove
-        { x: 0.55, y: 0.45 }, // Onipanu
-        { x: 0.57, y: 0.43 }  // Fadeyi
+      4: [ // Route 4: Straight segments only - Ikorodu to Fadeyi
+        // Segment 1: Northeast diagonal
+        { x: 0.15, y: 0.85 },
+        { x: 0.25, y: 0.75 },
+        
+        // Segment 2: East straight
+        { x: 0.40, y: 0.75 },
+        
+        // Segment 3: North straight
+        { x: 0.40, y: 0.60 },
+        
+        // Segment 4: East straight
+        { x: 0.55, y: 0.60 },
+        
+        // Segment 5: South straight
+        { x: 0.55, y: 0.75 },
+        
+        // Segment 6: East straight to terminal
+        { x: 0.70, y: 0.75 }
       ],
       5: [ // Route 5: Random multi-segment path with 7 distinct segments
         // Segment 1: Start at random point, go northwest
