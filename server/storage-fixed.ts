@@ -605,6 +605,26 @@ export class MemStorage implements IStorage {
     return undefined;
   }
 
+  async clearAlert(id: number): Promise<Alert | undefined> {
+    const alert = this.alerts.get(id);
+    if (alert) {
+      const updatedAlert = { ...alert, isActive: false, status: "cleared" };
+      this.alerts.set(id, updatedAlert);
+      return updatedAlert;
+    }
+    return undefined;
+  }
+
+  async escalateAlert(id: number): Promise<Alert | undefined> {
+    const alert = this.alerts.get(id);
+    if (alert) {
+      const updatedAlert = { ...alert, isActive: false, status: "escalated" };
+      this.alerts.set(id, updatedAlert);
+      return updatedAlert;
+    }
+    return undefined;
+  }
+
   async closeAlert(id: number): Promise<Alert | undefined> {
     const alert = this.alerts.get(id);
     if (alert) {

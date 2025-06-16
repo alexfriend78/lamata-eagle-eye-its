@@ -214,7 +214,25 @@ export class DatabaseStorage implements IStorage {
   async acknowledgeAlert(id: number): Promise<Alert | undefined> {
     const [updatedAlert] = await db
       .update(alerts)
-      .set({ isActive: false })
+      .set({ status: "acknowledged", isActive: false })
+      .where(eq(alerts.id, id))
+      .returning();
+    return updatedAlert;
+  }
+
+  async clearAlert(id: number): Promise<Alert | undefined> {
+    const [updatedAlert] = await db
+      .update(alerts)
+      .set({ status: "cleared", isActive: false })
+      .where(eq(alerts.id, id))
+      .returning();
+    return updatedAlert;
+  }
+
+  async escalateAlert(id: number): Promise<Alert | undefined> {
+    const [updatedAlert] = await db
+      .update(alerts)
+      .set({ status: "escalated", isActive: false })
       .where(eq(alerts.id, id))
       .returning();
     return updatedAlert;

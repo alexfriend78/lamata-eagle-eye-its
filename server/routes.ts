@@ -202,6 +202,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Escalate alert
+  app.patch("/api/alerts/:id/escalate", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const alert = await storage.escalateAlert(id);
+      if (!alert) {
+        res.status(404).json({ error: "Alert not found" });
+        return;
+      }
+      res.json(alert);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to escalate alert" });
+    }
+  });
+
   // Update route aesthetics
   app.patch("/api/routes/:id", async (req, res) => {
     try {
