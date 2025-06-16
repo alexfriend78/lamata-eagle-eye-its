@@ -137,6 +137,14 @@ export default function EmergencyAlertSystem({
     },
   });
 
+  // Reset mutation states when active alert changes
+  useEffect(() => {
+    if (activeAlert) {
+      acknowledgeAlertMutation.reset();
+      closeAlertMutation.reset();
+    }
+  }, [activeAlert?.id]);
+
   const handleSimulateAlert = () => {
     const bus = buses.find(b => b.id === parseInt(selectedBus));
     if (!bus || !alertMessage) return;
