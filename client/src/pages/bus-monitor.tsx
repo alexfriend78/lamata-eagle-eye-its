@@ -127,10 +127,10 @@ export default function BusMonitor() {
             <div className="flex items-center space-x-4">
               <div className="text-2xl animate-pulse">🚌</div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-green-800 via-green-600 to-green-800 bg-clip-text text-transparent drop-shadow-lg">
+                <h1 className="text-2xl font-bold text-green-900 dark:text-green-100 drop-shadow-lg">
                   LAMATA - Eagle Eye ITS 🦅
                 </h1>
-                <p className="text-xs font-medium text-green-700 dark:text-green-400">
+                <p className="text-xs font-medium text-green-800 dark:text-green-200">
                   Lagos Metropolitan Area Transport Authority
                 </p>
               </div>
