@@ -175,19 +175,19 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         // Segment 7: Final east stretch
         { x: mapWidth * 0.90, y: mapHeight * 0.65 }
       ],
-      3: [ // Route 3: New diagonal pattern - Lagos Central Express
-        // Segment 1: Southeast diagonal from southwest
-        { x: mapWidth * 0.20, y: mapHeight * 0.80 },
-        { x: mapWidth * 0.40, y: mapHeight * 0.60 },
+      3: [ // Route 3: Lagos Metro Express - Diamond Pattern
+        // Segment 1: Northeast diagonal
+        { x: mapWidth * 0.25, y: mapHeight * 0.75 },
+        { x: mapWidth * 0.50, y: mapHeight * 0.50 },
         
-        // Segment 2: Northeast diagonal
-        { x: mapWidth * 0.65, y: mapHeight * 0.35 },
+        // Segment 2: Southeast diagonal
+        { x: mapWidth * 0.75, y: mapHeight * 0.75 },
         
-        // Segment 3: Northwest diagonal
-        { x: mapWidth * 0.45, y: mapHeight * 0.20 },
+        // Segment 3: Southwest diagonal
+        { x: mapWidth * 0.50, y: mapHeight * 0.90 },
         
-        // Segment 4: Northeast diagonal to terminal
-        { x: mapWidth * 0.70, y: mapHeight * 0.10 }
+        // Segment 4: Northwest diagonal back to center
+        { x: mapWidth * 0.30, y: mapHeight * 0.70 }
       ],
       4: [ // Route 4: Realistic Lagos BRT - Ikorodu to Victoria Island
         // Segment 1: Northeast from Ikorodu towards Mile 12
@@ -206,28 +206,22 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         // Segment 5: Southeast to Victoria Island
         { x: mapWidth * 0.85, y: mapHeight * 0.35 }
       ],
-      5: [ // Route 5: Random multi-segment path with 7 distinct segments
-        // Segment 1: Start at random point, go northwest
-        { x: mapWidth * 0.80, y: mapHeight * 0.75 },
-        { x: mapWidth * 0.65, y: mapHeight * 0.60 },
+      5: [ // Route 5: Lagos Orbital Express - Zigzag Pattern
+        // Segment 1: Southwest diagonal
+        { x: mapWidth * 0.80, y: mapHeight * 0.20 },
+        { x: mapWidth * 0.60, y: mapHeight * 0.40 },
         
-        // Segment 2: Sharp south turn
-        { x: mapWidth * 0.65, y: mapHeight * 0.25 },
+        // Segment 2: Northwest diagonal
+        { x: mapWidth * 0.40, y: mapHeight * 0.20 },
         
-        // Segment 3: Southwest diagonal
-        { x: mapWidth * 0.45, y: mapHeight * 0.05 },
+        // Segment 3: Northeast diagonal
+        { x: mapWidth * 0.60, y: mapHeight * 0.10 },
         
-        // Segment 4: Sharp east turn
-        { x: mapWidth * 0.85, y: mapHeight * 0.05 },
+        // Segment 4: Southeast diagonal
+        { x: mapWidth * 0.85, y: mapHeight * 0.35 },
         
-        // Segment 5: Northeast diagonal
-        { x: mapWidth * 0.95, y: mapHeight * 0.35 },
-        
-        // Segment 6: West turn
-        { x: mapWidth * 0.55, y: mapHeight * 0.35 },
-        
-        // Segment 7: Final northwest to random endpoint
-        { x: mapWidth * 0.25, y: mapHeight * 0.55 }
+        // Segment 5: Southwest diagonal to finish
+        { x: mapWidth * 0.70, y: mapHeight * 0.50 }
       ]
     };
     return routePaths[routeId] || [];

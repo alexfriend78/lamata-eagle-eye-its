@@ -83,9 +83,9 @@ export class MemStorage implements IStorage {
     const routesData = [
       { routeNumber: "1", name: "Oshodi - Abule-Egba", color: "#FF0000" },
       { routeNumber: "2", name: "Abule Egba - TBS/Obalende", color: "#0066CC" },
-      { routeNumber: "3", name: "Lagos Central Express", color: "#00AA44" },
+      { routeNumber: "3", name: "Lagos Metro Express", color: "#00AA44" },
       { routeNumber: "4", name: "Ikorodu - Fadeyi", color: "#FFD700" },
-      { routeNumber: "5", name: "Ikorodu - Oshodi", color: "#8A2BE2" }
+      { routeNumber: "5", name: "Lagos Orbital Express", color: "#8A2BE2" }
     ];
 
     routesData.forEach(routeData => {
@@ -168,38 +168,35 @@ export class MemStorage implements IStorage {
       { name: "Marina", x: 0.86, y: 0.65, zone: 2, routeId: 2 },
       { name: "Victoria Island Terminal", x: 0.90, y: 0.65, zone: 3, routeId: 2 },
 
-      // Route 3: New diagonal pattern stations - Lagos Central Express
-      // Segment 1 stations: Southeast diagonal from southwest
-      { name: "Agege Terminal", x: 0.20, y: 0.80, zone: 3, routeId: 3 },
-      { name: "Ikeja Under Bridge", x: 0.24, y: 0.76, zone: 3, routeId: 3 },
-      { name: "Allen Avenue", x: 0.28, y: 0.72, zone: 2, routeId: 3 },
-      { name: "Opebi", x: 0.32, y: 0.68, zone: 2, routeId: 3 },
-      { name: "Oregun", x: 0.36, y: 0.64, zone: 2, routeId: 3 },
-      { name: "Maryland Junction", x: 0.40, y: 0.60, zone: 2, routeId: 3 },
+      // Route 3: Lagos Metro Express - Diamond Pattern stations
+      // Segment 1 stations: Northeast diagonal
+      { name: "Ikeja Central", x: 0.25, y: 0.75, zone: 2, routeId: 3 },
+      { name: "Opebi Link", x: 0.30, y: 0.70, zone: 2, routeId: 3 },
+      { name: "Allen Roundabout", x: 0.35, y: 0.65, zone: 2, routeId: 3 },
+      { name: "Computer Village", x: 0.40, y: 0.60, zone: 2, routeId: 3 },
+      { name: "Yaba Tech", x: 0.45, y: 0.55, zone: 2, routeId: 3 },
+      { name: "TBS Central", x: 0.50, y: 0.50, zone: 2, routeId: 3 },
       
-      // Segment 2 stations: Northeast diagonal
-      { name: "Ikoyi", x: 0.45, y: 0.55, zone: 2, routeId: 3 },
-      { name: "Falomo", x: 0.50, y: 0.50, zone: 2, routeId: 3 },
-      { name: "Awolowo Road", x: 0.55, y: 0.45, zone: 2, routeId: 3 },
-      { name: "Bar Beach", x: 0.60, y: 0.40, zone: 2, routeId: 3 },
-      { name: "Victoria Island", x: 0.65, y: 0.35, zone: 2, routeId: 3 },
+      // Segment 2 stations: Southeast diagonal
+      { name: "Victoria Plaza", x: 0.55, y: 0.55, zone: 2, routeId: 3 },
+      { name: "Lekki Phase 1", x: 0.60, y: 0.60, zone: 2, routeId: 3 },
+      { name: "Admiralty Way", x: 0.65, y: 0.65, zone: 2, routeId: 3 },
+      { name: "Chevron Drive", x: 0.70, y: 0.70, zone: 2, routeId: 3 },
+      { name: "Lekki Terminal", x: 0.75, y: 0.75, zone: 2, routeId: 3 },
       
-      // Segment 3 stations: Northwest diagonal
-      { name: "Tiamiyu Savage", x: 0.62, y: 0.32, zone: 2, routeId: 3 },
-      { name: "Ahmadu Bello", x: 0.59, y: 0.29, zone: 2, routeId: 3 },
-      { name: "Broad Street", x: 0.56, y: 0.26, zone: 2, routeId: 3 },
-      { name: "Lagos Island", x: 0.53, y: 0.23, zone: 2, routeId: 3 },
-      { name: "Central Bank", x: 0.50, y: 0.21, zone: 2, routeId: 3 },
-      { name: "Marina", x: 0.47, y: 0.20, zone: 2, routeId: 3 },
-      { name: "CMS", x: 0.45, y: 0.20, zone: 2, routeId: 3 },
+      // Segment 3 stations: Southwest diagonal
+      { name: "Epe Junction", x: 0.70, y: 0.80, zone: 3, routeId: 3 },
+      { name: "Ajah Market", x: 0.65, y: 0.85, zone: 3, routeId: 3 },
+      { name: "Lakowe", x: 0.60, y: 0.87, zone: 3, routeId: 3 },
+      { name: "Sangotedo", x: 0.55, y: 0.89, zone: 3, routeId: 3 },
+      { name: "Awoyaya", x: 0.50, y: 0.90, zone: 3, routeId: 3 },
       
-      // Segment 4 stations: Northeast diagonal to terminal
-      { name: "National Theatre", x: 0.48, y: 0.17, zone: 2, routeId: 3 },
-      { name: "Iganmu", x: 0.52, y: 0.14, zone: 2, routeId: 3 },
-      { name: "Ijora", x: 0.56, y: 0.12, zone: 2, routeId: 3 },
-      { name: "Apapa", x: 0.60, y: 0.11, zone: 2, routeId: 3 },
-      { name: "Port Terminal", x: 0.64, y: 0.10, zone: 2, routeId: 3 },
-      { name: "Wharf Central", x: 0.70, y: 0.10, zone: 2, routeId: 3 },
+      // Segment 4 stations: Northwest diagonal back to center
+      { name: "Ibeju Central", x: 0.45, y: 0.87, zone: 3, routeId: 3 },
+      { name: "Bogije", x: 0.40, y: 0.82, zone: 3, routeId: 3 },
+      { name: "Eleko Junction", x: 0.35, y: 0.77, zone: 3, routeId: 3 },
+      { name: "Ikorodu Link", x: 0.32, y: 0.73, zone: 3, routeId: 3 },
+      { name: "Agric Terminal", x: 0.30, y: 0.70, zone: 3, routeId: 3 },
 
       // Route 4: Realistic Lagos BRT stations - Ikorodu to Victoria Island
       // Segment 1 stations: Northeast from Ikorodu towards Mile 12
@@ -824,19 +821,19 @@ export class MemStorage implements IStorage {
         // Segment 7: Final east stretch
         { x: 0.90, y: 0.65 }
       ],
-      3: [ // Route 3: New diagonal pattern - Lagos Central Express
-        // Segment 1: Southeast diagonal from southwest
-        { x: 0.20, y: 0.80 },
-        { x: 0.40, y: 0.60 },
+      3: [ // Route 3: Lagos Metro Express - Diamond Pattern
+        // Segment 1: Northeast diagonal
+        { x: 0.25, y: 0.75 },
+        { x: 0.50, y: 0.50 },
         
-        // Segment 2: Northeast diagonal
-        { x: 0.65, y: 0.35 },
+        // Segment 2: Southeast diagonal
+        { x: 0.75, y: 0.75 },
         
-        // Segment 3: Northwest diagonal
-        { x: 0.45, y: 0.20 },
+        // Segment 3: Southwest diagonal
+        { x: 0.50, y: 0.90 },
         
-        // Segment 4: Northeast diagonal to terminal
-        { x: 0.70, y: 0.10 }
+        // Segment 4: Northwest diagonal back to center
+        { x: 0.30, y: 0.70 }
       ],
       4: [ // Route 4: Realistic Lagos BRT - Ikorodu to Victoria Island
         // Segment 1: Northeast from Ikorodu towards Mile 12
@@ -855,28 +852,22 @@ export class MemStorage implements IStorage {
         // Segment 5: Southeast to Victoria Island
         { x: 0.85, y: 0.35 }
       ],
-      5: [ // Route 5: Random multi-segment path with 7 distinct segments
-        // Segment 1: Start at random point, go northwest
-        { x: 0.80, y: 0.75 },
-        { x: 0.65, y: 0.60 },
+      5: [ // Route 5: Lagos Orbital Express - Zigzag Pattern
+        // Segment 1: Southwest diagonal
+        { x: 0.80, y: 0.20 },
+        { x: 0.60, y: 0.40 },
         
-        // Segment 2: Sharp south turn
-        { x: 0.65, y: 0.25 },
+        // Segment 2: Northwest diagonal
+        { x: 0.40, y: 0.20 },
         
-        // Segment 3: Southwest diagonal
-        { x: 0.45, y: 0.05 },
+        // Segment 3: Northeast diagonal
+        { x: 0.60, y: 0.10 },
         
-        // Segment 4: Sharp east turn
-        { x: 0.85, y: 0.05 },
+        // Segment 4: Southeast diagonal
+        { x: 0.85, y: 0.35 },
         
-        // Segment 5: Northeast diagonal
-        { x: 0.95, y: 0.35 },
-        
-        // Segment 6: West turn
-        { x: 0.55, y: 0.35 },
-        
-        // Segment 7: Final northwest to random endpoint
-        { x: 0.25, y: 0.55 }
+        // Segment 5: Southwest diagonal to finish
+        { x: 0.70, y: 0.50 }
       ]
     };
     return routePaths[routeId] || [];
