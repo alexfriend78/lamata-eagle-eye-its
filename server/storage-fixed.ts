@@ -871,25 +871,40 @@ export class MemStorage implements IStorage {
         { x: 0.55, y: 0.45 }, // Onipanu
         { x: 0.57, y: 0.43 }  // Fadeyi
       ],
-      5: [ // Route 5: Ikorodu - Oshodi (Southwest to Central)
+      5: [ // Route 5: Mixed segments with straight lines and curves
+        // Segment 1: Straight northeast start
         { x: 0.15, y: 0.85 }, // Ikorodu Terminal
-        { x: 0.17, y: 0.83 }, // Benson
-        { x: 0.19, y: 0.81 }, // ARUNA
-        { x: 0.21, y: 0.79 }, // AGRIC TERMINAL
-        { x: 0.23, y: 0.77 }, // OWUTU IDIROKO
-        { x: 0.25, y: 0.75 }, // OGOLONTO
-        { x: 0.27, y: 0.73 }, // MAJIDUN AWORI
-        { x: 0.29, y: 0.71 }, // AJEGUNLE
-        { x: 0.31, y: 0.69 }, // IRAWO
-        { x: 0.33, y: 0.67 }, // IDERA
-        { x: 0.35, y: 0.65 }, // OWODEONIRIN
-        { x: 0.37, y: 0.63 }, // MILE12 TERMINAL
-        { x: 0.39, y: 0.61 }, // KETU
-        { x: 0.41, y: 0.59 }, // OJOTA
-        { x: 0.43, y: 0.57 }, // NEWGARAGE
-        { x: 0.45, y: 0.55 }, // Maryland
-        { x: 0.47, y: 0.53 }, // Anthony
-        { x: 0.50, y: 0.60 }  // Oshodi Terminal 3
+        { x: 0.20, y: 0.80 }, // Benson
+        { x: 0.25, y: 0.75 }, // ARUNA
+        
+        // Segment 2: Curved section (gentle arc)
+        { x: 0.28, y: 0.72 }, // AGRIC TERMINAL
+        { x: 0.32, y: 0.70 }, // OWUTU IDIROKO
+        { x: 0.36, y: 0.69 }, // OGOLONTO
+        { x: 0.40, y: 0.70 }, // MAJIDUN AWORI
+        { x: 0.43, y: 0.72 }, // AJEGUNLE
+        
+        // Segment 3: Straight north
+        { x: 0.43, y: 0.68 }, // IRAWO
+        { x: 0.43, y: 0.64 }, // IDERA
+        { x: 0.43, y: 0.60 }, // OWODEONIRIN
+        
+        // Segment 4: Sharp curve east
+        { x: 0.46, y: 0.58 }, // MILE12 TERMINAL
+        { x: 0.50, y: 0.57 }, // KETU
+        { x: 0.54, y: 0.58 }, // OJOTA
+        
+        // Segment 5: S-curve pattern
+        { x: 0.56, y: 0.61 }, // NEWGARAGE
+        { x: 0.57, y: 0.64 }, // Maryland
+        { x: 0.56, y: 0.67 }, // Anthony
+        { x: 0.54, y: 0.69 }, // Obanikoro
+        
+        // Segment 6: Final curved approach to Oshodi
+        { x: 0.52, y: 0.71 }, // Fadeyi
+        { x: 0.51, y: 0.73 }, // Yaba Junction
+        { x: 0.50, y: 0.75 }, // Oshodi Approach
+        { x: 0.50, y: 0.77 }  // Oshodi Terminal 3
       ]
     };
     return routePaths[routeId] || [];
