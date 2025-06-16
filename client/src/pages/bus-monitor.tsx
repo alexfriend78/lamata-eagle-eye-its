@@ -313,8 +313,8 @@ export default function BusMonitor() {
       </header>
 
       {/* Scrollable Main Content */}
-      <div className="flex-1 overflow-hidden">
-        <div className="flex h-full">
+      <div className="flex-1 overflow-auto">
+        <div className="flex min-h-[200vh]">
           {/* Full Screen Map Area */}
         <div className="flex-1 relative overflow-hidden">
           <MapContainer 
