@@ -359,13 +359,34 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                         Critical alert has been escalated to security personnel. Response team has been notified.
                       </p>
                     </div>
-                    <Button
-                      onClick={onClose}
-                      className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 flex items-center gap-2"
-                    >
-                      <X className="w-4 h-4" />
-                      Close Panel
-                    </Button>
+                    <div className="flex gap-3">
+                      <Button
+                        onClick={async () => {
+                          try {
+                            const response = await fetch(`/api/buses/${bus.id}/return-to-route`, {
+                              method: 'POST'
+                            });
+                            if (response.ok) {
+                              // Close the panel after successful clear
+                              onClose();
+                            }
+                          } catch (error) {
+                            console.error('Failed to clear alert:', error);
+                          }
+                        }}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 flex items-center gap-2"
+                      >
+                        <CheckCircle className="w-4 h-4" />
+                        Clear Alert
+                      </Button>
+                      <Button
+                        onClick={onClose}
+                        className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 flex items-center gap-2"
+                      >
+                        <X className="w-4 h-4" />
+                        Close Panel
+                      </Button>
+                    </div>
                   </div>
                 )}
               </div>
