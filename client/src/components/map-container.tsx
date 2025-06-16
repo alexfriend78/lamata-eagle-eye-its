@@ -551,6 +551,96 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         }}
       >
         {/* Background Map Layer */}
+      {showBackgroundMap && (
+        <svg width={mapWidth} height={mapHeight} className="absolute inset-0" style={{ zIndex: 1 }}>
+          <g opacity="0.15">
+            {/* Lagos State outline */}
+            <path
+              d="M100,150 L200,120 L350,140 L450,160 L500,200 L480,300 L420,350 L300,380 L200,360 L150,300 L100,250 Z"
+              fill="none"
+              stroke={theme === 'dark' ? '#6b7280' : '#9ca3af'}
+              strokeWidth="2"
+            />
+            
+            {/* Lagos Island */}
+            <ellipse
+              cx="1000"
+              cy="400"
+              rx="80"
+              ry="40"
+              fill={theme === 'dark' ? '#374151' : '#f3f4f6'}
+              stroke={theme === 'dark' ? '#6b7280' : '#9ca3af'}
+              strokeWidth="1"
+              opacity="0.3"
+            />
+            
+            {/* Victoria Island */}
+            <ellipse
+              cx="1050"
+              cy="450"
+              rx="60"
+              ry="30"
+              fill={theme === 'dark' ? '#374151' : '#f3f4f6'}
+              stroke={theme === 'dark' ? '#6b7280' : '#9ca3af'}
+              strokeWidth="1"
+              opacity="0.3"
+            />
+            
+            {/* Major waterways - Lagos Lagoon */}
+            <path
+              d="M600,350 Q750,370 900,360 Q1000,350 1100,380"
+              fill="none"
+              stroke={theme === 'dark' ? '#1e40af' : '#3b82f6'}
+              strokeWidth="8"
+              opacity="0.3"
+            />
+            
+            {/* Road network grid */}
+            {Array.from({length: 15}, (_, i) => (
+              <line
+                key={`h-${i}`}
+                x1="0"
+                y1={50 + i * 40}
+                x2={mapWidth}
+                y2={50 + i * 40}
+                stroke={theme === 'dark' ? '#374151' : '#e5e7eb'}
+                strokeWidth="0.5"
+                opacity="0.4"
+              />
+            ))}
+            {Array.from({length: 25}, (_, i) => (
+              <line
+                key={`v-${i}`}
+                x1={i * 50}
+                y1="0"
+                x2={i * 50}
+                y2={mapHeight}
+                stroke={theme === 'dark' ? '#374151' : '#e5e7eb'}
+                strokeWidth="0.5"
+                opacity="0.4"
+              />
+            ))}
+            
+            {/* Major highways */}
+            <path
+              d="M0,300 L400,280 L800,300 L1200,320"
+              fill="none"
+              stroke={theme === 'dark' ? '#6b7280' : '#9ca3af'}
+              strokeWidth="3"
+              opacity="0.6"
+            />
+            <path
+              d="M200,100 Q400,200 600,300 Q800,400 1000,500"
+              fill="none"
+              stroke={theme === 'dark' ? '#6b7280' : '#9ca3af'}
+              strokeWidth="3"
+              opacity="0.6"
+            />
+          </g>
+        </svg>
+      )}
+
+        {/* Area Labels and Features */}
         {showMap && (
           <div 
             className="absolute inset-0"

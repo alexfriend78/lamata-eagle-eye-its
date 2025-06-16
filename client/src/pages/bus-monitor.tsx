@@ -227,6 +227,17 @@ export default function BusMonitor() {
               >
                 Buses
               </Button>
+
+              {/* Background Map Toggle */}
+              <Button
+                onClick={() => setShowBackgroundMap(!showBackgroundMap)}
+                variant={showBackgroundMap ? "default" : "outline"}
+                size="sm"
+                className="h-8 px-2 text-xs"
+                title="Toggle background map"
+              >
+                Map
+              </Button>
             </div>
 
             {/* Station Names Toggle */}
@@ -333,6 +344,7 @@ export default function BusMonitor() {
             showRoutes={showRoutes}
             showStations={showStations}
             showBuses={showBuses}
+            showBackgroundMap={showBackgroundMap}
           />
         </div>
 
