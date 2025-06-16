@@ -199,7 +199,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     // Calculate offset for overlapping routes - spread them more
     const offsetDistance = (routeIndex % 5 - 2) * 12; // -24, -12, 0, 12, 24 pixel offset
     
-    // Apply perpendicular offset to create parallel lines
+    // Apply perpendicular offset to create parallel lines that curve around stations
     const offsetPoints = points.map((point, i) => {
       if (i === points.length - 1) {
         // For last point, use previous segment direction
@@ -207,6 +207,25 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
       }
       // Use current segment direction
       return calculatePerpendicularOffset(point, points[i+1], offsetDistance);
+    });
+
+    // Create curved path around stations instead of straight lines through them
+    const curvedPoints = offsetPoints.map((point, i) => {
+      if (i === 0 || i === offsetPoints.length - 1) {
+        return point; // Keep endpoints as-is
+      }
+      
+      // Add curve offset to avoid station name areas
+      const stationOffset = 20; // Pixels to offset from station center
+      const angle = Math.atan2(
+        offsetPoints[i + 1].y - offsetPoints[i - 1].y,
+        offsetPoints[i + 1].x - offsetPoints[i - 1].x
+      );
+      
+      return {
+        x: point.x + Math.cos(angle + Math.PI / 2) * stationOffset,
+        y: point.y + Math.sin(angle + Math.PI / 2) * stationOffset
+      };
     });
 
 
@@ -274,7 +293,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             <>
               {/* Shadow effect */}
               <polyline
-                points={offsetPoints.map(p => `${p.x + 2},${p.y + 2}`).join(' ')}
+                points={curvedPoints.map(p => `${p.x + 2},${p.y + 2}`).join(' ')}
                 fill="none"
                 stroke="rgba(0,0,0,0.3)"
                 strokeWidth={isHighlighted ? lineWidth + 2 : lineWidth}
@@ -285,7 +304,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
               {/* Double line background effect */}
               {route.lineStyle === "double" && (
                 <polyline
-                  points={offsetPoints.map(p => `${p.x},${p.y}`).join(' ')}
+                  points={curvedPoints.map(p => `${p.x},${p.y}`).join(' ')}
                   fill="none"
                   stroke={route.color}
                   strokeWidth={lineWidth + 4}
@@ -297,7 +316,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
 
               {/* Main route line */}
               <polyline
-                points={offsetPoints.map(p => `${p.x},${p.y}`).join(' ')}
+                points={curvedPoints.map(p => `${p.x},${p.y}`).join(' ')}
                 fill="none"
                 stroke={strokeColor}
                 strokeWidth={lineWidth}
