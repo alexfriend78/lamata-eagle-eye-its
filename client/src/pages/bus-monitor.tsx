@@ -67,7 +67,7 @@ export default function BusMonitor() {
     });
   };
 
-  const criticalAlert = alerts?.find(alert => alert.severity === "critical");
+  const criticalAlert = alerts?.find(alert => alert.severity === "critical" && alert.isActive);
   
   // Find the most recent active alert with highest priority
   const priorityOrder = { P1: 1, P2: 2, P3: 3, P4: 4, P5: 5 };
