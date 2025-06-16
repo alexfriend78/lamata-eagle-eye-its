@@ -197,6 +197,17 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     const points = getRoutePoints(route.id);
     const isHighlighted = selectedRoutes.includes(route.id);
     
+    // Debug logging for Route 1
+    if (route.id === 1) {
+      console.log('Route 1 rendering:', { 
+        routeId: route.id, 
+        pointsLength: points.length, 
+        selectedRoutes, 
+        isHighlighted,
+        color: route.color 
+      });
+    }
+    
     if (points.length < 2) return null;
 
     // Calculate offset for overlapping routes - spread them more
