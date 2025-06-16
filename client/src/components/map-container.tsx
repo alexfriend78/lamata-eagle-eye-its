@@ -1,5 +1,7 @@
+import { useState } from "react";
 import { type BusWithRoute, type Route, type Station } from "@shared/schema";
 import BusIcon from "./bus-icon";
+import BusDetailsPanel from "./bus-details-panel";
 import { useRouteStations } from "@/hooks/use-route-stations";
 import { useQuery } from "@tanstack/react-query";
 
@@ -23,6 +25,8 @@ interface MapContainerProps {
 }
 
 export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed, showRoutes, showStations, showBuses }: MapContainerProps) {
+  const [selectedBus, setSelectedBus] = useState<BusWithRoute | null>(null);
+  
   // Dynamic screen dimensions accounting for header
   const mapWidth = typeof window !== 'undefined' ? window.innerWidth : 1920;
   const mapHeight = typeof window !== 'undefined' ? window.innerHeight - 64 : 1016; // Subtract header height
@@ -785,7 +789,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
               }}
               onMouseEnter={() => onBusHover?.(bus)}
               onMouseLeave={() => onBusHover?.(null)}
-              className="cursor-pointer"
+              onClick={() => setSelectedBus(bus)}
+              className="cursor-pointer hover:scale-110 transition-transform"
             >
               <BusIcon
                 bus={bus}
@@ -794,6 +799,14 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             </div>
           ))}
       </div>
+
+      {/* Bus Details Panel */}
+      {selectedBus && (
+        <BusDetailsPanel
+          bus={selectedBus}
+          onClose={() => setSelectedBus(null)}
+        />
+      )}
     </div>
   );
 }
