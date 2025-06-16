@@ -102,35 +102,36 @@ function BusIcon({ bus, style, alerts = [] }: BusIconProps) {
     return `rgb(${deepR}, ${deepG}, ${deepB})`;
   };
 
-  const getGlowEffect = () => {
-    if (activeGlow === "closed-alert" && highestClosedAlert) {
-      // Bright, intense pulsing glow for closed alerts until cleared
-      const color = getAlertColor(highestClosedAlert.priority || "medium");
-      return `drop-shadow(0 0 12px ${color}) drop-shadow(0 0 24px ${color}) drop-shadow(0 0 36px ${color}) drop-shadow(0 0 48px ${color})`;
-    } else if (activeGlow === "acknowledged-alert" && highestAcknowledgedAlert) {
-      // Time-based escalating glow for acknowledged alerts
+  const getGlowStyles = () => {
+    if (activeGlow === "acknowledged-alert" && highestAcknowledgedAlert) {
       const baseColor = getAlertColor(highestAcknowledgedAlert.priority || "medium");
       const intensity = getTimeBasedIntensity(highestAcknowledgedAlert);
-      const deepColor = getDeeperColor(baseColor, intensity);
       
-      // Massive escalating glow size based on time
-      const baseSize = 40; // Much larger base size
-      const size1 = baseSize * intensity;
-      const size2 = baseSize * 2.5 * intensity;
-      const size3 = baseSize * 4 * intensity;
-      const size4 = baseSize * 6 * intensity;
-      const size5 = baseSize * 8 * intensity;
-      const size6 = baseSize * 10 * intensity;
-      const size7 = baseSize * 12 * intensity;
+      // Create very bright, saturated color for maximum visibility
+      const glowColor = baseColor;
+      const baseSize = 30 * intensity;
       
-      return `drop-shadow(0 0 ${size1}px ${deepColor}) drop-shadow(0 0 ${size2}px ${deepColor}) drop-shadow(0 0 ${size3}px ${deepColor}) drop-shadow(0 0 ${size4}px ${deepColor}) drop-shadow(0 0 ${size5}px ${deepColor}) drop-shadow(0 0 ${size6}px ${deepColor}) drop-shadow(0 0 ${size7}px ${deepColor})`;
+      return {
+        boxShadow: `
+          0 0 ${baseSize}px ${glowColor},
+          0 0 ${baseSize * 2}px ${glowColor},
+          0 0 ${baseSize * 3}px ${glowColor},
+          0 0 ${baseSize * 4}px ${glowColor}
+        `,
+        backgroundColor: glowColor,
+        borderRadius: '50%',
+        opacity: 0.8
+      };
     } else if (activeGlow === "emergency" && highestPriorityAlert) {
       const color = getAlertColor(highestPriorityAlert.priority || "medium");
-      return `drop-shadow(0 0 8px ${color}) drop-shadow(0 0 16px ${color}) drop-shadow(0 0 24px ${color})`;
-    } else if (activeGlow === "off-route") {
-      return "drop-shadow(0 0 8px #1e40af) drop-shadow(0 0 16px #1e40af) drop-shadow(0 0 24px #1e40af)";
+      return {
+        boxShadow: `0 0 20px ${color}, 0 0 40px ${color}, 0 0 60px ${color}`,
+        backgroundColor: color,
+        borderRadius: '50%',
+        opacity: 0.6
+      };
     }
-    return "drop-shadow(0 1px 2px rgba(0,0,0,0.3))";
+    return {};
   };
 
   const shouldPulse = activeGlow !== "none";
@@ -153,25 +154,43 @@ function BusIcon({ bus, style, alerts = [] }: BusIconProps) {
   
   const pulseAnimation = getPulseAnimation();
 
+  const glowStyles = getGlowStyles();
+
   return (
-    <div
-      className={`text-2xl transition-all duration-500 ${pulseAnimation}`}
-      style={{
-        ...style,
-        color: getBusColor(bus.status),
-        filter: getGlowEffect(),
-        zIndex: 30
-      }}
-      title={`Bus ${bus.busNumber} - Route ${bus.route.routeNumber} - Direction: ${bus.direction || 'Unknown'} - Status: ${
-        hasClosedAlert ? `Closed Alert (${highestClosedAlert?.priority}) - Awaiting Clearance` :
-        hasAcknowledgedAlert ? `Acknowledged Alert (${highestAcknowledgedAlert?.priority}) - Awaiting Clearance` :
-        hasEmergencyAlert ? `Emergency Alert (${highestPriorityAlert?.priority})` :
-        bus.status === "off-route" ? "Off Route" :
-        bus.status === "alert" ? "Active (with alerts)" : 
-        bus.status === "active" ? "Active" : bus.status
-      }`}
-    >
-      🚌
+    <div className="relative" style={style}>
+      {/* Glow background element */}
+      {activeGlow !== "none" && (
+        <div
+          className={`absolute inset-0 rounded-full ${pulseAnimation}`}
+          style={{
+            ...glowStyles,
+            width: '200%',
+            height: '200%',
+            top: '-50%',
+            left: '-50%',
+            zIndex: 10,
+            pointerEvents: 'none'
+          }}
+        />
+      )}
+      
+      {/* Bus icon */}
+      <div
+        className={`text-2xl transition-all duration-500 relative z-20 ${pulseAnimation}`}
+        style={{
+          color: getBusColor(bus.status)
+        }}
+        title={`Bus ${bus.busNumber} - Route ${bus.route.routeNumber} - Direction: ${bus.direction || 'Unknown'} - Status: ${
+          hasClosedAlert ? `Closed Alert (${highestClosedAlert?.priority}) - Awaiting Clearance` :
+          hasAcknowledgedAlert ? `Acknowledged Alert (${highestAcknowledgedAlert?.priority}) - Awaiting Clearance` :
+          hasEmergencyAlert ? `Emergency Alert (${highestPriorityAlert?.priority})` :
+          bus.status === "off-route" ? "Off Route" :
+          bus.status === "alert" ? "Active (with alerts)" : 
+          bus.status === "active" ? "Active" : bus.status
+        }`}
+      >
+        🚌
+      </div>
     </div>
   );
 }
