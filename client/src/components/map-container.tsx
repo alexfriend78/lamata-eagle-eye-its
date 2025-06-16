@@ -175,41 +175,22 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         // Segment 7: Final east stretch
         { x: mapWidth * 0.90, y: mapHeight * 0.65 }
       ],
-      3: [ // Route 3: Complex path with 8 straight segments and 2 curves
-        // Segment 1: Northeast from Ikorodu
+      3: [ // Route 3: Straight segments only - Ikorodu to TBS
+        // Segment 1: Northeast diagonal
         { x: mapWidth * 0.15, y: mapHeight * 0.85 },
-        { x: mapWidth * 0.25, y: mapHeight * 0.75 },
+        { x: mapWidth * 0.35, y: mapHeight * 0.65 },
         
-        // Segment 2: Sharp east turn
-        { x: mapWidth * 0.45, y: mapHeight * 0.75 },
+        // Segment 2: East straight
+        { x: mapWidth * 0.55, y: mapHeight * 0.65 },
         
-        // Segment 3: Southeast diagonal
-        { x: mapWidth * 0.60, y: mapHeight * 0.60 },
+        // Segment 3: North straight
+        { x: mapWidth * 0.55, y: mapHeight * 0.45 },
         
-        // CURVE 1: Smooth arc turning north
-        { x: mapWidth * 0.65, y: mapHeight * 0.55 },
-        { x: mapWidth * 0.68, y: mapHeight * 0.48 },
-        { x: mapWidth * 0.70, y: mapHeight * 0.40 },
+        // Segment 4: East straight
+        { x: mapWidth * 0.75, y: mapHeight * 0.45 },
         
-        // Segment 4: North continuation
-        { x: mapWidth * 0.70, y: mapHeight * 0.25 },
-        
-        // Segment 5: Sharp west turn
-        { x: mapWidth * 0.50, y: mapHeight * 0.25 },
-        
-        // Segment 6: Southwest diagonal
-        { x: mapWidth * 0.35, y: mapHeight * 0.40 },
-        
-        // CURVE 2: Smooth arc turning east
-        { x: mapWidth * 0.32, y: mapHeight * 0.45 },
-        { x: mapWidth * 0.35, y: mapHeight * 0.50 },
-        { x: mapWidth * 0.40, y: mapHeight * 0.52 },
-        
-        // Segment 7: East continuation
-        { x: mapWidth * 0.65, y: mapHeight * 0.52 },
-        
-        // Segment 8: Final northeast to terminal
-        { x: mapWidth * 0.80, y: mapHeight * 0.35 }
+        // Segment 5: South straight
+        { x: mapWidth * 0.75, y: mapHeight * 0.25 }
       ],
       4: [ // Route 4: Realistic Lagos BRT - Ikorodu to Victoria Island
         // Segment 1: Northeast from Ikorodu towards Mile 12
