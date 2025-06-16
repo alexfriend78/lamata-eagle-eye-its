@@ -35,23 +35,23 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     // Fallback to hardcoded paths if no station data available
     const routePaths: Record<number, { x: number; y: number }[]> = {
       1: [ // Route 1: Oshodi - Abule-Egba (alongside stations)
-        { x: mapWidth * 0.365, y: mapHeight * 0.67 }, // Slightly left of Oshodi Terminal 2
-        { x: mapWidth * 0.345, y: mapHeight * 0.65 }, // Slightly left of Bolade
-        { x: mapWidth * 0.325, y: mapHeight * 0.63 }, // Slightly left of Ladipo
-        { x: mapWidth * 0.305, y: mapHeight * 0.61 }, // Slightly left of Shogunle
-        { x: mapWidth * 0.285, y: mapHeight * 0.59 }, // Slightly left of PWD
-        { x: mapWidth * 0.265, y: mapHeight * 0.57 }, // Slightly left of Airport Junction
-        { x: mapWidth * 0.245, y: mapHeight * 0.55 }, // Slightly left of Ikeja Along
-        { x: mapWidth * 0.225, y: mapHeight * 0.53 }, // Slightly left of Ile Zik
-        { x: mapWidth * 0.205, y: mapHeight * 0.51 }, // Slightly left of Mangoro
-        { x: mapWidth * 0.185, y: mapHeight * 0.49 }, // Slightly left of Cement
-        { x: mapWidth * 0.165, y: mapHeight * 0.47 }, // Slightly left of Iyana Dopemu
-        { x: mapWidth * 0.145, y: mapHeight * 0.45 }, // Slightly left of Adealu
-        { x: mapWidth * 0.125, y: mapHeight * 0.43 }, // Slightly left of Iyana Ipaja Bus stop
-        { x: mapWidth * 0.105, y: mapHeight * 0.41 }, // Slightly left of Pleasure
-        { x: mapWidth * 0.085, y: mapHeight * 0.39 }, // Slightly left of Ile Epo
-        { x: mapWidth * 0.065, y: mapHeight * 0.37 }, // Slightly left of Super
-        { x: mapWidth * 0.045, y: mapHeight * 0.35 }  // Slightly left of Abule Egba
+        { x: mapWidth * 0.355, y: mapHeight * 0.67 }, // Left of Oshodi Terminal 2
+        { x: mapWidth * 0.335, y: mapHeight * 0.65 }, // Left of Bolade
+        { x: mapWidth * 0.315, y: mapHeight * 0.63 }, // Left of Ladipo
+        { x: mapWidth * 0.295, y: mapHeight * 0.61 }, // Left of Shogunle
+        { x: mapWidth * 0.275, y: mapHeight * 0.59 }, // Left of PWD
+        { x: mapWidth * 0.255, y: mapHeight * 0.57 }, // Left of Airport Junction
+        { x: mapWidth * 0.235, y: mapHeight * 0.55 }, // Left of Ikeja Along
+        { x: mapWidth * 0.215, y: mapHeight * 0.53 }, // Left of Ile Zik
+        { x: mapWidth * 0.195, y: mapHeight * 0.51 }, // Left of Mangoro
+        { x: mapWidth * 0.175, y: mapHeight * 0.49 }, // Left of Cement
+        { x: mapWidth * 0.155, y: mapHeight * 0.47 }, // Left of Iyana Dopemu
+        { x: mapWidth * 0.135, y: mapHeight * 0.45 }, // Left of Adealu
+        { x: mapWidth * 0.115, y: mapHeight * 0.43 }, // Left of Iyana Ipaja Bus stop
+        { x: mapWidth * 0.095, y: mapHeight * 0.41 }, // Left of Pleasure
+        { x: mapWidth * 0.075, y: mapHeight * 0.39 }, // Left of Ile Epo
+        { x: mapWidth * 0.055, y: mapHeight * 0.37 }, // Left of Super
+        { x: mapWidth * 0.035, y: mapHeight * 0.35 }  // Left of Abule Egba
       ],
       2: [ // Route 2: Abule Egba - Lekki Phase 2 Terminal (Complete north-south-east)
         { x: mapWidth * 0.18, y: mapHeight * 0.28 }, // Abule Egba Terminal
