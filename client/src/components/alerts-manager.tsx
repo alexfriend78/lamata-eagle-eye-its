@@ -75,7 +75,11 @@ export default function AlertsManager({ onClose }: AlertsManagerProps) {
   };
 
   const AlertCard = ({ alert, showActions = true }: { alert: AlertWithDetails; showActions?: boolean }) => (
-    <Card key={alert.id} className="mb-4">
+    <Card 
+      key={alert.id} 
+      className="mb-4 cursor-pointer hover:shadow-md transition-shadow"
+      onClick={() => setSelectedAlert(alert)}
+    >
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
@@ -113,7 +117,7 @@ export default function AlertsManager({ onClose }: AlertsManagerProps) {
         )}
         
         {showActions && (
-          <div className="flex gap-2">
+          <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
             {alert.isActive && (
               <>
                 <Button
@@ -292,6 +296,148 @@ export default function AlertsManager({ onClose }: AlertsManagerProps) {
           </Tabs>
         </CardContent>
       </Card>
+
+      {/* Alert Details Modal */}
+      <Dialog open={!!selectedAlert} onOpenChange={() => setSelectedAlert(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Info className="w-5 h-5" />
+              Alert Details
+            </DialogTitle>
+          </DialogHeader>
+          
+          {selectedAlert && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Alert Type</label>
+                  <p className="text-lg font-semibold capitalize">{selectedAlert.type}</p>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Priority</label>
+                  <Badge className={`${getPriorityColor(selectedAlert.priority)} text-white`}>
+                    {selectedAlert.priority?.toUpperCase()}
+                  </Badge>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Severity</label>
+                  <Badge variant={selectedAlert.severity === 'critical' ? 'destructive' : 'secondary'}>
+                    {selectedAlert.severity}
+                  </Badge>
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Status</label>
+                  <Badge variant={selectedAlert.isActive ? 'destructive' : 'secondary'}>
+                    {selectedAlert.status}
+                  </Badge>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium text-gray-500">Message</label>
+                <p className="text-gray-800 dark:text-gray-200 mt-1">{selectedAlert.message}</p>
+              </div>
+
+              {selectedAlert.bus && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-500 flex items-center gap-1">
+                      <MapPin className="w-4 h-4" />
+                      Bus Information
+                    </label>
+                    <p className="text-gray-800 dark:text-gray-200">
+                      Bus #{selectedAlert.bus.busNumber}
+                    </p>
+                  </div>
+                  {selectedAlert.route && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-500">Route</label>
+                      <p className="text-gray-800 dark:text-gray-200">
+                        {selectedAlert.route.routeNumber} - {selectedAlert.route.name}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {selectedAlert.driverName && (
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-500 flex items-center gap-1">
+                      <User className="w-4 h-4" />
+                      Driver
+                    </label>
+                    <p className="text-gray-800 dark:text-gray-200">{selectedAlert.driverName}</p>
+                  </div>
+                  {selectedAlert.driverNumber && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-500 flex items-center gap-1">
+                        <Phone className="w-4 h-4" />
+                        Contact
+                      </label>
+                      <p className="text-gray-800 dark:text-gray-200">{selectedAlert.driverNumber}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-500">Created</label>
+                  <p className="text-gray-800 dark:text-gray-200">
+                    {new Date(selectedAlert.createdAt).toLocaleString()}
+                  </p>
+                </div>
+                {selectedAlert.zoneNumber && (
+                  <div>
+                    <label className="text-sm font-medium text-gray-500">Zone</label>
+                    <p className="text-gray-800 dark:text-gray-200">{selectedAlert.zoneNumber}</p>
+                  </div>
+                )}
+              </div>
+
+              {selectedAlert.isActive && (
+                <div className="flex gap-2 pt-4 border-t">
+                  <Button
+                    onClick={() => {
+                      clearAlertMutation.mutate(selectedAlert.id);
+                      setSelectedAlert(null);
+                    }}
+                    variant="destructive"
+                    disabled={clearAlertMutation.isPending}
+                  >
+                    <X className="w-4 h-4 mr-1" />
+                    Clear Alert
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      escalateAlertMutation.mutate(selectedAlert.id);
+                      setSelectedAlert(null);
+                    }}
+                    variant="outline"
+                    disabled={escalateAlertMutation.isPending}
+                  >
+                    <ArrowUp className="w-4 h-4 mr-1" />
+                    Escalate
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      acknowledgeAlertMutation.mutate(selectedAlert.id);
+                      setSelectedAlert(null);
+                    }}
+                    variant="secondary"
+                    disabled={acknowledgeAlertMutation.isPending}
+                  >
+                    <CheckCircle className="w-4 h-4 mr-1" />
+                    Acknowledge
+                  </Button>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
