@@ -143,6 +143,17 @@ export default function AlertsManager({ onClose }: AlertsManagerProps) {
                 </Button>
               </>
             )}
+            {!alert.isActive && alert.status === 'acknowledged' && (
+              <Button
+                onClick={() => clearAlertMutation.mutate(alert.id)}
+                disabled={clearAlertMutation.isPending}
+                size="sm"
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                <CheckCircle className="w-4 h-4 mr-1" />
+                {clearAlertMutation.isPending ? 'Clearing...' : 'Clear Alert'}
+              </Button>
+            )}
           </div>
         )}
       </CardContent>
@@ -272,7 +283,7 @@ export default function AlertsManager({ onClose }: AlertsManagerProps) {
                 ) : (
                   acknowledgedAlerts
                     .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-                    .map(alert => <AlertCard key={alert.id} alert={alert} showActions={false} />)
+                    .map(alert => <AlertCard key={alert.id} alert={alert} showActions={true} />)
                 )}
               </div>
             </TabsContent>
