@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { type BusWithRoute, type Route, type Station, type AlertWithDetails } from "@shared/schema";
 import BusIcon from "./bus-icon";
 import BusDetailsPanel from "./bus-details-panel";
+import WeatherOverlay from "./weather-overlay";
 import { useRouteStations } from "@/hooks/use-route-stations";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   const [geofencingAlert, setGeofencingAlert] = useState<{busId: number, busNumber: string} | null>(null);
   const [dismissedAlerts, setDismissedAlerts] = useState<Set<number>>(new Set());
   const [showReturnDialog, setShowReturnDialog] = useState(false);
+  const [showWeather, setShowWeather] = useState(false);
 
   // Fetch active alerts to determine which buses have emergency alerts
   const { data: alerts = [] } = useQuery<AlertWithDetails[]>({
@@ -1002,6 +1004,12 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             );
           })}
       </div>
+
+      {/* Weather Overlay */}
+      <WeatherOverlay 
+        isVisible={showWeather}
+        onToggle={setShowWeather}
+      />
 
       {/* Bus Details Panel */}
       {selectedBus && (
