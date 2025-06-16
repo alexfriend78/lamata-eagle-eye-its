@@ -29,18 +29,35 @@ interface MapContainerProps {
 export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed, showRoutes, showStations, showBuses }: MapContainerProps) {
   const [selectedBus, setSelectedBus] = useState<BusWithRoute | null>(null);
   const [geofencingAlert, setGeofencingAlert] = useState<{busId: number, busNumber: string} | null>(null);
+  const [dismissedAlerts, setDismissedAlerts] = useState<Set<number>>(new Set());
   const [showReturnDialog, setShowReturnDialog] = useState(false);
 
   // Check for off-route buses and show geofencing alerts
   useEffect(() => {
-    const offRouteBuses = buses.filter(bus => bus.status === "off-route");
+    const offRouteBuses = buses.filter(bus => bus.status === "off-route" && !dismissedAlerts.has(bus.id));
+    const onRouteBuses = buses.filter(bus => bus.status !== "off-route");
+    
+    // Clear dismissed alerts for buses that are back on route
+    if (onRouteBuses.length > 0) {
+      const onRouteBusIds = new Set(onRouteBuses.map(bus => bus.id));
+      setDismissedAlerts(prev => {
+        const newDismissed = new Set(prev);
+        for (const busId of prev) {
+          if (onRouteBusIds.has(busId)) {
+            newDismissed.delete(busId);
+          }
+        }
+        return newDismissed;
+      });
+    }
+    
     if (offRouteBuses.length > 0 && !geofencingAlert) {
       const offRouteBus = offRouteBuses[0];
       setGeofencingAlert({ busId: offRouteBus.id, busNumber: offRouteBus.busNumber });
-    } else if (offRouteBuses.length === 0 && geofencingAlert) {
+    } else if (offRouteBuses.length === 0) {
       setGeofencingAlert(null);
     }
-  }, [buses, geofencingAlert]);
+  }, [buses, dismissedAlerts, geofencingAlert]);
 
   // Handle bus click - dismiss geofencing alert when viewing bus details
   const handleBusClick = (bus: BusWithRoute) => {
@@ -57,7 +74,10 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
 
   // Handle dismissing geofencing alert
   const handleDismissAlert = () => {
-    setGeofencingAlert(null);
+    if (geofencingAlert) {
+      setDismissedAlerts(prev => new Set(prev).add(geofencingAlert.busId));
+      setGeofencingAlert(null);
+    }
   };
 
   // Handle return bus to route
@@ -496,10 +516,10 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
       {/* Flashing Geofencing Alert */}
       {geofencingAlert && (
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 animate-pulse">
-          <div className="bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg border-2 border-red-700 flex items-center gap-3"
+          <div className="bg-blue-800 text-white px-6 py-3 rounded-lg shadow-lg border-2 border-blue-900 flex items-center gap-3"
                style={{
-                 boxShadow: '0 0 25px rgba(220, 38, 38, 0.6), 0 0 40px rgba(185, 28, 28, 0.4)',
-                 background: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)'
+                 boxShadow: '0 0 25px rgba(30, 64, 175, 0.6), 0 0 40px rgba(23, 37, 84, 0.4)',
+                 background: 'linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%)'
                }}>
             <AlertTriangle className="h-5 w-5 animate-bounce" />
             <span className="font-semibold">
@@ -509,7 +529,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
               onClick={handleDismissAlert}
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-red-700 ml-2"
+              className="text-white hover:bg-blue-900 ml-2"
             >
               <X className="h-4 w-4" />
             </Button>
