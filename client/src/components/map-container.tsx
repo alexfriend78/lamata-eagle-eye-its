@@ -30,7 +30,18 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   const { data: routeStations = [] } = useRouteStations(selectedRoutes);
 
   const getRoutePoints = (routeId: number) => {
-    // Define routes using dynamic resolution for consistent coverage
+    // Use actual station coordinates from backend for route rendering
+    const routeStationsForRoute = routeStations.find(rs => rs.routeId === routeId)?.stations || [];
+    
+    if (routeStationsForRoute.length > 0) {
+      // Convert station coordinates to pixel coordinates
+      return routeStationsForRoute.map(station => ({
+        x: station.x * mapWidth,
+        y: station.y * mapHeight
+      }));
+    }
+    
+    // Fallback to hardcoded paths if no station data available
     const routePaths: Record<number, { x: number; y: number }[]> = {
       1: [ // Route 1: Oshodi - Abule-Egba (North-South line) - Matches exact station coordinates
         { x: mapWidth * 0.37, y: mapHeight * 0.67 }, // Oshodi Terminal 2
