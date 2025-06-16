@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { X, Phone, User, Users, MapPin, Gauge, Camera, Play, Pause, Volume2, VolumeX, AlertTriangle, Navigation } from "lucide-react";
+import { X, Phone, User, Users, MapPin, Gauge, Camera, Play, Pause, Volume2, VolumeX, AlertTriangle, Navigation, RotateCcw } from "lucide-react";
 import { type BusWithRoute } from "@shared/schema";
 
 // Import CCTV video feeds for buses
@@ -292,6 +292,29 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                     </div>
                   </div>
                 </div>
+              </div>
+              
+              {/* Return to Route Action Button */}
+              <div className="mt-4 flex justify-center">
+                <Button
+                  onClick={async () => {
+                    try {
+                      const response = await fetch(`/api/buses/${bus.id}/return-to-route`, {
+                        method: 'POST'
+                      });
+                      if (response.ok) {
+                        // Close the panel after successful return
+                        onClose();
+                      }
+                    } catch (error) {
+                      console.error('Failed to return bus to route:', error);
+                    }
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 flex items-center gap-2"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  Return Bus to Route
+                </Button>
               </div>
             </div>
           )}
