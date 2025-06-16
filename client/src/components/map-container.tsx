@@ -201,23 +201,23 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     // Calculate offset for overlapping routes - ensure Route 1 doesn't go through station names
     let offsetDistance: number;
     if (route.id === 1) {
-      offsetDistance = -20; // Move Route 1 to the left of stations
+      offsetDistance = -40; // Move Route 1 significantly to the left of stations
     } else if (route.id === 2) {
-      offsetDistance = 20; // Move Route 2 to the right
+      offsetDistance = 40; // Move Route 2 to the right
     } else if (route.id === 3) {
-      offsetDistance = -35; // Move Route 3 further left
+      offsetDistance = -60; // Move Route 3 further left
+    } else if (route.id === 4) {
+      offsetDistance = 60; // Move Route 4 to the right
     } else {
-      offsetDistance = (routeIndex % 5 - 2) * 15; // Other routes spread out
+      offsetDistance = 0; // Route 5 in center
     }
     
-    // Apply perpendicular offset to create parallel lines that curve around stations
-    const offsetPoints = points.map((point, i) => {
-      if (i === points.length - 1) {
-        // For last point, use previous segment direction
-        return calculatePerpendicularOffset(points[i-1], point, offsetDistance);
-      }
-      // Use current segment direction
-      return calculatePerpendicularOffset(point, points[i+1], offsetDistance);
+    // Apply simple horizontal offset to move routes away from station names
+    const offsetPoints = points.map((point) => {
+      return {
+        x: point.x + offsetDistance,
+        y: point.y
+      };
     });
 
     // Use straight lines connecting all stations without curve offsets
