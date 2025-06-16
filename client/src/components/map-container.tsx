@@ -204,7 +204,11 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         pointsLength: points.length, 
         selectedRoutes, 
         isHighlighted,
-        color: route.color 
+        color: route.color,
+        firstPoint: points[0],
+        lastPoint: points[points.length - 1],
+        routeIndex,
+        offsetDistance: (routeIndex % 5 - 2) * 12
       });
     }
     
