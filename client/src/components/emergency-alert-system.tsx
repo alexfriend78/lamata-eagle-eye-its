@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
@@ -66,6 +66,13 @@ export default function EmergencyAlertSystem({
   const [isVideoMuted, setIsVideoMuted] = useState(false);
 
   const queryClient = useQueryClient();
+
+  // Reset showTriage when a new alert arrives to ensure alerts show first
+  useEffect(() => {
+    if (activeAlert) {
+      setShowTriage(false);
+    }
+  }, [activeAlert]);
 
   const createAlertMutation = useMutation({
     mutationFn: async (alertData: any) => {
