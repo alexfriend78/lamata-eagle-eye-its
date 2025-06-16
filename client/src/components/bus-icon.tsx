@@ -11,7 +11,8 @@ function BusIcon({ bus, style, alerts = [] }: BusIconProps) {
   // Check for different alert states
   const busAlerts = alerts.filter(alert => alert.busId === bus.id);
   const activeAlerts = busAlerts.filter(alert => alert.isActive);
-  const closedAlerts = busAlerts.filter(alert => alert.status === "closed" && alert.isActive);
+  const closedAlerts = busAlerts.filter(alert => alert.status === "closed" && !alert.isActive);
+  const acknowledgedAlerts = busAlerts.filter(alert => alert.status === "acknowledged" && !alert.isActive);
   
   const highestPriorityAlert = activeAlerts.sort((a, b) => {
     const priorityOrder = { P1: 5, P2: 4, P3: 3, P4: 2, P5: 1, critical: 5, high: 4, medium: 3, low: 2 };
@@ -20,6 +21,12 @@ function BusIcon({ bus, style, alerts = [] }: BusIconProps) {
   })[0];
 
   const highestClosedAlert = closedAlerts.sort((a, b) => {
+    const priorityOrder = { P1: 5, P2: 4, P3: 3, P4: 2, P5: 1, critical: 5, high: 4, medium: 3, low: 2 };
+    return (priorityOrder[b.priority as keyof typeof priorityOrder] || 0) - 
+           (priorityOrder[a.priority as keyof typeof priorityOrder] || 0);
+  })[0];
+
+  const highestAcknowledgedAlert = acknowledgedAlerts.sort((a, b) => {
     const priorityOrder = { P1: 5, P2: 4, P3: 3, P4: 2, P5: 1, critical: 5, high: 4, medium: 3, low: 2 };
     return (priorityOrder[b.priority as keyof typeof priorityOrder] || 0) - 
            (priorityOrder[a.priority as keyof typeof priorityOrder] || 0);
@@ -55,20 +62,26 @@ function BusIcon({ bus, style, alerts = [] }: BusIconProps) {
   const isAlertBus = bus.status === "alert";
   const hasEmergencyAlert = highestPriorityAlert !== undefined;
   const hasClosedAlert = highestClosedAlert !== undefined;
+  const hasAcknowledgedAlert = highestAcknowledgedAlert !== undefined;
 
   // Determine if bus should show off-route glow or emergency alert glow
   const showOffRouteGlow = bus.status === "off-route";
   const showEmergencyGlow = hasEmergencyAlert;
   const showClosedAlertGlow = hasClosedAlert;
+  const showAcknowledgedAlertGlow = hasAcknowledgedAlert;
 
-  // Priority: Closed alerts override everything, then emergency alerts, then off-route glows
-  const activeGlow = showClosedAlertGlow ? "closed-alert" : showEmergencyGlow ? "emergency" : showOffRouteGlow ? "off-route" : "none";
+  // Priority: Closed alerts override everything, then emergency alerts, then acknowledged alerts, then off-route glows
+  const activeGlow = showClosedAlertGlow ? "closed-alert" : showEmergencyGlow ? "emergency" : showAcknowledgedAlertGlow ? "acknowledged-alert" : showOffRouteGlow ? "off-route" : "none";
 
   const getGlowEffect = () => {
     if (activeGlow === "closed-alert" && highestClosedAlert) {
       // Bright, intense pulsing glow for closed alerts until cleared
       const color = getAlertColor(highestClosedAlert.priority || "medium");
       return `drop-shadow(0 0 12px ${color}) drop-shadow(0 0 24px ${color}) drop-shadow(0 0 36px ${color}) drop-shadow(0 0 48px ${color})`;
+    } else if (activeGlow === "acknowledged-alert" && highestAcknowledgedAlert) {
+      // Large pulsing glow for acknowledged alerts until cleared
+      const color = getAlertColor(highestAcknowledgedAlert.priority || "medium");
+      return `drop-shadow(0 0 16px ${color}) drop-shadow(0 0 32px ${color}) drop-shadow(0 0 48px ${color}) drop-shadow(0 0 64px ${color})`;
     } else if (activeGlow === "emergency" && highestPriorityAlert) {
       const color = getAlertColor(highestPriorityAlert.priority || "medium");
       return `drop-shadow(0 0 8px ${color}) drop-shadow(0 0 16px ${color}) drop-shadow(0 0 24px ${color})`;
@@ -79,7 +92,9 @@ function BusIcon({ bus, style, alerts = [] }: BusIconProps) {
   };
 
   const shouldPulse = activeGlow !== "none";
-  const pulseAnimation = activeGlow === "closed-alert" ? "animate-pulse-intense" : shouldPulse ? "animate-pulse" : "";
+  const pulseAnimation = activeGlow === "closed-alert" ? "animate-pulse-intense" : 
+                        activeGlow === "acknowledged-alert" ? "animate-pulse-intense" : 
+                        shouldPulse ? "animate-pulse" : "";
 
   return (
     <div
@@ -92,6 +107,7 @@ function BusIcon({ bus, style, alerts = [] }: BusIconProps) {
       }}
       title={`Bus ${bus.busNumber} - Route ${bus.route.routeNumber} - Direction: ${bus.direction || 'Unknown'} - Status: ${
         hasClosedAlert ? `Closed Alert (${highestClosedAlert?.priority}) - Awaiting Clearance` :
+        hasAcknowledgedAlert ? `Acknowledged Alert (${highestAcknowledgedAlert?.priority}) - Awaiting Clearance` :
         hasEmergencyAlert ? `Emergency Alert (${highestPriorityAlert?.priority})` :
         bus.status === "off-route" ? "Off Route" :
         bus.status === "alert" ? "Active (with alerts)" : 

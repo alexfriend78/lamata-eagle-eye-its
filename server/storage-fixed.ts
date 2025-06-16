@@ -607,7 +607,9 @@ export class MemStorage implements IStorage {
   }
 
   async getActiveAlerts(): Promise<AlertWithDetails[]> {
-    const alerts = Array.from(this.alerts.values()).filter(alert => alert.isActive);
+    const alerts = Array.from(this.alerts.values()).filter(alert => 
+      alert.isActive || alert.status === "acknowledged"
+    );
     return alerts.map(alert => ({
       ...alert,
       bus: alert.busId ? this.buses.get(alert.busId) : undefined,
