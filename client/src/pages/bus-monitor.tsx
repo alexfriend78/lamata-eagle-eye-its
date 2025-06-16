@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { queryClient, apiRequest } from "@/lib/queryClient";
 import { useBusData } from "@/hooks/use-bus-data";
 import { useTheme } from "@/hooks/use-theme";
 import MapContainer from "@/components/map-container";
@@ -11,7 +12,10 @@ import RouteCustomizationPanel from "@/components/route-customization-panel";
 import RouteAestheticsPanel from "@/components/route-aesthetics-panel";
 import CrowdAnalyticsPanel from "@/components/crowd-analytics-panel";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Bell } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
@@ -34,6 +38,28 @@ export default function BusMonitor() {
   const [showBuses, setShowBuses] = useState(true);
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
   const { theme, setTheme } = useTheme();
+
+  // Alert management mutations
+  const acknowledgeAlertMutation = useMutation({
+    mutationFn: (alertId: number) => apiRequest(`/api/alerts/${alertId}/acknowledge`, 'POST'),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
+    },
+  });
+
+  const clearAlertMutation = useMutation({
+    mutationFn: (alertId: number) => apiRequest(`/api/alerts/${alertId}/clear`, 'POST'),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
+    },
+  });
+
+  const escalateAlertMutation = useMutation({
+    mutationFn: (alertId: number) => apiRequest(`/api/alerts/${alertId}/escalate`, 'POST'),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
+    },
+  });
 
   // Fetch station details when a station is hovered or selected
   const activeStation = hoveredStation || selectedStation;
@@ -231,6 +257,177 @@ export default function BusMonitor() {
               routes={routes || []}
               theme={theme}
             />
+
+            {/* Alerts Management */}
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="h-8 px-3 relative"
+                >
+                  <Bell className="h-4 w-4 mr-1" />
+                  Alerts
+                  {alerts && alerts.length > 0 && (
+                    <Badge className="ml-2 h-5 min-w-5 bg-red-500 text-white animate-pulse">
+                      {alerts.length}
+                    </Badge>
+                  )}
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5 text-red-500" />
+                    Alert Management Center
+                  </DialogTitle>
+                </DialogHeader>
+                
+                <Tabs defaultValue="active" className="w-full">
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="active">
+                      Active Alerts ({alerts?.filter(a => a.isActive && a.status !== "cleared").length || 0})
+                    </TabsTrigger>
+                    <TabsTrigger value="acknowledged">
+                      Acknowledged ({alerts?.filter(a => a.status === "acknowledged").length || 0})
+                    </TabsTrigger>
+                    <TabsTrigger value="cleared">
+                      Cleared ({alerts?.filter(a => a.status === "cleared").length || 0})
+                    </TabsTrigger>
+                  </TabsList>
+                  
+                  <TabsContent value="active" className="space-y-4">
+                    <div className="space-y-3">
+                      {alerts?.filter(a => a.isActive && a.status !== "cleared").map((alert) => (
+                        <div key={alert.id} className="border rounded-lg p-4 bg-red-50 dark:bg-red-900/20">
+                          <div className="flex items-start justify-between">
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <Badge 
+                                  variant="destructive" 
+                                  className={`
+                                    ${alert.priority === 'critical' ? 'bg-red-600' : 
+                                      alert.priority === 'high' ? 'bg-orange-600' : 
+                                      alert.priority === 'medium' ? 'bg-yellow-600' : 'bg-blue-600'}
+                                  `}
+                                >
+                                  {alert.priority?.toUpperCase() || 'MEDIUM'} PRIORITY
+                                </Badge>
+                                <span className="text-sm text-gray-500">
+                                  {new Date(alert.timestamp).toLocaleString()}
+                                </span>
+                              </div>
+                              <p className="font-medium">{alert.message}</p>
+                              {alert.busNumber && (
+                                <p className="text-sm text-gray-600">Bus: {alert.busNumber}</p>
+                              )}
+                              {alert.driverName && (
+                                <p className="text-sm text-gray-600">Driver: {alert.driverName}</p>
+                              )}
+                            </div>
+                            <div className="flex gap-2">
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => acknowledgeAlertMutation.mutate(alert.id)}
+                                disabled={acknowledgeAlertMutation.isPending}
+                              >
+                                Acknowledge
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="default"
+                                onClick={() => clearAlertMutation.mutate(alert.id)}
+                                disabled={clearAlertMutation.isPending}
+                              >
+                                Clear
+                              </Button>
+                              <Button 
+                                size="sm" 
+                                variant="destructive"
+                                onClick={() => escalateAlertMutation.mutate(alert.id)}
+                                disabled={escalateAlertMutation.isPending}
+                              >
+                                Escalate
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      {(!alerts || alerts.filter(a => a.isActive && a.status !== "cleared").length === 0) && (
+                        <p className="text-center text-gray-500 py-8">No active alerts</p>
+                      )}
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="acknowledged" className="space-y-4">
+                    <div className="space-y-3">
+                      {alerts?.filter(a => a.status === "acknowledged").map((alert) => (
+                        <div key={alert.id} className="border rounded-lg p-4 bg-yellow-50 dark:bg-yellow-900/20">
+                          <div className="flex items-start justify-between">
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+                                  ACKNOWLEDGED
+                                </Badge>
+                                <span className="text-sm text-gray-500">
+                                  {new Date(alert.timestamp).toLocaleString()}
+                                </span>
+                              </div>
+                              <p className="font-medium">{alert.message}</p>
+                              {alert.busNumber && (
+                                <p className="text-sm text-gray-600">Bus: {alert.busNumber}</p>
+                              )}
+                            </div>
+                            <div className="flex gap-2">
+                              <Button 
+                                size="sm" 
+                                variant="default"
+                                onClick={() => clearAlertMutation.mutate(alert.id)}
+                                disabled={clearAlertMutation.isPending}
+                              >
+                                Clear
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      {(!alerts || alerts.filter(a => a.status === "acknowledged").length === 0) && (
+                        <p className="text-center text-gray-500 py-8">No acknowledged alerts</p>
+                      )}
+                    </div>
+                  </TabsContent>
+                  
+                  <TabsContent value="cleared" className="space-y-4">
+                    <div className="space-y-3">
+                      {alerts?.filter(a => a.status === "cleared").map((alert) => (
+                        <div key={alert.id} className="border rounded-lg p-4 bg-green-50 dark:bg-green-900/20">
+                          <div className="flex items-start justify-between">
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <Badge variant="secondary" className="bg-green-100 text-green-800">
+                                  CLEARED
+                                </Badge>
+                                <span className="text-sm text-gray-500">
+                                  {new Date(alert.timestamp).toLocaleString()}
+                                </span>
+                              </div>
+                              <p className="font-medium">{alert.message}</p>
+                              {alert.busNumber && (
+                                <p className="text-sm text-gray-600">Bus: {alert.busNumber}</p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      {(!alerts || alerts.filter(a => a.status === "cleared").length === 0) && (
+                        <p className="text-center text-gray-500 py-8">No cleared alerts</p>
+                      )}
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </DialogContent>
+            </Dialog>
 
             {/* Settings */}
             <Button
