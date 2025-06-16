@@ -198,8 +198,17 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     
 
 
-    // Calculate offset for overlapping routes - spread them more
-    const offsetDistance = (routeIndex % 5 - 2) * 12; // -24, -12, 0, 12, 24 pixel offset
+    // Calculate offset for overlapping routes - ensure Route 1 doesn't go through station names
+    let offsetDistance: number;
+    if (route.id === 1) {
+      offsetDistance = -20; // Move Route 1 to the left of stations
+    } else if (route.id === 2) {
+      offsetDistance = 20; // Move Route 2 to the right
+    } else if (route.id === 3) {
+      offsetDistance = -35; // Move Route 3 further left
+    } else {
+      offsetDistance = (routeIndex % 5 - 2) * 15; // Other routes spread out
+    }
     
     // Apply perpendicular offset to create parallel lines that curve around stations
     const offsetPoints = points.map((point, i) => {
