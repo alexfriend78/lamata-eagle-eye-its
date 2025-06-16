@@ -11,6 +11,8 @@ import swordVideoPath from "@assets/Sword_Lagos_Bus_CCTV_Video_Ready (1)_1750007
 import knifeVideoPath from "@assets/knife_Lagos_Bus_CCTV_Video_Ready_1750007661394.mp4";
 import gunVideoPath from "@assets/BRT_Bus_with_Machine_Gun_1750007661395.mp4";
 import fightVideoPath from "@assets/Bus_Fight_Video_Generated_1750007661396.mp4";
+import heartAttackVideoPath from "@assets/Video_Ready_Lagos_BRT_Heart_Attack_1750056149432.mp4";
+import medicalEmergencyVideoPath from "@assets/Bus_Passenger_Medical_Emergency_Video_1750056149435.mp4";
 
 interface EmergencyAlertSystemProps {
   buses: BusWithRoute[];
@@ -127,24 +129,41 @@ export default function EmergencyAlertSystem({
     return stations.find(s => s.id === stationId);
   };
 
-  // Helper function to get video for P1 critical security emergencies only
+  // Helper function to get video for P1 critical emergencies
   const getVideoForAlert = (alert: AlertWithDetails) => {
-    // Only show videos for P1 critical security emergencies
-    if (alert.priority === 'P1' && 
-        (alert.type === 'emergency' || alert.type === 'security')) {
-      const p1SecurityVideos = [
-        swordVideoPath,     // Sword attack
-        knifeVideoPath,     // Knife threat
-        gunVideoPath,       // Gun/machine gun
-        fightVideoPath      // Bus fight
-      ];
+    // Only show videos for P1 critical emergencies
+    if (alert.priority === 'P1') {
+      // Check if it's a medical emergency
+      if (alert.type === 'medical' || 
+          alert.message.toLowerCase().includes('medical') ||
+          alert.message.toLowerCase().includes('heart') ||
+          alert.message.toLowerCase().includes('emergency')) {
+        const p1MedicalVideos = [
+          heartAttackVideoPath,      // Heart attack emergency
+          medicalEmergencyVideoPath  // General medical emergency
+        ];
+        
+        // Use alert ID as seed for consistent video selection per alert
+        const videoIndex = alert.id % p1MedicalVideos.length;
+        return p1MedicalVideos[videoIndex];
+      }
       
-      // Use alert ID as seed for consistent video selection per alert
-      const videoIndex = alert.id % p1SecurityVideos.length;
-      return p1SecurityVideos[videoIndex];
+      // Security/violence emergencies
+      if (alert.type === 'emergency' || alert.type === 'security') {
+        const p1SecurityVideos = [
+          swordVideoPath,     // Sword attack
+          knifeVideoPath,     // Knife threat
+          gunVideoPath,       // Gun/machine gun
+          fightVideoPath      // Bus fight
+        ];
+        
+        // Use alert ID as seed for consistent video selection per alert
+        const videoIndex = alert.id % p1SecurityVideos.length;
+        return p1SecurityVideos[videoIndex];
+      }
     }
     
-    return null; // No video for non-critical security alerts
+    return null; // No video for non-P1 alerts
   };
 
   // Video player controls
