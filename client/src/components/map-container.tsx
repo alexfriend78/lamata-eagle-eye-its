@@ -148,7 +148,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         { x: mapWidth * 0.55, y: mapHeight * 0.45 }, // Onipanu
         { x: mapWidth * 0.57, y: mapHeight * 0.43 }  // Fadeyi
       ],
-      5: [ // Route 5: Ikorodu - Oshodi (Southwest to Central)
+      5: [ // Route 5: Ikorodu - Oshodi (Complete path through all 37 stations)
         { x: mapWidth * 0.15, y: mapHeight * 0.85 }, // Ikorodu Terminal
         { x: mapWidth * 0.17, y: mapHeight * 0.83 }, // Benson
         { x: mapWidth * 0.19, y: mapHeight * 0.81 }, // ARUNA
@@ -165,8 +165,26 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         { x: mapWidth * 0.41, y: mapHeight * 0.59 }, // OJOTA
         { x: mapWidth * 0.43, y: mapHeight * 0.57 }, // NEWGARAGE
         { x: mapWidth * 0.45, y: mapHeight * 0.55 }, // Maryland
-        { x: mapWidth * 0.47, y: mapHeight * 0.53 }, // Anthony
-        { x: mapWidth * 0.50, y: mapHeight * 0.60 }  // Oshodi Terminal 3
+        { x: mapWidth * 0.47, y: mapHeight * 0.53 }, // Idiroko
+        { x: mapWidth * 0.49, y: mapHeight * 0.51 }, // Anthony
+        { x: mapWidth * 0.51, y: mapHeight * 0.49 }, // Obanikoro
+        { x: mapWidth * 0.53, y: mapHeight * 0.47 }, // Palmgroove
+        { x: mapWidth * 0.55, y: mapHeight * 0.45 }, // Onipanu
+        { x: mapWidth * 0.57, y: mapHeight * 0.43 }, // Fadeyi
+        { x: mapWidth * 0.59, y: mapHeight * 0.41 }, // MOSALASI TERMINAL
+        { x: mapWidth * 0.61, y: mapHeight * 0.39 }, // BARRAKS
+        { x: mapWidth * 0.63, y: mapHeight * 0.37 }, // Stadium
+        { x: mapWidth * 0.65, y: mapHeight * 0.35 }, // Iponri
+        { x: mapWidth * 0.67, y: mapHeight * 0.33 }, // Costain
+        { x: mapWidth * 0.69, y: mapHeight * 0.31 }, // National Theatre
+        { x: mapWidth * 0.71, y: mapHeight * 0.29 }, // Oyingbo
+        { x: mapWidth * 0.73, y: mapHeight * 0.27 }, // Jibowu
+        { x: mapWidth * 0.75, y: mapHeight * 0.25 }, // Yaba
+        { x: mapWidth * 0.77, y: mapHeight * 0.23 }, // Palmgroove Junction
+        { x: mapWidth * 0.79, y: mapHeight * 0.21 }, // Maryland Junction
+        { x: mapWidth * 0.81, y: mapHeight * 0.19 }, // Ikeja Under Bridge
+        { x: mapWidth * 0.83, y: mapHeight * 0.17 }, // Airport Road
+        { x: mapWidth * 0.85, y: mapHeight * 0.15 }  // Oshodi Terminal 1
       ]
     };
     return routePaths[routeId] || [];
