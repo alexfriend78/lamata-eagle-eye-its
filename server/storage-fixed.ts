@@ -168,35 +168,30 @@ export class MemStorage implements IStorage {
       { name: "Marina", x: 0.86, y: 0.65, zone: 2, routeId: 2 },
       { name: "Victoria Island Terminal", x: 0.90, y: 0.65, zone: 3, routeId: 2 },
 
-      // Route 3: Lagos Metro Express - Diamond Pattern stations
-      // Segment 1 stations: Northeast diagonal
-      { name: "Ikeja Central", x: 0.25, y: 0.75, zone: 2, routeId: 3 },
-      { name: "Opebi Link", x: 0.30, y: 0.70, zone: 2, routeId: 3 },
-      { name: "Allen Roundabout", x: 0.35, y: 0.65, zone: 2, routeId: 3 },
+      // Route 3: Lagos Metro Express - Non-crossing L-Shape stations
+      // Segment 1 stations: Southwest to northeast
+      { name: "Agege Terminal", x: 0.20, y: 0.80, zone: 3, routeId: 3 },
+      { name: "Ikeja Under Bridge", x: 0.25, y: 0.75, zone: 2, routeId: 3 },
+      { name: "Allen Avenue", x: 0.30, y: 0.70, zone: 2, routeId: 3 },
+      { name: "Opebi", x: 0.35, y: 0.65, zone: 2, routeId: 3 },
       { name: "Computer Village", x: 0.40, y: 0.60, zone: 2, routeId: 3 },
       { name: "Yaba Tech", x: 0.45, y: 0.55, zone: 2, routeId: 3 },
-      { name: "TBS Central", x: 0.50, y: 0.50, zone: 2, routeId: 3 },
       
-      // Segment 2 stations: Southeast diagonal
-      { name: "Victoria Plaza", x: 0.55, y: 0.55, zone: 2, routeId: 3 },
-      { name: "Lekki Phase 1", x: 0.60, y: 0.60, zone: 2, routeId: 3 },
-      { name: "Admiralty Way", x: 0.65, y: 0.65, zone: 2, routeId: 3 },
-      { name: "Chevron Drive", x: 0.70, y: 0.70, zone: 2, routeId: 3 },
-      { name: "Lekki Terminal", x: 0.75, y: 0.75, zone: 2, routeId: 3 },
+      // Segment 2 stations: Continue northeast
+      { name: "Surulere", x: 0.50, y: 0.50, zone: 2, routeId: 3 },
+      { name: "Alaba Market", x: 0.55, y: 0.45, zone: 2, routeId: 3 },
+      { name: "Festac Town", x: 0.60, y: 0.40, zone: 2, routeId: 3 },
+      { name: "Mile 2", x: 0.65, y: 0.35, zone: 2, routeId: 3 },
+      { name: "Orile", x: 0.70, y: 0.30, zone: 2, routeId: 3 },
       
-      // Segment 3 stations: Southwest diagonal
-      { name: "Epe Junction", x: 0.70, y: 0.80, zone: 3, routeId: 3 },
-      { name: "Ajah Market", x: 0.65, y: 0.85, zone: 3, routeId: 3 },
-      { name: "Lakowe", x: 0.60, y: 0.87, zone: 3, routeId: 3 },
-      { name: "Sangotedo", x: 0.55, y: 0.89, zone: 3, routeId: 3 },
-      { name: "Awoyaya", x: 0.50, y: 0.90, zone: 3, routeId: 3 },
+      // Segment 3 stations: Turn southeast
+      { name: "Apapa", x: 0.75, y: 0.35, zone: 2, routeId: 3 },
+      { name: "Tin Can", x: 0.80, y: 0.40, zone: 2, routeId: 3 },
+      { name: "Kirikiri", x: 0.85, y: 0.45, zone: 2, routeId: 3 },
       
-      // Segment 4 stations: Northwest diagonal back to center
-      { name: "Ibeju Central", x: 0.45, y: 0.87, zone: 3, routeId: 3 },
-      { name: "Bogije", x: 0.40, y: 0.82, zone: 3, routeId: 3 },
-      { name: "Eleko Junction", x: 0.35, y: 0.77, zone: 3, routeId: 3 },
-      { name: "Ikorodu Link", x: 0.32, y: 0.73, zone: 3, routeId: 3 },
-      { name: "Agric Terminal", x: 0.30, y: 0.70, zone: 3, routeId: 3 },
+      // Segment 4 stations: End southeast
+      { name: "Port Complex", x: 0.88, y: 0.48, zone: 2, routeId: 3 },
+      { name: "Wharf Terminal", x: 0.90, y: 0.50, zone: 2, routeId: 3 },
 
       // Route 4: Realistic Lagos BRT stations - Ikorodu to Victoria Island
       // Segment 1 stations: Northeast from Ikorodu towards Mile 12
@@ -228,39 +223,34 @@ export class MemStorage implements IStorage {
       { name: "Falomo", x: 0.83, y: 0.37, zone: 2, routeId: 4 },
       { name: "Victoria Island Terminal", x: 0.85, y: 0.35, zone: 2, routeId: 4 },
 
-      // Route 5: Lagos Orbital Express - Zigzag Pattern stations
-      // Segment 1 stations: Southwest diagonal
-      { name: "Lekki Phase 2", x: 0.80, y: 0.20, zone: 2, routeId: 5 },
-      { name: "Jakande Estate", x: 0.75, y: 0.25, zone: 2, routeId: 5 },
-      { name: "Eko Atlantic", x: 0.70, y: 0.30, zone: 2, routeId: 5 },
-      { name: "Bar Beach", x: 0.65, y: 0.35, zone: 2, routeId: 5 },
-      { name: "Tafawa Balewa", x: 0.60, y: 0.40, zone: 2, routeId: 5 },
+      // Route 5: Lagos Orbital Express - Non-crossing Arc stations
+      // Segment 1 stations: Start northwest
+      { name: "Abule Egba Terminal", x: 0.15, y: 0.25, zone: 1, routeId: 5 },
+      { name: "Iyana Ipaja", x: 0.20, y: 0.22, zone: 1, routeId: 5 },
+      { name: "Command", x: 0.25, y: 0.20, zone: 1, routeId: 5 },
+      { name: "Ikeja GRA", x: 0.30, y: 0.18, zone: 2, routeId: 5 },
       
-      // Segment 2 stations: Northwest diagonal
-      { name: "Ikoyi North", x: 0.55, y: 0.35, zone: 2, routeId: 5 },
-      { name: "Dolphin Estate", x: 0.50, y: 0.30, zone: 2, routeId: 5 },
-      { name: "Third Mainland", x: 0.45, y: 0.25, zone: 2, routeId: 5 },
-      { name: "Adeniji Adele", x: 0.40, y: 0.20, zone: 2, routeId: 5 },
+      // Segment 2 stations: Curve northeast
+      { name: "Allen Avenue", x: 0.35, y: 0.15, zone: 2, routeId: 5 },
+      { name: "Ojuelegba", x: 0.40, y: 0.13, zone: 2, routeId: 5 },
+      { name: "Yaba", x: 0.45, y: 0.12, zone: 2, routeId: 5 },
+      { name: "Palmgrove", x: 0.50, y: 0.11, zone: 2, routeId: 5 },
       
-      // Segment 3 stations: Northeast diagonal
-      { name: "Onikan Stadium", x: 0.45, y: 0.15, zone: 2, routeId: 5 },
-      { name: "Tafawa Balewa", x: 0.50, y: 0.12, zone: 2, routeId: 5 },
-      { name: "Race Course", x: 0.55, y: 0.11, zone: 2, routeId: 5 },
-      { name: "King George V", x: 0.60, y: 0.10, zone: 2, routeId: 5 },
+      // Segment 3 stations: Continue northeast
+      { name: "Ebute Metta", x: 0.55, y: 0.10, zone: 2, routeId: 5 },
+      { name: "National Theatre", x: 0.60, y: 0.10, zone: 2, routeId: 5 },
+      { name: "Ijora", x: 0.65, y: 0.12, zone: 2, routeId: 5 },
+      { name: "Costain", x: 0.70, y: 0.15, zone: 2, routeId: 5 },
       
-      // Segment 4 stations: Southeast diagonal
-      { name: "Teslim Balogun", x: 0.65, y: 0.15, zone: 2, routeId: 5 },
-      { name: "Surulere North", x: 0.70, y: 0.20, zone: 2, routeId: 5 },
-      { name: "National Stadium", x: 0.75, y: 0.25, zone: 2, routeId: 5 },
-      { name: "Alaka Estate", x: 0.80, y: 0.30, zone: 2, routeId: 5 },
-      { name: "Mile 12 Junction", x: 0.85, y: 0.35, zone: 2, routeId: 5 },
+      // Segment 4 stations: Turn southeast
+      { name: "Alaba Market", x: 0.75, y: 0.20, zone: 2, routeId: 5 },
+      { name: "Mile 2", x: 0.78, y: 0.23, zone: 2, routeId: 5 },
+      { name: "Festac", x: 0.80, y: 0.25, zone: 2, routeId: 5 },
       
-      // Segment 5 stations: Southwest diagonal to finish
-      { name: "Ketu Mile 12", x: 0.82, y: 0.38, zone: 2, routeId: 5 },
-      { name: "Ojota", x: 0.79, y: 0.41, zone: 2, routeId: 5 },
-      { name: "Maryland", x: 0.76, y: 0.44, zone: 2, routeId: 5 },
-      { name: "Anthony", x: 0.73, y: 0.47, zone: 2, routeId: 5 },
-      { name: "Gbagada Terminal", x: 0.70, y: 0.50, zone: 2, routeId: 5 }
+      // Segment 5 stations: End southwest
+      { name: "LASU Gate", x: 0.82, y: 0.30, zone: 2, routeId: 5 },
+      { name: "Igando", x: 0.84, y: 0.35, zone: 2, routeId: 5 },
+      { name: "Isheri Terminal", x: 0.85, y: 0.40, zone: 2, routeId: 5 }
     ];
 
     stationsData.forEach(stationData => {
