@@ -11,8 +11,9 @@ import RouteCustomizationPanel from "@/components/route-customization-panel";
 import RouteAestheticsPanel from "@/components/route-aesthetics-panel";
 import CrowdAnalyticsPanel from "@/components/crowd-analytics-panel";
 import AlertsManager from "@/components/alerts-manager";
+import AIInsightsPanel from "@/components/ai-insights-panel";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
@@ -29,6 +30,7 @@ export default function BusMonitor() {
   const [showRouteCustomization, setShowRouteCustomization] = useState(false);
   const [activeAlert, setActiveAlert] = useState<any | null>(null);
   const [showAlertsManager, setShowAlertsManager] = useState(false);
+  const [showAIInsights, setShowAIInsights] = useState(false);
   
   // Visibility controls for routes, bus stops, and buses
   const [showRoutes, setShowRoutes] = useState(true);
@@ -249,6 +251,18 @@ export default function BusMonitor() {
               routes={routes || []}
               theme={theme}
             />
+
+            {/* AI Insights */}
+            <Button
+              onClick={() => setShowAIInsights(!showAIInsights)}
+              variant={showAIInsights ? "default" : "outline"}
+              size="sm"
+              className="h-8 px-3 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white border-0"
+              title="AI Fleet Intelligence"
+            >
+              <Brain className="h-4 w-4 mr-1" />
+              AI Insights
+            </Button>
 
             {/* Settings */}
             <Button

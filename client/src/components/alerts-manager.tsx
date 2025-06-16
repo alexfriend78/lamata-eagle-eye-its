@@ -127,7 +127,7 @@ export default function AlertsManager({ onClose }: AlertsManagerProps) {
               {alert.status === 'closed' && 'Closed by: '}
               {alert.status === 'escalated' && 'Escalated by: '}
               {alert.status === 'acknowledged' && 'Acknowledged by: '}
-              <span className="font-medium">Operator Sarah Chen</span>
+              <span className="font-medium">Operator Adunni Okafor</span>
             </span>
           </div>
         )}
