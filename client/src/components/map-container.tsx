@@ -232,43 +232,25 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         { x: mapWidth * 0.55, y: mapHeight * 0.45 }, // Onipanu
         { x: mapWidth * 0.57, y: mapHeight * 0.43 }  // Fadeyi
       ],
-      5: [ // Route 5: Ikorodu - Oshodi (Complete path through all 37 stations)
-        { x: mapWidth * 0.15, y: mapHeight * 0.85 }, // Ikorodu Terminal
-        { x: mapWidth * 0.17, y: mapHeight * 0.83 }, // Benson
-        { x: mapWidth * 0.19, y: mapHeight * 0.81 }, // ARUNA
-        { x: mapWidth * 0.21, y: mapHeight * 0.79 }, // AGRIC TERMINAL
-        { x: mapWidth * 0.23, y: mapHeight * 0.77 }, // OWUTU IDIROKO
-        { x: mapWidth * 0.25, y: mapHeight * 0.75 }, // OGOLONTO
-        { x: mapWidth * 0.27, y: mapHeight * 0.73 }, // MAJIDUN AWORI
-        { x: mapWidth * 0.29, y: mapHeight * 0.71 }, // AJEGUNLE
-        { x: mapWidth * 0.31, y: mapHeight * 0.69 }, // IRAWO
-        { x: mapWidth * 0.33, y: mapHeight * 0.67 }, // IDERA
-        { x: mapWidth * 0.35, y: mapHeight * 0.65 }, // OWODEONIRIN
-        { x: mapWidth * 0.37, y: mapHeight * 0.63 }, // MILE12 TERMINAL
-        { x: mapWidth * 0.39, y: mapHeight * 0.61 }, // KETU
-        { x: mapWidth * 0.41, y: mapHeight * 0.59 }, // OJOTA
-        { x: mapWidth * 0.43, y: mapHeight * 0.57 }, // NEWGARAGE
-        { x: mapWidth * 0.45, y: mapHeight * 0.55 }, // Maryland
-        { x: mapWidth * 0.47, y: mapHeight * 0.53 }, // Idiroko
-        { x: mapWidth * 0.49, y: mapHeight * 0.51 }, // Anthony
-        { x: mapWidth * 0.51, y: mapHeight * 0.49 }, // Obanikoro
-        { x: mapWidth * 0.53, y: mapHeight * 0.47 }, // Palmgroove
-        { x: mapWidth * 0.55, y: mapHeight * 0.45 }, // Onipanu
-        { x: mapWidth * 0.57, y: mapHeight * 0.43 }, // Fadeyi
-        { x: mapWidth * 0.59, y: mapHeight * 0.41 }, // MOSALASI TERMINAL
-        { x: mapWidth * 0.61, y: mapHeight * 0.39 }, // BARRAKS
-        { x: mapWidth * 0.63, y: mapHeight * 0.37 }, // Stadium
-        { x: mapWidth * 0.65, y: mapHeight * 0.35 }, // Iponri
-        { x: mapWidth * 0.67, y: mapHeight * 0.33 }, // Costain
-        { x: mapWidth * 0.69, y: mapHeight * 0.31 }, // National Theatre
-        { x: mapWidth * 0.71, y: mapHeight * 0.29 }, // Oyingbo
-        { x: mapWidth * 0.73, y: mapHeight * 0.27 }, // Jibowu
-        { x: mapWidth * 0.75, y: mapHeight * 0.25 }, // Yaba
-        { x: mapWidth * 0.77, y: mapHeight * 0.23 }, // Palmgroove Junction
-        { x: mapWidth * 0.79, y: mapHeight * 0.21 }, // Maryland Junction
-        { x: mapWidth * 0.81, y: mapHeight * 0.19 }, // Ikeja Under Bridge
-        { x: mapWidth * 0.83, y: mapHeight * 0.17 }, // Airport Road
-        { x: mapWidth * 0.85, y: mapHeight * 0.15 }  // Oshodi Terminal 1
+      5: [ // Route 5: Multi-segment path with 6 distinct straight line segments
+        // Segment 1: Northeast diagonal from Ikorodu
+        { x: mapWidth * 0.15, y: mapHeight * 0.85 },
+        { x: mapWidth * 0.25, y: mapHeight * 0.75 },
+        
+        // Segment 2: Straight north
+        { x: mapWidth * 0.25, y: mapHeight * 0.60 },
+        
+        // Segment 3: Southeast diagonal
+        { x: mapWidth * 0.40, y: mapHeight * 0.45 },
+        
+        // Segment 4: Straight east
+        { x: mapWidth * 0.60, y: mapHeight * 0.45 },
+        
+        // Segment 5: Northeast diagonal
+        { x: mapWidth * 0.75, y: mapHeight * 0.30 },
+        
+        // Segment 6: Final northwest approach
+        { x: mapWidth * 0.65, y: mapHeight * 0.20 }
       ]
     };
     return routePaths[routeId] || [];

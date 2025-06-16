@@ -225,43 +225,43 @@ export class MemStorage implements IStorage {
       { name: "Onipanu", x: 0.55, y: 0.45, zone: 2, routeId: 4 },
       { name: "Fadeyi", x: 0.57, y: 0.43, zone: 2, routeId: 4 },
 
-      // Route 5: Ikorodu - Oshodi stations
+      // Route 5: Multi-segment path stations positioned along 6 segments
+      // Segment 1 stations: Northeast diagonal from Ikorodu
       { name: "Ikorodu Terminal", x: 0.15, y: 0.85, zone: 4, routeId: 5 },
-      { name: "Benson", x: 0.17, y: 0.83, zone: 4, routeId: 5 },
-      { name: "ARUNA", x: 0.19, y: 0.81, zone: 4, routeId: 5 },
-      { name: "AGRIC TERMINAL", x: 0.21, y: 0.79, zone: 4, routeId: 5 },
-      { name: "OWUTU IDIROKO", x: 0.23, y: 0.77, zone: 4, routeId: 5 },
-      { name: "OGOLONTO", x: 0.25, y: 0.75, zone: 3, routeId: 5 },
-      { name: "MAJIDUN AWORI", x: 0.27, y: 0.73, zone: 3, routeId: 5 },
-      { name: "AJEGUNLE", x: 0.29, y: 0.71, zone: 3, routeId: 5 },
-      { name: "IRAWO", x: 0.31, y: 0.69, zone: 3, routeId: 5 },
-      { name: "IDERA", x: 0.33, y: 0.67, zone: 3, routeId: 5 },
-      { name: "OWODEONIRIN", x: 0.35, y: 0.65, zone: 3, routeId: 5 },
-      { name: "MILE12 TERMINAL", x: 0.37, y: 0.63, zone: 3, routeId: 5 },
-      { name: "KETU", x: 0.39, y: 0.61, zone: 2, routeId: 5 },
-      { name: "OJOTA", x: 0.41, y: 0.59, zone: 2, routeId: 5 },
-      { name: "NEWGARAGE", x: 0.43, y: 0.57, zone: 2, routeId: 5 },
-      { name: "Maryland", x: 0.45, y: 0.55, zone: 2, routeId: 5 },
-      { name: "Idiroko", x: 0.47, y: 0.53, zone: 2, routeId: 5 },
-      { name: "Anthony", x: 0.49, y: 0.51, zone: 2, routeId: 5 },
-      { name: "Obanikoro", x: 0.51, y: 0.49, zone: 2, routeId: 5 },
-      { name: "Palmgroove", x: 0.53, y: 0.47, zone: 2, routeId: 5 },
-      { name: "Onipanu", x: 0.55, y: 0.45, zone: 2, routeId: 5 },
-      { name: "Fadeyi", x: 0.57, y: 0.43, zone: 2, routeId: 5 },
-      { name: "MOSALASI TERMINAL", x: 0.59, y: 0.41, zone: 2, routeId: 5 },
-      { name: "BARRAKS", x: 0.61, y: 0.39, zone: 2, routeId: 5 },
-      { name: "Stadium", x: 0.63, y: 0.37, zone: 2, routeId: 5 },
-      { name: "Iponri", x: 0.65, y: 0.35, zone: 2, routeId: 5 },
-      { name: "Costain", x: 0.67, y: 0.33, zone: 2, routeId: 5 },
-      { name: "National Theatre", x: 0.69, y: 0.31, zone: 2, routeId: 5 },
-      { name: "Oyingbo", x: 0.71, y: 0.29, zone: 2, routeId: 5 },
-      { name: "Jibowu", x: 0.73, y: 0.27, zone: 2, routeId: 5 },
-      { name: "Yaba", x: 0.75, y: 0.25, zone: 2, routeId: 5 },
-      { name: "Palmgroove Junction", x: 0.77, y: 0.23, zone: 2, routeId: 5 },
-      { name: "Maryland Junction", x: 0.79, y: 0.21, zone: 2, routeId: 5 },
-      { name: "Ikeja Under Bridge", x: 0.81, y: 0.19, zone: 1, routeId: 5 },
-      { name: "Airport Road", x: 0.83, y: 0.17, zone: 1, routeId: 5 },
-      { name: "Oshodi Terminal 1", x: 0.85, y: 0.15, zone: 2, routeId: 5 }
+      { name: "Benson", x: 0.18, y: 0.82, zone: 4, routeId: 5 },
+      { name: "ARUNA", x: 0.21, y: 0.79, zone: 4, routeId: 5 },
+      { name: "AGRIC TERMINAL", x: 0.25, y: 0.75, zone: 3, routeId: 5 },
+      
+      // Segment 2 stations: Straight north
+      { name: "OGOLONTO", x: 0.25, y: 0.72, zone: 3, routeId: 5 },
+      { name: "MAJIDUN AWORI", x: 0.25, y: 0.68, zone: 3, routeId: 5 },
+      { name: "AJEGUNLE", x: 0.25, y: 0.64, zone: 3, routeId: 5 },
+      { name: "IRAWO", x: 0.25, y: 0.60, zone: 3, routeId: 5 },
+      
+      // Segment 3 stations: Southeast diagonal
+      { name: "IDERA", x: 0.28, y: 0.57, zone: 3, routeId: 5 },
+      { name: "OWODEONIRIN", x: 0.32, y: 0.53, zone: 3, routeId: 5 },
+      { name: "MILE12 TERMINAL", x: 0.36, y: 0.49, zone: 2, routeId: 5 },
+      { name: "KETU", x: 0.40, y: 0.45, zone: 2, routeId: 5 },
+      
+      // Segment 4 stations: Straight east
+      { name: "OJOTA", x: 0.44, y: 0.45, zone: 2, routeId: 5 },
+      { name: "Maryland", x: 0.48, y: 0.45, zone: 2, routeId: 5 },
+      { name: "Anthony", x: 0.52, y: 0.45, zone: 2, routeId: 5 },
+      { name: "Palmgroove", x: 0.56, y: 0.45, zone: 2, routeId: 5 },
+      { name: "Fadeyi", x: 0.60, y: 0.45, zone: 2, routeId: 5 },
+      
+      // Segment 5 stations: Northeast diagonal
+      { name: "MOSALASI TERMINAL", x: 0.63, y: 0.42, zone: 2, routeId: 5 },
+      { name: "Stadium", x: 0.66, y: 0.39, zone: 2, routeId: 5 },
+      { name: "Costain", x: 0.69, y: 0.36, zone: 2, routeId: 5 },
+      { name: "National Theatre", x: 0.72, y: 0.33, zone: 2, routeId: 5 },
+      { name: "Yaba Junction", x: 0.75, y: 0.30, zone: 2, routeId: 5 },
+      
+      // Segment 6 stations: Northwest approach
+      { name: "Ikeja Under Bridge", x: 0.72, y: 0.27, zone: 1, routeId: 5 },
+      { name: "Airport Road", x: 0.69, y: 0.24, zone: 1, routeId: 5 },
+      { name: "Oshodi Terminal 1", x: 0.65, y: 0.20, zone: 2, routeId: 5 }
     ];
 
     stationsData.forEach(stationData => {
@@ -871,25 +871,25 @@ export class MemStorage implements IStorage {
         { x: 0.55, y: 0.45 }, // Onipanu
         { x: 0.57, y: 0.43 }  // Fadeyi
       ],
-      5: [ // Route 5: Ikorodu - Oshodi (Southwest to Central)
-        { x: 0.15, y: 0.85 }, // Ikorodu Terminal
-        { x: 0.17, y: 0.83 }, // Benson
-        { x: 0.19, y: 0.81 }, // ARUNA
-        { x: 0.21, y: 0.79 }, // AGRIC TERMINAL
-        { x: 0.23, y: 0.77 }, // OWUTU IDIROKO
-        { x: 0.25, y: 0.75 }, // OGOLONTO
-        { x: 0.27, y: 0.73 }, // MAJIDUN AWORI
-        { x: 0.29, y: 0.71 }, // AJEGUNLE
-        { x: 0.31, y: 0.69 }, // IRAWO
-        { x: 0.33, y: 0.67 }, // IDERA
-        { x: 0.35, y: 0.65 }, // OWODEONIRIN
-        { x: 0.37, y: 0.63 }, // MILE12 TERMINAL
-        { x: 0.39, y: 0.61 }, // KETU
-        { x: 0.41, y: 0.59 }, // OJOTA
-        { x: 0.43, y: 0.57 }, // NEWGARAGE
-        { x: 0.45, y: 0.55 }, // Maryland
-        { x: 0.47, y: 0.53 }, // Anthony
-        { x: 0.50, y: 0.60 }  // Oshodi Terminal 3
+      5: [ // Route 5: Multi-segment path with 6 distinct straight line segments
+        // Segment 1: Northeast diagonal from Ikorodu
+        { x: 0.15, y: 0.85 },
+        { x: 0.25, y: 0.75 },
+        
+        // Segment 2: Straight north
+        { x: 0.25, y: 0.60 },
+        
+        // Segment 3: Southeast diagonal
+        { x: 0.40, y: 0.45 },
+        
+        // Segment 4: Straight east
+        { x: 0.60, y: 0.45 },
+        
+        // Segment 5: Northeast diagonal
+        { x: 0.75, y: 0.30 },
+        
+        // Segment 6: Final northwest approach
+        { x: 0.65, y: 0.20 }
       ]
     };
     return routePaths[routeId] || [];
