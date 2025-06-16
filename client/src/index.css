@@ -100,23 +100,23 @@
 }
 
 .animate-pulse-intense {
-  animation: pulse-intense 1s ease-in-out infinite;
+  animation: pulse-intense 1.4s ease-in-out infinite;
 }
 
 .animate-pulse-strong {
-  animation: pulse-strong 0.9s ease-in-out infinite;
+  animation: pulse-strong 1.26s ease-in-out infinite;
 }
 
 .animate-pulse-super {
-  animation: pulse-super 0.8s ease-in-out infinite;
+  animation: pulse-super 1.12s ease-in-out infinite;
 }
 
 .animate-pulse-ultra {
-  animation: pulse-ultra 0.7s ease-in-out infinite;
+  animation: pulse-ultra 0.98s ease-in-out infinite;
 }
 
 .animate-pulse-mega {
-  animation: pulse-mega 0.6s ease-in-out infinite;
+  animation: pulse-mega 0.84s ease-in-out infinite;
 }
 
 :root {

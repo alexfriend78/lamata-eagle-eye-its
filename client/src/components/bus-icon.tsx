@@ -107,28 +107,53 @@ function BusIcon({ bus, style, alerts = [] }: BusIconProps) {
       const baseColor = getAlertColor(highestAcknowledgedAlert.priority || "medium");
       const intensity = getTimeBasedIntensity(highestAcknowledgedAlert);
       
-      // Create very bright, saturated color for maximum visibility
-      const glowColor = baseColor;
+      // Extract RGB values from color
+      const colorMatch = baseColor.match(/rgb\((\d+), (\d+), (\d+)\)/);
+      const [r, g, b] = colorMatch ? [colorMatch[1], colorMatch[2], colorMatch[3]] : [255, 0, 0];
+      
       const baseSize = 30 * intensity;
       
       return {
-        boxShadow: `
-          0 0 ${baseSize}px ${glowColor},
-          0 0 ${baseSize * 2}px ${glowColor},
-          0 0 ${baseSize * 3}px ${glowColor},
-          0 0 ${baseSize * 4}px ${glowColor}
+        background: `
+          radial-gradient(
+            circle,
+            rgba(${r}, ${g}, ${b}, 0.9) 0%,
+            rgba(${r}, ${g}, ${b}, 0.7) 20%,
+            rgba(${r}, ${g}, ${b}, 0.5) 40%,
+            rgba(${r}, ${g}, ${b}, 0.3) 60%,
+            rgba(${r}, ${g}, ${b}, 0.1) 80%,
+            transparent 100%
+          )
         `,
-        backgroundColor: glowColor,
-        borderRadius: '50%',
-        opacity: 0.8
+        boxShadow: `
+          0 0 ${baseSize}px rgba(${r}, ${g}, ${b}, 0.8),
+          0 0 ${baseSize * 2}px rgba(${r}, ${g}, ${b}, 0.6),
+          0 0 ${baseSize * 3}px rgba(${r}, ${g}, ${b}, 0.4),
+          0 0 ${baseSize * 4}px rgba(${r}, ${g}, ${b}, 0.2)
+        `,
+        borderRadius: '50%'
       };
     } else if (activeGlow === "emergency" && highestPriorityAlert) {
       const color = getAlertColor(highestPriorityAlert.priority || "medium");
+      const colorMatch = color.match(/rgb\((\d+), (\d+), (\d+)\)/);
+      const [r, g, b] = colorMatch ? [colorMatch[1], colorMatch[2], colorMatch[3]] : [255, 0, 0];
+      
       return {
-        boxShadow: `0 0 20px ${color}, 0 0 40px ${color}, 0 0 60px ${color}`,
-        backgroundColor: color,
-        borderRadius: '50%',
-        opacity: 0.6
+        background: `
+          radial-gradient(
+            circle,
+            rgba(${r}, ${g}, ${b}, 0.8) 0%,
+            rgba(${r}, ${g}, ${b}, 0.6) 30%,
+            rgba(${r}, ${g}, ${b}, 0.3) 60%,
+            transparent 100%
+          )
+        `,
+        boxShadow: `
+          0 0 20px rgba(${r}, ${g}, ${b}, 0.7),
+          0 0 40px rgba(${r}, ${g}, ${b}, 0.5),
+          0 0 60px rgba(${r}, ${g}, ${b}, 0.3)
+        `,
+        borderRadius: '50%'
       };
     }
     return {};
