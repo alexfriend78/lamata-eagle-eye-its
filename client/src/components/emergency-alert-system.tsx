@@ -63,7 +63,7 @@ export default function EmergencyAlertSystem({
   const [alertMessage, setAlertMessage] = useState("");
   const [alertType, setAlertType] = useState("emergency");
   const [isVideoPlaying, setIsVideoPlaying] = useState(true);
-  const [isVideoMuted, setIsVideoMuted] = useState(false);
+  const [isVideoMuted, setIsVideoMuted] = useState(true);
 
   const queryClient = useQueryClient();
 

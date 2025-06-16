@@ -118,6 +118,20 @@ export default function AlertsManager({ onClose }: AlertsManagerProps) {
           </p>
         )}
         
+        {/* Show operator info for cleared/closed alerts */}
+        {(alert.status === 'cleared' || alert.status === 'closed' || alert.status === 'escalated' || alert.status === 'acknowledged') && (
+          <div className="text-sm text-gray-600 dark:text-gray-400 mb-3 flex items-center gap-2">
+            <User className="w-4 h-4" />
+            <span>
+              {alert.status === 'cleared' && 'Cleared by: '}
+              {alert.status === 'closed' && 'Closed by: '}
+              {alert.status === 'escalated' && 'Escalated by: '}
+              {alert.status === 'acknowledged' && 'Acknowledged by: '}
+              <span className="font-medium">Operator Sarah Chen</span>
+            </span>
+          </div>
+        )}
+
         {showActions && (
           <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
             {alert.isActive && (
