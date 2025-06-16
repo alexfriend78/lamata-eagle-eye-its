@@ -116,6 +116,7 @@ export default function EmergencyAlertSystem({
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
+      onAlertDismiss(); // Immediately close the alert window
     },
   });
 
