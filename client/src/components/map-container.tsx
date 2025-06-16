@@ -211,7 +211,12 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
 
     // Create consistent curves for all routes around stations
     const curvedPoints = offsetPoints.map((point, i) => {
-      // Apply consistent curve to all points including endpoints for uniform appearance
+      // Keep endpoints exactly at station positions for proper connection
+      if (i === 0 || i === offsetPoints.length - 1) {
+        return point; // No offset for start/end points
+      }
+      
+      // Apply curve offset only to intermediate points to avoid text overlap
       const textOffset = 8; // Small offset to avoid text overlap
       const routeOffset = routeIndex * 4; // Additional offset for multiple routes
       
