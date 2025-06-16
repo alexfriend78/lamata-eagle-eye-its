@@ -630,18 +630,12 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                   <span className="text-gray-600 dark:text-gray-400">Name:</span>
                   <span className="font-semibold">{bus.driverName || 'Not assigned'}</span>
                 </div>
-                {bus.driverPhone && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Phone:</span>
-                    <Button variant="ghost" size="sm" className="h-auto p-0 font-semibold text-blue-600">
-                      <Phone className="w-4 h-4 mr-1" />
-                      {bus.driverPhone}
-                    </Button>
-                  </div>
-                )}
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">License:</span>
-                  <span className="font-semibold">{bus.driverLicense || 'DL-' + Math.random().toString(36).substr(2, 6).toUpperCase()}</span>
+                  <span className="text-gray-600 dark:text-gray-400">Telephone:</span>
+                  <Button variant="ghost" size="sm" className="h-auto p-0 font-semibold text-blue-600">
+                    <Phone className="w-4 h-4 mr-1" />
+                    {bus.driverPhone || '+234-8000-000-000'}
+                  </Button>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Shift Start:</span>

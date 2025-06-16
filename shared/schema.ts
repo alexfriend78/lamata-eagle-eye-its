@@ -38,6 +38,9 @@ export const buses = pgTable("buses", {
   currentY: real("current_y").notNull(),
   status: text("status").notNull().default("on_time"), // on_time, delayed, alert
   direction: text("direction").notNull().default("forward"), // forward, reverse
+  passengerCount: integer("passenger_count").notNull().default(0),
+  driverName: text("driver_name"),
+  driverPhone: text("driver_phone"),
   lastUpdated: timestamp("last_updated").notNull().defaultNow(),
 });
 

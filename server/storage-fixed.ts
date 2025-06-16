@@ -279,30 +279,30 @@ export class MemStorage implements IStorage {
       });
     });
 
-    // Create buses for each route with direction of travel - 2 buses per route
+    // Create buses for each route with direction of travel and Nigerian driver data
     const busesData = [
       // Route 1 buses - positioned on current route coordinates (matching frontend path)
-      { number: "BRT001", routeId: 1, status: "active", capacity: 70, direction: "Outbound", currentX: 0.385, currentY: 0.67 },
-      { number: "BRT002", routeId: 1, status: "active", capacity: 70, direction: "Inbound", currentX: 0.245, currentY: 0.53 },
-      { number: "BRT009", routeId: 1, status: "delayed", capacity: 70, direction: "Outbound", currentX: 0.185, currentY: 0.47 },
+      { number: "BRT001", routeId: 1, status: "active", capacity: 70, direction: "Outbound", currentX: 0.385, currentY: 0.67, driverName: "Adebayo Johnson", driverPhone: "+234-8012-345-678" },
+      { number: "BRT002", routeId: 1, status: "active", capacity: 70, direction: "Inbound", currentX: 0.245, currentY: 0.53, driverName: "Chukwudi Okafor", driverPhone: "+234-8023-456-789" },
+      { number: "BRT009", routeId: 1, status: "delayed", capacity: 70, direction: "Outbound", currentX: 0.185, currentY: 0.47, driverName: "Fatima Abdullahi", driverPhone: "+234-8034-567-890" },
       
       // Route 2 buses
-      { number: "BRT003", routeId: 2, status: "delayed", capacity: 70, direction: "Southbound" },
-      { number: "BRT004", routeId: 2, status: "active", capacity: 70, direction: "Northbound" },
-      { number: "BRT010", routeId: 2, status: "active", capacity: 70, direction: "Southbound" },
+      { number: "BRT003", routeId: 2, status: "delayed", capacity: 70, direction: "Southbound", driverName: "Olumide Adeyemi", driverPhone: "+234-8045-678-901" },
+      { number: "BRT004", routeId: 2, status: "active", capacity: 70, direction: "Northbound", driverName: "Ngozi Okwu", driverPhone: "+234-8056-789-012" },
+      { number: "BRT010", routeId: 2, status: "active", capacity: 70, direction: "Southbound", driverName: "Ibrahim Musa", driverPhone: "+234-8067-890-123" },
       
       // Route 3 buses
-      { number: "BRT005", routeId: 3, status: "active", capacity: 70, direction: "Eastbound" },
-      { number: "BRT006", routeId: 3, status: "alert", capacity: 70, direction: "Westbound" },
-      { number: "BRT011", routeId: 3, status: "active", capacity: 70, direction: "Eastbound" },
+      { number: "BRT005", routeId: 3, status: "active", capacity: 70, direction: "Eastbound", driverName: "Folake Akinola", driverPhone: "+234-8078-901-234" },
+      { number: "BRT006", routeId: 3, status: "alert", capacity: 70, direction: "Westbound", driverName: "Emeka Nwosu", driverPhone: "+234-8089-012-345" },
+      { number: "BRT011", routeId: 3, status: "active", capacity: 70, direction: "Eastbound", driverName: "Aisha Bello", driverPhone: "+234-8090-123-456" },
       
       // Route 4 buses
-      { number: "BRT007", routeId: 4, status: "active", capacity: 70, direction: "Northbound" },
-      { number: "BRT012", routeId: 4, status: "active", capacity: 70, direction: "Southbound" },
+      { number: "BRT007", routeId: 4, status: "active", capacity: 70, direction: "Northbound", driverName: "Tunde Olawale", driverPhone: "+234-8001-234-567" },
+      { number: "BRT012", routeId: 4, status: "active", capacity: 70, direction: "Southbound", driverName: "Kemi Owolabi", driverPhone: "+234-8012-345-678" },
       
       // Route 5 buses  
-      { number: "BRT008", routeId: 5, status: "active", capacity: 70, direction: "Eastbound" },
-      { number: "BRT013", routeId: 5, status: "active", capacity: 70, direction: "Westbound" }
+      { number: "BRT008", routeId: 5, status: "active", capacity: 70, direction: "Eastbound", driverName: "Hassan Usman", driverPhone: "+234-8023-456-789" },
+      { number: "BRT013", routeId: 5, status: "active", capacity: 70, direction: "Westbound", driverName: "Chioma Ikechukwu", driverPhone: "+234-8034-567-890" }
     ];
 
     busesData.forEach(busData => {
@@ -329,7 +329,9 @@ export class MemStorage implements IStorage {
         status: busData.status,
         direction: busData.direction,
         passengerCount: Math.floor(Math.random() * busData.capacity * 0.8),
-        lastUpdated: new Date()
+        lastUpdated: new Date(),
+        driverName: busData.driverName,
+        driverPhone: busData.driverPhone
       });
     });
 
