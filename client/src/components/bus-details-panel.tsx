@@ -145,21 +145,25 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
     
     // Simulate a deviation from the designed path
     const designedPath = getDesignedRoutePoints(bus.routeId);
+    if (designedPath.length === 0) return [];
+    
     const currentIndex = Math.floor(designedPath.length * 0.3); // Assume 30% through route
     const deviationPath = [];
     
     // Add points showing where bus went off-route
-    for (let i = 0; i <= currentIndex; i++) {
+    for (let i = 0; i <= currentIndex && i < designedPath.length; i++) {
       deviationPath.push(designedPath[i]);
     }
     
-    // Add deviation points
-    const lastPoint = designedPath[currentIndex];
-    deviationPath.push(
-      { x: lastPoint.x + 0.05, y: lastPoint.y + 0.03 },
-      { x: lastPoint.x + 0.08, y: lastPoint.y + 0.06 },
-      { x: bus.currentX, y: bus.currentY }
-    );
+    // Add deviation points if we have a valid last point
+    if (designedPath[currentIndex]) {
+      const lastPoint = designedPath[currentIndex];
+      deviationPath.push(
+        { x: lastPoint.x + 0.05, y: lastPoint.y + 0.03 },
+        { x: lastPoint.x + 0.08, y: lastPoint.y + 0.06 },
+        { x: bus.currentX || lastPoint.x + 0.1, y: bus.currentY || lastPoint.y + 0.08 }
+      );
+    }
     
     return deviationPath;
   };
@@ -228,14 +232,16 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                     />
                     
                     {/* Current Bus Position */}
-                    <circle
-                      cx={bus.currentX * 400}
-                      cy={bus.currentY * 300}
-                      r="6"
-                      fill="#ef4444"
-                      stroke="#ffffff"
-                      strokeWidth="2"
-                    />
+                    {bus.currentX !== undefined && bus.currentY !== undefined && (
+                      <circle
+                        cx={bus.currentX * 400}
+                        cy={bus.currentY * 300}
+                        r="6"
+                        fill="#ef4444"
+                        stroke="#ffffff"
+                        strokeWidth="2"
+                      />
+                    )}
                     
                     {/* Route stations */}
                     {getDesignedRoutePoints(bus.routeId).map((point, index) => (
