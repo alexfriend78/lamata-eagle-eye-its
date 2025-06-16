@@ -211,25 +211,22 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         // Segment 8: Final northeast to terminal
         { x: mapWidth * 0.80, y: mapHeight * 0.35 }
       ],
-      4: [ // Route 4: Straight segments only - Ikorodu to Fadeyi
-        // Segment 1: Northeast diagonal
+      4: [ // Route 4: Realistic Lagos BRT - Ikorodu to Victoria Island
+        // Segment 1: Northeast from Ikorodu towards Mile 12
         { x: mapWidth * 0.15, y: mapHeight * 0.85 },
-        { x: mapWidth * 0.25, y: mapHeight * 0.75 },
+        { x: mapWidth * 0.30, y: mapHeight * 0.70 },
         
-        // Segment 2: East straight
-        { x: mapWidth * 0.40, y: mapHeight * 0.75 },
+        // Segment 2: East through Ketu-Maryland corridor
+        { x: mapWidth * 0.45, y: mapHeight * 0.65 },
         
-        // Segment 3: North straight
-        { x: mapWidth * 0.40, y: mapHeight * 0.60 },
+        // Segment 3: Northeast through Yaba-Surulere
+        { x: mapWidth * 0.60, y: mapHeight * 0.50 },
         
-        // Segment 4: East straight
-        { x: mapWidth * 0.55, y: mapHeight * 0.60 },
+        // Segment 4: East through Lagos Island
+        { x: mapWidth * 0.75, y: mapHeight * 0.45 },
         
-        // Segment 5: South straight
-        { x: mapWidth * 0.55, y: mapHeight * 0.75 },
-        
-        // Segment 6: East straight to terminal
-        { x: mapWidth * 0.70, y: mapHeight * 0.75 }
+        // Segment 5: Southeast to Victoria Island
+        { x: mapWidth * 0.85, y: mapHeight * 0.35 }
       ],
       5: [ // Route 5: Random multi-segment path with 7 distinct segments
         // Segment 1: Start at random point, go northwest

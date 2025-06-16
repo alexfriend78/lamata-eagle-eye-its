@@ -225,38 +225,35 @@ export class MemStorage implements IStorage {
       { name: "Victoria Island", x: 0.75, y: 0.41, zone: 2, routeId: 3 },
       { name: "Lagos Island", x: 0.80, y: 0.35, zone: 2, routeId: 3 },
 
-      // Route 4: Straight segments only stations
-      // Segment 1 stations: Northeast diagonal
+      // Route 4: Realistic Lagos BRT stations - Ikorodu to Victoria Island
+      // Segment 1 stations: Northeast from Ikorodu towards Mile 12
       { name: "Ikorodu Terminal", x: 0.15, y: 0.85, zone: 4, routeId: 4 },
       { name: "Benson", x: 0.18, y: 0.82, zone: 4, routeId: 4 },
       { name: "Agric", x: 0.21, y: 0.79, zone: 4, routeId: 4 },
-      { name: "Owutu", x: 0.25, y: 0.75, zone: 3, routeId: 4 },
+      { name: "Mile 12", x: 0.26, y: 0.74, zone: 3, routeId: 4 },
+      { name: "Owutu", x: 0.30, y: 0.70, zone: 3, routeId: 4 },
       
-      // Segment 2 stations: East straight
-      { name: "Mile 12", x: 0.28, y: 0.75, zone: 3, routeId: 4 },
-      { name: "Ketu", x: 0.32, y: 0.75, zone: 3, routeId: 4 },
-      { name: "Ojota", x: 0.36, y: 0.75, zone: 2, routeId: 4 },
-      { name: "Maryland", x: 0.40, y: 0.75, zone: 2, routeId: 4 },
+      // Segment 2 stations: East through Ketu-Maryland corridor
+      { name: "Ketu", x: 0.35, y: 0.68, zone: 3, routeId: 4 },
+      { name: "Ojota", x: 0.40, y: 0.66, zone: 2, routeId: 4 },
+      { name: "Maryland", x: 0.45, y: 0.65, zone: 2, routeId: 4 },
       
-      // Segment 3 stations: North straight
-      { name: "Anthony", x: 0.40, y: 0.70, zone: 2, routeId: 4 },
-      { name: "Gbagada", x: 0.40, y: 0.65, zone: 2, routeId: 4 },
-      { name: "Yaba", x: 0.40, y: 0.60, zone: 2, routeId: 4 },
+      // Segment 3 stations: Northeast through Yaba-Surulere
+      { name: "Anthony", x: 0.50, y: 0.58, zone: 2, routeId: 4 },
+      { name: "Palmgroove", x: 0.53, y: 0.55, zone: 2, routeId: 4 },
+      { name: "Yaba", x: 0.57, y: 0.52, zone: 2, routeId: 4 },
+      { name: "Surulere", x: 0.60, y: 0.50, zone: 2, routeId: 4 },
       
-      // Segment 4 stations: East straight
-      { name: "Fadeyi", x: 0.45, y: 0.60, zone: 2, routeId: 4 },
-      { name: "Jibowu", x: 0.50, y: 0.60, zone: 2, routeId: 4 },
-      { name: "Mushin", x: 0.55, y: 0.60, zone: 2, routeId: 4 },
+      // Segment 4 stations: East through Lagos Island
+      { name: "National Theatre", x: 0.65, y: 0.48, zone: 2, routeId: 4 },
+      { name: "Lagos Island", x: 0.70, y: 0.46, zone: 2, routeId: 4 },
+      { name: "CMS", x: 0.75, y: 0.45, zone: 2, routeId: 4 },
       
-      // Segment 5 stations: South straight
-      { name: "Papa Ajao", x: 0.55, y: 0.65, zone: 2, routeId: 4 },
-      { name: "Ikeja", x: 0.55, y: 0.70, zone: 2, routeId: 4 },
-      { name: "Ogba", x: 0.55, y: 0.75, zone: 2, routeId: 4 },
-      
-      // Segment 6 stations: East straight to terminal
-      { name: "Agege", x: 0.60, y: 0.75, zone: 2, routeId: 4 },
-      { name: "Pen Cinema", x: 0.65, y: 0.75, zone: 2, routeId: 4 },
-      { name: "Alimosho Terminal", x: 0.70, y: 0.75, zone: 2, routeId: 4 },
+      // Segment 5 stations: Southeast to Victoria Island
+      { name: "Tafawa Balewa Square", x: 0.78, y: 0.42, zone: 2, routeId: 4 },
+      { name: "Ikoyi Bridge", x: 0.81, y: 0.39, zone: 2, routeId: 4 },
+      { name: "Falomo", x: 0.83, y: 0.37, zone: 2, routeId: 4 },
+      { name: "Victoria Island Terminal", x: 0.85, y: 0.35, zone: 2, routeId: 4 },
 
       // Route 5: Random path stations positioned along 7 segments
       // Segment 1 stations: Northwest from random start
@@ -887,25 +884,22 @@ export class MemStorage implements IStorage {
         // Segment 8: Final northeast to terminal
         { x: 0.80, y: 0.35 }
       ],
-      4: [ // Route 4: Straight segments only - Ikorodu to Fadeyi
-        // Segment 1: Northeast diagonal
+      4: [ // Route 4: Realistic Lagos BRT - Ikorodu to Victoria Island
+        // Segment 1: Northeast from Ikorodu towards Mile 12
         { x: 0.15, y: 0.85 },
-        { x: 0.25, y: 0.75 },
+        { x: 0.30, y: 0.70 },
         
-        // Segment 2: East straight
-        { x: 0.40, y: 0.75 },
+        // Segment 2: East through Ketu-Maryland corridor
+        { x: 0.45, y: 0.65 },
         
-        // Segment 3: North straight
-        { x: 0.40, y: 0.60 },
+        // Segment 3: Northeast through Yaba-Surulere
+        { x: 0.60, y: 0.50 },
         
-        // Segment 4: East straight
-        { x: 0.55, y: 0.60 },
+        // Segment 4: East through Lagos Island
+        { x: 0.75, y: 0.45 },
         
-        // Segment 5: South straight
-        { x: 0.55, y: 0.75 },
-        
-        // Segment 6: East straight to terminal
-        { x: 0.70, y: 0.75 }
+        // Segment 5: Southeast to Victoria Island
+        { x: 0.85, y: 0.35 }
       ],
       5: [ // Route 5: Random multi-segment path with 7 distinct segments
         // Segment 1: Start at random point, go northwest
