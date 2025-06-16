@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { X, Phone, User, Users, MapPin, Gauge, Camera, Play, Pause, Volume2, VolumeX } from "lucide-react";
+import { X, Phone, User, Users, MapPin, Gauge, Camera, Play, Pause, Volume2, VolumeX, AlertTriangle, Navigation } from "lucide-react";
 import { type BusWithRoute } from "@shared/schema";
 
 // Import CCTV video feeds for buses
@@ -107,6 +107,63 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
     }
   };
 
+  // Get route points for the designed path
+  const getDesignedRoutePoints = (routeId: number) => {
+    const routePaths: Record<number, { x: number; y: number }[]> = {
+      1: [
+        { x: 0.37, y: 0.67 }, { x: 0.35, y: 0.65 }, { x: 0.33, y: 0.63 },
+        { x: 0.31, y: 0.61 }, { x: 0.29, y: 0.59 }, { x: 0.27, y: 0.57 },
+        { x: 0.25, y: 0.55 }, { x: 0.23, y: 0.53 }, { x: 0.21, y: 0.51 },
+        { x: 0.19, y: 0.49 }, { x: 0.17, y: 0.47 }, { x: 0.15, y: 0.45 },
+        { x: 0.13, y: 0.43 }, { x: 0.11, y: 0.41 }, { x: 0.09, y: 0.39 },
+        { x: 0.07, y: 0.37 }, { x: 0.05, y: 0.35 }
+      ],
+      2: [
+        { x: 0.18, y: 0.28 }, { x: 0.22, y: 0.32 }, { x: 0.26, y: 0.36 },
+        { x: 0.30, y: 0.40 }, { x: 0.34, y: 0.44 }, { x: 0.38, y: 0.48 },
+        { x: 0.42, y: 0.52 }, { x: 0.46, y: 0.56 }, { x: 0.50, y: 0.60 }
+      ],
+      3: [
+        { x: 0.15, y: 0.85 }, { x: 0.20, y: 0.82 }, { x: 0.25, y: 0.79 },
+        { x: 0.30, y: 0.76 }, { x: 0.35, y: 0.73 }, { x: 0.40, y: 0.70 }
+      ],
+      4: [
+        { x: 0.60, y: 0.30 }, { x: 0.65, y: 0.35 }, { x: 0.70, y: 0.40 },
+        { x: 0.75, y: 0.45 }, { x: 0.80, y: 0.50 }, { x: 0.85, y: 0.55 }
+      ],
+      5: [
+        { x: 0.45, y: 0.15 }, { x: 0.50, y: 0.20 }, { x: 0.55, y: 0.25 },
+        { x: 0.60, y: 0.30 }, { x: 0.65, y: 0.35 }, { x: 0.70, y: 0.40 }
+      ]
+    };
+    return routePaths[routeId] || [];
+  };
+
+  // Generate simulated off-route path for visualization
+  const getOffRoutePath = () => {
+    if (bus.status !== "off-route") return [];
+    
+    // Simulate a deviation from the designed path
+    const designedPath = getDesignedRoutePoints(bus.routeId);
+    const currentIndex = Math.floor(designedPath.length * 0.3); // Assume 30% through route
+    const deviationPath = [];
+    
+    // Add points showing where bus went off-route
+    for (let i = 0; i <= currentIndex; i++) {
+      deviationPath.push(designedPath[i]);
+    }
+    
+    // Add deviation points
+    const lastPoint = designedPath[currentIndex];
+    deviationPath.push(
+      { x: lastPoint.x + 0.05, y: lastPoint.y + 0.03 },
+      { x: lastPoint.x + 0.08, y: lastPoint.y + 0.06 },
+      { x: bus.currentX, y: bus.currentY }
+    );
+    
+    return deviationPath;
+  };
+
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
       <Card className="w-full max-w-6xl bg-white dark:bg-gray-800 max-h-[90vh] overflow-y-auto">
@@ -115,12 +172,104 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
             <CardTitle className="text-2xl font-bold">Bus Details - {bus.busNumber}</CardTitle>
             <p className="text-gray-600 dark:text-gray-300">Route {bus.route.routeNumber}: {bus.route.name}</p>
           </div>
-          <Button onClick={onClose} variant="ghost" size="sm">
+          <Button 
+            onClick={(e) => {
+              e.stopPropagation();
+              onClose();
+            }} 
+            variant="ghost" 
+            size="sm"
+            className="hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
             <X className="w-4 h-4" />
           </Button>
         </CardHeader>
 
         <CardContent className="space-y-6">
+          {/* Off-Route Alert and Route Map */}
+          {bus.status === "off-route" && (
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+              <div className="flex items-center gap-2 mb-4">
+                <AlertTriangle className="w-5 h-5 text-red-600" />
+                <h3 className="text-lg font-semibold text-red-800 dark:text-red-400">
+                  GEOFENCING VIOLATION - Bus Off Designated Route
+                </h3>
+              </div>
+              
+              {/* Route Comparison Map */}
+              <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border">
+                <div className="flex items-center gap-2 mb-3">
+                  <Navigation className="w-4 h-4" />
+                  <h4 className="font-medium">Route Comparison View</h4>
+                </div>
+                
+                <div className="relative bg-gray-100 dark:bg-gray-700 rounded h-64 overflow-hidden">
+                  <svg width="100%" height="100%" viewBox="0 0 400 300" className="absolute inset-0">
+                    {/* Designed Route Path - Blue */}
+                    <polyline
+                      points={getDesignedRoutePoints(bus.routeId)
+                        .map(point => `${point.x * 400},${point.y * 300}`)
+                        .join(' ')}
+                      fill="none"
+                      stroke="#3b82f6"
+                      strokeWidth="3"
+                      strokeDasharray="none"
+                    />
+                    
+                    {/* Actual Path Taken - Red */}
+                    <polyline
+                      points={getOffRoutePath()
+                        .map(point => `${point.x * 400},${point.y * 300}`)
+                        .join(' ')}
+                      fill="none"
+                      stroke="#ef4444"
+                      strokeWidth="3"
+                      strokeDasharray="5,5"
+                    />
+                    
+                    {/* Current Bus Position */}
+                    <circle
+                      cx={bus.currentX * 400}
+                      cy={bus.currentY * 300}
+                      r="6"
+                      fill="#ef4444"
+                      stroke="#ffffff"
+                      strokeWidth="2"
+                    />
+                    
+                    {/* Route stations */}
+                    {getDesignedRoutePoints(bus.routeId).map((point, index) => (
+                      <circle
+                        key={index}
+                        cx={point.x * 400}
+                        cy={point.y * 300}
+                        r="3"
+                        fill="#3b82f6"
+                        opacity="0.7"
+                      />
+                    ))}
+                  </svg>
+                  
+                  {/* Legend */}
+                  <div className="absolute bottom-2 left-2 bg-white dark:bg-gray-800 p-2 rounded shadow text-xs">
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="w-3 h-0.5 bg-blue-500"></div>
+                      <span>Designed Route</span>
+                    </div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <div className="w-3 h-0.5 bg-red-500 border-dashed"></div>
+                      <span>Actual Path</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                      <span>Current Position</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Live Video Feeds */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Driver View */}

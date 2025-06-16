@@ -909,13 +909,13 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 onClick={() => handleBusClick(bus)}
                 className="cursor-pointer hover:scale-110 transition-transform"
               >
-                {/* Orange glow effect for off-route buses */}
+                {/* Bright red glow effect for off-route buses */}
                 {isOffRoute && (
                   <div
                     className="absolute inset-0 rounded-full animate-pulse"
                     style={{
-                      boxShadow: `0 0 ${15 + glowIntensity * 25}px ${10 + glowIntensity * 15}px rgba(255, 165, 0, ${0.3 + glowIntensity * 0.4})`,
-                      transform: 'scale(1.5)',
+                      boxShadow: `0 0 ${20 + glowIntensity * 40}px ${15 + glowIntensity * 25}px rgba(255, 0, 0, ${0.4 + glowIntensity * 0.5})`,
+                      transform: `scale(${1.8 + glowIntensity * 0.7})`,
                       zIndex: -1
                     }}
                   />
@@ -924,7 +924,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 <BusIcon
                   bus={bus}
                   style={{
-                    filter: isOffRoute ? `drop-shadow(0 0 8px rgba(255, 165, 0, ${0.6 + glowIntensity * 0.4}))` : undefined
+                    filter: isOffRoute ? `drop-shadow(0 0 12px rgba(255, 0, 0, ${0.7 + glowIntensity * 0.3}))` : undefined
                   }}
                 />
               </div>
