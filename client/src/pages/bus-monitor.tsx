@@ -380,7 +380,7 @@ export default function BusMonitor() {
       <EmergencyAlertSystem
         buses={buses || []}
         stations={stations || []}
-        activeAlert={highestPriorityAlert || activeAlert}
+        activeAlert={highestPriorityAlert}
         onAlertDismiss={() => setActiveAlert(null)}
         onAlertCreate={(alert) => setActiveAlert(alert)}
       />
