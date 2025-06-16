@@ -26,9 +26,10 @@ interface MapContainerProps {
   showStations: boolean;
   showBuses: boolean;
   showBackgroundMap: boolean;
+  backgroundMapOpacity: number;
 }
 
-export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed, showRoutes, showStations, showBuses, showBackgroundMap }: MapContainerProps) {
+export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed, showRoutes, showStations, showBuses, showBackgroundMap, backgroundMapOpacity }: MapContainerProps) {
   const [selectedBus, setSelectedBus] = useState<BusWithRoute | null>(null);
   const [geofencingAlert, setGeofencingAlert] = useState<{busId: number, busNumber: string} | null>(null);
   const [dismissedAlerts, setDismissedAlerts] = useState<Set<number>>(new Set());
@@ -553,7 +554,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         {/* Background Map Layer */}
       {showBackgroundMap && (
         <svg width={mapWidth} height={mapHeight} className="absolute inset-0" style={{ zIndex: 1 }}>
-          <g opacity="0.15">
+          <g opacity={backgroundMapOpacity}>
             {/* Lagos State outline */}
             <path
               d="M100,150 L200,120 L350,140 L450,160 L500,200 L480,300 L420,350 L300,380 L200,360 L150,300 L100,250 Z"
