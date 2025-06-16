@@ -7,8 +7,10 @@ import { X, Phone, User, Users, MapPin, Gauge, Camera, Play, Pause, Volume2, Vol
 import { type BusWithRoute } from "@shared/schema";
 
 // Import CCTV video feeds for buses
-import driverVideoPath from "@assets/Delayed Bus_Passenger At Bus Stop_1750009404917.mp4";
-import passengersVideoPath from "@assets/Passengers Queuing at BRT_Bus_Video_Generated_1750009404918.mp4";
+import driverVideoPath from "@assets/knife_Lagos_Bus_CCTV_Video_Ready_1750007661394.mp4";
+import passengersVideoPath from "@assets/Bus_Fight_Video_Generated_1750007661396.mp4";
+import emergencyVideoPath from "@assets/Bus_Passenger_Medical_Emergency_Video_1750056149435.mp4";
+import machineGunVideoPath from "@assets/BRT_Bus_with_Machine_Gun_1750007661395.mp4";
 
 interface BusDetailsPanelProps {
   bus: BusWithRoute;
@@ -105,6 +107,24 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
       video.muted = !isPassengerVideoMuted;
       setIsPassengerVideoMuted(!isPassengerVideoMuted);
     }
+  };
+
+  // Select appropriate video feeds based on bus status and conditions
+  const getDriverVideoSrc = () => {
+    if (bus.status === "off-route" || bus.status === "alert") {
+      return driverVideoPath; // Shows knife incident
+    }
+    return emergencyVideoPath; // Normal operations
+  };
+
+  const getPassengerVideoSrc = () => {
+    if (busData.passengerCount > 50) {
+      return passengersVideoPath; // Shows fight incident when crowded
+    }
+    if (bus.status === "alert") {
+      return machineGunVideoPath; // Emergency situations
+    }
+    return emergencyVideoPath; // Normal passenger activity
   };
 
   // Get route points for the designed path
@@ -290,7 +310,7 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
               <div className="relative bg-black rounded-lg overflow-hidden">
                 <video
                   id="driver-video"
-                  src={driverVideoPath}
+                  src={getDriverVideoSrc()}
                   autoPlay
                   loop
                   muted={isDriverVideoMuted}
@@ -329,7 +349,7 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
               <div className="relative bg-black rounded-lg overflow-hidden">
                 <video
                   id="passenger-video"
-                  src={passengersVideoPath}
+                  src={getPassengerVideoSrc()}
                   autoPlay
                   loop
                   muted={isPassengerVideoMuted}
