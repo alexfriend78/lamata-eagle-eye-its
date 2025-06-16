@@ -32,6 +32,7 @@ export interface IStorage {
   getAlert(id: number): Promise<Alert | undefined>;
   createAlert(alert: InsertAlert): Promise<Alert>;
   acknowledgeAlert(id: number): Promise<Alert | undefined>;
+  clearAlert(id: number): Promise<Alert | undefined>;
   
   // Route Stations
   getRouteStations(routeId: number): Promise<Station[]>;
@@ -639,7 +640,17 @@ export class MemStorage implements IStorage {
   async acknowledgeAlert(id: number): Promise<Alert | undefined> {
     const alert = this.alerts.get(id);
     if (alert) {
-      const updatedAlert = { ...alert, isActive: false };
+      const updatedAlert = { ...alert, isActive: false, status: "acknowledged" };
+      this.alerts.set(id, updatedAlert);
+      return updatedAlert;
+    }
+    return undefined;
+  }
+
+  async clearAlert(id: number): Promise<Alert | undefined> {
+    const alert = this.alerts.get(id);
+    if (alert) {
+      const updatedAlert = { ...alert, isActive: false, status: "cleared" };
       this.alerts.set(id, updatedAlert);
       return updatedAlert;
     }

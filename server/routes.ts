@@ -1,6 +1,6 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage-fixed";
+import { storage } from "./storage-old";
 import { insertAlertSchema, insertBusSchema } from "@shared/schema";
 import { z } from "zod";
 import path from "path";
@@ -199,6 +199,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(alert);
     } catch (error) {
       res.status(500).json({ error: "Failed to clear alert" });
+    }
+  });
+
+  // Escalate alert
+  app.patch("/api/alerts/:id/escalate", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const alert = await storage.getAlert(id);
+      if (!alert) {
+        res.status(404).json({ error: "Alert not found" });
+        return;
+      }
+      
+      // Create escalated alert
+      const escalatedAlert = await storage.createAlert({
+        type: `escalated_${alert.type}`,
+        message: `ESCALATED: ${alert.message}`,
+        busId: alert.busId,
+        routeId: alert.routeId,
+        priority: 'critical',
+        severity: 'high',
+        status: 'active'
+      });
+      
+      res.json(escalatedAlert);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to escalate alert" });
     }
   });
 
