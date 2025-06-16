@@ -13,6 +13,7 @@ function BusIcon({ bus, style }: BusIconProps) {
       case "delayed": return "#eab308"; // yellow-500
       case "alert": return "#22c55e"; // green-500 (show as active)
       case "active": return "#22c55e"; // green-500
+      case "off-route": return "#dc2626"; // red-600 - deep red for off-route
       default: return "#22c55e";
     }
   };

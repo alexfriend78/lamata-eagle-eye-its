@@ -50,6 +50,16 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     }
   };
 
+  // Handle closing bus details panel
+  const handleCloseBusDetails = () => {
+    setSelectedBus(null);
+  };
+
+  // Handle dismissing geofencing alert
+  const handleDismissAlert = () => {
+    setGeofencingAlert(null);
+  };
+
   // Handle return bus to route
   const handleReturnBusToRoute = async () => {
     if (selectedBus) {
@@ -486,16 +496,20 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
       {/* Flashing Geofencing Alert */}
       {geofencingAlert && (
         <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 animate-pulse">
-          <div className="bg-orange-500 text-white px-6 py-3 rounded-lg shadow-lg border-2 border-orange-600 flex items-center gap-3">
+          <div className="bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg border-2 border-red-700 flex items-center gap-3"
+               style={{
+                 boxShadow: '0 0 25px rgba(220, 38, 38, 0.6), 0 0 40px rgba(185, 28, 28, 0.4)',
+                 background: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)'
+               }}>
             <AlertTriangle className="h-5 w-5 animate-bounce" />
             <span className="font-semibold">
               GEOFENCING ALERT: Bus {geofencingAlert.busNumber} has deviated from designated route
             </span>
             <Button
-              onClick={() => setGeofencingAlert(null)}
+              onClick={handleDismissAlert}
               variant="ghost"
               size="sm"
-              className="text-white hover:bg-orange-600 ml-2"
+              className="text-white hover:bg-red-700 ml-2"
             >
               <X className="h-4 w-4" />
             </Button>
@@ -909,16 +923,35 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 onClick={() => handleBusClick(bus)}
                 className="cursor-pointer hover:scale-110 transition-transform"
               >
-                {/* Bright red glow effect for off-route buses */}
+                {/* Deep red pulsing glow effect for off-route buses */}
                 {isOffRoute && (
-                  <div
-                    className="absolute inset-0 rounded-full animate-pulse"
-                    style={{
-                      boxShadow: `0 0 ${20 + glowIntensity * 40}px ${15 + glowIntensity * 25}px rgba(255, 0, 0, ${0.4 + glowIntensity * 0.5})`,
-                      transform: `scale(${1.8 + glowIntensity * 0.7})`,
-                      zIndex: -1
-                    }}
-                  />
+                  <>
+                    {/* Main red glow */}
+                    <div
+                      className="absolute inset-0 rounded-full animate-pulse"
+                      style={{
+                        background: `radial-gradient(circle, rgba(220, 38, 38, ${0.8 + glowIntensity * 0.2}) 0%, rgba(220, 38, 38, ${0.6 + glowIntensity * 0.3}) 30%, rgba(220, 38, 38, ${0.4 + glowIntensity * 0.4}) 60%, rgba(220, 38, 38, 0) 100%)`,
+                        boxShadow: `
+                          0 0 ${25 + glowIntensity * 50}px ${20 + glowIntensity * 30}px rgba(220, 38, 38, ${0.6 + glowIntensity * 0.4}),
+                          0 0 ${40 + glowIntensity * 70}px ${30 + glowIntensity * 45}px rgba(185, 28, 28, ${0.4 + glowIntensity * 0.3}),
+                          0 0 ${60 + glowIntensity * 90}px ${40 + glowIntensity * 60}px rgba(153, 27, 27, ${0.2 + glowIntensity * 0.2})
+                        `,
+                        transform: `scale(${2.2 + glowIntensity * 1.0})`,
+                        zIndex: -1,
+                        animationDuration: `${1.5 - glowIntensity * 0.5}s`
+                      }}
+                    />
+                    {/* Inner intense red core */}
+                    <div
+                      className="absolute inset-0 rounded-full animate-pulse"
+                      style={{
+                        background: `radial-gradient(circle, rgba(239, 68, 68, ${0.9 + glowIntensity * 0.1}) 0%, rgba(220, 38, 38, ${0.7 + glowIntensity * 0.2}) 50%, rgba(220, 38, 38, 0) 100%)`,
+                        transform: `scale(${1.5 + glowIntensity * 0.5})`,
+                        zIndex: -1,
+                        animationDuration: `${1.2 - glowIntensity * 0.3}s`
+                      }}
+                    />
+                  </>
                 )}
                 
                 <BusIcon
@@ -936,13 +969,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
       {selectedBus && (
         <BusDetailsPanel
           bus={selectedBus}
-          onClose={() => {
-            if (selectedBus.status === "off-route") {
-              setShowReturnDialog(true);
-            } else {
-              setSelectedBus(null);
-            }
-          }}
+          onClose={handleCloseBusDetails}
         />
       )}
     </div>
