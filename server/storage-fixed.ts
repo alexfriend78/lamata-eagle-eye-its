@@ -214,28 +214,55 @@ export class MemStorage implements IStorage {
       });
     });
 
-    // Create buses for each route with direction of travel
+    // Create buses for each route with direction of travel - 2 buses per route
     const busesData = [
-      { number: "BRT001", routeId: 1, status: "active", capacity: 70, direction: "Outbound" },
-      { number: "BRT002", routeId: 1, status: "active", capacity: 70, direction: "Inbound" },
+      // Route 1 buses - positioned on current route coordinates
+      { number: "BRT001", routeId: 1, status: "active", capacity: 70, direction: "Outbound", currentX: 0.385, currentY: 0.58 },
+      { number: "BRT002", routeId: 1, status: "active", capacity: 70, direction: "Inbound", currentX: 0.245, currentY: 0.42 },
+      { number: "BRT009", routeId: 1, status: "delayed", capacity: 70, direction: "Outbound", currentX: 0.325, currentY: 0.50 },
+      
+      // Route 2 buses
       { number: "BRT003", routeId: 2, status: "delayed", capacity: 70, direction: "Southbound" },
       { number: "BRT004", routeId: 2, status: "active", capacity: 70, direction: "Northbound" },
+      { number: "BRT010", routeId: 2, status: "active", capacity: 70, direction: "Southbound" },
+      
+      // Route 3 buses
       { number: "BRT005", routeId: 3, status: "active", capacity: 70, direction: "Eastbound" },
       { number: "BRT006", routeId: 3, status: "alert", capacity: 70, direction: "Westbound" },
+      { number: "BRT011", routeId: 3, status: "active", capacity: 70, direction: "Eastbound" },
+      
+      // Route 4 buses
       { number: "BRT007", routeId: 4, status: "active", capacity: 70, direction: "Northbound" },
-      { number: "BRT008", routeId: 5, status: "active", capacity: 70, direction: "Eastbound" }
+      { number: "BRT012", routeId: 4, status: "active", capacity: 70, direction: "Southbound" },
+      
+      // Route 5 buses  
+      { number: "BRT008", routeId: 5, status: "active", capacity: 70, direction: "Eastbound" },
+      { number: "BRT013", routeId: 5, status: "active", capacity: 70, direction: "Westbound" }
     ];
 
     busesData.forEach(busData => {
       const id = this.currentBusId++;
-      const routePoints = this.getRoutePoints(busData.routeId);
-      const randomPoint = routePoints[Math.floor(Math.random() * routePoints.length)] || { x: 0.5, y: 0.5 };
+      let currentX, currentY;
+      
+      // Use provided coordinates for Route 1 buses, otherwise generate from route points
+      if (busData.currentX !== undefined && busData.currentY !== undefined) {
+        currentX = busData.currentX;
+        currentY = busData.currentY;
+      } else {
+        const routePoints = this.getRoutePoints(busData.routeId);
+        const randomPoint = routePoints[Math.floor(Math.random() * routePoints.length)] || { x: 0.5, y: 0.5 };
+        currentX = randomPoint.x;
+        currentY = randomPoint.y;
+      }
       
       this.buses.set(id, {
         id,
-        ...busData,
-        currentX: randomPoint.x,
-        currentY: randomPoint.y,
+        routeId: busData.routeId,
+        busNumber: busData.number,
+        currentX,
+        currentY,
+        status: busData.status,
+        direction: busData.direction,
         passengerCount: Math.floor(Math.random() * busData.capacity * 0.8),
         lastUpdated: new Date()
       });
@@ -574,23 +601,23 @@ export class MemStorage implements IStorage {
   private getRoutePoints(routeId: number): Array<{x: number, y: number}> {
     // Define the same route paths used in the frontend
     const routePaths: Record<number, Array<{x: number, y: number}>> = {
-      1: [ // Route 1: Oshodi - Abule-Egba (Central to Northwest)
-        { x: 0.50, y: 0.60 }, // Oshodi Terminal 2
-        { x: 0.48, y: 0.58 }, // Bolade
-        { x: 0.46, y: 0.56 }, // Ladipo
-        { x: 0.44, y: 0.54 }, // Shogunle
-        { x: 0.42, y: 0.52 }, // PWD
-        { x: 0.40, y: 0.50 }, // Airport Junction
-        { x: 0.38, y: 0.48 }, // Ikeja Along
-        { x: 0.36, y: 0.46 }, // Ile Zik
-        { x: 0.34, y: 0.44 }, // Mangoro
-        { x: 0.32, y: 0.42 }, // Cement
-        { x: 0.30, y: 0.40 }, // Iyana Dopemu
-        { x: 0.28, y: 0.38 }, // Adealu
-        { x: 0.26, y: 0.36 }, // Iyana Ipaja Bus stop
-        { x: 0.24, y: 0.34 }, // Pleasure
-        { x: 0.22, y: 0.32 }, // Ile Epo
-        { x: 0.20, y: 0.30 }, // Super
+      1: [ // Route 1: Oshodi - Abule-Egba (Current positioning at x=0.385)
+        { x: 0.385, y: 0.60 }, // Oshodi Terminal 2
+        { x: 0.385, y: 0.58 }, // Bolade
+        { x: 0.385, y: 0.56 }, // Ladipo
+        { x: 0.385, y: 0.54 }, // Shogunle
+        { x: 0.385, y: 0.52 }, // PWD
+        { x: 0.385, y: 0.50 }, // Airport Junction
+        { x: 0.385, y: 0.48 }, // Ikeja Along
+        { x: 0.385, y: 0.46 }, // Ile Zik
+        { x: 0.385, y: 0.44 }, // Mangoro
+        { x: 0.385, y: 0.42 }, // Cement
+        { x: 0.385, y: 0.40 }, // Iyana Dopemu
+        { x: 0.385, y: 0.38 }, // Adealu
+        { x: 0.385, y: 0.36 }, // Iyana Ipaja Bus stop
+        { x: 0.385, y: 0.34 }, // Pleasure
+        { x: 0.385, y: 0.32 }, // Ile Epo
+        { x: 0.385, y: 0.30 }, // Super
         { x: 0.18, y: 0.28 }  // Abule Egba
       ],
       2: [ // Route 2: Abule Egba - Lekki Phase 2 Terminal (Complete north-south-east)
