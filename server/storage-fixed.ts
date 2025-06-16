@@ -228,47 +228,39 @@ export class MemStorage implements IStorage {
       { name: "Falomo", x: 0.83, y: 0.37, zone: 2, routeId: 4 },
       { name: "Victoria Island Terminal", x: 0.85, y: 0.35, zone: 2, routeId: 4 },
 
-      // Route 5: Random path stations positioned along 7 segments
-      // Segment 1 stations: Northwest from random start
-      { name: "Eastern Terminal", x: 0.80, y: 0.75, zone: 3, routeId: 5 },
-      { name: "Victoria Garden", x: 0.75, y: 0.70, zone: 3, routeId: 5 },
-      { name: "Lekki Phase 1", x: 0.70, y: 0.65, zone: 3, routeId: 5 },
-      { name: "Admiralty Way", x: 0.65, y: 0.60, zone: 3, routeId: 5 },
+      // Route 5: Lagos Orbital Express - Zigzag Pattern stations
+      // Segment 1 stations: Southwest diagonal
+      { name: "Lekki Phase 2", x: 0.80, y: 0.20, zone: 2, routeId: 5 },
+      { name: "Jakande Estate", x: 0.75, y: 0.25, zone: 2, routeId: 5 },
+      { name: "Eko Atlantic", x: 0.70, y: 0.30, zone: 2, routeId: 5 },
+      { name: "Bar Beach", x: 0.65, y: 0.35, zone: 2, routeId: 5 },
+      { name: "Tafawa Balewa", x: 0.60, y: 0.40, zone: 2, routeId: 5 },
       
-      // Segment 2 stations: Sharp south turn
-      { name: "Ikoyi Bridge", x: 0.65, y: 0.50, zone: 3, routeId: 5 },
-      { name: "Falomo", x: 0.65, y: 0.40, zone: 2, routeId: 5 },
-      { name: "Obalende", x: 0.65, y: 0.30, zone: 2, routeId: 5 },
-      { name: "Marina", x: 0.65, y: 0.25, zone: 2, routeId: 5 },
+      // Segment 2 stations: Northwest diagonal
+      { name: "Ikoyi North", x: 0.55, y: 0.35, zone: 2, routeId: 5 },
+      { name: "Dolphin Estate", x: 0.50, y: 0.30, zone: 2, routeId: 5 },
+      { name: "Third Mainland", x: 0.45, y: 0.25, zone: 2, routeId: 5 },
+      { name: "Adeniji Adele", x: 0.40, y: 0.20, zone: 2, routeId: 5 },
       
-      // Segment 3 stations: Southwest diagonal
-      { name: "CMS", x: 0.60, y: 0.20, zone: 2, routeId: 5 },
-      { name: "TBS", x: 0.55, y: 0.15, zone: 2, routeId: 5 },
-      { name: "National Theatre", x: 0.50, y: 0.10, zone: 2, routeId: 5 },
-      { name: "Ebute Metta", x: 0.45, y: 0.05, zone: 2, routeId: 5 },
+      // Segment 3 stations: Northeast diagonal
+      { name: "Onikan Stadium", x: 0.45, y: 0.15, zone: 2, routeId: 5 },
+      { name: "Tafawa Balewa", x: 0.50, y: 0.12, zone: 2, routeId: 5 },
+      { name: "Race Course", x: 0.55, y: 0.11, zone: 2, routeId: 5 },
+      { name: "King George V", x: 0.60, y: 0.10, zone: 2, routeId: 5 },
       
-      // Segment 4 stations: Sharp east turn
-      { name: "Oyingbo", x: 0.55, y: 0.05, zone: 2, routeId: 5 },
-      { name: "Jibowu", x: 0.65, y: 0.05, zone: 2, routeId: 5 },
-      { name: "Yaba", x: 0.75, y: 0.05, zone: 2, routeId: 5 },
-      { name: "Sabo", x: 0.85, y: 0.05, zone: 2, routeId: 5 },
+      // Segment 4 stations: Southeast diagonal
+      { name: "Teslim Balogun", x: 0.65, y: 0.15, zone: 2, routeId: 5 },
+      { name: "Surulere North", x: 0.70, y: 0.20, zone: 2, routeId: 5 },
+      { name: "National Stadium", x: 0.75, y: 0.25, zone: 2, routeId: 5 },
+      { name: "Alaka Estate", x: 0.80, y: 0.30, zone: 2, routeId: 5 },
+      { name: "Mile 12 Junction", x: 0.85, y: 0.35, zone: 2, routeId: 5 },
       
-      // Segment 5 stations: Northeast diagonal
-      { name: "Surulere", x: 0.88, y: 0.12, zone: 2, routeId: 5 },
-      { name: "Alaba", x: 0.91, y: 0.20, zone: 2, routeId: 5 },
-      { name: "Festac", x: 0.94, y: 0.28, zone: 2, routeId: 5 },
-      { name: "Mile 2", x: 0.95, y: 0.35, zone: 2, routeId: 5 },
-      
-      // Segment 6 stations: West turn
-      { name: "Orile", x: 0.85, y: 0.35, zone: 2, routeId: 5 },
-      { name: "Mushin", x: 0.75, y: 0.35, zone: 2, routeId: 5 },
-      { name: "Isolo", x: 0.65, y: 0.35, zone: 2, routeId: 5 },
-      { name: "Ikeja", x: 0.55, y: 0.35, zone: 1, routeId: 5 },
-      
-      // Segment 7 stations: Northwest to endpoint
-      { name: "Agege", x: 0.45, y: 0.45, zone: 1, routeId: 5 },
-      { name: "Iyana Ipaja", x: 0.35, y: 0.50, zone: 1, routeId: 5 },
-      { name: "Abule Egba West", x: 0.25, y: 0.55, zone: 1, routeId: 5 }
+      // Segment 5 stations: Southwest diagonal to finish
+      { name: "Ketu Mile 12", x: 0.82, y: 0.38, zone: 2, routeId: 5 },
+      { name: "Ojota", x: 0.79, y: 0.41, zone: 2, routeId: 5 },
+      { name: "Maryland", x: 0.76, y: 0.44, zone: 2, routeId: 5 },
+      { name: "Anthony", x: 0.73, y: 0.47, zone: 2, routeId: 5 },
+      { name: "Gbagada Terminal", x: 0.70, y: 0.50, zone: 2, routeId: 5 }
     ];
 
     stationsData.forEach(stationData => {
