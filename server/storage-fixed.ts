@@ -168,29 +168,56 @@ export class MemStorage implements IStorage {
       { name: "Marina", x: 0.86, y: 0.65, zone: 2, routeId: 2 },
       { name: "Victoria Island Terminal", x: 0.90, y: 0.65, zone: 3, routeId: 2 },
 
-      // Route 3: Lagos Metro Express - Simple North-South Line stations
-      // Segment 1 stations: Start north
-      { name: "Ikeja North Terminal", x: 0.35, y: 0.15, zone: 2, routeId: 3 },
-      { name: "Ikeja GRA", x: 0.35, y: 0.20, zone: 2, routeId: 3 },
-      { name: "Allen Avenue", x: 0.35, y: 0.25, zone: 2, routeId: 3 },
-      { name: "Ikeja Along", x: 0.35, y: 0.30, zone: 2, routeId: 3 },
-      { name: "Computer Village", x: 0.35, y: 0.35, zone: 2, routeId: 3 },
+      // Route 3: Lagos Metro Express - 8 Segment Pattern stations
+      // Segment 1 stations: West to east
+      { name: "Agege Terminal", x: 0.10, y: 0.20, zone: 3, routeId: 3 },
+      { name: "Pen Cinema", x: 0.15, y: 0.20, zone: 2, routeId: 3 },
+      { name: "Ogba", x: 0.20, y: 0.20, zone: 2, routeId: 3 },
+      { name: "Ikeja", x: 0.25, y: 0.20, zone: 2, routeId: 3 },
       
-      // Segment 2 stations: Move south
-      { name: "Ojuelegba", x: 0.35, y: 0.40, zone: 2, routeId: 3 },
-      { name: "Palmgrove", x: 0.35, y: 0.45, zone: 2, routeId: 3 },
-      { name: "Yaba", x: 0.35, y: 0.50, zone: 2, routeId: 3 },
-      { name: "Jibowu", x: 0.35, y: 0.55, zone: 2, routeId: 3 },
-      { name: "Ebute Metta", x: 0.35, y: 0.60, zone: 2, routeId: 3 },
+      // Segment 2 stations: South
+      { name: "Computer Village", x: 0.25, y: 0.25, zone: 2, routeId: 3 },
+      { name: "Alausa", x: 0.25, y: 0.30, zone: 2, routeId: 3 },
+      { name: "Berger", x: 0.25, y: 0.35, zone: 2, routeId: 3 },
       
-      // Segment 3 stations: Continue south
-      { name: "Oyingbo", x: 0.35, y: 0.65, zone: 2, routeId: 3 },
-      { name: "Mushin", x: 0.35, y: 0.70, zone: 2, routeId: 3 },
-      { name: "Oshodi", x: 0.35, y: 0.75, zone: 2, routeId: 3 },
-      { name: "Isolo", x: 0.35, y: 0.80, zone: 2, routeId: 3 },
+      // Segment 3 stations: East
+      { name: "Ojodu", x: 0.30, y: 0.35, zone: 2, routeId: 3 },
+      { name: "Omole", x: 0.35, y: 0.35, zone: 2, routeId: 3 },
+      { name: "Magodo", x: 0.40, y: 0.35, zone: 2, routeId: 3 },
+      { name: "Ketu", x: 0.45, y: 0.35, zone: 2, routeId: 3 },
       
-      // Segment 4 stations: End south
-      { name: "Ejigbo Terminal", x: 0.35, y: 0.85, zone: 3, routeId: 3 },
+      // Segment 4 stations: North
+      { name: "Mile 12", x: 0.45, y: 0.30, zone: 2, routeId: 3 },
+      { name: "Kosofe", x: 0.45, y: 0.25, zone: 2, routeId: 3 },
+      { name: "Gbagada", x: 0.45, y: 0.20, zone: 2, routeId: 3 },
+      { name: "Palmgrove", x: 0.45, y: 0.15, zone: 2, routeId: 3 },
+      
+      // Segment 5 stations: East
+      { name: "Yaba", x: 0.50, y: 0.15, zone: 2, routeId: 3 },
+      { name: "Surulere", x: 0.55, y: 0.15, zone: 2, routeId: 3 },
+      { name: "National Stadium", x: 0.60, y: 0.15, zone: 2, routeId: 3 },
+      { name: "Alaba", x: 0.65, y: 0.15, zone: 2, routeId: 3 },
+      
+      // Segment 6 stations: South
+      { name: "Ojo", x: 0.65, y: 0.20, zone: 2, routeId: 3 },
+      { name: "Alaba Market", x: 0.65, y: 0.25, zone: 2, routeId: 3 },
+      { name: "Mile 2", x: 0.65, y: 0.30, zone: 2, routeId: 3 },
+      { name: "Festac", x: 0.65, y: 0.35, zone: 2, routeId: 3 },
+      { name: "Satellite", x: 0.65, y: 0.40, zone: 2, routeId: 3 },
+      { name: "Trade Fair", x: 0.65, y: 0.45, zone: 2, routeId: 3 },
+      { name: "LASU", x: 0.65, y: 0.50, zone: 2, routeId: 3 },
+      
+      // Segment 7 stations: East
+      { name: "Igando", x: 0.70, y: 0.50, zone: 2, routeId: 3 },
+      { name: "Isheri", x: 0.75, y: 0.50, zone: 2, routeId: 3 },
+      { name: "Dopemu", x: 0.80, y: 0.50, zone: 2, routeId: 3 },
+      
+      // Segment 8 stations: South to end
+      { name: "Iyana Isolo", x: 0.80, y: 0.55, zone: 2, routeId: 3 },
+      { name: "Isolo", x: 0.80, y: 0.60, zone: 2, routeId: 3 },
+      { name: "Okota", x: 0.80, y: 0.65, zone: 2, routeId: 3 },
+      { name: "Ejigbo", x: 0.80, y: 0.70, zone: 2, routeId: 3 },
+      { name: "Jakande Terminal", x: 0.80, y: 0.75, zone: 3, routeId: 3 },
 
       // Route 4: Realistic Lagos BRT stations - Ikorodu to Victoria Island
       // Segment 1 stations: Northeast from Ikorodu towards Mile 12

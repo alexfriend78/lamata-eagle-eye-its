@@ -175,18 +175,31 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         // Segment 7: Final east stretch
         { x: mapWidth * 0.90, y: mapHeight * 0.65 }
       ],
-      3: [ // Route 3: Lagos Metro Express - Simple North-South Line
-        // Segment 1: Start north
-        { x: mapWidth * 0.35, y: mapHeight * 0.15 },
+      3: [ // Route 3: Lagos Metro Express - 8 Segment Pattern
+        // Segment 1: Start west, go east
+        { x: mapWidth * 0.10, y: mapHeight * 0.20 },
+        { x: mapWidth * 0.25, y: mapHeight * 0.20 },
         
-        // Segment 2: Move south
-        { x: mapWidth * 0.35, y: mapHeight * 0.40 },
+        // Segment 2: Go south
+        { x: mapWidth * 0.25, y: mapHeight * 0.35 },
         
-        // Segment 3: Continue south
-        { x: mapWidth * 0.35, y: mapHeight * 0.65 },
+        // Segment 3: Go east
+        { x: mapWidth * 0.45, y: mapHeight * 0.35 },
         
-        // Segment 4: End south
-        { x: mapWidth * 0.35, y: mapHeight * 0.85 }
+        // Segment 4: Go north
+        { x: mapWidth * 0.45, y: mapHeight * 0.15 },
+        
+        // Segment 5: Go east
+        { x: mapWidth * 0.65, y: mapHeight * 0.15 },
+        
+        // Segment 6: Go south
+        { x: mapWidth * 0.65, y: mapHeight * 0.50 },
+        
+        // Segment 7: Go east
+        { x: mapWidth * 0.80, y: mapHeight * 0.50 },
+        
+        // Segment 8: Go south to end
+        { x: mapWidth * 0.80, y: mapHeight * 0.75 }
       ],
       4: [ // Route 4: Realistic Lagos BRT - Ikorodu to Victoria Island
         // Segment 1: Northeast from Ikorodu towards Mile 12
