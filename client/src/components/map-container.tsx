@@ -34,30 +34,16 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
 
   // Check for off-route buses and show geofencing alerts
   useEffect(() => {
-    const offRouteBuses = buses.filter(bus => bus.status === "off-route" && !dismissedAlerts.has(bus.id));
-    const onRouteBuses = buses.filter(bus => bus.status !== "off-route");
+    const offRouteBuses = buses.filter(bus => bus.status === "off-route");
+    const availableOffRouteBuses = offRouteBuses.filter(bus => !dismissedAlerts.has(bus.id));
     
-    // Clear dismissed alerts for buses that are back on route
-    if (onRouteBuses.length > 0) {
-      const onRouteBusIds = new Set(onRouteBuses.map(bus => bus.id));
-      setDismissedAlerts(prev => {
-        const newDismissed = new Set(prev);
-        for (const busId of prev) {
-          if (onRouteBusIds.has(busId)) {
-            newDismissed.delete(busId);
-          }
-        }
-        return newDismissed;
-      });
-    }
-    
-    if (offRouteBuses.length > 0 && !geofencingAlert) {
-      const offRouteBus = offRouteBuses[0];
+    if (availableOffRouteBuses.length > 0 && !geofencingAlert) {
+      const offRouteBus = availableOffRouteBuses[0];
       setGeofencingAlert({ busId: offRouteBus.id, busNumber: offRouteBus.busNumber });
-    } else if (offRouteBuses.length === 0) {
+    } else if (offRouteBuses.length === 0 && geofencingAlert) {
       setGeofencingAlert(null);
     }
-  }, [buses, dismissedAlerts, geofencingAlert]);
+  }, [buses]);
 
   // Handle bus click - dismiss geofencing alert when viewing bus details
   const handleBusClick = (bus: BusWithRoute) => {
@@ -943,29 +929,29 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 onClick={() => handleBusClick(bus)}
                 className="cursor-pointer hover:scale-110 transition-transform"
               >
-                {/* Deep red pulsing glow effect for off-route buses */}
+                {/* Deep blue pulsing glow effect for off-route buses */}
                 {isOffRoute && (
                   <>
-                    {/* Main red glow */}
+                    {/* Main blue glow */}
                     <div
                       className="absolute inset-0 rounded-full animate-pulse"
                       style={{
-                        background: `radial-gradient(circle, rgba(220, 38, 38, ${0.8 + glowIntensity * 0.2}) 0%, rgba(220, 38, 38, ${0.6 + glowIntensity * 0.3}) 30%, rgba(220, 38, 38, ${0.4 + glowIntensity * 0.4}) 60%, rgba(220, 38, 38, 0) 100%)`,
+                        background: `radial-gradient(circle, rgba(30, 64, 175, ${0.8 + glowIntensity * 0.2}) 0%, rgba(30, 64, 175, ${0.6 + glowIntensity * 0.3}) 30%, rgba(30, 64, 175, ${0.4 + glowIntensity * 0.4}) 60%, rgba(30, 64, 175, 0) 100%)`,
                         boxShadow: `
-                          0 0 ${25 + glowIntensity * 50}px ${20 + glowIntensity * 30}px rgba(220, 38, 38, ${0.6 + glowIntensity * 0.4}),
-                          0 0 ${40 + glowIntensity * 70}px ${30 + glowIntensity * 45}px rgba(185, 28, 28, ${0.4 + glowIntensity * 0.3}),
-                          0 0 ${60 + glowIntensity * 90}px ${40 + glowIntensity * 60}px rgba(153, 27, 27, ${0.2 + glowIntensity * 0.2})
+                          0 0 ${25 + glowIntensity * 50}px ${20 + glowIntensity * 30}px rgba(30, 64, 175, ${0.6 + glowIntensity * 0.4}),
+                          0 0 ${40 + glowIntensity * 70}px ${30 + glowIntensity * 45}px rgba(23, 37, 84, ${0.4 + glowIntensity * 0.3}),
+                          0 0 ${60 + glowIntensity * 90}px ${40 + glowIntensity * 60}px rgba(17, 24, 39, ${0.2 + glowIntensity * 0.2})
                         `,
                         transform: `scale(${2.2 + glowIntensity * 1.0})`,
                         zIndex: -1,
                         animationDuration: `${1.5 - glowIntensity * 0.5}s`
                       }}
                     />
-                    {/* Inner intense red core */}
+                    {/* Inner intense blue core */}
                     <div
                       className="absolute inset-0 rounded-full animate-pulse"
                       style={{
-                        background: `radial-gradient(circle, rgba(239, 68, 68, ${0.9 + glowIntensity * 0.1}) 0%, rgba(220, 38, 38, ${0.7 + glowIntensity * 0.2}) 50%, rgba(220, 38, 38, 0) 100%)`,
+                        background: `radial-gradient(circle, rgba(59, 130, 246, ${0.9 + glowIntensity * 0.1}) 0%, rgba(30, 64, 175, ${0.7 + glowIntensity * 0.2}) 50%, rgba(30, 64, 175, 0) 100%)`,
                         transform: `scale(${1.5 + glowIntensity * 0.5})`,
                         zIndex: -1,
                         animationDuration: `${1.2 - glowIntensity * 0.3}s`
@@ -977,7 +963,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 <BusIcon
                   bus={bus}
                   style={{
-                    filter: isOffRoute ? `drop-shadow(0 0 12px rgba(255, 0, 0, ${0.7 + glowIntensity * 0.3}))` : undefined
+                    filter: isOffRoute ? `drop-shadow(0 0 12px rgba(30, 64, 175, ${0.7 + glowIntensity * 0.3}))` : undefined
                   }}
                 />
               </div>
