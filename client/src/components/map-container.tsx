@@ -304,6 +304,18 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 />
               )}
 
+              {/* Test circle for Route 1 to verify SVG coordinates */}
+              {route.id === 1 && (
+                <circle
+                  cx="500"
+                  cy="400" 
+                  r="20"
+                  fill="purple"
+                  stroke="yellow"
+                  strokeWidth="3"
+                />
+              )}
+
               {/* Main route line */}
               <polyline
                 points={offsetPoints.map(p => `${p.x},${p.y}`).join(' ')}
