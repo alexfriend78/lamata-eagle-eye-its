@@ -32,24 +32,9 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   const getRoutePoints = (routeId: number) => {
     // Define routes using dynamic resolution for consistent coverage
     const routePaths: Record<number, { x: number; y: number }[]> = {
-      1: [ // Route 1: Oshodi - Abule-Egba (North-South line)
-        { x: mapWidth * 0.5, y: mapHeight * 0.6 }, // Oshodi Terminal 2
-        { x: mapWidth * 0.48, y: mapHeight * 0.58 }, // Bolade
-        { x: mapWidth * 0.46, y: mapHeight * 0.56 }, // Ladipo
-        { x: mapWidth * 0.44, y: mapHeight * 0.54 }, // Shogunle
-        { x: mapWidth * 0.42, y: mapHeight * 0.52 }, // PWD
-        { x: mapWidth * 0.40, y: mapHeight * 0.50 }, // Airport Junction
-        { x: mapWidth * 0.38, y: mapHeight * 0.48 }, // Ikeja Along
-        { x: mapWidth * 0.36, y: mapHeight * 0.46 }, // Ile Zik
-        { x: mapWidth * 0.34, y: mapHeight * 0.44 }, // Mangoro
-        { x: mapWidth * 0.32, y: mapHeight * 0.42 }, // Cement
-        { x: mapWidth * 0.30, y: mapHeight * 0.40 }, // Iyana Dopemu
-        { x: mapWidth * 0.28, y: mapHeight * 0.38 }, // Adealu
-        { x: mapWidth * 0.26, y: mapHeight * 0.36 }, // Iyana Ipaja Bus stop
-        { x: mapWidth * 0.24, y: mapHeight * 0.34 }, // Pleasure
-        { x: mapWidth * 0.22, y: mapHeight * 0.32 }, // Ile Epo
-        { x: mapWidth * 0.20, y: mapHeight * 0.30 }, // Super
-        { x: mapWidth * 0.18, y: mapHeight * 0.28 }  // Abule Egba
+      1: [ // Route 1: Simple test line - diagonal across screen
+        { x: 100, y: 100 }, // Fixed coordinates
+        { x: 500, y: 500 } // Fixed coordinates
       ],
       2: [ // Route 2: Abule Egba - Lekki Phase 2 Terminal (Complete north-south-east)
         { x: mapWidth * 0.18, y: mapHeight * 0.28 }, // Abule Egba Terminal
@@ -222,7 +207,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         height="100%"
         viewBox={`0 0 ${mapWidth} ${mapHeight}`}
         preserveAspectRatio="xMidYMid slice"
-        style={{ zIndex: 10 + routeIndex }}
+        style={{ zIndex: route.id === 1 ? 1000 : (10 + routeIndex) }}
       >
         {/* Create gradients and filters for aesthetic effects */}
         <defs>
@@ -266,7 +251,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             ? `url(#gradient-${route.id})` 
             : (route.id === 1 ? "#FF0000" : route.color); // Make Route 1 bright red for visibility
 
-          const lineWidth = route.id === 1 ? 8 : (route.lineWidth || 6); // Make Route 1 thicker
+          const lineWidth = route.id === 1 ? 20 : (route.lineWidth || 6); // Make Route 1 much thicker
           const opacity = route.opacity || (isHighlighted ? 1 : 0.9);
 
           return (
@@ -303,6 +288,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeDasharray={getStrokePattern()}
+
                 className={getAnimationClass()}
                 opacity={opacity}
                 filter={route.glowColor ? `url(#glow-${route.id})` : undefined}
