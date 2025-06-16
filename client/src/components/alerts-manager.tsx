@@ -19,13 +19,15 @@ export default function AlertsManager({ onClose }: AlertsManagerProps) {
 
   // Fetch all alerts (both active and inactive)
   const { data: allAlerts = [] } = useQuery<AlertWithDetails[]>({
-    queryKey: ['/api/alerts'],
+    queryKey: ['/api/alerts', 'includeAll'],
+    queryFn: () => fetch('/api/alerts?includeAll=true').then(res => res.json()),
     refetchInterval: 2000
   });
 
   // Separate alerts by status
   const activeAlerts = allAlerts.filter(alert => alert.isActive && alert.status === 'active');
   const clearedAlerts = allAlerts.filter(alert => alert.status === 'cleared');
+  const closedAlerts = allAlerts.filter(alert => alert.status === 'closed');
   const escalatedAlerts = allAlerts.filter(alert => alert.status === 'escalated');
   const acknowledgedAlerts = allAlerts.filter(alert => alert.status === 'acknowledged');
 
@@ -191,7 +193,7 @@ export default function AlertsManager({ onClose }: AlertsManagerProps) {
 
         <CardContent className="overflow-y-auto max-h-[75vh]">
           <Tabs defaultValue="active" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="active" className="flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4" />
                 Active ({activeAlerts.length})
@@ -207,6 +209,10 @@ export default function AlertsManager({ onClose }: AlertsManagerProps) {
               <TabsTrigger value="acknowledged" className="flex items-center gap-2">
                 <Shield className="w-4 h-4" />
                 Acknowledged ({acknowledgedAlerts.length})
+              </TabsTrigger>
+              <TabsTrigger value="closed" className="flex items-center gap-2">
+                <X className="w-4 h-4" />
+                Closed ({closedAlerts.length})
               </TabsTrigger>
             </TabsList>
 

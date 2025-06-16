@@ -28,6 +28,7 @@ export interface IStorage {
   
   // Alerts
   getActiveAlerts(): Promise<AlertWithDetails[]>;
+  getAllAlerts(): Promise<AlertWithDetails[]>;
   getAlert(id: number): Promise<Alert | undefined>;
   createAlert(alert: InsertAlert): Promise<Alert>;
   acknowledgeAlert(id: number): Promise<Alert | undefined>;
@@ -571,6 +572,15 @@ export class MemStorage implements IStorage {
     const alerts = Array.from(this.alerts.values()).filter(alert => 
       alert.isActive || alert.status === "acknowledged"
     );
+    return alerts.map(alert => ({
+      ...alert,
+      bus: alert.busId ? this.buses.get(alert.busId) : undefined,
+      route: alert.routeId ? this.routes.get(alert.routeId) : undefined
+    }));
+  }
+
+  async getAllAlerts(): Promise<AlertWithDetails[]> {
+    const alerts = Array.from(this.alerts.values());
     return alerts.map(alert => ({
       ...alert,
       bus: alert.busId ? this.buses.get(alert.busId) : undefined,
