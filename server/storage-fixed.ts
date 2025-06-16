@@ -125,43 +125,48 @@ export class MemStorage implements IStorage {
       { name: "Super", x: 0.07, y: 0.37, zone: 1, routeId: 1 },
       { name: "Abule Egba", x: 0.05, y: 0.35, zone: 1, routeId: 1 },
 
-      // Route 2: Abule Egba - TBS/Obalende stations
+      // Route 2: Blue Line - Zigzag route with stations positioned along 7 segments
+      // Segment 1 stations: Northwest diagonal
       { name: "Abule Egba Terminal", x: 0.18, y: 0.28, zone: 1, routeId: 2 },
-      { name: "Ile Epo", x: 0.22, y: 0.32, zone: 1, routeId: 2 },
-      { name: "Command", x: 0.24, y: 0.34, zone: 1, routeId: 2 },
-      { name: "Canaan Land", x: 0.26, y: 0.36, zone: 1, routeId: 2 },
-      { name: "Iyana Ipaja", x: 0.28, y: 0.38, zone: 1, routeId: 2 },
-      { name: "Alimosho", x: 0.30, y: 0.40, zone: 1, routeId: 2 },
-      { name: "Iyana Dopemu", x: 0.32, y: 0.42, zone: 1, routeId: 2 },
-      { name: "Agege", x: 0.34, y: 0.44, zone: 1, routeId: 2 },
-      { name: "Pen Cinema", x: 0.36, y: 0.46, zone: 1, routeId: 2 },
-      { name: "Ogba", x: 0.38, y: 0.48, zone: 1, routeId: 2 },
-      { name: "Berger", x: 0.40, y: 0.50, zone: 1, routeId: 2 },
-      { name: "Ketu", x: 0.42, y: 0.52, zone: 2, routeId: 2 },
-      { name: "Ojota", x: 0.44, y: 0.54, zone: 2, routeId: 2 },
-      { name: "Ogudu", x: 0.46, y: 0.56, zone: 2, routeId: 2 },
-      { name: "Palmgroove", x: 0.48, y: 0.58, zone: 2, routeId: 2 },
-      { name: "Yaba", x: 0.50, y: 0.60, zone: 2, routeId: 2 },
-      { name: "Jibowu", x: 0.52, y: 0.62, zone: 2, routeId: 2 },
-      { name: "Oyingbo", x: 0.54, y: 0.64, zone: 2, routeId: 2 },
-      { name: "Ebute Metta", x: 0.56, y: 0.66, zone: 2, routeId: 2 },
-      { name: "National Theatre", x: 0.58, y: 0.68, zone: 2, routeId: 2 },
-      { name: "Costain", x: 0.60, y: 0.70, zone: 2, routeId: 2 },
-      { name: "Alaka", x: 0.62, y: 0.72, zone: 2, routeId: 2 },
-      { name: "Iponri", x: 0.64, y: 0.74, zone: 2, routeId: 2 },
-      { name: "Stadium", x: 0.66, y: 0.76, zone: 2, routeId: 2 },
-      { name: "Lagos Island", x: 0.68, y: 0.78, zone: 2, routeId: 2 },
-      { name: "CMS", x: 0.70, y: 0.80, zone: 2, routeId: 2 },
-      { name: "TBS Terminal", x: 0.72, y: 0.82, zone: 2, routeId: 2 },
-      { name: "Obalende", x: 0.74, y: 0.84, zone: 2, routeId: 2 },
-      { name: "Falomo", x: 0.76, y: 0.86, zone: 3, routeId: 2 },
-      { name: "Ikoyi", x: 0.78, y: 0.88, zone: 3, routeId: 2 },
-      { name: "Victoria Island", x: 0.80, y: 0.90, zone: 3, routeId: 2 },
-      { name: "Admiralty Way", x: 0.82, y: 0.92, zone: 3, routeId: 2 },
-      { name: "Lekki Phase 1", x: 0.84, y: 0.94, zone: 3, routeId: 2 },
-      { name: "Lekki Toll Gate", x: 0.86, y: 0.96, zone: 3, routeId: 2 },
-      { name: "Chevron", x: 0.88, y: 0.98, zone: 3, routeId: 2 },
-      { name: "Lekki Phase 2 Terminal", x: 0.90, y: 1.00, zone: 3, routeId: 2 },
+      { name: "Ile Epo", x: 0.20, y: 0.26, zone: 1, routeId: 2 },
+      { name: "Command", x: 0.22, y: 0.24, zone: 1, routeId: 2 },
+      { name: "Canaan Land", x: 0.25, y: 0.22, zone: 1, routeId: 2 },
+      
+      // Segment 2 stations: Northeast diagonal
+      { name: "Iyana Ipaja", x: 0.28, y: 0.24, zone: 1, routeId: 2 },
+      { name: "Alimosho", x: 0.31, y: 0.26, zone: 1, routeId: 2 },
+      { name: "Dopemu Junction", x: 0.35, y: 0.28, zone: 1, routeId: 2 },
+      
+      // Segment 3 stations: Straight east
+      { name: "Agege", x: 0.38, y: 0.28, zone: 1, routeId: 2 },
+      { name: "Pen Cinema", x: 0.42, y: 0.28, zone: 1, routeId: 2 },
+      { name: "Ogba", x: 0.46, y: 0.28, zone: 1, routeId: 2 },
+      { name: "Ikeja Along", x: 0.50, y: 0.28, zone: 1, routeId: 2 },
+      
+      // Segment 4 stations: Southeast diagonal
+      { name: "Airport Junction", x: 0.53, y: 0.31, zone: 2, routeId: 2 },
+      { name: "PWD", x: 0.56, y: 0.34, zone: 2, routeId: 2 },
+      { name: "Berger", x: 0.60, y: 0.38, zone: 2, routeId: 2 },
+      
+      // Segment 5 stations: Southwest diagonal
+      { name: "Ketu", x: 0.57, y: 0.41, zone: 2, routeId: 2 },
+      { name: "Ojota", x: 0.54, y: 0.44, zone: 2, routeId: 2 },
+      { name: "Maryland", x: 0.51, y: 0.47, zone: 2, routeId: 2 },
+      { name: "Anthony", x: 0.50, y: 0.50, zone: 2, routeId: 2 },
+      
+      // Segment 6 stations: Southeast diagonal again
+      { name: "Obanikoro", x: 0.54, y: 0.54, zone: 2, routeId: 2 },
+      { name: "Palmgroove", x: 0.58, y: 0.58, zone: 2, routeId: 2 },
+      { name: "Yaba", x: 0.62, y: 0.61, zone: 2, routeId: 2 },
+      { name: "Jibowu", x: 0.66, y: 0.63, zone: 2, routeId: 2 },
+      { name: "Costain", x: 0.70, y: 0.65, zone: 2, routeId: 2 },
+      
+      // Segment 7 stations: Final east stretch
+      { name: "National Theatre", x: 0.74, y: 0.65, zone: 2, routeId: 2 },
+      { name: "Lagos Island", x: 0.78, y: 0.65, zone: 2, routeId: 2 },
+      { name: "CMS Terminal", x: 0.82, y: 0.65, zone: 2, routeId: 2 },
+      { name: "Marina", x: 0.86, y: 0.65, zone: 2, routeId: 2 },
+      { name: "Victoria Island Terminal", x: 0.90, y: 0.65, zone: 3, routeId: 2 },
 
       // Route 3: Ikorodu - TBS stations 
       { name: "Ikorodu Terminal", x: 0.15, y: 0.85, zone: 4, routeId: 3 },
