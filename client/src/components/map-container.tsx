@@ -209,22 +209,19 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
       return calculatePerpendicularOffset(point, points[i+1], offsetDistance);
     });
 
-    // Create curved path around stations instead of straight lines through them
+    // Create subtle curves around stations to avoid text overlap while staying visible
     const curvedPoints = offsetPoints.map((point, i) => {
       if (i === 0 || i === offsetPoints.length - 1) {
         return point; // Keep endpoints as-is
       }
       
-      // Add curve offset to avoid station name areas
-      const stationOffset = 20; // Pixels to offset from station center
-      const angle = Math.atan2(
-        offsetPoints[i + 1].y - offsetPoints[i - 1].y,
-        offsetPoints[i + 1].x - offsetPoints[i - 1].x
-      );
+      // Add small offset to avoid station text but keep routes visible
+      const textOffset = 8; // Small offset to avoid text overlap
+      const routeOffset = routeIndex * 4; // Additional offset for multiple routes
       
       return {
-        x: point.x + Math.cos(angle + Math.PI / 2) * stationOffset,
-        y: point.y + Math.sin(angle + Math.PI / 2) * stationOffset
+        x: point.x + textOffset + routeOffset,
+        y: point.y - textOffset // Slightly above the station center
       };
     });
 
