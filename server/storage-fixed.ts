@@ -168,30 +168,29 @@ export class MemStorage implements IStorage {
       { name: "Marina", x: 0.86, y: 0.65, zone: 2, routeId: 2 },
       { name: "Victoria Island Terminal", x: 0.90, y: 0.65, zone: 3, routeId: 2 },
 
-      // Route 3: Lagos Metro Express - Non-crossing L-Shape stations
-      // Segment 1 stations: Southwest to northeast
-      { name: "Agege Terminal", x: 0.20, y: 0.80, zone: 3, routeId: 3 },
-      { name: "Ikeja Under Bridge", x: 0.25, y: 0.75, zone: 2, routeId: 3 },
-      { name: "Allen Avenue", x: 0.30, y: 0.70, zone: 2, routeId: 3 },
-      { name: "Opebi", x: 0.35, y: 0.65, zone: 2, routeId: 3 },
-      { name: "Computer Village", x: 0.40, y: 0.60, zone: 2, routeId: 3 },
-      { name: "Yaba Tech", x: 0.45, y: 0.55, zone: 2, routeId: 3 },
+      // Route 3: Lagos Metro Express - Simple North-South Line stations
+      // Segment 1 stations: Start north
+      { name: "Ikeja North Terminal", x: 0.35, y: 0.15, zone: 2, routeId: 3 },
+      { name: "Ikeja GRA", x: 0.35, y: 0.20, zone: 2, routeId: 3 },
+      { name: "Allen Avenue", x: 0.35, y: 0.25, zone: 2, routeId: 3 },
+      { name: "Ikeja Along", x: 0.35, y: 0.30, zone: 2, routeId: 3 },
+      { name: "Computer Village", x: 0.35, y: 0.35, zone: 2, routeId: 3 },
       
-      // Segment 2 stations: Continue northeast
-      { name: "Surulere", x: 0.50, y: 0.50, zone: 2, routeId: 3 },
-      { name: "Alaba Market", x: 0.55, y: 0.45, zone: 2, routeId: 3 },
-      { name: "Festac Town", x: 0.60, y: 0.40, zone: 2, routeId: 3 },
-      { name: "Mile 2", x: 0.65, y: 0.35, zone: 2, routeId: 3 },
-      { name: "Orile", x: 0.70, y: 0.30, zone: 2, routeId: 3 },
+      // Segment 2 stations: Move south
+      { name: "Ojuelegba", x: 0.35, y: 0.40, zone: 2, routeId: 3 },
+      { name: "Palmgrove", x: 0.35, y: 0.45, zone: 2, routeId: 3 },
+      { name: "Yaba", x: 0.35, y: 0.50, zone: 2, routeId: 3 },
+      { name: "Jibowu", x: 0.35, y: 0.55, zone: 2, routeId: 3 },
+      { name: "Ebute Metta", x: 0.35, y: 0.60, zone: 2, routeId: 3 },
       
-      // Segment 3 stations: Turn southeast
-      { name: "Apapa", x: 0.75, y: 0.35, zone: 2, routeId: 3 },
-      { name: "Tin Can", x: 0.80, y: 0.40, zone: 2, routeId: 3 },
-      { name: "Kirikiri", x: 0.85, y: 0.45, zone: 2, routeId: 3 },
+      // Segment 3 stations: Continue south
+      { name: "Oyingbo", x: 0.35, y: 0.65, zone: 2, routeId: 3 },
+      { name: "Mushin", x: 0.35, y: 0.70, zone: 2, routeId: 3 },
+      { name: "Oshodi", x: 0.35, y: 0.75, zone: 2, routeId: 3 },
+      { name: "Isolo", x: 0.35, y: 0.80, zone: 2, routeId: 3 },
       
-      // Segment 4 stations: End southeast
-      { name: "Port Complex", x: 0.88, y: 0.48, zone: 2, routeId: 3 },
-      { name: "Wharf Terminal", x: 0.90, y: 0.50, zone: 2, routeId: 3 },
+      // Segment 4 stations: End south
+      { name: "Ejigbo Terminal", x: 0.35, y: 0.85, zone: 3, routeId: 3 },
 
       // Route 4: Realistic Lagos BRT stations - Ikorodu to Victoria Island
       // Segment 1 stations: Northeast from Ikorodu towards Mile 12
