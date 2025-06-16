@@ -8,6 +8,7 @@ export const routes = pgTable("routes", {
   name: text("name").notNull(),
   color: text("color").notNull().default("#1976D2"),
   isActive: boolean("is_active").notNull().default(true),
+  points: text("points").notNull().default("[]"), // JSON string of route points
   // Aesthetic customization fields
   lineStyle: text("line_style").notNull().default("solid"), // solid, dashed, dotted, double
   lineWidth: integer("line_width").notNull().default(3), // 1-8 pixels

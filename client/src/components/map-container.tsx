@@ -106,16 +106,22 @@ export default function MapContainer({
   const routeStations = useRouteStations(selectedRoutes);
 
   const renderRouteLine = (route: Route, routeIndex: number) => {
-    const routePoints = route.points || [];
+    let routePoints;
+    try {
+      routePoints = JSON.parse(route.points || "[]");
+    } catch {
+      routePoints = [];
+    }
+    
     if (routePoints.length < 2) return null;
 
     const isHighlighted = selectedRoutes.length === 0 || selectedRoutes.includes(route.id);
     
     // Create path string for the route
-    let pathData = `M${routePoints[0].x * mapWidth},${routePoints[0].y * mapHeight}`;
+    let pathData = `M${routePoints[0].x},${routePoints[0].y}`;
     
     for (let i = 1; i < routePoints.length; i++) {
-      pathData += ` L${routePoints[i].x * mapWidth},${routePoints[i].y * mapHeight}`;
+      pathData += ` L${routePoints[i].x},${routePoints[i].y}`;
     }
 
     return (
