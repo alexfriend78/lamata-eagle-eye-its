@@ -33,23 +33,23 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     // Define routes using dynamic resolution for consistent coverage
     const routePaths: Record<number, { x: number; y: number }[]> = {
       1: [ // Route 1: Oshodi - Abule-Egba (North-South line)
-        { x: mapWidth * 0.57, y: mapHeight * 0.67 }, // Oshodi Terminal 2
-        { x: mapWidth * 0.55, y: mapHeight * 0.65 }, // Bolade
-        { x: mapWidth * 0.53, y: mapHeight * 0.63 }, // Ladipo
-        { x: mapWidth * 0.51, y: mapHeight * 0.61 }, // Shogunle
-        { x: mapWidth * 0.49, y: mapHeight * 0.59 }, // PWD
-        { x: mapWidth * 0.47, y: mapHeight * 0.57 }, // Airport Junction
-        { x: mapWidth * 0.45, y: mapHeight * 0.55 }, // Ikeja Along
-        { x: mapWidth * 0.43, y: mapHeight * 0.53 }, // Ile Zik
-        { x: mapWidth * 0.41, y: mapHeight * 0.51 }, // Mangoro
-        { x: mapWidth * 0.39, y: mapHeight * 0.49 }, // Cement
-        { x: mapWidth * 0.37, y: mapHeight * 0.47 }, // Iyana Dopemu
-        { x: mapWidth * 0.35, y: mapHeight * 0.45 }, // Adealu
-        { x: mapWidth * 0.33, y: mapHeight * 0.43 }, // Iyana Ipaja Bus stop
-        { x: mapWidth * 0.31, y: mapHeight * 0.41 }, // Pleasure
-        { x: mapWidth * 0.29, y: mapHeight * 0.39 }, // Ile Epo
-        { x: mapWidth * 0.27, y: mapHeight * 0.37 }, // Super
-        { x: mapWidth * 0.25, y: mapHeight * 0.35 }  // Abule Egba
+        { x: mapWidth * 0.37, y: mapHeight * 0.67 }, // Oshodi Terminal 2
+        { x: mapWidth * 0.35, y: mapHeight * 0.65 }, // Bolade
+        { x: mapWidth * 0.33, y: mapHeight * 0.63 }, // Ladipo
+        { x: mapWidth * 0.31, y: mapHeight * 0.61 }, // Shogunle
+        { x: mapWidth * 0.29, y: mapHeight * 0.59 }, // PWD
+        { x: mapWidth * 0.27, y: mapHeight * 0.57 }, // Airport Junction
+        { x: mapWidth * 0.25, y: mapHeight * 0.55 }, // Ikeja Along
+        { x: mapWidth * 0.23, y: mapHeight * 0.53 }, // Ile Zik
+        { x: mapWidth * 0.21, y: mapHeight * 0.51 }, // Mangoro
+        { x: mapWidth * 0.19, y: mapHeight * 0.49 }, // Cement
+        { x: mapWidth * 0.17, y: mapHeight * 0.47 }, // Iyana Dopemu
+        { x: mapWidth * 0.15, y: mapHeight * 0.45 }, // Adealu
+        { x: mapWidth * 0.13, y: mapHeight * 0.43 }, // Iyana Ipaja Bus stop
+        { x: mapWidth * 0.11, y: mapHeight * 0.41 }, // Pleasure
+        { x: mapWidth * 0.09, y: mapHeight * 0.39 }, // Ile Epo
+        { x: mapWidth * 0.07, y: mapHeight * 0.37 }, // Super
+        { x: mapWidth * 0.05, y: mapHeight * 0.35 }  // Abule Egba
       ],
       2: [ // Route 2: Abule Egba - Lekki Phase 2 Terminal (Complete north-south-east)
         { x: mapWidth * 0.18, y: mapHeight * 0.28 }, // Abule Egba Terminal
@@ -194,7 +194,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     
     if (points.length < 2) return null;
     
-    console.log(`Rendering route ${route.id} (${route.name}) with ${points.length} points, highlighted: ${isHighlighted}`);
+
 
     // Calculate offset for overlapping routes - spread them more
     const offsetDistance = (routeIndex % 5 - 2) * 12; // -24, -12, 0, 12, 24 pixel offset
@@ -209,11 +209,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
       return calculatePerpendicularOffset(point, points[i+1], offsetDistance);
     });
 
-    // Debug log for Route 1 specifically
-    if (route.id === 1) {
-      console.log(`Route 1 debug - color: ${route.color}, points: ${points.length}, offset: ${offsetDistance}`);
-      console.log(`Route 1 offset points:`, offsetPoints.slice(0, 3).map(p => `${Math.round(p.x)},${Math.round(p.y)}`));
-    }
+
 
 
 
@@ -271,11 +267,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
 
           const lineWidth = route.lineWidth || 6;
           
-          // Debug log for Route 1 specifically
-          if (route.id === 1) {
-            console.log(`Route 1 debug - color: ${route.color}, strokeColor: ${strokeColor}, lineWidth: ${lineWidth}, opacity: ${route.opacity}`);
-            console.log(`Route 1 offset points:`, offsetPoints.map(p => `${p.x},${p.y}`).join(' '));
-          }
+
           const opacity = route.opacity || (isHighlighted ? 1 : 0.9);
 
           return (
