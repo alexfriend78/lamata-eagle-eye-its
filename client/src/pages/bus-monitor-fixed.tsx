@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { MapContainer } from "@/components/map-container";
-import { BusDetailsPanel } from "@/components/bus-details-panel";
-import { AlertsManager } from "@/components/alerts-manager";
-import { AIInsightsPanel } from "@/components/ai-insights-panel";
-import { RouteAestheticsPanel } from "@/components/route-aesthetics-panel";
+import MapContainer from "@/components/map-container";
+import BusDetailsPanel from "@/components/bus-details-panel";
+import AlertsManager from "@/components/alerts-manager";
+import AIInsightsPanel from "@/components/ai-insights-panel";
+import RouteAestheticsPanel from "@/components/route-aesthetics-panel";
 import { 
   Brain, 
   Settings, 
