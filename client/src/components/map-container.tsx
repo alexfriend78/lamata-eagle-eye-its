@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { type BusWithRoute, type Route, type Station } from "@shared/schema";
 import BusIcon from "./bus-icon";
 import BusDetailsPanel from "./bus-details-panel";
 import { useRouteStations } from "@/hooks/use-route-stations";
 import { useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { AlertTriangle, X } from "lucide-react";
 
 interface MapContainerProps {
   buses: BusWithRoute[];
@@ -26,6 +28,67 @@ interface MapContainerProps {
 
 export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed, showRoutes, showStations, showBuses }: MapContainerProps) {
   const [selectedBus, setSelectedBus] = useState<BusWithRoute | null>(null);
+  const [geofencingAlert, setGeofencingAlert] = useState<{busId: number, busNumber: string} | null>(null);
+  const [showReturnDialog, setShowReturnDialog] = useState(false);
+
+  // Check for off-route buses and show geofencing alerts
+  useEffect(() => {
+    const offRouteBuses = buses.filter(bus => bus.status === "off-route");
+    if (offRouteBuses.length > 0 && !geofencingAlert) {
+      const offRouteBus = offRouteBuses[0];
+      setGeofencingAlert({ busId: offRouteBus.id, busNumber: offRouteBus.busNumber });
+    } else if (offRouteBuses.length === 0 && geofencingAlert) {
+      setGeofencingAlert(null);
+    }
+  }, [buses, geofencingAlert]);
+
+  // Handle bus click - dismiss geofencing alert when viewing bus details
+  const handleBusClick = (bus: BusWithRoute) => {
+    setSelectedBus(bus);
+    if (geofencingAlert && geofencingAlert.busId === bus.id) {
+      setGeofencingAlert(null);
+    }
+  };
+
+  // Handle return bus to route
+  const handleReturnBusToRoute = async () => {
+    if (selectedBus) {
+      try {
+        await fetch(`/api/buses/${selectedBus.id}/return-to-route`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        setShowReturnDialog(false);
+        setSelectedBus(null);
+      } catch (error) {
+        console.error('Failed to return bus to route:', error);
+      }
+    }
+  };
+
+  // Calculate distance from route for off-route glow intensity
+  const getOffRouteGlowIntensity = (bus: BusWithRoute): number => {
+    if (bus.status !== "off-route") return 0;
+    
+    const routePoints = getRoutePoints(bus.routeId);
+    if (routePoints.length === 0) return 0;
+
+    // Find closest route point
+    let minDistance = Infinity;
+    routePoints.forEach(point => {
+      const normalizedPointX = point.x / mapWidth;
+      const normalizedPointY = point.y / mapHeight;
+      const distance = Math.sqrt(
+        Math.pow(normalizedPointX - bus.currentX, 2) + 
+        Math.pow(normalizedPointY - bus.currentY, 2)
+      );
+      minDistance = Math.min(minDistance, distance);
+    });
+
+    // Convert distance to glow intensity (0-1, where 1 is maximum glow)
+    const maxDistance = 0.2; // Maximum distance for full glow
+    return Math.min(minDistance / maxDistance, 1);
+  };
   
   // Dynamic screen dimensions accounting for header
   const mapWidth = typeof window !== 'undefined' ? window.innerWidth : 1920;
@@ -419,6 +482,56 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   return (
     <div className="relative w-full h-full overflow-hidden bg-white dark:bg-gray-900"
          style={{ minWidth: mapWidth, minHeight: mapHeight }}>
+      
+      {/* Flashing Geofencing Alert */}
+      {geofencingAlert && (
+        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-50 animate-pulse">
+          <div className="bg-orange-500 text-white px-6 py-3 rounded-lg shadow-lg border-2 border-orange-600 flex items-center gap-3">
+            <AlertTriangle className="h-5 w-5 animate-bounce" />
+            <span className="font-semibold">
+              GEOFENCING ALERT: Bus {geofencingAlert.busNumber} has deviated from designated route
+            </span>
+            <Button
+              onClick={() => setGeofencingAlert(null)}
+              variant="ghost"
+              size="sm"
+              className="text-white hover:bg-orange-600 ml-2"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Return to Route Dialog */}
+      {showReturnDialog && selectedBus && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div className="flex items-center gap-3 mb-4">
+              <AlertTriangle className="h-6 w-6 text-orange-500" />
+              <h3 className="text-lg font-semibold">Return Bus to Route</h3>
+            </div>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Bus {selectedBus.busNumber} is currently off its designated route. 
+              Would you like to return it to the proper path?
+            </p>
+            <div className="flex gap-3 justify-end">
+              <Button
+                onClick={() => setShowReturnDialog(false)}
+                variant="outline"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleReturnBusToRoute}
+                className="bg-orange-500 hover:bg-orange-600 text-white"
+              >
+                Return to Route
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Grid zones overlay */}
       <div className="absolute inset-0 pointer-events-none z-40">
         {Array.from({ length: 16 }, (_, i) => {
@@ -778,33 +891,58 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         {/* Bus Icons with Animations - only show if buses visibility is enabled */}
         {showBuses && buses
           .filter(bus => selectedRoutes.length === 0 || selectedRoutes.includes(bus.routeId))
-          .map((bus) => (
-            <div
-              key={bus.id}
-              style={{
-                position: 'absolute',
-                top: `${(bus.currentY * mapHeight) - 12}px`,
-                left: `${(bus.currentX * mapWidth) - 12}px`,
-                zIndex: 30
-              }}
-              onMouseEnter={() => onBusHover?.(bus)}
-              onMouseLeave={() => onBusHover?.(null)}
-              onClick={() => setSelectedBus(bus)}
-              className="cursor-pointer hover:scale-110 transition-transform"
-            >
-              <BusIcon
-                bus={bus}
-                style={{}}
-              />
-            </div>
-          ))}
+          .map((bus) => {
+            const glowIntensity = getOffRouteGlowIntensity(bus);
+            const isOffRoute = bus.status === "off-route";
+            
+            return (
+              <div
+                key={bus.id}
+                style={{
+                  position: 'absolute',
+                  top: `${(bus.currentY * mapHeight) - 12}px`,
+                  left: `${(bus.currentX * mapWidth) - 12}px`,
+                  zIndex: 30
+                }}
+                onMouseEnter={() => onBusHover?.(bus)}
+                onMouseLeave={() => onBusHover?.(null)}
+                onClick={() => handleBusClick(bus)}
+                className="cursor-pointer hover:scale-110 transition-transform"
+              >
+                {/* Orange glow effect for off-route buses */}
+                {isOffRoute && (
+                  <div
+                    className="absolute inset-0 rounded-full animate-pulse"
+                    style={{
+                      boxShadow: `0 0 ${15 + glowIntensity * 25}px ${10 + glowIntensity * 15}px rgba(255, 165, 0, ${0.3 + glowIntensity * 0.4})`,
+                      transform: 'scale(1.5)',
+                      zIndex: -1
+                    }}
+                  />
+                )}
+                
+                <BusIcon
+                  bus={bus}
+                  style={{
+                    filter: isOffRoute ? `drop-shadow(0 0 8px rgba(255, 165, 0, ${0.6 + glowIntensity * 0.4}))` : undefined
+                  }}
+                />
+              </div>
+            );
+          })}
       </div>
 
       {/* Bus Details Panel */}
       {selectedBus && (
         <BusDetailsPanel
           bus={selectedBus}
-          onClose={() => setSelectedBus(null)}
+          onClose={() => {
+            if (selectedBus.status === "off-route") {
+              setShowReturnDialog(true);
+            } else {
+              setSelectedBus(null);
+            }
+          }}
         />
       )}
     </div>

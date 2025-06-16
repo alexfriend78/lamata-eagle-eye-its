@@ -226,7 +226,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       await storage.updateBusStatus(id, "active");
       
-      if (storage instanceof MemStorage) {
+      if (storage.returnBusToRoute) {
         (storage as any).returnBusToRoute(id);
       }
       
@@ -336,6 +336,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error generating predictions:', error);
       res.status(500).json({ error: "Failed to generate predictions" });
+    }
+  });
+
+  // Return bus to route endpoint
+  app.post("/api/buses/:id/return-to-route", async (req, res) => {
+    try {
+      const busId = parseInt(req.params.id);
+      const bus = await storage.getBus(busId);
+      
+      if (!bus) {
+        return res.status(404).json({ error: "Bus not found" });
+      }
+
+      // Use the returnBusToRoute method from storage
+      if (typeof storage.returnBusToRoute === 'function') {
+        storage.returnBusToRoute(busId);
+      } else {
+        // Fallback: update bus status to "active"
+        await storage.updateBusStatus(busId, "active");
+      }
+
+      const updatedBus = await storage.getBus(busId);
+      res.json(updatedBus);
+    } catch (error) {
+      console.error('Error returning bus to route:', error);
+      res.status(500).json({ error: "Failed to return bus to route" });
     }
   });
 
