@@ -47,7 +47,7 @@ export default function AIInsightsPanel({ buses, stations, alerts, stats }: AIIn
         priority: 'high',
         title: 'Additional Bus Deployment Required',
         description: `${highDensityStations.length} stations showing high passenger density (>50 people)`,
-        recommendation: `Deploy 2-3 additional buses to Route 1 (Oshodi-Abule Egba) immediately`,
+        recommendation: `Deploy 2-3 additional buses with drivers Adebayo Ogundimu and Kemi Adeleke to Route 1 immediately`,
         impact: 'Reduce wait times by 35% and improve passenger satisfaction',
         confidence: 92,
         location: 'Oshodi Terminal 2, Bolade Station',
@@ -65,7 +65,7 @@ export default function AIInsightsPanel({ buses, stations, alerts, stats }: AIIn
         priority: 'medium',
         title: 'Traffic Congestion Detected',
         description: `${slowBuses.length} buses moving below 15km/h - likely traffic congestion`,
-        recommendation: 'Activate alternate route protocols for Route 2 and Route 3',
+        recommendation: 'Activate alternate route protocols - assign drivers Folake Adebisi and Emeka Okafor to bypass congested areas',
         impact: 'Reduce delay by 18 minutes per trip',
         confidence: 87,
         location: 'Ikeja Axis',
@@ -82,7 +82,7 @@ export default function AIInsightsPanel({ buses, stations, alerts, stats }: AIIn
         priority: 'high',
         title: 'Morning Rush Hour Peak Incoming',
         description: 'Passenger demand expected to increase 340% in next 30 minutes',
-        recommendation: 'Deploy 5 additional buses across all routes within 15 minutes',
+        recommendation: 'Deploy 5 additional buses with drivers Chioma Nwachukwu, Yusuf Ibrahim, Funmi Oluwaseun, Tunde Bakare, and Amina Hassan across all routes within 15 minutes',
         impact: 'Prevent overcrowding and maintain service quality',
         confidence: 95,
         location: 'All Major Terminals',
@@ -173,9 +173,17 @@ export default function AIInsightsPanel({ buses, stations, alerts, stats }: AIIn
             <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent font-bold">
               AI Fleet Intelligence
             </span>
-            <Badge variant="secondary" className="ml-auto">
+            <Badge variant="secondary" className="ml-2">
               {insights.length} Insights
             </Badge>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="ml-auto h-6 w-6 p-0"
+              onClick={() => window.dispatchEvent(new CustomEvent('closeAIInsights'))}
+            >
+              ×
+            </Button>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">

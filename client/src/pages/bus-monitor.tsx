@@ -31,6 +31,13 @@ export default function BusMonitor() {
   const [activeAlert, setActiveAlert] = useState<any | null>(null);
   const [showAlertsManager, setShowAlertsManager] = useState(false);
   const [showAIInsights, setShowAIInsights] = useState(false);
+
+  // Handle AI Insights close event
+  useEffect(() => {
+    const handleCloseAIInsights = () => setShowAIInsights(false);
+    window.addEventListener('closeAIInsights', handleCloseAIInsights);
+    return () => window.removeEventListener('closeAIInsights', handleCloseAIInsights);
+  }, []);
   
   // Visibility controls for routes, bus stops, and buses
   const [showRoutes, setShowRoutes] = useState(true);
@@ -420,6 +427,18 @@ export default function BusMonitor() {
       {/* Alerts Manager */}
       {showAlertsManager && (
         <AlertsManager onClose={() => setShowAlertsManager(false)} />
+      )}
+
+      {/* AI Insights Panel */}
+      {showAIInsights && (
+        <div className="fixed right-4 top-20 w-96 max-h-[calc(100vh-120px)] overflow-y-auto z-40">
+          <AIInsightsPanel
+            buses={buses || []}
+            stations={stations || []}
+            alerts={alerts || []}
+            stats={stats || { totalBuses: 0, activeRoutes: 0, onTimePercentage: 0, onTimeBuses: 0, delayedBuses: 0, alertBuses: 0, avgCrowdDensity: 0, peakStations: [] }}
+          />
+        </div>
       )}
       </div>
     </div>
