@@ -121,12 +121,12 @@ export default function BusMonitor() {
       )}
       
       {/* Full Screen Header */}
-      <header className={`${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-gray-100 border-gray-300'} border-b px-6 py-3`}>
+      <header className={`bg-gradient-to-r from-green-600 via-white to-green-600 dark:from-green-800 dark:via-gray-900 dark:to-green-800 border-b border-green-200 dark:border-green-700 px-6 py-3 shadow-lg`}>
         <div className="flex flex-col space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="text-2xl">🚌</div>
-              <h1 className="text-xl font-semibold">LAMATA - Eagle Eye ITS 🦅</h1>
+              <h1 className="text-xl font-semibold bg-gradient-to-r from-green-800 to-green-600 bg-clip-text text-transparent">LAMATA - Eagle Eye ITS 🦅</h1>
             </div>
             
             <div className="flex items-center space-x-6">
