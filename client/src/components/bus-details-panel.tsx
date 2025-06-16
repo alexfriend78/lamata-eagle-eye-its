@@ -35,21 +35,12 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
   });
 
   // Filter alerts for this specific bus
-  const busAlerts = alerts.filter(alert => alert.busId === bus.id && (alert.isActive || alert.status === "acknowledged"));
+  const busAlerts = alerts.filter(alert => alert.busId === bus.id && alert.isActive);
   const hasEmergencyAlerts = busAlerts.length > 0;
 
   // Mutation to clear alert
   const clearAlertMutation = useMutation({
-    mutationFn: (alertId: number) => apiRequest(`/api/alerts/${alertId}/clear`, { method: "PATCH" }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
-    }
-  });
-
-  // Mutation to escalate alert
-  const escalateAlertMutation = useMutation({
-    mutationFn: (alertId: number) => apiRequest(`/api/alerts/${alertId}/escalate`, { method: "PATCH" }),
+    mutationFn: (alertId: number) => apiRequest(`/api/alerts/${alertId}/acknowledge`, { method: "PATCH" }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
@@ -468,16 +459,7 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                     )}
                     
                     <div className="flex gap-3">
-                      {alert.status === "acknowledged" ? (
-                        <Button
-                          onClick={() => clearAlertMutation.mutate(alert.id)}
-                          disabled={clearAlertMutation.isPending}
-                          className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
-                        >
-                          <CheckCircle className="w-4 h-4" />
-                          {clearAlertMutation.isPending ? 'Clearing...' : 'Clear Alert'}
-                        </Button>
-                      ) : (
+                      {!isEscalated ? (
                         <>
                           <Button
                             onClick={() => clearAlertMutation.mutate(alert.id)}
@@ -488,14 +470,64 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                             {clearAlertMutation.isPending ? 'Clearing...' : 'Clear Alert'}
                           </Button>
                           <Button
-                            onClick={() => escalateAlertMutation.mutate(alert.id)}
-                            disabled={escalateAlertMutation.isPending}
+                            onClick={async () => {
+                              try {
+                                const response = await fetch(`/api/alerts`, {
+                                  method: 'POST',
+                                  headers: {
+                                    'Content-Type': 'application/json'
+                                  },
+                                  body: JSON.stringify({
+                                    type: 'escalated_emergency',
+                                    message: `ESCALATED: Emergency alert for Bus ${bus.busNumber}. Critical intervention required.`,
+                                    busId: bus.id,
+                                    routeId: bus.routeId,
+                                    priority: 'critical',
+                                    severity: 'high'
+                                  })
+                                });
+                                if (response.ok) {
+                                  setIsEscalated(true);
+                                }
+                              } catch (error) {
+                                console.error('Failed to escalate alert:', error);
+                              }
+                            }}
                             className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
                           >
                             <AlertOctagon className="w-4 h-4" />
-                            {escalateAlertMutation.isPending ? 'Escalating...' : 'Escalate'}
+                            Escalate
                           </Button>
                         </>
+                      ) : (
+                        <div className="flex flex-col gap-3 w-full">
+                          <div className="bg-green-100 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 text-center">
+                            <div className="flex items-center justify-center gap-2 mb-1">
+                              <CheckCircle className="w-4 h-4 text-green-600" />
+                              <span className="font-semibold text-green-800 dark:text-green-200">Security Team Alerted</span>
+                            </div>
+                            <p className="text-xs text-green-700 dark:text-green-300">
+                              Emergency response team has been notified and is en route.
+                            </p>
+                          </div>
+                          <div className="flex gap-3">
+                            <Button
+                              onClick={() => clearAlertMutation.mutate(alert.id)}
+                              disabled={clearAlertMutation.isPending}
+                              className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
+                            >
+                              <CheckCircle className="w-4 h-4" />
+                              {clearAlertMutation.isPending ? 'Clearing...' : 'Clear Alert'}
+                            </Button>
+                            <Button
+                              onClick={onClose}
+                              className="bg-gray-600 hover:bg-gray-700 text-white flex items-center gap-2"
+                            >
+                              <X className="w-4 h-4" />
+                              Close Panel
+                            </Button>
+                          </div>
+                        </div>
                       )}
                     </div>
                   </div>
