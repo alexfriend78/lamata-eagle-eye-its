@@ -232,25 +232,28 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         { x: mapWidth * 0.55, y: mapHeight * 0.45 }, // Onipanu
         { x: mapWidth * 0.57, y: mapHeight * 0.43 }  // Fadeyi
       ],
-      5: [ // Route 5: Multi-segment path with 6 distinct straight line segments
-        // Segment 1: Northeast diagonal from Ikorodu
-        { x: mapWidth * 0.15, y: mapHeight * 0.85 },
-        { x: mapWidth * 0.25, y: mapHeight * 0.75 },
+      5: [ // Route 5: Random multi-segment path with 7 distinct segments
+        // Segment 1: Start at random point, go northwest
+        { x: mapWidth * 0.80, y: mapHeight * 0.75 },
+        { x: mapWidth * 0.65, y: mapHeight * 0.60 },
         
-        // Segment 2: Straight north
-        { x: mapWidth * 0.25, y: mapHeight * 0.60 },
+        // Segment 2: Sharp south turn
+        { x: mapWidth * 0.65, y: mapHeight * 0.25 },
         
-        // Segment 3: Southeast diagonal
-        { x: mapWidth * 0.40, y: mapHeight * 0.45 },
+        // Segment 3: Southwest diagonal
+        { x: mapWidth * 0.45, y: mapHeight * 0.05 },
         
-        // Segment 4: Straight east
-        { x: mapWidth * 0.60, y: mapHeight * 0.45 },
+        // Segment 4: Sharp east turn
+        { x: mapWidth * 0.85, y: mapHeight * 0.05 },
         
         // Segment 5: Northeast diagonal
-        { x: mapWidth * 0.75, y: mapHeight * 0.30 },
+        { x: mapWidth * 0.95, y: mapHeight * 0.35 },
         
-        // Segment 6: Final northwest approach
-        { x: mapWidth * 0.65, y: mapHeight * 0.20 }
+        // Segment 6: West turn
+        { x: mapWidth * 0.55, y: mapHeight * 0.35 },
+        
+        // Segment 7: Final northwest to random endpoint
+        { x: mapWidth * 0.25, y: mapHeight * 0.55 }
       ]
     };
     return routePaths[routeId] || [];

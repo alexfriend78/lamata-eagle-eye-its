@@ -225,43 +225,47 @@ export class MemStorage implements IStorage {
       { name: "Onipanu", x: 0.55, y: 0.45, zone: 2, routeId: 4 },
       { name: "Fadeyi", x: 0.57, y: 0.43, zone: 2, routeId: 4 },
 
-      // Route 5: Multi-segment path stations positioned along 6 segments
-      // Segment 1 stations: Northeast diagonal from Ikorodu
-      { name: "Ikorodu Terminal", x: 0.15, y: 0.85, zone: 4, routeId: 5 },
-      { name: "Benson", x: 0.18, y: 0.82, zone: 4, routeId: 5 },
-      { name: "ARUNA", x: 0.21, y: 0.79, zone: 4, routeId: 5 },
-      { name: "AGRIC TERMINAL", x: 0.25, y: 0.75, zone: 3, routeId: 5 },
+      // Route 5: Random path stations positioned along 7 segments
+      // Segment 1 stations: Northwest from random start
+      { name: "Eastern Terminal", x: 0.80, y: 0.75, zone: 3, routeId: 5 },
+      { name: "Victoria Garden", x: 0.75, y: 0.70, zone: 3, routeId: 5 },
+      { name: "Lekki Phase 1", x: 0.70, y: 0.65, zone: 3, routeId: 5 },
+      { name: "Admiralty Way", x: 0.65, y: 0.60, zone: 3, routeId: 5 },
       
-      // Segment 2 stations: Straight north
-      { name: "OGOLONTO", x: 0.25, y: 0.72, zone: 3, routeId: 5 },
-      { name: "MAJIDUN AWORI", x: 0.25, y: 0.68, zone: 3, routeId: 5 },
-      { name: "AJEGUNLE", x: 0.25, y: 0.64, zone: 3, routeId: 5 },
-      { name: "IRAWO", x: 0.25, y: 0.60, zone: 3, routeId: 5 },
+      // Segment 2 stations: Sharp south turn
+      { name: "Ikoyi Bridge", x: 0.65, y: 0.50, zone: 3, routeId: 5 },
+      { name: "Falomo", x: 0.65, y: 0.40, zone: 2, routeId: 5 },
+      { name: "Obalende", x: 0.65, y: 0.30, zone: 2, routeId: 5 },
+      { name: "Marina", x: 0.65, y: 0.25, zone: 2, routeId: 5 },
       
-      // Segment 3 stations: Southeast diagonal
-      { name: "IDERA", x: 0.28, y: 0.57, zone: 3, routeId: 5 },
-      { name: "OWODEONIRIN", x: 0.32, y: 0.53, zone: 3, routeId: 5 },
-      { name: "MILE12 TERMINAL", x: 0.36, y: 0.49, zone: 2, routeId: 5 },
-      { name: "KETU", x: 0.40, y: 0.45, zone: 2, routeId: 5 },
+      // Segment 3 stations: Southwest diagonal
+      { name: "CMS", x: 0.60, y: 0.20, zone: 2, routeId: 5 },
+      { name: "TBS", x: 0.55, y: 0.15, zone: 2, routeId: 5 },
+      { name: "National Theatre", x: 0.50, y: 0.10, zone: 2, routeId: 5 },
+      { name: "Ebute Metta", x: 0.45, y: 0.05, zone: 2, routeId: 5 },
       
-      // Segment 4 stations: Straight east
-      { name: "OJOTA", x: 0.44, y: 0.45, zone: 2, routeId: 5 },
-      { name: "Maryland", x: 0.48, y: 0.45, zone: 2, routeId: 5 },
-      { name: "Anthony", x: 0.52, y: 0.45, zone: 2, routeId: 5 },
-      { name: "Palmgroove", x: 0.56, y: 0.45, zone: 2, routeId: 5 },
-      { name: "Fadeyi", x: 0.60, y: 0.45, zone: 2, routeId: 5 },
+      // Segment 4 stations: Sharp east turn
+      { name: "Oyingbo", x: 0.55, y: 0.05, zone: 2, routeId: 5 },
+      { name: "Jibowu", x: 0.65, y: 0.05, zone: 2, routeId: 5 },
+      { name: "Yaba", x: 0.75, y: 0.05, zone: 2, routeId: 5 },
+      { name: "Sabo", x: 0.85, y: 0.05, zone: 2, routeId: 5 },
       
       // Segment 5 stations: Northeast diagonal
-      { name: "MOSALASI TERMINAL", x: 0.63, y: 0.42, zone: 2, routeId: 5 },
-      { name: "Stadium", x: 0.66, y: 0.39, zone: 2, routeId: 5 },
-      { name: "Costain", x: 0.69, y: 0.36, zone: 2, routeId: 5 },
-      { name: "National Theatre", x: 0.72, y: 0.33, zone: 2, routeId: 5 },
-      { name: "Yaba Junction", x: 0.75, y: 0.30, zone: 2, routeId: 5 },
+      { name: "Surulere", x: 0.88, y: 0.12, zone: 2, routeId: 5 },
+      { name: "Alaba", x: 0.91, y: 0.20, zone: 2, routeId: 5 },
+      { name: "Festac", x: 0.94, y: 0.28, zone: 2, routeId: 5 },
+      { name: "Mile 2", x: 0.95, y: 0.35, zone: 2, routeId: 5 },
       
-      // Segment 6 stations: Northwest approach
-      { name: "Ikeja Under Bridge", x: 0.72, y: 0.27, zone: 1, routeId: 5 },
-      { name: "Airport Road", x: 0.69, y: 0.24, zone: 1, routeId: 5 },
-      { name: "Oshodi Terminal 1", x: 0.65, y: 0.20, zone: 2, routeId: 5 }
+      // Segment 6 stations: West turn
+      { name: "Orile", x: 0.85, y: 0.35, zone: 2, routeId: 5 },
+      { name: "Mushin", x: 0.75, y: 0.35, zone: 2, routeId: 5 },
+      { name: "Isolo", x: 0.65, y: 0.35, zone: 2, routeId: 5 },
+      { name: "Ikeja", x: 0.55, y: 0.35, zone: 1, routeId: 5 },
+      
+      // Segment 7 stations: Northwest to endpoint
+      { name: "Agege", x: 0.45, y: 0.45, zone: 1, routeId: 5 },
+      { name: "Iyana Ipaja", x: 0.35, y: 0.50, zone: 1, routeId: 5 },
+      { name: "Abule Egba West", x: 0.25, y: 0.55, zone: 1, routeId: 5 }
     ];
 
     stationsData.forEach(stationData => {
@@ -871,25 +875,28 @@ export class MemStorage implements IStorage {
         { x: 0.55, y: 0.45 }, // Onipanu
         { x: 0.57, y: 0.43 }  // Fadeyi
       ],
-      5: [ // Route 5: Multi-segment path with 6 distinct straight line segments
-        // Segment 1: Northeast diagonal from Ikorodu
-        { x: 0.15, y: 0.85 },
-        { x: 0.25, y: 0.75 },
+      5: [ // Route 5: Random multi-segment path with 7 distinct segments
+        // Segment 1: Start at random point, go northwest
+        { x: 0.80, y: 0.75 },
+        { x: 0.65, y: 0.60 },
         
-        // Segment 2: Straight north
-        { x: 0.25, y: 0.60 },
+        // Segment 2: Sharp south turn
+        { x: 0.65, y: 0.25 },
         
-        // Segment 3: Southeast diagonal
-        { x: 0.40, y: 0.45 },
+        // Segment 3: Southwest diagonal
+        { x: 0.45, y: 0.05 },
         
-        // Segment 4: Straight east
-        { x: 0.60, y: 0.45 },
+        // Segment 4: Sharp east turn
+        { x: 0.85, y: 0.05 },
         
         // Segment 5: Northeast diagonal
-        { x: 0.75, y: 0.30 },
+        { x: 0.95, y: 0.35 },
         
-        // Segment 6: Final northwest approach
-        { x: 0.65, y: 0.20 }
+        // Segment 6: West turn
+        { x: 0.55, y: 0.35 },
+        
+        // Segment 7: Final northwest to random endpoint
+        { x: 0.25, y: 0.55 }
       ]
     };
     return routePaths[routeId] || [];
