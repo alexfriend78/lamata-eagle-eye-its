@@ -1,0 +1,33 @@
+Route 1 SVG path: 811.04,757.1 767.1999999999999,734.5 723.36,711.9 679.52,689.3 635.68,666.6999999999999 591.84,644.0...
+Console.js:61 Route 1 SVG properties: stroke=#FF0000, strokeWidth=4, opacity=1
+Console.js:61 Rendering route 2: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Rendering route 3: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Rendering route 4: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Rendering route 5: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Route rendering: showRoutes=true, routes.length=5, selectedRoutes=[1,2,3,4,5]
+Console.js:61 Filtered routes: 1,2,3,4,5
+Console.js:61 Rendering route 1: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Route 1 SVG path: 811.04,757.1 767.1999999999999,734.5 723.36,711.9 679.52,689.3 635.68,666.6999999999999 591.84,644.0...
+Console.js:61 Route 1 SVG properties: stroke=#FF0000, strokeWidth=4, opacity=1
+Console.js:61 Rendering route 2: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Rendering route 3: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Rendering route 4: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Rendering route 5: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Route rendering: showRoutes=true, routes.length=5, selectedRoutes=[1,2,3,4,5]
+Console.js:61 Filtered routes: 1,2,3,4,5
+Console.js:61 Rendering route 1: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Route 1 SVG path: 811.04,757.1 767.1999999999999,734.5 723.36,711.9 679.52,689.3 635.68,666.6999999999999 591.84,644.0...
+Console.js:61 Route 1 SVG properties: stroke=#FF0000, strokeWidth=4, opacity=1
+Console.js:61 Rendering route 2: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Rendering route 3: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Rendering route 4: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Rendering route 5: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Route rendering: showRoutes=true, routes.length=5, selectedRoutes=[1,2,3,4,5]
+Console.js:61 Filtered routes: 1,2,3,4,5
+Console.js:61 Rendering route 1: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Route 1 SVG path: 811.04,757.1 767.1999999999999,734.5 723.36,711.9 679.52,689.3 635.68,666.6999999999999 591.84,644.0...
+Console.js:61 Route 1 SVG properties: stroke=#FF0000, strokeWidth=4, opacity=1
+Console.js:61 Rendering route 2: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Rendering route 3: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Rendering route 4: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5
+Console.js:61 Rendering route 5: showRoutes=true, selectedRoutes=[1,2,3,4,5], routesLength=5

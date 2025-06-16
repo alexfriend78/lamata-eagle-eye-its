@@ -197,11 +197,12 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     
     if (points.length < 2) return null;
 
-    // Debug Route 1 SVG path
+    // Debug Route 1 SVG path and viewport bounds
     if (route.id === 1) {
       const pathString = points.map(p => `${p.x},${p.y}`).join(' ');
       console.log(`Route 1 SVG path: ${pathString.substring(0, 100)}...`);
       console.log(`Route 1 SVG properties: stroke=${route.color}, strokeWidth=${route.lineWidth || 6}, opacity=${route.opacity || 1}`);
+      console.log(`Viewport bounds: ${mapWidth}x${mapHeight}, First point: ${points[0].x},${points[0].y}`);
     }
     
 
@@ -602,6 +603,17 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
+
+        {/* Test visible element */}
+        <svg
+          width={mapWidth}
+          height={mapHeight}
+          className="absolute inset-0 pointer-events-none"
+          style={{ zIndex: 1000 }}
+        >
+          <circle cx="100" cy="100" r="30" fill="red" stroke="yellow" strokeWidth="5" />
+          <text x="150" y="110" fill="blue" fontSize="20" fontWeight="bold">TEST VISIBLE</text>
         </svg>
 
         {/* Route Lines */}
