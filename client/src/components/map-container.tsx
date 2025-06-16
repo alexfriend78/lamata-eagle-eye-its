@@ -175,31 +175,19 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         // Segment 7: Final east stretch
         { x: mapWidth * 0.90, y: mapHeight * 0.65 }
       ],
-      3: [ // Route 3: Lagos Metro Express - 8 Segment Pattern
-        // Segment 1: Start west, go east
-        { x: mapWidth * 0.10, y: mapHeight * 0.20 },
-        { x: mapWidth * 0.25, y: mapHeight * 0.20 },
+      3: [ // Route 3: Lagos Metro Express - 4 Smooth Diagonal Segments
+        // Segment 1: Southwest to northeast diagonal
+        { x: mapWidth * 0.15, y: mapHeight * 0.70 },
+        { x: mapWidth * 0.40, y: mapHeight * 0.35 },
         
-        // Segment 2: Go south
-        { x: mapWidth * 0.25, y: mapHeight * 0.35 },
+        // Segment 2: Northwest to southeast diagonal
+        { x: mapWidth * 0.30, y: mapHeight * 0.15 },
         
-        // Segment 3: Go east
-        { x: mapWidth * 0.45, y: mapHeight * 0.35 },
+        // Segment 3: Southwest to northeast diagonal
+        { x: mapWidth * 0.65, y: mapHeight * 0.25 },
         
-        // Segment 4: Go north
-        { x: mapWidth * 0.45, y: mapHeight * 0.15 },
-        
-        // Segment 5: Go east
-        { x: mapWidth * 0.65, y: mapHeight * 0.15 },
-        
-        // Segment 6: Go south
-        { x: mapWidth * 0.65, y: mapHeight * 0.50 },
-        
-        // Segment 7: Go east
-        { x: mapWidth * 0.80, y: mapHeight * 0.50 },
-        
-        // Segment 8: Go south to end
-        { x: mapWidth * 0.80, y: mapHeight * 0.75 }
+        // Segment 4: Northwest to southeast diagonal to end
+        { x: mapWidth * 0.85, y: mapHeight * 0.60 }
       ],
       4: [ // Route 4: Realistic Lagos BRT - Ikorodu to Victoria Island
         // Segment 1: Northeast from Ikorodu towards Mile 12
