@@ -30,14 +30,17 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   const { data: routeStations = [] } = useRouteStations(selectedRoutes);
 
   const getRoutePoints = (routeId: number) => {
-    // Use actual station coordinates from backend for route rendering
-    const routeStationsForRoute = routeStations.find(rs => rs.routeId === routeId)?.stations || [];
+    // Filter stations that belong to this route using the routeId property
+    const stationsForRoute = stations.filter(station => station.routeId === routeId);
     
-    if (routeStationsForRoute.length > 0) {
-      // Convert station coordinates to pixel coordinates
-      return routeStationsForRoute.map(station => ({
-        x: station.x * mapWidth,
-        y: station.y * mapHeight
+    if (stationsForRoute.length > 0) {
+      // Convert station coordinates to pixel coordinates and center them
+      const centerOffsetX = mapWidth * 0.1; // Center horizontally  
+      const centerOffsetY = mapHeight * 0.05; // Center vertically
+      
+      return stationsForRoute.map(station => ({
+        x: (station.x * mapWidth * 0.8) + centerOffsetX,
+        y: (station.y * mapHeight * 0.9) + centerOffsetY
       }));
     }
     
@@ -220,22 +223,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
       return calculatePerpendicularOffset(point, points[i+1], offsetDistance);
     });
 
-    // Create consistent curves for all routes around stations
-    const curvedPoints = offsetPoints.map((point, i) => {
-      // Keep endpoints exactly at station positions for proper connection
-      if (i === 0 || i === offsetPoints.length - 1) {
-        return point; // No offset for start/end points
-      }
-      
-      // Apply curve offset only to intermediate points to avoid text overlap
-      const textOffset = 8; // Small offset to avoid text overlap
-      const routeOffset = routeIndex * 4; // Additional offset for multiple routes
-      
-      return {
-        x: point.x + textOffset + routeOffset,
-        y: point.y - textOffset // Slightly above the station center
-      };
-    });
+    // Use straight lines connecting all stations without curve offsets
+    const straightPoints = offsetPoints;
 
 
 
@@ -302,7 +291,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             <>
               {/* Shadow effect */}
               <polyline
-                points={curvedPoints.map(p => `${p.x + 2},${p.y + 2}`).join(' ')}
+                points={straightPoints.map(p => `${p.x + 2},${p.y + 2}`).join(' ')}
                 fill="none"
                 stroke="rgba(0,0,0,0.3)"
                 strokeWidth={isHighlighted ? lineWidth + 2 : lineWidth}
@@ -313,7 +302,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
               {/* Double line background effect */}
               {route.lineStyle === "double" && (
                 <polyline
-                  points={curvedPoints.map(p => `${p.x},${p.y}`).join(' ')}
+                  points={straightPoints.map(p => `${p.x},${p.y}`).join(' ')}
                   fill="none"
                   stroke={route.color}
                   strokeWidth={lineWidth + 4}
@@ -325,7 +314,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
 
               {/* Main route line */}
               <polyline
-                points={curvedPoints.map(p => `${p.x},${p.y}`).join(' ')}
+                points={straightPoints.map(p => `${p.x},${p.y}`).join(' ')}
                 fill="none"
                 stroke={strokeColor}
                 strokeWidth={lineWidth}
@@ -338,9 +327,9 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
               />
 
               {/* Pattern overlays */}
-              {route.pattern === "arrows" && offsetPoints.map((point, index) => {
+              {route.pattern === "arrows" && straightPoints.map((point, index) => {
                 if (index === 0 || index % 4 !== 0) return null;
-                const prevPoint = offsetPoints[index - 1];
+                const prevPoint = straightPoints[index - 1];
                 const angle = Math.atan2(point.y - prevPoint.y, point.x - prevPoint.x) * 180 / Math.PI;
                 
                 return (
@@ -354,7 +343,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 );
               })}
 
-              {route.pattern === "dots" && offsetPoints.map((point, index) => {
+              {route.pattern === "dots" && straightPoints.map((point, index) => {
                 if (index % 6 !== 0) return null;
                 return (
                   <circle
