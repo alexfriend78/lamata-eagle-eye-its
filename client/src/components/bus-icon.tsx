@@ -87,16 +87,17 @@ function BusIcon({ bus, style, alerts = [] }: BusIconProps) {
   };
 
   const getDeeperColor = (baseColor: string, intensity: number) => {
-    // Convert hex to RGB and make it deeper/more saturated
+    // Convert hex to RGB and make it much deeper and more saturated
     const hex = baseColor.replace('#', '');
     const r = parseInt(hex.substr(0, 2), 16);
     const g = parseInt(hex.substr(2, 2), 16);
     const b = parseInt(hex.substr(4, 2), 16);
     
-    // Make color deeper by reducing brightness while maintaining saturation
-    const deepR = Math.max(0, Math.floor(r * (0.7 - (intensity - 1) * 0.1)));
-    const deepG = Math.max(0, Math.floor(g * (0.7 - (intensity - 1) * 0.1)));
-    const deepB = Math.max(0, Math.floor(b * (0.7 - (intensity - 1) * 0.1)));
+    // Make color significantly deeper with more dramatic reduction
+    const deepnessMultiplier = 0.3 - (intensity - 1) * 0.05; // Much more aggressive
+    const deepR = Math.max(20, Math.floor(r * deepnessMultiplier));
+    const deepG = Math.max(20, Math.floor(g * deepnessMultiplier));
+    const deepB = Math.max(20, Math.floor(b * deepnessMultiplier));
     
     return `rgb(${deepR}, ${deepG}, ${deepB})`;
   };
@@ -112,15 +113,17 @@ function BusIcon({ bus, style, alerts = [] }: BusIconProps) {
       const intensity = getTimeBasedIntensity(highestAcknowledgedAlert);
       const deepColor = getDeeperColor(baseColor, intensity);
       
-      // Escalating glow size based on time
-      const baseSize = 16;
+      // Massive escalating glow size based on time
+      const baseSize = 40; // Much larger base size
       const size1 = baseSize * intensity;
-      const size2 = baseSize * 2 * intensity;
-      const size3 = baseSize * 3 * intensity;
-      const size4 = baseSize * 4 * intensity;
-      const size5 = baseSize * 5 * intensity;
+      const size2 = baseSize * 2.5 * intensity;
+      const size3 = baseSize * 4 * intensity;
+      const size4 = baseSize * 6 * intensity;
+      const size5 = baseSize * 8 * intensity;
+      const size6 = baseSize * 10 * intensity;
+      const size7 = baseSize * 12 * intensity;
       
-      return `drop-shadow(0 0 ${size1}px ${deepColor}) drop-shadow(0 0 ${size2}px ${deepColor}) drop-shadow(0 0 ${size3}px ${deepColor}) drop-shadow(0 0 ${size4}px ${deepColor}) drop-shadow(0 0 ${size5}px ${deepColor})`;
+      return `drop-shadow(0 0 ${size1}px ${deepColor}) drop-shadow(0 0 ${size2}px ${deepColor}) drop-shadow(0 0 ${size3}px ${deepColor}) drop-shadow(0 0 ${size4}px ${deepColor}) drop-shadow(0 0 ${size5}px ${deepColor}) drop-shadow(0 0 ${size6}px ${deepColor}) drop-shadow(0 0 ${size7}px ${deepColor})`;
     } else if (activeGlow === "emergency" && highestPriorityAlert) {
       const color = getAlertColor(highestPriorityAlert.priority || "medium");
       return `drop-shadow(0 0 8px ${color}) drop-shadow(0 0 16px ${color}) drop-shadow(0 0 24px ${color})`;
