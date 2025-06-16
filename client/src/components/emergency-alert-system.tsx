@@ -108,15 +108,23 @@ export default function EmergencyAlertSystem({
 
   const closeAlertMutation = useMutation({
     mutationFn: async (alertId: number) => {
+      console.log("Making close alert API call for alert:", alertId);
       const response = await fetch(`/api/alerts/${alertId}/close`, {
         method: "PATCH",
       });
-      return response.json();
+      const result = await response.json();
+      console.log("Close alert API response:", result);
+      return result;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log("Close alert mutation succeeded:", data);
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
+      console.log("Calling onAlertDismiss to close alert window");
       onAlertDismiss(); // Immediately close the alert window
+    },
+    onError: (error) => {
+      console.error("Close alert mutation failed:", error);
     },
   });
 
@@ -320,13 +328,16 @@ export default function EmergencyAlertSystem({
             
             <div className="flex gap-4 justify-center">
               <Button
-                onClick={() => closeAlertMutation.mutate(activeAlert.id)}
+                onClick={() => {
+                  console.log("Close Alert button clicked for alert:", activeAlert.id);
+                  closeAlertMutation.mutate(activeAlert.id);
+                }}
                 variant="secondary"
                 size="lg"
                 className="bg-white/20 text-white border-white/30 hover:bg-white/30"
                 disabled={closeAlertMutation.isPending}
               >
-                Close Alert
+                {closeAlertMutation.isPending ? "Closing..." : "Close Alert"}
               </Button>
               
               <Button
