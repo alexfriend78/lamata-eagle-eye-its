@@ -191,8 +191,6 @@ export default function BusMonitor() {
               </div>
             </div>
 
-
-
             {/* Visibility Controls */}
             <div className="flex items-center space-x-1 border-l border-gray-300 dark:border-gray-600 pl-4 ml-4">
               <span className="text-xs font-medium text-gray-600 dark:text-gray-400 mr-2">Show:</span>
@@ -301,8 +299,6 @@ export default function BusMonitor() {
               <Map className="h-4 w-4" />
             </Button>
 
-
-
             {/* Theme Toggle */}
             <Button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -342,21 +338,23 @@ export default function BusMonitor() {
             </Button>
           </div>
 
-          {/* Zone Selection */}
-          <div className="flex items-center space-x-2">
-            <span className="text-sm font-medium">Zones:</span>
-            <div className="flex space-x-1 flex-wrap">
-              {Array.from({ length: 16 }, (_, i) => i + 1).map((zone) => (
-                <Button
-                  key={zone}
-                  onClick={() => setSelectedZone(selectedZone === zone ? null : zone)}
-                  variant={selectedZone === zone ? "default" : "outline"}
-                  size="sm"
-                  className="h-7 px-2 text-xs"
-                >
-                  Z{zone}
-                </Button>
-              ))}
+          <div className="flex items-center justify-between">
+            {/* Zone Selection */}
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium">Zones:</span>
+              <div className="flex space-x-1 flex-wrap">
+                {Array.from({ length: 16 }, (_, i) => i + 1).map((zone) => (
+                  <Button
+                    key={zone}
+                    onClick={() => setSelectedZone(selectedZone === zone ? null : zone)}
+                    variant={selectedZone === zone ? "default" : "outline"}
+                    size="sm"
+                    className="h-7 px-2 text-xs"
+                  >
+                    Z{zone}
+                  </Button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
