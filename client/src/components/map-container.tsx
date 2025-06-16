@@ -192,7 +192,8 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     const points = getRoutePoints(route.id);
     const isHighlighted = selectedRoutes.includes(route.id);
     
-
+    // Debug routing props
+    console.log(`Rendering route ${route.id}: showRoutes=${showRoutes}, selectedRoutes=${JSON.stringify(selectedRoutes)}, routesLength=${routes.length}`);
     
     if (points.length < 2) return null;
 
@@ -604,9 +605,12 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         </svg>
 
         {/* Route Lines */}
-        {showRoutes && routes
-          .filter(route => selectedRoutes.length === 0 || selectedRoutes.includes(route.id))
-          .map((route, index) => renderRouteLine(route, index))}
+        {(() => {
+          console.log(`Route rendering: showRoutes=${showRoutes}, routes.length=${routes.length}, selectedRoutes=${JSON.stringify(selectedRoutes)}`);
+          const filteredRoutes = routes.filter(route => selectedRoutes.length === 0 || selectedRoutes.includes(route.id));
+          console.log(`Filtered routes: ${filteredRoutes.map(r => r.id).join(',')}`);
+          return showRoutes && filteredRoutes.map((route, index) => renderRouteLine(route, index));
+        })()}
 
         {/* Major Interchange Stations - London Underground style */}
         {(() => {
