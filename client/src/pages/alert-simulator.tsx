@@ -18,6 +18,8 @@ const ALERT_TYPES = [
   { value: "emergency", label: "Emergency", icon: AlertTriangle, color: "text-red-600" },
   { value: "medical", label: "Medical", icon: AlertTriangle, color: "text-red-500" },
   { value: "security", label: "Security", icon: AlertTriangle, color: "text-orange-600" },
+  { value: "driver_misconduct", label: "Driver Misconduct", icon: AlertTriangle, color: "text-red-500" },
+  { value: "passenger_panic", label: "Passenger Panic", icon: AlertTriangle, color: "text-red-600" },
   { value: "breakdown", label: "Breakdown", icon: XCircle, color: "text-yellow-600" },
   { value: "traffic", label: "Traffic", icon: Clock, color: "text-blue-600" },
   { value: "maintenance", label: "Maintenance", icon: Info, color: "text-gray-600" }
@@ -462,6 +464,24 @@ export default function AlertSimulator() {
                   >
                     <MapPin className="h-4 w-4 mr-2" />
                     P2 Geofencing Alert
+                  </Button>
+
+                  <Button
+                    onClick={() => handleQuickAlert("driver_misconduct", "P2", "PASSENGER REPORT: Suspicious or unprofessional driver behavior reported via mobile app")}
+                    className="w-full bg-red-500 hover:bg-red-600"
+                    disabled={createAlertMutation.isPending}
+                  >
+                    <AlertTriangle className="h-4 w-4 mr-2" />
+                    P2 Driver Misconduct Report
+                  </Button>
+
+                  <Button
+                    onClick={() => handleQuickAlert("passenger_panic", "P1", "PANIC ALERT: Passenger emergency assistance requested via mobile app")}
+                    className="w-full bg-red-600 hover:bg-red-700"
+                    disabled={createAlertMutation.isPending}
+                  >
+                    <AlertTriangle className="h-4 w-4 mr-2" />
+                    P1 Passenger Panic Alert
                   </Button>
                 </div>
               </CardContent>
