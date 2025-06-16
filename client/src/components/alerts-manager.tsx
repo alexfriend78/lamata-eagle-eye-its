@@ -4,7 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AlertTriangle, CheckCircle, X, ArrowUp, Clock, Shield, AlertOctagon } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { AlertTriangle, CheckCircle, X, ArrowUp, Clock, Shield, AlertOctagon, Info, MapPin, Phone, User } from "lucide-react";
 import { type AlertWithDetails } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 
@@ -14,6 +15,7 @@ interface AlertsManagerProps {
 
 export default function AlertsManager({ onClose }: AlertsManagerProps) {
   const queryClient = useQueryClient();
+  const [selectedAlert, setSelectedAlert] = useState<AlertWithDetails | null>(null);
 
   // Fetch all alerts (both active and inactive)
   const { data: allAlerts = [] } = useQuery<AlertWithDetails[]>({
@@ -22,10 +24,10 @@ export default function AlertsManager({ onClose }: AlertsManagerProps) {
   });
 
   // Separate alerts by status
-  const activeAlerts = allAlerts.filter(alert => alert.isActive);
-  const clearedAlerts = allAlerts.filter(alert => alert.status === 'cleared' && !alert.isActive);
-  const escalatedAlerts = allAlerts.filter(alert => alert.status === 'escalated' && !alert.isActive);
-  const acknowledgedAlerts = allAlerts.filter(alert => alert.status === 'acknowledged' && !alert.isActive);
+  const activeAlerts = allAlerts.filter(alert => alert.isActive && alert.status === 'active');
+  const clearedAlerts = allAlerts.filter(alert => alert.status === 'cleared');
+  const escalatedAlerts = allAlerts.filter(alert => alert.status === 'escalated');
+  const acknowledgedAlerts = allAlerts.filter(alert => alert.status === 'acknowledged');
 
   // Mutations for alert actions
   const clearAlertMutation = useMutation({
