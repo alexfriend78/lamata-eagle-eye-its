@@ -580,8 +580,15 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid)" />
-          
-          {/* Route Lines */}
+        </svg>
+
+        {/* Route Lines - separate layer above stations */}
+        <svg
+          width={mapWidth}
+          height={mapHeight}
+          className="absolute inset-0 pointer-events-none"
+          style={{ zIndex: 30 }}
+        >
           {showRoutes && routes
             .filter(route => selectedRoutes.length === 0 || selectedRoutes.includes(route.id))
             .map((route, index) => renderRouteLine(route, index))}
