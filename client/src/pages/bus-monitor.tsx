@@ -112,7 +112,7 @@ export default function BusMonitor() {
   };
 
   return (
-    <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
+    <div className={`h-screen flex flex-col ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
       {criticalAlert && (
         <EmergencyAlert 
           alert={criticalAlert}
@@ -120,8 +120,8 @@ export default function BusMonitor() {
         />
       )}
       
-      {/* Full Screen Header */}
-      <header className={`bg-gradient-to-r from-green-600 via-white to-green-600 dark:from-green-800 dark:via-gray-900 dark:to-green-800 border-b border-green-200 dark:border-green-700 px-6 py-3 shadow-lg`}>
+      {/* Fixed Header */}
+      <header className={`sticky top-0 z-50 bg-gradient-to-r from-green-600 via-white to-green-600 dark:from-green-800 dark:via-gray-900 dark:to-green-800 border-b border-green-200 dark:border-green-700 px-6 py-3 shadow-lg`}>
         <div className="flex flex-col space-y-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -312,8 +312,10 @@ export default function BusMonitor() {
         </div>
       </header>
 
-      <div className="flex h-[calc(100vh-64px)]">
-        {/* Full Screen Map Area */}
+      {/* Scrollable Main Content */}
+      <div className="flex-1 overflow-hidden">
+        <div className="flex h-full">
+          {/* Full Screen Map Area */}
         <div className="flex-1 relative overflow-hidden">
           <MapContainer 
             buses={buses || []}
@@ -449,6 +451,7 @@ export default function BusMonitor() {
           />
         </div>
       )}
+        </div>
       </div>
     </div>
   );
