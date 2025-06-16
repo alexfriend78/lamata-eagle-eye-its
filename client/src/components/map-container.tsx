@@ -596,87 +596,137 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
               opacity="0.3"
             />
             
-            {/* Dense Road Network Grid */}
-            {/* Major roads - horizontal */}
-            {Array.from({length: 25}, (_, i) => (
-              <line
-                key={`major-h-${i}`}
-                x1="0"
-                y1={30 + i * 25}
-                x2={mapWidth}
-                y2={30 + i * 25}
-                stroke={theme === 'dark' ? '#4b5563' : '#d1d5db'}
-                strokeWidth="1.5"
-                opacity="0.8"
-              />
-            ))}
-            {/* Major roads - vertical */}
-            {Array.from({length: 50}, (_, i) => (
-              <line
-                key={`major-v-${i}`}
-                x1={25 + i * 25}
-                y1="0"
-                x2={25 + i * 25}
-                y2={mapHeight}
-                stroke={theme === 'dark' ? '#4b5563' : '#d1d5db'}
-                strokeWidth="1.5"
-                opacity="0.8"
-              />
-            ))}
-            
-            {/* Minor roads - horizontal */}
-            {Array.from({length: 50}, (_, i) => (
-              <line
-                key={`minor-h-${i}`}
-                x1="0"
-                y1={15 + i * 12.5}
-                x2={mapWidth}
-                y2={15 + i * 12.5}
-                stroke={theme === 'dark' ? '#374151' : '#e5e7eb'}
-                strokeWidth="0.8"
-                opacity="0.6"
-              />
-            ))}
-            {/* Minor roads - vertical */}
-            {Array.from({length: 100}, (_, i) => (
-              <line
-                key={`minor-v-${i}`}
-                x1={12.5 + i * 12.5}
-                y1="0"
-                x2={12.5 + i * 12.5}
-                y2={mapHeight}
-                stroke={theme === 'dark' ? '#374151' : '#e5e7eb'}
-                strokeWidth="0.8"
-                opacity="0.6"
-              />
-            ))}
-            
-            {/* Street-level roads - horizontal */}
-            {Array.from({length: 100}, (_, i) => (
-              <line
-                key={`street-h-${i}`}
-                x1="0"
-                y1={7.5 + i * 6.25}
-                x2={mapWidth}
-                y2={7.5 + i * 6.25}
-                stroke={theme === 'dark' ? '#1f2937' : '#f3f4f6'}
-                strokeWidth="0.4"
-                opacity="0.4"
-              />
-            ))}
-            {/* Street-level roads - vertical */}
-            {Array.from({length: 200}, (_, i) => (
-              <line
-                key={`street-v-${i}`}
-                x1={6.25 + i * 6.25}
-                y1="0"
-                x2={6.25 + i * 6.25}
-                y2={mapHeight}
-                stroke={theme === 'dark' ? '#1f2937' : '#f3f4f6'}
-                strokeWidth="0.4"
-                opacity="0.4"
-              />
-            ))}
+            {/* Random Road Network */}
+            {(() => {
+              // Stable seed for consistent random generation
+              const seed = 12345;
+              let seedValue = seed;
+              const seededRandom = () => {
+                seedValue = (seedValue * 9301 + 49297) % 233280;
+                return seedValue / 233280;
+              };
+              
+              const majorRoads = [];
+              const minorRoads = [];
+              
+              // Major road network - primary arterials
+              const majorPoints = [
+                {x: 80, y: 120}, {x: 220, y: 90}, {x: 380, y: 140}, {x: 520, y: 100},
+                {x: 680, y: 160}, {x: 840, y: 130}, {x: 980, y: 150}, {x: 1150, y: 120},
+                {x: 120, y: 280}, {x: 300, y: 250}, {x: 480, y: 290}, {x: 640, y: 260},
+                {x: 800, y: 300}, {x: 970, y: 270}, {x: 1080, y: 310},
+                {x: 100, y: 420}, {x: 270, y: 400}, {x: 440, y: 440}, {x: 600, y: 410},
+                {x: 760, y: 450}, {x: 920, y: 420}, {x: 1100, y: 460},
+                {x: 140, y: 570}, {x: 320, y: 550}, {x: 500, y: 590}, {x: 680, y: 560},
+                {x: 840, y: 600}, {x: 1000, y: 570}, {x: 1140, y: 610}
+              ];
+              
+              // Connect major points with curved paths
+              for (let i = 0; i < majorPoints.length - 1; i++) {
+                const p1 = majorPoints[i];
+                const p2 = majorPoints[i + 1];
+                
+                // Use seeded randomness for consistent connections
+                const shouldConnect = seededRandom() > 0.3;
+                if (shouldConnect) {
+                  const midX = (p1.x + p2.x) / 2 + (seededRandom() - 0.5) * 100;
+                  const midY = (p1.y + p2.y) / 2 + (seededRandom() - 0.5) * 50;
+                  
+                  majorRoads.push(
+                    <path
+                      key={`major-${i}`}
+                      d={`M${p1.x},${p1.y} Q${midX},${midY} ${p2.x},${p2.y}`}
+                      fill="none"
+                      stroke={theme === 'dark' ? '#4b5563' : '#d1d5db'}
+                      strokeWidth="2"
+                      opacity="0.8"
+                    />
+                  );
+                }
+              }
+              
+              // Add cross-connections between major roads
+              for (let i = 0; i < majorPoints.length; i += 3) {
+                for (let j = i + 2; j < Math.min(i + 6, majorPoints.length); j++) {
+                  const shouldConnect = seededRandom() > 0.6;
+                  if (shouldConnect) {
+                    const p1 = majorPoints[i];
+                    const p2 = majorPoints[j];
+                    const midX = (p1.x + p2.x) / 2 + (seededRandom() - 0.5) * 80;
+                    const midY = (p1.y + p2.y) / 2 + (seededRandom() - 0.5) * 80;
+                    
+                    majorRoads.push(
+                      <path
+                        key={`major-cross-${i}-${j}`}
+                        d={`M${p1.x},${p1.y} Q${midX},${midY} ${p2.x},${p2.y}`}
+                        fill="none"
+                        stroke={theme === 'dark' ? '#4b5563' : '#d1d5db'}
+                        strokeWidth="1.8"
+                        opacity="0.7"
+                      />
+                    );
+                  }
+                }
+              }
+              
+              // Minor road network - secondary streets with seeded positions
+              const minorPoints = [];
+              for (let i = 0; i < 150; i++) {
+                minorPoints.push({
+                  x: seededRandom() * mapWidth,
+                  y: seededRandom() * mapHeight
+                });
+              }
+              
+              // Connect nearby minor points
+              for (let i = 0; i < minorPoints.length; i++) {
+                const p1 = minorPoints[i];
+                for (let j = i + 1; j < minorPoints.length; j++) {
+                  const p2 = minorPoints[j];
+                  const distance = Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
+                  
+                  if (distance < 120 && seededRandom() > 0.4) {
+                    minorRoads.push(
+                      <line
+                        key={`minor-${i}-${j}`}
+                        x1={p1.x}
+                        y1={p1.y}
+                        x2={p2.x}
+                        y2={p2.y}
+                        stroke={theme === 'dark' ? '#374151' : '#e5e7eb'}
+                        strokeWidth="1"
+                        opacity="0.6"
+                      />
+                    );
+                  }
+                }
+              }
+              
+              // Connect minor roads to major roads
+              for (let i = 0; i < 80; i++) {
+                const minorIndex = Math.floor(seededRandom() * minorPoints.length);
+                const majorIndex = Math.floor(seededRandom() * majorPoints.length);
+                const minorPoint = minorPoints[minorIndex];
+                const majorPoint = majorPoints[majorIndex];
+                
+                if (seededRandom() > 0.5) {
+                  minorRoads.push(
+                    <line
+                      key={`connector-${i}`}
+                      x1={minorPoint.x}
+                      y1={minorPoint.y}
+                      x2={majorPoint.x}
+                      y2={majorPoint.y}
+                      stroke={theme === 'dark' ? '#374151' : '#e5e7eb'}
+                      strokeWidth="0.8"
+                      opacity="0.5"
+                    />
+                  );
+                }
+              }
+              
+              return [...majorRoads, ...minorRoads];
+            })()}
             
             {/* Major highways */}
             <path
