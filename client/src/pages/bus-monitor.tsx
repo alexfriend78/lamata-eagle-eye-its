@@ -15,8 +15,9 @@ import AIInsightsPanel from "@/components/ai-insights-panel";
 import RouteOptimizer from "@/components/route-optimizer";
 import PredictiveMaintenance from "@/components/predictive-maintenance";
 import ManagementAnalyticsPanel from "@/components/management-analytics-panel";
+import EcoImpactCalculator from "@/components/eco-impact-calculator";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain, Navigation, Wrench, BarChart3 } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain, Navigation, Wrench, BarChart3, Leaf } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
