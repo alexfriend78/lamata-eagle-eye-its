@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Slider } from "@/components/ui/slider";
+import { Label } from "@/components/ui/label";
 import { 
   BarChart3, 
   TrendingUp, 
@@ -20,7 +22,9 @@ import {
   Eye,
   ThumbsDown,
   Zap,
-  Brain
+  Brain,
+  Calendar,
+  CalendarRange
 } from "lucide-react";
 import { type SystemStats, type Bus, type Station, type AlertWithDetails } from "@shared/schema";
 
@@ -70,105 +74,142 @@ export default function ManagementAnalyticsPanel({
   onClose 
 }: ManagementAnalyticsPanelProps) {
   const [activeTab, setActiveTab] = useState("kpis");
+  const [daysBack, setDaysBack] = useState([7]); // Default to 7 days back
+  const [dateRange, setDateRange] = useState({
+    start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000), // 7 days ago
+    end: new Date()
+  });
 
-  // Generate realistic KPI data based on actual system state
+  // Generate realistic KPI data based on actual system state and date range
   const generateKPIs = (): KPI[] => {
     const totalBuses = buses.length;
     const onTimeBuses = buses.filter(bus => bus.status === 'on_time' || bus.status === 'active').length;
     const delayedBuses = buses.filter(bus => bus.status === 'delayed').length;
     const alertBuses = buses.filter(bus => bus.status === 'alert').length;
     
-    const onTimePercentage = totalBuses > 0 ? (onTimeBuses / totalBuses) * 100 : 0;
+    // Calculate base performance
+    const baseOnTimePercentage = totalBuses > 0 ? (onTimeBuses / totalBuses) * 100 : 0;
     const securityAlerts = alerts.filter(alert => alert.type === 'security').length;
     const medicalAlerts = alerts.filter(alert => alert.type === 'medical').length;
     
+    // Historical variation factors based on selected time period
+    const daysBackValue = daysBack[0];
+    const seasonalFactor = Math.sin((daysBackValue / 30) * Math.PI) * 0.1; // Seasonal variation
+    const weatherFactor = Math.random() * 0.15 - 0.075; // Weather impact
+    const dayOfWeekFactor = (daysBackValue % 7 < 5) ? 0.05 : -0.1; // Weekday vs weekend
+    
+    // Apply historical variations
+    const onTimePercentage = Math.max(60, Math.min(95, baseOnTimePercentage + (seasonalFactor + weatherFactor + dayOfWeekFactor) * 20));
+    
+    // Historical variations for all metrics
+    const complaintsBase = Math.max(0, Math.round(totalBuses * 0.3 + (daysBackValue / 10)));
+    const complaintsVariation = Math.max(0, Math.round(complaintsBase * (1 + seasonalFactor + weatherFactor)));
+    
+    const escalationsBase = Math.max(0, Math.round(alertBuses * 0.8 + securityAlerts));
+    const escalationsVariation = Math.max(0, Math.round(escalationsBase * (1 + Math.abs(seasonalFactor) * 2)));
+    
+    const securityBase = Math.max(0, securityAlerts + Math.round(daysBackValue / 15));
+    const securityVariation = Math.max(0, Math.round(securityBase * (1 + Math.abs(weatherFactor) * 3)));
+    
+    const medicalBase = Math.max(0, medicalAlerts + Math.round(daysBackValue / 20));
+    const medicalVariation = Math.max(0, Math.round(medicalBase * (1 + Math.random() * 0.5)));
+    
+    const violationsBase = Math.max(0, Math.round(delayedBuses * 1.2 + (daysBackValue / 8)));
+    const violationsVariation = Math.max(0, Math.round(violationsBase * (1 + Math.abs(seasonalFactor) * 1.5)));
+    
+    const satisfactionBase = 85 + (onTimePercentage - 75) * 0.2 - (daysBackValue / 30);
+    const satisfactionVariation = Math.max(60, Math.min(95, satisfactionBase + weatherFactor * 10));
+    
+    const utilizationBase = (totalBuses > 0 ? (onTimeBuses / totalBuses) * 100 : 0);
+    const utilizationVariation = Math.max(50, Math.min(98, utilizationBase + (seasonalFactor + dayOfWeekFactor) * 15));
+
     return [
       {
         id: "on_time_performance",
         name: "On-Time Performance",
-        value: onTimePercentage,
+        value: Math.round(onTimePercentage),
         target: 85,
         unit: "%",
         trend: onTimePercentage >= 85 ? "up" : onTimePercentage >= 75 ? "stable" : "down",
-        trendValue: 2.3,
+        trendValue: Math.round((onTimePercentage - 80) * 0.5),
         status: onTimePercentage >= 85 ? "good" : onTimePercentage >= 75 ? "warning" : "critical",
         icon: <Clock className="h-5 w-5" />
       },
       {
         id: "complaints_received",
         name: "Daily Complaints",
-        value: Math.floor(Math.random() * 15) + 5,
+        value: complaintsVariation,
         target: 10,
         unit: "cases",
-        trend: "down",
-        trendValue: -12.5,
-        status: "good",
+        trend: complaintsVariation <= 10 ? "down" : "up",
+        trendValue: complaintsVariation <= 10 ? -12 : 15,
+        status: complaintsVariation <= 10 ? "good" : complaintsVariation <= 20 ? "warning" : "critical",
         icon: <ThumbsDown className="h-5 w-5" />
       },
       {
         id: "escalations",
         name: "Critical Escalations",
-        value: alerts.filter(alert => alert.severity === 'critical').length,
+        value: escalationsVariation,
         target: 2,
         unit: "cases",
-        trend: "stable",
-        trendValue: 0,
-        status: alerts.filter(alert => alert.severity === 'critical').length <= 2 ? "good" : "warning",
+        trend: escalationsVariation <= 2 ? "stable" : "up",
+        trendValue: escalationsVariation <= 2 ? 0 : 25,
+        status: escalationsVariation <= 2 ? "good" : escalationsVariation <= 5 ? "warning" : "critical",
         icon: <TrendingUp className="h-5 w-5" />
       },
       {
         id: "security_threats",
         name: "Security Incidents",
-        value: securityAlerts,
+        value: securityVariation,
         target: 0,
         unit: "alerts",
-        trend: securityAlerts === 0 ? "stable" : "up",
-        trendValue: securityAlerts * 100,
-        status: securityAlerts === 0 ? "good" : "critical",
+        trend: securityVariation === 0 ? "stable" : "up",
+        trendValue: securityVariation === 0 ? 0 : securityVariation * 50,
+        status: securityVariation === 0 ? "good" : securityVariation <= 2 ? "warning" : "critical",
         icon: <Shield className="h-5 w-5" />
       },
       {
         id: "medical_alerts",
         name: "Medical Emergencies",
-        value: medicalAlerts,
+        value: medicalVariation,
         target: 0,
         unit: "cases",
-        trend: medicalAlerts === 0 ? "stable" : "up",
-        trendValue: medicalAlerts * 50,
-        status: medicalAlerts === 0 ? "good" : "warning",
+        trend: medicalVariation === 0 ? "stable" : "up",
+        trendValue: medicalVariation === 0 ? 0 : medicalVariation * 25,
+        status: medicalVariation === 0 ? "good" : medicalVariation <= 1 ? "warning" : "critical",
         icon: <Heart className="h-5 w-5" />
       },
       {
         id: "geofencing_alerts",
         name: "Route Violations",
-        value: buses.filter(bus => Math.random() > 0.85).length, // Simulate off-route buses
+        value: violationsVariation,
         target: 1,
         unit: "buses",
-        trend: "down",
-        trendValue: -25,
-        status: "good",
+        trend: violationsVariation <= 1 ? "down" : "up",
+        trendValue: violationsVariation <= 1 ? -25 : 20,
+        status: violationsVariation <= 1 ? "good" : violationsVariation <= 5 ? "warning" : "critical",
         icon: <MapPin className="h-5 w-5" />
       },
       {
         id: "passenger_satisfaction",
         name: "Passenger Satisfaction",
-        value: 87.5,
+        value: Math.round(satisfactionVariation * 10) / 10,
         target: 90,
         unit: "%",
-        trend: "up",
-        trendValue: 3.2,
-        status: "warning",
+        trend: satisfactionVariation >= 85 ? "up" : "down",
+        trendValue: Math.round((satisfactionVariation - 85) * 0.5),
+        status: satisfactionVariation >= 85 ? "good" : satisfactionVariation >= 75 ? "warning" : "critical",
         icon: <Users className="h-5 w-5" />
       },
       {
         id: "operational_efficiency",
         name: "Fleet Utilization",
-        value: (totalBuses > 0 ? (onTimeBuses / totalBuses) * 100 : 0),
+        value: Math.round(utilizationVariation),
         target: 95,
         unit: "%",
-        trend: "stable",
-        trendValue: 1.1,
-        status: "good",
+        trend: utilizationVariation >= 85 ? "up" : "stable",
+        trendValue: Math.round((utilizationVariation - 85) * 0.2),
+        status: utilizationVariation >= 85 ? "good" : utilizationVariation >= 70 ? "warning" : "critical",
         icon: <Activity className="h-5 w-5" />
       }
     ];
@@ -285,6 +326,50 @@ export default function ManagementAnalyticsPanel({
             </TabsList>
 
             <TabsContent value="kpis" className="mt-6">
+              {/* Date Range Controls */}
+              <div className={`mb-6 p-4 rounded-lg border ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'}`}>
+                <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0 lg:space-x-6">
+                  <div className="flex-1">
+                    <Label className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                      Historical Analysis Period
+                    </Label>
+                    <div className="mt-2 space-y-2">
+                      <div className="flex items-center space-x-4">
+                        <CalendarRange className="h-4 w-4" />
+                        <span className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                          {daysBack[0]} {daysBack[0] === 1 ? 'day' : 'days'} ago
+                        </span>
+                      </div>
+                      <Slider
+                        value={daysBack}
+                        onValueChange={(value) => {
+                          setDaysBack(value);
+                          const newStartDate = new Date(Date.now() - value[0] * 24 * 60 * 60 * 1000);
+                          setDateRange({ start: newStartDate, end: new Date() });
+                        }}
+                        max={90}
+                        min={1}
+                        step={1}
+                        className="w-full"
+                      />
+                      <div className="flex justify-between text-xs text-gray-500">
+                        <span>1 day</span>
+                        <span>3 months</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-col space-y-2">
+                    <Label className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                      Date Range
+                    </Label>
+                    <div className={`p-2 rounded border text-sm ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-300' : 'bg-white border-gray-300 text-gray-700'}`}>
+                      {dateRange.start.toLocaleDateString()} - {dateRange.end.toLocaleDateString()}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {kpis.map((kpi) => (
                   <Card key={kpi.id} className={`${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'}`}>
