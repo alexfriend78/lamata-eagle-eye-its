@@ -11,7 +11,7 @@ import RouteCustomizationPanel from "@/components/route-customization-panel";
 import RouteAestheticsPanel from "@/components/route-aesthetics-panel";
 import CrowdAnalyticsPanel from "@/components/crowd-analytics-panel";
 import AlertsManager from "@/components/alerts-manager";
-import AIInsightsPanel from "@/components/ai-insights-panel-new";
+import AIInsightsPanel from "@/components/ai-insights-panel";
 import RouteOptimizer from "@/components/route-optimizer";
 import PredictiveMaintenance from "@/components/predictive-maintenance";
 import { Button } from "@/components/ui/button";
@@ -337,6 +337,30 @@ export default function BusMonitor() {
             >
               <Brain className="h-4 w-4 mr-1" />
               AI Insights
+            </Button>
+
+            {/* Route Optimizer */}
+            <Button
+              onClick={() => setShowRouteOptimizer(!showRouteOptimizer)}
+              variant={showRouteOptimizer ? "default" : "outline"}
+              size="sm"
+              className="h-8 px-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-0"
+              title="Smart Route Optimizer"
+            >
+              <Navigation className="h-4 w-4 mr-1" />
+              Route Optimizer
+            </Button>
+
+            {/* Predictive Maintenance */}
+            <Button
+              onClick={() => setShowPredictiveMaintenance(!showPredictiveMaintenance)}
+              variant={showPredictiveMaintenance ? "default" : "outline"}
+              size="sm"
+              className="h-8 px-3 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white border-0"
+              title="Predictive Maintenance System"
+            >
+              <Wrench className="h-4 w-4 mr-1" />
+              Predictive Maintenance
             </Button>
 
             {/* Settings */}
