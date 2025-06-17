@@ -88,22 +88,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
   const videoIndex = getNextVideoIndex() % routeVideos.length;
   const videoSrc = routeVideos[videoIndex];
   
-  // Debug logging - now should show correct route detection
-  console.log('Station Debug Info:', {
-    stationId: actualStation.id,
-    stationName: actualStation.name,
-    stationRouteId: actualStation.routeId,
-    detectedRoute: stationRoute,
-    availableVideos: routeVideos.length,
-    selectedVideoIndex: videoIndex,
-    selectedVideoSrc: videoSrc,
-    isArray: Array.isArray(stationDetails),
-    actualStation: actualStation,
-    videoCategory: stationRoute === 1 ? 'Secondary School' : 
-                   stationRoute === 2 ? 'Family' :
-                   stationRoute === 3 ? 'Professional' :
-                   stationRoute === 4 ? 'Orderly' : 'Fallback'
-  });
+  // Video system now working - sequential playback with route-specific content
   
 
 
@@ -240,7 +225,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
       >
         <div className="flex items-center gap-2">
           <span className="text-2xl">🚏</span>
-          <h2 className="text-lg font-semibold">{stationDetails.name}</h2>
+          <h2 className="text-lg font-semibold">{actualStation.name}</h2>
           <Badge variant="outline" className="text-xs ml-2">Drag to move</Badge>
         </div>
         <Button
@@ -266,7 +251,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                   <Users className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">Passengers waiting</span>
                 </div>
-                <Badge variant="outline">{stationDetails.passengerCount}</Badge>
+                <Badge variant="outline">{actualStation.passengerCount}</Badge>
               </div>
               
               {/* Crowd Level */}
@@ -277,16 +262,16 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                 </div>
                 <Badge 
                   variant={
-                    stationDetails.passengerCount < 20 ? "outline" : 
-                    stationDetails.passengerCount < 40 ? "secondary" : "destructive"
+                    actualStation.passengerCount < 20 ? "outline" : 
+                    actualStation.passengerCount < 40 ? "secondary" : "destructive"
                   }
                   className={
-                    stationDetails.passengerCount < 20 ? "bg-green-50 text-green-700" : 
-                    stationDetails.passengerCount < 40 ? "bg-yellow-50 text-yellow-700" : "bg-red-50 text-red-700"
+                    actualStation.passengerCount < 20 ? "bg-green-50 text-green-700" : 
+                    actualStation.passengerCount < 40 ? "bg-yellow-50 text-yellow-700" : "bg-red-50 text-red-700"
                   }
                 >
-                  {stationDetails.passengerCount < 20 ? "Light" : 
-                   stationDetails.passengerCount < 40 ? "Moderate" : "Heavy"}
+                  {actualStation.passengerCount < 20 ? "Light" : 
+                   actualStation.passengerCount < 40 ? "Moderate" : "Heavy"}
                 </Badge>
               </div>
               
@@ -298,16 +283,16 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                 </div>
                 <Badge 
                   variant={
-                    stationDetails.id % 3 === 0 ? "destructive" : 
-                    stationDetails.id % 3 === 1 ? "secondary" : "outline"
+                    actualStation.id % 3 === 0 ? "destructive" : 
+                    actualStation.id % 3 === 1 ? "secondary" : "outline"
                   }
                   className={
-                    stationDetails.id % 3 === 0 ? "bg-red-50 text-red-700" : 
-                    stationDetails.id % 3 === 1 ? "bg-yellow-50 text-yellow-700" : "bg-green-50 text-green-700"
+                    actualStation.id % 3 === 0 ? "bg-red-50 text-red-700" : 
+                    actualStation.id % 3 === 1 ? "bg-yellow-50 text-yellow-700" : "bg-green-50 text-green-700"
                   }
                 >
-                  {stationDetails.id % 3 === 0 ? "Heavy" : 
-                   stationDetails.id % 3 === 1 ? "Moderate" : "Light"}
+                  {actualStation.id % 3 === 0 ? "Heavy" : 
+                   actualStation.id % 3 === 1 ? "Moderate" : "Light"}
                 </Badge>
               </div>
               
@@ -316,7 +301,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                   <MapPin className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">Zone</span>
                 </div>
-                <Badge variant="outline">Zone {stationDetails.zone}</Badge>
+                <Badge variant="outline">Zone {actualStation.zone}</Badge>
               </div>
 
               <div className="flex items-center justify-between">
