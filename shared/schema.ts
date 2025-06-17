@@ -155,6 +155,7 @@ export type AlertWithDetails = Alert & { bus?: Bus; route?: Route };
 export type BusArrivalWithDetails = BusArrival & { bus: BusWithRoute; route: Route };
 
 export type StationDetails = Station & {
+  routeId?: number | null;
   upcomingArrivals: BusArrivalWithDetails[];
   activeRoutes: Route[];
   currentDensity?: CrowdDensityReading;

@@ -257,8 +257,11 @@ export class MemStorage implements IStorage {
       { name: "Isheri Terminal", x: 0.85, y: 0.40, zone: 2, routeId: 5 }
     ];
 
-    stationsData.forEach(stationData => {
+    const stationIdMap = new Map<number, number>(); // index -> actual station ID
+    
+    stationsData.forEach((stationData, index) => {
       const id = this.currentStationId++;
+      stationIdMap.set(index, id);
       this.stations.set(id, {
         id,
         name: stationData.name,
@@ -274,14 +277,15 @@ export class MemStorage implements IStorage {
     
     console.log(`✅ Initialized ${this.stations.size} stations across ${this.routes.size} routes`);
 
-    // Add route-station relationships
+    // Add route-station relationships using correct station IDs
     stationsData.forEach((stationData, index) => {
       const routeStationId = this.currentRouteStationId++;
+      const actualStationId = stationIdMap.get(index)!;
       this.routeStations.set(routeStationId, {
         id: routeStationId,
         routeId: stationData.routeId,
-        stationId: index + 1,
-        order: index
+        stationId: actualStationId,
+        sequence: index
       });
     });
 
@@ -693,6 +697,9 @@ export class MemStorage implements IStorage {
       .map(rs => this.routes.get(rs.routeId))
       .filter(route => route !== undefined) as Route[];
 
+    // Get the primary route ID for this station (first route it belongs to)
+    const primaryRouteId = routeStations.length > 0 ? routeStations[0].routeId : null;
+
     // Get upcoming arrivals (simplified)
     const upcomingArrivals = Array.from(this.busArrivals.values())
       .filter(arrival => arrival.stationId === id)
@@ -705,6 +712,7 @@ export class MemStorage implements IStorage {
 
     return {
       ...station,
+      routeId: primaryRouteId,
       upcomingArrivals,
       activeRoutes
     };
