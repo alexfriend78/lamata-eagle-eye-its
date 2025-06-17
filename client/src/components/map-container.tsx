@@ -885,7 +885,10 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 top: `${stationPixelY - 8}px`, 
                 left: `${stationPixelX - 8}px` 
               }}
-              onDoubleClick={() => onStationClick && onStationClick(station)}
+              onDoubleClick={() => {
+                console.log('🎯 Station clicked:', { id: station.id, name: station.name });
+                onStationClick && onStationClick(station);
+              }}
             >
             {/* Bus Stop Icon - Unicode */}
             <div className="relative">
