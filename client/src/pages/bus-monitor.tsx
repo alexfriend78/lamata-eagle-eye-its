@@ -15,9 +15,9 @@ import AIInsightsPanel from "@/components/ai-insights-panel";
 import RouteOptimizer from "@/components/route-optimizer";
 import PredictiveMaintenance from "@/components/predictive-maintenance";
 import ManagementAnalyticsPanel from "@/components/management-analytics-panel";
-import EcoImpactCalculator from "@/components/eco-impact-calculator";
+
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain, Navigation, Wrench, BarChart3, Leaf } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain, Navigation, Wrench, BarChart3 } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
@@ -38,7 +38,7 @@ export default function BusMonitor() {
   const [showRouteOptimizer, setShowRouteOptimizer] = useState(false);
   const [showPredictiveMaintenance, setShowPredictiveMaintenance] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
-  const [showEcoCalculator, setShowEcoCalculator] = useState(false);
+
 
   // Handle AI Insights close event
   useEffect(() => {
@@ -355,17 +355,7 @@ export default function BusMonitor() {
               Analytics
             </Button>
 
-            {/* Eco-Impact Calculator */}
-            <Button
-              onClick={() => setShowEcoCalculator(!showEcoCalculator)}
-              variant={showEcoCalculator ? "default" : "outline"}
-              size="sm"
-              className="h-8 px-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white border-0"
-              title="Environmental Impact Calculator"
-            >
-              <Leaf className="h-4 w-4 mr-1" />
-              Eco Impact
-            </Button>
+
 
 
 
@@ -591,16 +581,7 @@ export default function BusMonitor() {
         />
       )}
 
-      {/* Eco-Impact Calculator */}
-      {showEcoCalculator && (
-        <EcoImpactCalculator
-          buses={buses || []}
-          routes={routes || []}
-          stations={stations || []}
-          theme={theme}
-          onClose={() => setShowEcoCalculator(false)}
-        />
-      )}
+
       </div>
     </div>
   );
