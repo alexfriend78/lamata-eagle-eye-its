@@ -392,6 +392,7 @@ export class MemStorage implements IStorage {
   async getStations(): Promise<Station[]> {
     const stations = Array.from(this.stations.values());
     console.log(`📊 getStations() returning ${stations.length} stations`);
+    console.log(`📍 First 5 stations:`, stations.slice(0, 5).map(s => ({ id: s.id, name: s.name })));
     return stations;
   }
 

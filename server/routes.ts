@@ -72,6 +72,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/stations", async (_req, res) => {
     try {
       const stations = await storage.getStations();
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
       res.json(stations);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch stations" });
