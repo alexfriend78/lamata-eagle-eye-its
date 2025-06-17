@@ -13,8 +13,9 @@ import CrowdAnalyticsPanel from "@/components/crowd-analytics-panel";
 import AlertsManager from "@/components/alerts-manager";
 import AIInsightsPanel from "@/components/ai-insights-panel";
 import RouteOptimizer from "@/components/route-optimizer";
+import PredictiveMaintenance from "@/components/predictive-maintenance";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain, Navigation } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain, Navigation, Wrench } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
@@ -33,6 +34,7 @@ export default function BusMonitor() {
   const [showAlertsManager, setShowAlertsManager] = useState(false);
   const [showAIInsights, setShowAIInsights] = useState(false);
   const [showRouteOptimizer, setShowRouteOptimizer] = useState(false);
+  const [showPredictiveMaintenance, setShowPredictiveMaintenance] = useState(false);
 
   // Handle AI Insights close event
   useEffect(() => {
@@ -335,6 +337,18 @@ export default function BusMonitor() {
               Optimizer
             </Button>
 
+            {/* Predictive Maintenance */}
+            <Button
+              onClick={() => setShowPredictiveMaintenance(!showPredictiveMaintenance)}
+              variant={showPredictiveMaintenance ? "default" : "outline"}
+              size="sm"
+              className="h-8 px-3 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white border-0"
+              title="Predictive Maintenance"
+            >
+              <Wrench className="h-4 w-4 mr-1" />
+              Maintenance
+            </Button>
+
             {/* AI Insights */}
             <Button
               onClick={() => setShowAIInsights(!showAIInsights)}
@@ -515,6 +529,15 @@ export default function BusMonitor() {
           buses={buses || []}
           theme={theme}
           onClose={() => setShowRouteOptimizer(false)}
+        />
+      )}
+
+      {/* Predictive Maintenance */}
+      {showPredictiveMaintenance && (
+        <PredictiveMaintenance
+          buses={buses || []}
+          theme={theme}
+          onClose={() => setShowPredictiveMaintenance(false)}
         />
       )}
 
