@@ -9,10 +9,11 @@ interface ControlPanelProps {
   alerts: AlertWithDetails[];
   routes: Route[];
   onRefresh: () => void;
+  onSimulateEmergency: () => void;
   theme: "light" | "dark";
 }
 
-export default function ControlPanel({ stats, alerts, routes, onRefresh, theme }: ControlPanelProps) {
+export default function ControlPanel({ stats, alerts, routes, onRefresh, onSimulateEmergency, theme }: ControlPanelProps) {
   const { toast } = useToast();
 
   const simulateAlertMutation = useMutation({
@@ -238,6 +239,13 @@ export default function ControlPanel({ stats, alerts, routes, onRefresh, theme }
           className="w-full bg-red-600 hover:bg-red-700 text-white"
         >
           {simulateAlertMutation.isPending ? "Creating..." : "Simulate Alert"}
+        </Button>
+        <Button
+          onClick={onSimulateEmergency}
+          variant="destructive"
+          className="w-full bg-orange-600 hover:bg-orange-700 text-white"
+        >
+          Simulate Emergency
         </Button>
         <Button
           onClick={onRefresh}

@@ -120,6 +120,21 @@ export default function BusMonitor() {
     setHoveredBus(null);
   };
 
+  const handleSimulateEmergency = () => {
+    // Create a high-priority emergency alert
+    if (routes && routes.length > 0) {
+      const randomRoute = routes[Math.floor(Math.random() * routes.length)];
+      const emergencyAlert = {
+        routeId: randomRoute.id,
+        type: "emergency",
+        message: "EMERGENCY: Medical assistance required - Bus stopped",
+        severity: "critical",
+        priority: "P1"
+      };
+      setActiveAlert(emergencyAlert);
+    }
+  };
+
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
       {criticalAlert && (
