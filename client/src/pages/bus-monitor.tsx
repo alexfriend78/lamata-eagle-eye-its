@@ -397,6 +397,34 @@ export default function BusMonitor() {
           />
         </div>
 
+        {/* AI Insights Side Panel */}
+        {showAIInsights && (
+          <div className={`w-80 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-gray-100 border-gray-300'} border-l p-4 overflow-y-auto`}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                AI Insights
+              </h2>
+              <Button
+                onClick={() => setShowAIInsights(false)}
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0"
+              >
+                ✕
+              </Button>
+            </div>
+            <AIInsightsPanel
+              buses={buses || []}
+              stations={stations || []}
+              alerts={alerts || []}
+              stats={stats || { totalBuses: 0, activeRoutes: 0, onTimePercentage: 0, onTimeBuses: 0, delayedBuses: 0, alertBuses: 0, avgCrowdDensity: 0, peakStations: 0 }}
+              routes={routes || []}
+              theme={theme}
+              onClose={() => setShowAIInsights(false)}
+            />
+          </div>
+        )}
+
         {/* Collapsible Control Panel */}
         {showSettings && (
           <div className={`w-80 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-gray-100 border-gray-300'} border-l p-4 overflow-y-auto`}>
@@ -522,21 +550,6 @@ export default function BusMonitor() {
           onClose={() => setShowPredictiveMaintenance(false)}
         />
       )}
-
-        {/* AI Insights Side Panel */}
-        {showAIInsights && (
-          <div className={`w-80 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-gray-100 border-gray-300'} border-l p-4 overflow-y-auto`}>
-            <AIInsightsPanel
-              buses={buses || []}
-              stations={stations || []}
-              alerts={alerts || []}
-              stats={stats || { totalBuses: 0, activeRoutes: 0, onTimePercentage: 0, onTimeBuses: 0, delayedBuses: 0, alertBuses: 0, avgCrowdDensity: 0, peakStations: 0 }}
-              routes={routes || []}
-              theme={theme}
-              onClose={() => setShowAIInsights(false)}
-            />
-          </div>
-        )}
       </div>
     </div>
   );
