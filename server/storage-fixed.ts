@@ -261,10 +261,18 @@ export class MemStorage implements IStorage {
       const id = this.currentStationId++;
       this.stations.set(id, {
         id,
-        ...stationData,
-        passengerCount: Math.floor(Math.random() * 60) + 10 // 10-70 passengers
+        name: stationData.name,
+        x: stationData.x,
+        y: stationData.y,
+        zone: stationData.zone,
+        passengerCount: Math.floor(Math.random() * 60) + 10,
+        trafficCondition: 'normal',
+        accessibility: true,
+        amenities: ['benches', 'lighting']
       });
     });
+    
+    console.log(`✅ Initialized ${this.stations.size} stations across ${this.routes.size} routes`);
 
     // Add route-station relationships
     stationsData.forEach((stationData, index) => {
@@ -378,7 +386,9 @@ export class MemStorage implements IStorage {
   }
 
   async getStations(): Promise<Station[]> {
-    return Array.from(this.stations.values());
+    const stations = Array.from(this.stations.values());
+    console.log(`📊 getStations() returning ${stations.length} stations`);
+    return stations;
   }
 
   async getStation(id: number): Promise<Station | undefined> {
