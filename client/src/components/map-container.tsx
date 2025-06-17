@@ -879,7 +879,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
           
           // Show only stations that belong to selected routes
           if (routeStations.length > 0) {
-            const routeStationIds = new Set(routeStations.map((rs: any) => rs.id));
+            const routeStationIds = new Set(routeStations.map((rs: any) => rs.stationId));
             return stations.filter(station => routeStationIds.has(station.id));
           }
           
