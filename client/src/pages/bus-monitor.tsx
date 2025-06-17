@@ -12,8 +12,9 @@ import RouteAestheticsPanel from "@/components/route-aesthetics-panel";
 import CrowdAnalyticsPanel from "@/components/crowd-analytics-panel";
 import AlertsManager from "@/components/alerts-manager";
 import AIInsightsPanel from "@/components/ai-insights-panel";
+import RouteOptimizer from "@/components/route-optimizer";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain, Navigation } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
@@ -31,6 +32,7 @@ export default function BusMonitor() {
   const [activeAlert, setActiveAlert] = useState<any | null>(null);
   const [showAlertsManager, setShowAlertsManager] = useState(false);
   const [showAIInsights, setShowAIInsights] = useState(false);
+  const [showRouteOptimizer, setShowRouteOptimizer] = useState(false);
 
   // Handle AI Insights close event
   useEffect(() => {
@@ -321,6 +323,18 @@ export default function BusMonitor() {
               theme={theme}
             />
 
+            {/* Route Optimizer */}
+            <Button
+              onClick={() => setShowRouteOptimizer(!showRouteOptimizer)}
+              variant={showRouteOptimizer ? "default" : "outline"}
+              size="sm"
+              className="h-8 px-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0"
+              title="Smart Route Optimizer"
+            >
+              <Navigation className="h-4 w-4 mr-1" />
+              Optimizer
+            </Button>
+
             {/* AI Insights */}
             <Button
               onClick={() => setShowAIInsights(!showAIInsights)}
@@ -491,6 +505,17 @@ export default function BusMonitor() {
       {/* Alerts Manager */}
       {showAlertsManager && (
         <AlertsManager onClose={() => setShowAlertsManager(false)} />
+      )}
+
+      {/* Route Optimizer */}
+      {showRouteOptimizer && (
+        <RouteOptimizer
+          routes={routes || []}
+          stations={stations || []}
+          buses={buses || []}
+          theme={theme}
+          onClose={() => setShowRouteOptimizer(false)}
+        />
       )}
 
       {/* AI Insights Panel */}
