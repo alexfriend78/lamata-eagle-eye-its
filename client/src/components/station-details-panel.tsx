@@ -92,6 +92,16 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
       const videoIndex = getNextVideoIndex() % routeVideos.length;
       const newVideoSrc = routeVideos[videoIndex];
       
+      console.log('Station changed:', {
+        stationId: actualStation.id,
+        stationName: actualStation.name,
+        stationRoute,
+        videoIndex,
+        totalVideosForRoute: routeVideos.length,
+        newVideoSrc,
+        availableVideos: routeVideos
+      });
+      
       setCurrentVideoSrc(newVideoSrc);
       setLastStationId(actualStation.id);
       setIsVideoPlaying(true);
