@@ -364,7 +364,7 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
             <Button
               variant="outline"
               className={`h-auto p-4 ${theme === 'dark' ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'hover:bg-gray-50'}`}
-              onClick={() => setActiveTab('overview')}
+              onClick={() => setActiveTab('diagnostics')}
             >
               <div className="flex items-center space-x-2 w-full">
                 <AlertTriangle className={`w-5 h-5 ${criticalBuses > 0 ? 'text-red-600' : 'text-green-600'}`} />
