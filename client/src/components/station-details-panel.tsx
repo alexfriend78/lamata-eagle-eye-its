@@ -22,15 +22,62 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
 
   if (!isOpen || !stationDetails) return null;
 
-  // Station Live Feed - normal operations only
-  const stationVideoFiles = [
+  // Sequential video system for routes 1-4
+  const routeSpecificVideos = {
+    1: [ // Route 1 - Secondary school passengers
+      "/attached_assets/Secondary_school_passengers_202506171853_cjhf_1750183379795.mp4",
+      "/attached_assets/Secondary_school_passengers_202506171853_oofa_1750183379796.mp4",
+      "/attached_assets/Secondary_school_passengers_202506171853_zbgw_1750183379796.mp4",
+      "/attached_assets/Secondary_school_passengers_202506171853_arnr_1750183379796.mp4"
+    ],
+    2: [ // Route 2 - Family passengers
+      "/attached_assets/Family_passengers_at_202506171853_hynd6_1750183379797.mp4",
+      "/attached_assets/Family_passengers_at_202506171853_gy3pu_1750183379797.mp4",
+      "/attached_assets/Family_passengers_at_202506171852_qws2a_1750183379797.mp4",
+      "/attached_assets/Family_passengers_at_202506171852_vvrk4_1750183379797.mp4"
+    ],
+    3: [ // Route 3 - Professionally dressed passengers
+      "/attached_assets/Professionally_dressed_male_202506171852_mifo_1750183379797.mp4",
+      "/attached_assets/Professionally_dressed_male_202506171852_ox4f_1750183379797.mp4",
+      "/attached_assets/Professionally_dressed_female_202506171852_qt_1750183379798.mp4",
+      "/attached_assets/Professionally_dressed_female_202506171852_05_1750183379798.mp4"
+    ],
+    4: [ // Route 4 - Orderly passengers
+      "/attached_assets/Orderly_passengers_at_202506171851_6grag_1750183379799.mp4",
+      "/attached_assets/Orderly_passengers_at_202506171852_bazkh_1750183379799.mp4",
+      "/attached_assets/Orderly_professionally_dressed_202506171852_p_1750183379798.mp4",
+      "/attached_assets/Orderly_professionally_dressed_202506171852_0_1750183379799.mp4"
+    ]
+  };
+
+  // Fallback videos for routes 5+ (original videos)
+  const fallbackVideos = [
     "/attached_assets/Delayed Bus_Passenger At Bus Stop_1750009404917.mp4",
     "/attached_assets/Passengers Queuing at BRT_Bus_Video_Generated_1750009404918.mp4"
   ];
-  
-  const stationId = stationDetails?.id || 1;
-  const selectedIndex = stationId % stationVideoFiles.length;
-  const videoSrc = stationVideoFiles[selectedIndex];
+
+  // Get video counter from localStorage to maintain sequential playback
+  const getNextVideoIndex = () => {
+    const currentIndex = parseInt(localStorage.getItem('busStopVideoIndex') || '0');
+    const newIndex = currentIndex + 1;
+    localStorage.setItem('busStopVideoIndex', newIndex.toString());
+    return newIndex;
+  };
+
+  // Determine which route this station belongs to
+  const getStationRoute = (stationId: number) => {
+    // Route mapping based on station IDs from storage
+    if (stationId >= 1 && stationId <= 17) return 1;
+    if (stationId >= 18 && stationId <= 45) return 2;
+    if (stationId >= 46 && stationId <= 65) return 3;
+    if (stationId >= 66 && stationId <= 85) return 4;
+    return 5; // Route 5 or fallback
+  };
+
+  const stationRoute = getStationRoute(stationDetails.id);
+  const routeVideos = routeSpecificVideos[stationRoute] || fallbackVideos;
+  const videoIndex = getNextVideoIndex() % routeVideos.length;
+  const videoSrc = routeVideos[videoIndex];
   
 
 
