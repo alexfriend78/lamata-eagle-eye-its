@@ -23,7 +23,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
   if (!isOpen || !stationDetails) return null;
 
   // Sequential video system for routes 1-4
-  const routeSpecificVideos = {
+  const routeSpecificVideos: Record<number, string[]> = {
     1: [ // Route 1 - Secondary school passengers
       "/attached_assets/Secondary_school_passengers_202506171853_cjhf_1750183379795.mp4",
       "/attached_assets/Secondary_school_passengers_202506171853_oofa_1750183379796.mp4",
@@ -64,20 +64,46 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
     return newIndex;
   };
 
-  // Determine which route this station belongs to
-  const getStationRoute = (stationId: number) => {
-    // Route mapping based on station IDs from storage
+  // Get the actual station object - stationDetails might be an array, so we need to handle this correctly
+  const actualStation = Array.isArray(stationDetails) ? stationDetails[0] : stationDetails;
+  
+  // Use the routeId directly from the station data if available, otherwise fall back to ID mapping
+  const getStationRoute = (station: any) => {
+    // First try to use the routeId from the station data
+    if (station.routeId) {
+      return station.routeId;
+    }
+    
+    // Fallback to ID-based mapping if routeId is not available
+    const stationId = station.id;
     if (stationId >= 1 && stationId <= 17) return 1;
     if (stationId >= 18 && stationId <= 45) return 2;
     if (stationId >= 46 && stationId <= 65) return 3;
     if (stationId >= 66 && stationId <= 85) return 4;
-    return 5; // Route 5 or fallback
+    return 5;
   };
 
-  const stationRoute = getStationRoute(stationDetails.id);
+  const stationRoute = getStationRoute(actualStation);
   const routeVideos = routeSpecificVideos[stationRoute] || fallbackVideos;
   const videoIndex = getNextVideoIndex() % routeVideos.length;
   const videoSrc = routeVideos[videoIndex];
+  
+  // Debug logging - now should show correct route detection
+  console.log('Station Debug Info:', {
+    stationId: actualStation.id,
+    stationName: actualStation.name,
+    stationRouteId: actualStation.routeId,
+    detectedRoute: stationRoute,
+    availableVideos: routeVideos.length,
+    selectedVideoIndex: videoIndex,
+    selectedVideoSrc: videoSrc,
+    isArray: Array.isArray(stationDetails),
+    actualStation: actualStation,
+    videoCategory: stationRoute === 1 ? 'Secondary School' : 
+                   stationRoute === 2 ? 'Family' :
+                   stationRoute === 3 ? 'Professional' :
+                   stationRoute === 4 ? 'Orderly' : 'Fallback'
+  });
   
 
 
