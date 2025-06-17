@@ -38,6 +38,7 @@ export default function BusMonitor() {
   const [showRouteOptimizer, setShowRouteOptimizer] = useState(false);
   const [showPredictiveMaintenance, setShowPredictiveMaintenance] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
+  const [showEcoCalculator, setShowEcoCalculator] = useState(false);
 
   // Handle AI Insights close event
   useEffect(() => {
@@ -354,6 +355,18 @@ export default function BusMonitor() {
               Analytics
             </Button>
 
+            {/* Eco-Impact Calculator */}
+            <Button
+              onClick={() => setShowEcoCalculator(!showEcoCalculator)}
+              variant={showEcoCalculator ? "default" : "outline"}
+              size="sm"
+              className="h-8 px-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white border-0"
+              title="Environmental Impact Calculator"
+            >
+              <Leaf className="h-4 w-4 mr-1" />
+              Eco Impact
+            </Button>
+
 
 
             {/* Settings */}
@@ -575,6 +588,17 @@ export default function BusMonitor() {
           stats={stats || { totalBuses: 0, activeRoutes: 0, onTimePercentage: 0, onTimeBuses: 0, delayedBuses: 0, alertBuses: 0, avgCrowdDensity: 0, peakStations: 0 }}
           theme={theme}
           onClose={() => setShowAnalytics(false)}
+        />
+      )}
+
+      {/* Eco-Impact Calculator */}
+      {showEcoCalculator && (
+        <EcoImpactCalculator
+          buses={buses || []}
+          routes={routes || []}
+          stations={stations || []}
+          theme={theme}
+          onClose={() => setShowEcoCalculator(false)}
         />
       )}
       </div>
