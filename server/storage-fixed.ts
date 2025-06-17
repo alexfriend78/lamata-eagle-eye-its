@@ -106,25 +106,25 @@ export class MemStorage implements IStorage {
 
     // Create authentic Lagos BRT stations positioned exactly on route paths
     const stationsData = [
-      // Route 1: Oshodi - Abule-Egba stations (positioned exactly on route line)
-      // Route 1 path: (0.37,0.67) → (0.25,0.55) → (0.10,0.40) → (0.05,0.25)
+      // Route 1: Oshodi - Abule-Egba stations (positioned exactly on frontend route line)
+      // Frontend path: 0.37,0.67 → 0.365,0.65 → 0.345,0.63 → ... → 0.065,0.35
       { name: "Oshodi Terminal 2", x: 0.37, y: 0.67, zone: 2, routeId: 1 },
-      { name: "Bolade", x: 0.35, y: 0.65, zone: 2, routeId: 1 },
-      { name: "Ladipo", x: 0.33, y: 0.63, zone: 2, routeId: 1 },
-      { name: "Shogunle", x: 0.31, y: 0.61, zone: 2, routeId: 1 },
-      { name: "PWD", x: 0.29, y: 0.59, zone: 1, routeId: 1 },
-      { name: "Airport Junction", x: 0.27, y: 0.57, zone: 1, routeId: 1 },
-      { name: "Ikeja Along", x: 0.25, y: 0.55, zone: 1, routeId: 1 },
-      { name: "Ile Zik", x: 0.22, y: 0.52, zone: 1, routeId: 1 },
-      { name: "Mangoro", x: 0.19, y: 0.49, zone: 1, routeId: 1 },
-      { name: "Cement", x: 0.16, y: 0.46, zone: 1, routeId: 1 },
-      { name: "Iyana Dopemu", x: 0.13, y: 0.43, zone: 1, routeId: 1 },
-      { name: "Adealu", x: 0.10, y: 0.40, zone: 1, routeId: 1 },
-      { name: "Iyana Ipaja Bus stop", x: 0.09, y: 0.37, zone: 1, routeId: 1 },
-      { name: "Pleasure", x: 0.08, y: 0.34, zone: 1, routeId: 1 },
-      { name: "Ile Epo", x: 0.07, y: 0.31, zone: 1, routeId: 1 },
-      { name: "Super", x: 0.06, y: 0.28, zone: 1, routeId: 1 },
-      { name: "Abule Egba", x: 0.05, y: 0.25, zone: 1, routeId: 1 },
+      { name: "Bolade", x: 0.365, y: 0.65, zone: 2, routeId: 1 },
+      { name: "Ladipo", x: 0.345, y: 0.63, zone: 2, routeId: 1 },
+      { name: "Shogunle", x: 0.325, y: 0.61, zone: 2, routeId: 1 },
+      { name: "PWD", x: 0.305, y: 0.59, zone: 1, routeId: 1 },
+      { name: "Airport Junction", x: 0.285, y: 0.57, zone: 1, routeId: 1 },
+      { name: "Ikeja Along", x: 0.265, y: 0.55, zone: 1, routeId: 1 },
+      { name: "Ile Zik", x: 0.245, y: 0.53, zone: 1, routeId: 1 },
+      { name: "Mangoro", x: 0.225, y: 0.51, zone: 1, routeId: 1 },
+      { name: "Cement", x: 0.205, y: 0.49, zone: 1, routeId: 1 },
+      { name: "Iyana Dopemu", x: 0.185, y: 0.47, zone: 1, routeId: 1 },
+      { name: "Adealu", x: 0.165, y: 0.45, zone: 1, routeId: 1 },
+      { name: "Iyana Ipaja Bus stop", x: 0.145, y: 0.43, zone: 1, routeId: 1 },
+      { name: "Pleasure", x: 0.125, y: 0.41, zone: 1, routeId: 1 },
+      { name: "Ile Epo", x: 0.105, y: 0.39, zone: 1, routeId: 1 },
+      { name: "Super", x: 0.085, y: 0.37, zone: 1, routeId: 1 },
+      { name: "Abule Egba", x: 0.065, y: 0.35, zone: 1, routeId: 1 },
 
       // Route 2: Blue Line - Zigzag route with stations positioned along 7 segments
       // Segment 1 stations: Northwest diagonal
@@ -169,36 +169,36 @@ export class MemStorage implements IStorage {
       { name: "Marina", x: 0.86, y: 0.65, zone: 2, routeId: 2 },
       { name: "Victoria Island Terminal", x: 0.90, y: 0.65, zone: 3, routeId: 2 },
 
-      // Route 3: Lagos Metro Express - Diamond Pattern stations (positioned exactly on line)
-      // Route path: (0.25,0.75) → (0.50,0.50) → (0.75,0.75) → (0.50,0.90) → (0.30,0.70)
+      // Route 3: Lagos Metro Express (positioned exactly on frontend route line)
+      // Frontend path: (0.15,0.70) → (0.40,0.35) → (0.30,0.15) → (0.65,0.25) → (0.85,0.60)
       
-      // Segment 1: Northeast diagonal (0.25,0.75) → (0.50,0.50)
-      { name: "Ikorodu West", x: 0.25, y: 0.75, zone: 3, routeId: 3 },
-      { name: "Owutu", x: 0.30, y: 0.70, zone: 2, routeId: 3 },
-      { name: "Kosofe", x: 0.35, y: 0.65, zone: 2, routeId: 3 },
-      { name: "Ketu", x: 0.40, y: 0.60, zone: 2, routeId: 3 },
-      { name: "Mile 12", x: 0.45, y: 0.55, zone: 2, routeId: 3 },
-      { name: "Ojota", x: 0.50, y: 0.50, zone: 2, routeId: 3 },
+      // Segment 1: Southwest to northeast diagonal (0.15,0.70) → (0.40,0.35)
+      { name: "Ikorodu West", x: 0.15, y: 0.70, zone: 3, routeId: 3 },
+      { name: "Owutu", x: 0.20, y: 0.63, zone: 2, routeId: 3 },
+      { name: "Kosofe", x: 0.25, y: 0.56, zone: 2, routeId: 3 },
+      { name: "Ketu", x: 0.30, y: 0.49, zone: 2, routeId: 3 },
+      { name: "Mile 12", x: 0.35, y: 0.42, zone: 2, routeId: 3 },
+      { name: "Ojota", x: 0.40, y: 0.35, zone: 2, routeId: 3 },
       
-      // Segment 2: Southeast diagonal (0.50,0.50) → (0.75,0.75)
-      { name: "Maryland", x: 0.55, y: 0.55, zone: 2, routeId: 3 },
-      { name: "Palmgrove", x: 0.60, y: 0.60, zone: 2, routeId: 3 },
-      { name: "Ikeja GRA", x: 0.65, y: 0.65, zone: 2, routeId: 3 },
-      { name: "Allen Avenue", x: 0.70, y: 0.70, zone: 2, routeId: 3 },
-      { name: "Computer Village", x: 0.75, y: 0.75, zone: 2, routeId: 3 },
+      // Segment 2: Northwest to southeast diagonal (0.40,0.35) → (0.30,0.15)
+      { name: "Maryland", x: 0.38, y: 0.30, zone: 2, routeId: 3 },
+      { name: "Palmgrove", x: 0.36, y: 0.25, zone: 2, routeId: 3 },
+      { name: "Ikeja GRA", x: 0.34, y: 0.20, zone: 2, routeId: 3 },
+      { name: "Allen Avenue", x: 0.32, y: 0.17, zone: 2, routeId: 3 },
+      { name: "Computer Village", x: 0.30, y: 0.15, zone: 2, routeId: 3 },
       
-      // Segment 3: Southwest diagonal (0.75,0.75) → (0.50,0.90)
-      { name: "Ojuelegba", x: 0.70, y: 0.80, zone: 2, routeId: 3 },
-      { name: "Surulere", x: 0.65, y: 0.82, zone: 2, routeId: 3 },
-      { name: "National Stadium", x: 0.60, y: 0.85, zone: 2, routeId: 3 },
-      { name: "Alaba", x: 0.55, y: 0.87, zone: 2, routeId: 3 },
-      { name: "Mile 2", x: 0.50, y: 0.90, zone: 2, routeId: 3 },
+      // Segment 3: Southwest to northeast diagonal (0.30,0.15) → (0.65,0.25)
+      { name: "Ojuelegba", x: 0.37, y: 0.17, zone: 2, routeId: 3 },
+      { name: "Surulere", x: 0.44, y: 0.19, zone: 2, routeId: 3 },
+      { name: "National Stadium", x: 0.51, y: 0.21, zone: 2, routeId: 3 },
+      { name: "Alaba", x: 0.58, y: 0.23, zone: 2, routeId: 3 },
+      { name: "Mile 2", x: 0.65, y: 0.25, zone: 2, routeId: 3 },
       
-      // Segment 4: Northwest diagonal (0.50,0.90) → (0.30,0.70)
-      { name: "Festac", x: 0.45, y: 0.85, zone: 2, routeId: 3 },
-      { name: "Satellite Town", x: 0.40, y: 0.80, zone: 2, routeId: 3 },
-      { name: "Trade Fair", x: 0.35, y: 0.75, zone: 2, routeId: 3 },
-      { name: "Badagry Terminal", x: 0.30, y: 0.70, zone: 3, routeId: 3 },
+      // Segment 4: Northwest to southeast diagonal (0.65,0.25) → (0.85,0.60)
+      { name: "Festac", x: 0.69, y: 0.32, zone: 2, routeId: 3 },
+      { name: "Satellite Town", x: 0.73, y: 0.39, zone: 2, routeId: 3 },
+      { name: "Trade Fair", x: 0.77, y: 0.46, zone: 2, routeId: 3 },
+      { name: "Badagry Terminal", x: 0.85, y: 0.60, zone: 3, routeId: 3 },
 
       // Route 4: Realistic Lagos BRT stations - Ikorodu to Victoria Island
       // Segment 1 stations: Northeast from Ikorodu towards Mile 12
