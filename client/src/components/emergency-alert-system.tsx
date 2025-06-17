@@ -13,6 +13,7 @@ import gunVideoPath from "@assets/BRT_Bus_with_Machine_Gun_1750007661395.mp4";
 import fightVideoPath from "@assets/Bus_Fight_Video_Generated_1750007661396.mp4";
 import heartAttackVideoPath from "@assets/Video_Ready_Lagos_BRT_Heart_Attack_1750056149432.mp4";
 import medicalEmergencyVideoPath from "@assets/Bus_Passenger_Medical_Emergency_Video_1750056149435.mp4";
+import kidnappingVideoPath from "@assets/Kidnapping_on_Lagos_BRT_Bus_1750204355118.mp4";
 
 interface EmergencyAlertSystemProps {
   buses: BusWithRoute[];
@@ -180,6 +181,11 @@ export default function EmergencyAlertSystem({
   const getVideoForAlert = (alert: AlertWithDetails) => {
     // Only show videos for P1 critical emergencies
     if (alert.priority === 'P1') {
+      // Passenger panic alerts from Emergency Alert Simulator use kidnapping video
+      if (alert.type === 'passenger_panic') {
+        return kidnappingVideoPath;
+      }
+      
       // Check if it's a medical emergency
       if (alert.type === 'medical' || 
           alert.message.toLowerCase().includes('medical') ||
