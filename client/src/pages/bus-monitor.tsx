@@ -53,6 +53,14 @@ export default function BusMonitor() {
     queryKey: ['/api/stations', activeStation?.id],
     enabled: !!activeStation?.id,
   });
+  
+  // Debug logging for station selection
+  useEffect(() => {
+    if (activeStation) {
+      console.log('🔍 Active station changed:', { id: activeStation.id, name: activeStation.name });
+      console.log('📡 Station details received:', stationDetails);
+    }
+  }, [activeStation, stationDetails]);
 
   useEffect(() => {
     const timer = setInterval(() => {
