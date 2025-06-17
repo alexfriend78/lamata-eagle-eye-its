@@ -6,6 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { 
   BarChart3, 
   TrendingUp, 
@@ -23,7 +24,6 @@ import {
   ThumbsDown,
   Zap,
   Brain,
-  Calendar,
   CalendarRange
 } from "lucide-react";
 import { type SystemStats, type Bus, type Station, type AlertWithDetails } from "@shared/schema";
@@ -92,10 +92,10 @@ export default function ManagementAnalyticsPanel({
     const securityAlerts = alerts.filter(alert => alert.type === 'security').length;
     const medicalAlerts = alerts.filter(alert => alert.type === 'medical').length;
     
-    // Historical variation factors based on selected time period
+    // Historical variation factors based on selected time period (deterministic)
     const daysBackValue = daysBack[0];
     const seasonalFactor = Math.sin((daysBackValue / 30) * Math.PI) * 0.1; // Seasonal variation
-    const weatherFactor = Math.random() * 0.15 - 0.075; // Weather impact
+    const weatherFactor = Math.sin((daysBackValue * 7.3) % 100) * 0.075; // Deterministic weather impact
     const dayOfWeekFactor = (daysBackValue % 7 < 5) ? 0.05 : -0.1; // Weekday vs weekend
     
     // Apply historical variations
@@ -112,7 +112,7 @@ export default function ManagementAnalyticsPanel({
     const securityVariation = Math.max(0, Math.round(securityBase * (1 + Math.abs(weatherFactor) * 3)));
     
     const medicalBase = Math.max(0, medicalAlerts + Math.round(daysBackValue / 20));
-    const medicalVariation = Math.max(0, Math.round(medicalBase * (1 + Math.random() * 0.5)));
+    const medicalVariation = Math.max(0, Math.round(medicalBase * (1 + Math.sin(daysBackValue * 2.1) * 0.25)));
     
     const violationsBase = Math.max(0, Math.round(delayedBuses * 1.2 + (daysBackValue / 8)));
     const violationsVariation = Math.max(0, Math.round(violationsBase * (1 + Math.abs(seasonalFactor) * 1.5)));
@@ -361,10 +361,40 @@ export default function ManagementAnalyticsPanel({
                   
                   <div className="flex flex-col space-y-2">
                     <Label className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                      Date Range
+                      Custom Date Range
                     </Label>
-                    <div className={`p-2 rounded border text-sm ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-300' : 'bg-white border-gray-300 text-gray-700'}`}>
-                      {dateRange.start.toLocaleDateString()} - {dateRange.end.toLocaleDateString()}
+                    <div className="flex flex-col space-y-2">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xs text-gray-500 w-12">From:</span>
+                        <input
+                          type="date"
+                          value={dateRange.start.toISOString().split('T')[0]}
+                          onChange={(e) => {
+                            const newStart = new Date(e.target.value);
+                            const diffTime = Math.abs(new Date() - newStart);
+                            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                            setDateRange({ start: newStart, end: dateRange.end });
+                            setDaysBack([Math.min(90, diffDays)]);
+                          }}
+                          max={new Date().toISOString().split('T')[0]}
+                          min={new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]}
+                          className={`px-2 py-1 text-xs rounded border ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-300' : 'bg-white border-gray-300 text-gray-700'}`}
+                        />
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xs text-gray-500 w-12">To:</span>
+                        <input
+                          type="date"
+                          value={dateRange.end.toISOString().split('T')[0]}
+                          onChange={(e) => {
+                            const newEnd = new Date(e.target.value);
+                            setDateRange({ start: dateRange.start, end: newEnd });
+                          }}
+                          max={new Date().toISOString().split('T')[0]}
+                          min={dateRange.start.toISOString().split('T')[0]}
+                          className={`px-2 py-1 text-xs rounded border ${theme === 'dark' ? 'bg-gray-700 border-gray-600 text-gray-300' : 'bg-white border-gray-300 text-gray-700'}`}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
