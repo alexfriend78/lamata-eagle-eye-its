@@ -333,69 +333,77 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
         <div className="p-6">
           {/* Key Metrics */}
           <div className="grid grid-cols-4 gap-4 mb-6">
-            <Card className={theme === 'dark' ? 'bg-gray-800 border-gray-700' : ''}>
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2">
-                  <Shield className={`w-5 h-5 ${getHealthColor(diagnostics.reduce((sum, d) => sum + d.healthScore, 0) / diagnostics.length || 0)}`} />
-                  <div>
-                    <div className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                      {Math.floor(diagnostics.reduce((sum, d) => sum + d.healthScore, 0) / diagnostics.length || 0)}%
-                    </div>
-                    <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                      Fleet Health
-                    </div>
+            <Button
+              variant="outline"
+              className={`h-auto p-4 ${theme === 'dark' ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'hover:bg-gray-50'}`}
+              onClick={() => setActiveTab('overview')}
+            >
+              <div className="flex items-center space-x-2 w-full">
+                <Shield className={`w-5 h-5 ${getHealthColor(diagnostics.reduce((sum, d) => sum + d.healthScore, 0) / diagnostics.length || 0)}`} />
+                <div className="text-left">
+                  <div className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                    {Math.floor(diagnostics.reduce((sum, d) => sum + d.healthScore, 0) / diagnostics.length || 0)}%
+                  </div>
+                  <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Fleet Health
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </Button>
 
-            <Card className={theme === 'dark' ? 'bg-gray-800 border-gray-700' : ''}>
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2">
-                  <AlertTriangle className={`w-5 h-5 ${criticalBuses > 0 ? 'text-red-600' : 'text-green-600'}`} />
-                  <div>
-                    <div className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                      {criticalBuses}
-                    </div>
-                    <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                      Critical Buses
-                    </div>
+            <Button
+              variant="outline"
+              className={`h-auto p-4 ${theme === 'dark' ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'hover:bg-gray-50'}`}
+              onClick={() => setActiveTab('overview')}
+            >
+              <div className="flex items-center space-x-2 w-full">
+                <AlertTriangle className={`w-5 h-5 ${criticalBuses > 0 ? 'text-red-600' : 'text-green-600'}`} />
+                <div className="text-left">
+                  <div className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                    {criticalBuses}
+                  </div>
+                  <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Critical Buses
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </Button>
 
-            <Card className={theme === 'dark' ? 'bg-gray-800 border-gray-700' : ''}>
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2">
-                  <Calendar className={`w-5 h-5 ${upcomingMaintenance > 0 ? 'text-yellow-600' : 'text-green-600'}`} />
-                  <div>
-                    <div className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                      {upcomingMaintenance}
-                    </div>
-                    <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                      Due This Week
-                    </div>
+            <Button
+              variant="outline"
+              className={`h-auto p-4 ${theme === 'dark' ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'hover:bg-gray-50'}`}
+              onClick={() => setActiveTab('maintenance')}
+            >
+              <div className="flex items-center space-x-2 w-full">
+                <Calendar className={`w-5 h-5 ${upcomingMaintenance > 0 ? 'text-yellow-600' : 'text-green-600'}`} />
+                <div className="text-left">
+                  <div className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                    {upcomingMaintenance}
+                  </div>
+                  <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Due This Week
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </Button>
 
-            <Card className={theme === 'dark' ? 'bg-gray-800 border-gray-700' : ''}>
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2">
-                  <Clock className={`w-5 h-5 ${overdueMaintenance > 0 ? 'text-red-600' : 'text-green-600'}`} />
-                  <div>
-                    <div className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                      {overdueMaintenance}
-                    </div>
-                    <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                      Overdue
-                    </div>
+            <Button
+              variant="outline"
+              className={`h-auto p-4 ${theme === 'dark' ? 'bg-gray-800 border-gray-700 hover:bg-gray-750' : 'hover:bg-gray-50'}`}
+              onClick={() => setActiveTab('maintenance')}
+            >
+              <div className="flex items-center space-x-2 w-full">
+                <Clock className={`w-5 h-5 ${overdueMaintenance > 0 ? 'text-red-600' : 'text-green-600'}`} />
+                <div className="text-left">
+                  <div className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                    {overdueMaintenance}
+                  </div>
+                  <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                    Overdue
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </Button>
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
