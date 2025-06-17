@@ -90,9 +90,9 @@ export default function BusMonitor() {
   const criticalAlert = alerts?.find(alert => alert.severity === "critical" && alert.isActive);
   
   // Find the most recent active alert with highest priority
-  const priorityOrder = { P1: 1, P2: 2, P3: 3, P4: 4, P5: 5 };
+  const priorityOrder: Record<string, number> = { P1: 1, P2: 2, P3: 3, P4: 4, P5: 5 };
   const highestPriorityAlert = alerts?.filter(alert => alert.isActive)
-    .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority])[0];
+    .sort((a, b) => (priorityOrder[a.priority] || 5) - (priorityOrder[b.priority] || 5))[0] || null;
 
   const toggleRouteHighlight = (routeId: number) => {
     setSelectedRoutes(prev => 
@@ -379,6 +379,7 @@ export default function BusMonitor() {
               alerts={alerts || []}
               routes={routes || []}
               onRefresh={refetch}
+              onSimulateEmergency={handleSimulateEmergency}
               theme={theme}
             />
           </div>
@@ -464,7 +465,7 @@ export default function BusMonitor() {
       <EmergencyAlertSystem
         buses={buses || []}
         stations={stations || []}
-        activeAlert={highestPriorityAlert}
+        activeAlert={highestPriorityAlert || null}
         onAlertDismiss={() => setActiveAlert(null)}
         onAlertCreate={(alert) => setActiveAlert(alert)}
       />
@@ -481,7 +482,7 @@ export default function BusMonitor() {
             buses={buses || []}
             stations={stations || []}
             alerts={alerts || []}
-            stats={stats || { totalBuses: 0, activeRoutes: 0, onTimePercentage: 0, onTimeBuses: 0, delayedBuses: 0, alertBuses: 0, avgCrowdDensity: 0, peakStations: [] }}
+            stats={stats || { totalBuses: 0, activeRoutes: 0, onTimePercentage: 0, onTimeBuses: 0, delayedBuses: 0, alertBuses: 0, avgCrowdDensity: 0, peakStations: 0 }}
           />
         </div>
       )}
