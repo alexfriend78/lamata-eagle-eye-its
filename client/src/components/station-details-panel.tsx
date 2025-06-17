@@ -1,5 +1,5 @@
 import { X, Users, Clock, AlertTriangle, CheckCircle, MapPin, Video, Wifi, Shield, PlayCircle, VolumeX, Volume2, Camera, Activity } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +19,9 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [currentVideoSrc, setCurrentVideoSrc] = useState<string>("");
+  const [lastStationId, setLastStationId] = useState<number | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   if (!isOpen || !stationDetails) return null;
 
@@ -83,42 +86,57 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
     return 5;
   };
 
-  const stationRoute = getStationRoute(actualStation);
-  const routeVideos = routeSpecificVideos[stationRoute] || fallbackVideos;
-  const videoIndex = getNextVideoIndex() % routeVideos.length;
-  const videoSrc = routeVideos[videoIndex];
-  
-  // Video system now working - sequential playback with route-specific content
+  // Only update video when station changes to prevent constant re-rendering
+  useEffect(() => {
+    if (actualStation && actualStation.id !== lastStationId) {
+      const stationRoute = getStationRoute(actualStation);
+      const routeVideos = routeSpecificVideos[stationRoute] || fallbackVideos;
+      const videoIndex = getNextVideoIndex() % routeVideos.length;
+      const newVideoSrc = routeVideos[videoIndex];
+      
+      setCurrentVideoSrc(newVideoSrc);
+      setLastStationId(actualStation.id);
+      setIsVideoPlaying(true);
+      
+      // Auto-play video when it loads
+      if (videoRef.current) {
+        videoRef.current.load();
+        videoRef.current.play().catch(console.log);
+      }
+    }
+  }, [actualStation?.id]);
+
+  // Initial video setup
+  useEffect(() => {
+    if (!currentVideoSrc && actualStation) {
+      const stationRoute = getStationRoute(actualStation);
+      const routeVideos = routeSpecificVideos[stationRoute] || fallbackVideos;
+      const videoIndex = getNextVideoIndex() % routeVideos.length;
+      setCurrentVideoSrc(routeVideos[videoIndex]);
+    }
+  }, []);
   
 
 
   const toggleVideoPlayback = () => {
-    const video = document.getElementById('station-video') as HTMLVideoElement;
-    console.log('Toggle video playback clicked');
-    if (video) {
-      console.log('Video element found:', video.src);
-      console.log('Current playing state:', isVideoPlaying);
+    if (videoRef.current) {
       if (isVideoPlaying) {
-        video.pause();
+        videoRef.current.pause();
         setIsVideoPlaying(false);
       } else {
-        video.play().then(() => {
-          console.log('Video play promise resolved');
+        videoRef.current.play().then(() => {
           setIsVideoPlaying(true);
         }).catch((error) => {
           console.error('Video play failed:', error);
           setIsVideoPlaying(false);
         });
       }
-    } else {
-      console.error('Video element not found');
     }
   };
 
   const toggleVideoMute = () => {
-    const video = document.getElementById('station-video') as HTMLVideoElement;
-    if (video) {
-      video.muted = !isVideoMuted;
+    if (videoRef.current) {
+      videoRef.current.muted = !isVideoMuted;
       setIsVideoMuted(!isVideoMuted);
     }
   };
@@ -358,7 +376,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                   <Badge variant="secondary" className="text-xs">Bus Stand CCTV</Badge>
                 </div>
                 <a 
-                  href={videoSrc} 
+                  href={currentVideoSrc} 
                   target="_blank" 
                   className="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700"
                   rel="noopener noreferrer"
@@ -370,12 +388,12 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
             <CardContent>
               <div className="relative bg-black rounded-lg overflow-hidden">
                 <video
-                  id="station-video"
-                  key={stationDetails.id}
-                  src={videoSrc}
+                  ref={videoRef}
+                  key={actualStation.id}
+                  src={currentVideoSrc}
                   autoPlay
                   loop
-                  muted
+                  muted={isVideoMuted}
                   playsInline
                   controls
                   preload="metadata"
@@ -393,6 +411,8 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                   onLoadStart={() => console.log('Video load started')}
                   onCanPlay={() => console.log('Video can play')}
                   onLoadedMetadata={() => console.log('Video metadata loaded')}
+                  onPlay={() => setIsVideoPlaying(true)}
+                  onPause={() => setIsVideoPlaying(false)}
                 />
                 
                 <div className="absolute top-2 left-2">
