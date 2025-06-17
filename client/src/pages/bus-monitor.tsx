@@ -11,7 +11,7 @@ import RouteCustomizationPanel from "@/components/route-customization-panel";
 import RouteAestheticsPanel from "@/components/route-aesthetics-panel";
 import CrowdAnalyticsPanel from "@/components/crowd-analytics-panel";
 import AlertsManager from "@/components/alerts-manager";
-import AIInsightsPanel from "@/components/ai-insights-panel";
+import AIInsightsPanel from "@/components/ai-insights-panel-new";
 import RouteOptimizer from "@/components/route-optimizer";
 import PredictiveMaintenance from "@/components/predictive-maintenance";
 import { Button } from "@/components/ui/button";
