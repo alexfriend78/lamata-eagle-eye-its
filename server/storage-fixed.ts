@@ -829,19 +829,35 @@ export class MemStorage implements IStorage {
         // Segment 7: Final east stretch
         { x: 0.90, y: 0.65 }
       ],
-      3: [ // Route 3: Lagos Metro Express - Diamond Pattern
-        // Segment 1: Northeast diagonal
-        { x: 0.25, y: 0.75 },
-        { x: 0.50, y: 0.50 },
+      3: [ // Route 3: Lagos Metro Express - Following station coordinates
+        // Segment 1: Southwest to northeast diagonal (matches stations)
+        { x: 0.15, y: 0.70 }, // Ikorodu West
+        { x: 0.20, y: 0.63 }, // Owutu
+        { x: 0.25, y: 0.56 }, // Kosofe
+        { x: 0.30, y: 0.49 }, // Ketu
+        { x: 0.35, y: 0.42 }, // Mile 12
+        { x: 0.40, y: 0.35 }, // Ojota
         
-        // Segment 2: Southeast diagonal
-        { x: 0.75, y: 0.75 },
+        // Segment 2: Northwest curve
+        { x: 0.38, y: 0.30 }, // Maryland
+        { x: 0.36, y: 0.25 }, // Palmgrove
+        { x: 0.34, y: 0.20 }, // Ikeja GRA
+        { x: 0.32, y: 0.17 }, // Allen Avenue
+        { x: 0.30, y: 0.15 }, // Computer Village
         
-        // Segment 3: Southwest diagonal
-        { x: 0.50, y: 0.90 },
+        // Segment 3: Northeast to Mile 2
+        { x: 0.37, y: 0.17 }, // Ojuelegba
+        { x: 0.44, y: 0.19 }, // Surulere
+        { x: 0.51, y: 0.21 }, // National Stadium
+        { x: 0.58, y: 0.23 }, // Alaba
+        { x: 0.65, y: 0.25 }, // Mile 2
         
-        // Segment 4: Northwest diagonal back to center
-        { x: 0.30, y: 0.70 }
+        // Segment 4: Southeast to Badagry
+        { x: 0.69, y: 0.32 }, // Festac
+        { x: 0.73, y: 0.39 }, // Satellite Town
+        { x: 0.77, y: 0.46 }, // Trade Fair
+        { x: 0.81, y: 0.53 }, // Intermediate point
+        { x: 0.85, y: 0.60 }  // Badagry Terminal
       ],
       4: [ // Route 4: Realistic Lagos BRT - Ikorodu to Victoria Island
         // Segment 1: Northeast from Ikorodu towards Mile 12
