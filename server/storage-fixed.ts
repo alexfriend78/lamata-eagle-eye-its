@@ -304,10 +304,10 @@ export class MemStorage implements IStorage {
       { number: "BRT004", routeId: 2, status: "active", capacity: 70, direction: "Northbound", driverName: "Ngozi Okwu", driverPhone: "+234-8056-789-012" },
       { number: "BRT010", routeId: 2, status: "active", capacity: 70, direction: "Southbound", driverName: "Ibrahim Musa", driverPhone: "+234-8067-890-123" },
       
-      // Route 3 buses
-      { number: "BRT005", routeId: 3, status: "active", capacity: 70, direction: "Eastbound", driverName: "Folake Akinola", driverPhone: "+234-8078-901-234" },
-      { number: "BRT006", routeId: 3, status: "alert", capacity: 70, direction: "Westbound", driverName: "Emeka Nwosu", driverPhone: "+234-8089-012-345" },
-      { number: "BRT011", routeId: 3, status: "active", capacity: 70, direction: "Eastbound", driverName: "Aisha Bello", driverPhone: "+234-8090-123-456" },
+      // Route 3 buses - positioned on updated Route 3 path
+      { number: "BRT005", routeId: 3, status: "active", capacity: 70, direction: "Eastbound", currentX: 0.51, currentY: 0.21, driverName: "Folake Akinola", driverPhone: "+234-8078-901-234" },
+      { number: "BRT006", routeId: 3, status: "alert", capacity: 70, direction: "Westbound", currentX: 0.38, currentY: 0.30, driverName: "Emeka Nwosu", driverPhone: "+234-8089-012-345" },
+      { number: "BRT011", routeId: 3, status: "active", capacity: 70, direction: "Eastbound", currentX: 0.25, currentY: 0.56, driverName: "Aisha Bello", driverPhone: "+234-8090-123-456" },
       
       // Route 4 buses
       { number: "BRT007", routeId: 4, status: "active", capacity: 70, direction: "Northbound", driverName: "Tunde Olawale", driverPhone: "+234-8001-234-567" },
