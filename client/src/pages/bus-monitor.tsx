@@ -120,18 +120,36 @@ export default function BusMonitor() {
     setHoveredBus(null);
   };
 
-  const handleSimulateEmergency = () => {
-    // Create a high-priority emergency alert
+  const handleSimulateEmergency = async () => {
+    // Create a high-priority emergency alert in the database
     if (routes && routes.length > 0) {
       const randomRoute = routes[Math.floor(Math.random() * routes.length)];
-      const emergencyAlert = {
-        routeId: randomRoute.id,
-        type: "emergency",
-        message: "EMERGENCY: Medical assistance required - Bus stopped",
-        severity: "critical",
-        priority: "P1"
-      };
-      setActiveAlert(emergencyAlert);
+      
+      try {
+        const response = await fetch('/api/alerts', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            routeId: randomRoute.id,
+            type: "emergency",
+            message: "EMERGENCY: Medical assistance required - Bus stopped",
+            severity: "critical",
+            priority: "P1"
+          }),
+        });
+        
+        if (response.ok) {
+          // Refresh alerts data
+          refetch();
+          console.log('Emergency alert created successfully');
+        } else {
+          console.error('Failed to create emergency alert');
+        }
+      } catch (error) {
+        console.error('Error creating emergency alert:', error);
+      }
     }
   };
 

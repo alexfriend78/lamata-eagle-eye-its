@@ -694,16 +694,6 @@ export default function EmergencyAlertSystem({
     );
   }
 
-  // Simulate button
-  return (
-    <Button
-      onClick={() => setShowSimulator(true)}
-      variant="destructive"
-      size="sm"
-      className="fixed bottom-4 right-4 z-40"
-    >
-      <AlertTriangle className="w-4 h-4 mr-2" />
-      Simulate Emergency
-    </Button>
-  );
+  // Emergency simulation functionality has been moved to the System Control Panel
+  return null;
 }
