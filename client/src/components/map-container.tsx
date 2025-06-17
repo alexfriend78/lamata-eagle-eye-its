@@ -897,7 +897,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 top: `${stationPixelY - 8}px`, 
                 left: `${stationPixelX - 8}px` 
               }}
-              onClick={() => onStationClick && onStationClick(station)}
+              onDoubleClick={() => onStationClick && onStationClick(station)}
               onMouseEnter={() => onStationHover?.(station)}
               onMouseLeave={() => onStationHover?.(null)}
             >

@@ -196,6 +196,48 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                 <Badge variant="outline">{stationDetails.passengerCount}</Badge>
               </div>
               
+              {/* Crowd Level */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Activity className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">Crowd Level</span>
+                </div>
+                <Badge 
+                  variant={
+                    stationDetails.passengerCount < 20 ? "outline" : 
+                    stationDetails.passengerCount < 40 ? "secondary" : "destructive"
+                  }
+                  className={
+                    stationDetails.passengerCount < 20 ? "bg-green-50 text-green-700" : 
+                    stationDetails.passengerCount < 40 ? "bg-yellow-50 text-yellow-700" : "bg-red-50 text-red-700"
+                  }
+                >
+                  {stationDetails.passengerCount < 20 ? "Light" : 
+                   stationDetails.passengerCount < 40 ? "Moderate" : "Heavy"}
+                </Badge>
+              </div>
+              
+              {/* Traffic Conditions */}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">Traffic Conditions</span>
+                </div>
+                <Badge 
+                  variant={
+                    stationDetails.id % 3 === 0 ? "destructive" : 
+                    stationDetails.id % 3 === 1 ? "secondary" : "outline"
+                  }
+                  className={
+                    stationDetails.id % 3 === 0 ? "bg-red-50 text-red-700" : 
+                    stationDetails.id % 3 === 1 ? "bg-yellow-50 text-yellow-700" : "bg-green-50 text-green-700"
+                  }
+                >
+                  {stationDetails.id % 3 === 0 ? "Heavy" : 
+                   stationDetails.id % 3 === 1 ? "Moderate" : "Light"}
+                </Badge>
+              </div>
+              
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4 text-muted-foreground" />
@@ -244,15 +286,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                 </Badge>
               </div>
 
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Activity className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">Crowd Level</span>
-                </div>
-                <Badge variant={stationDetails.passengerCount > 15 ? "destructive" : stationDetails.passengerCount > 8 ? "secondary" : "default"}>
-                  {stationDetails.passengerCount > 15 ? "High" : stationDetails.passengerCount > 8 ? "Medium" : "Low"}
-                </Badge>
-              </div>
+
             </CardContent>
           </Card>
 
@@ -281,6 +315,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                   id="station-video"
                   key={stationDetails.id}
                   src={videoSrc}
+                  autoPlay
                   loop
                   muted
                   playsInline
