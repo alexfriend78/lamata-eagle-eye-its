@@ -50,7 +50,7 @@ export default function BusMonitor() {
   // Fetch station details when a station is hovered or selected
   const activeStation = hoveredStation || selectedStation;
   const { data: stationDetails } = useQuery<StationDetails>({
-    queryKey: ['/api/stations', activeStation?.id],
+    queryKey: [`/api/stations/${activeStation?.id}`],
     enabled: !!activeStation?.id,
   });
   
