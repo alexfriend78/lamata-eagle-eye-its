@@ -2,14 +2,20 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Brain, TrendingUp, Users, Clock, MapPin, AlertTriangle, Zap, ChevronRight, CheckCircle } from "lucide-react";
-import type { BusWithRoute, Station, AlertWithDetails, SystemStats } from "@shared/schema";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Brain, TrendingUp, Users, Clock, MapPin, AlertTriangle, Zap, ChevronRight, CheckCircle, Navigation, Wrench, X } from "lucide-react";
+import RouteOptimizer from "@/components/route-optimizer";
+import PredictiveMaintenance from "@/components/predictive-maintenance";
+import type { BusWithRoute, Station, AlertWithDetails, SystemStats, Route, Bus } from "@shared/schema";
 
 interface AIInsightsPanelProps {
   buses: BusWithRoute[];
   stations: Station[];
   alerts: AlertWithDetails[];
   stats: SystemStats;
+  routes: Route[];
+  theme: "light" | "dark";
+  onClose: () => void;
 }
 
 interface AIInsight {
@@ -27,9 +33,10 @@ interface AIInsight {
   implemented?: boolean;
 }
 
-export default function AIInsightsPanel({ buses, stations, alerts, stats }: AIInsightsPanelProps) {
+export default function AIInsightsPanel({ buses, stations, alerts, stats, routes, theme, onClose }: AIInsightsPanelProps) {
   const [selectedInsight, setSelectedInsight] = useState<AIInsight | null>(null);
   const [implementedInsights, setImplementedInsights] = useState<Set<string>>(new Set());
+  const [activeTab, setActiveTab] = useState("insights");
 
   // Generate AI insights based on real-time data
   const generateInsights = (): AIInsight[] => {

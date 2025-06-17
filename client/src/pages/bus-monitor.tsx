@@ -325,29 +325,7 @@ export default function BusMonitor() {
               theme={theme}
             />
 
-            {/* Route Optimizer */}
-            <Button
-              onClick={() => setShowRouteOptimizer(!showRouteOptimizer)}
-              variant={showRouteOptimizer ? "default" : "outline"}
-              size="sm"
-              className="h-8 px-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white border-0"
-              title="Smart Route Optimizer"
-            >
-              <Navigation className="h-4 w-4 mr-1" />
-              Optimizer
-            </Button>
 
-            {/* Predictive Maintenance */}
-            <Button
-              onClick={() => setShowPredictiveMaintenance(!showPredictiveMaintenance)}
-              variant={showPredictiveMaintenance ? "default" : "outline"}
-              size="sm"
-              className="h-8 px-3 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white border-0"
-              title="Predictive Maintenance"
-            >
-              <Wrench className="h-4 w-4 mr-1" />
-              Maintenance
-            </Button>
 
             {/* AI Insights */}
             <Button
@@ -543,14 +521,15 @@ export default function BusMonitor() {
 
       {/* AI Insights Panel */}
       {showAIInsights && (
-        <div className="fixed right-4 top-20 w-96 max-h-[calc(100vh-120px)] overflow-y-auto z-40">
-          <AIInsightsPanel
-            buses={buses || []}
-            stations={stations || []}
-            alerts={alerts || []}
-            stats={stats || { totalBuses: 0, activeRoutes: 0, onTimePercentage: 0, onTimeBuses: 0, delayedBuses: 0, alertBuses: 0, avgCrowdDensity: 0, peakStations: 0 }}
-          />
-        </div>
+        <AIInsightsPanel
+          buses={buses || []}
+          stations={stations || []}
+          alerts={alerts || []}
+          stats={stats || { totalBuses: 0, activeRoutes: 0, onTimePercentage: 0, onTimeBuses: 0, delayedBuses: 0, alertBuses: 0, avgCrowdDensity: 0, peakStations: 0 }}
+          routes={routes || []}
+          theme={theme}
+          onClose={() => setShowAIInsights(false)}
+        />
       )}
       </div>
     </div>
