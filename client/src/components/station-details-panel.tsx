@@ -102,6 +102,22 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
         availableVideos: routeVideos
       });
       
+      // Show which route this station belongs to
+      const routeNames = {
+        1: "Route 1 - Secondary School Passengers",
+        2: "Route 2 - Family Passengers", 
+        3: "Route 3 - Professional Passengers",
+        4: "Route 4 - Orderly Passengers",
+        5: "Route 5 - General Passengers"
+      };
+      const routeName = routeNames[stationRoute as 1 | 2 | 3 | 4 | 5] || 'Unknown Route';
+      console.log(`🚌 Station belongs to: ${routeName}`);
+      console.log(`📹 Playing video ${videoIndex + 1} of ${routeVideos.length} for this route`);
+      console.log(`💡 TIP: Click on stations from different routes to see different passenger types!`);
+      console.log(`   - Route 2 stations (IDs 18-45): Family passengers`);
+      console.log(`   - Route 3 stations (IDs 46-65): Professional passengers`); 
+      console.log(`   - Route 4 stations (IDs 66-85): Orderly passengers`);
+      
       setCurrentVideoSrc(newVideoSrc);
       setLastStationId(actualStation.id);
       setIsVideoPlaying(true);
