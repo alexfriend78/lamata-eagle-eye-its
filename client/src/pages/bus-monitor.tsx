@@ -428,8 +428,6 @@ export default function BusMonitor() {
               routes={routes || []}
               onRefresh={refetch}
               onSimulateEmergency={handleSimulateEmergency}
-              onShowRouteOptimizer={() => setShowRouteOptimizer(true)}
-              onShowPredictiveMaintenance={() => setShowPredictiveMaintenance(true)}
               theme={theme}
             />
           </div>

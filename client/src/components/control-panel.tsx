@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useMutation } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
-import { Navigation, Wrench } from "lucide-react";
 import { type SystemStats, type AlertWithDetails, type Route } from "@shared/schema";
 
 interface ControlPanelProps {
@@ -11,12 +10,10 @@ interface ControlPanelProps {
   routes: Route[];
   onRefresh: () => void;
   onSimulateEmergency: () => void;
-  onShowRouteOptimizer: () => void;
-  onShowPredictiveMaintenance: () => void;
   theme: "light" | "dark";
 }
 
-export default function ControlPanel({ stats, alerts, routes, onRefresh, onSimulateEmergency, onShowRouteOptimizer, onShowPredictiveMaintenance, theme }: ControlPanelProps) {
+export default function ControlPanel({ stats, alerts, routes, onRefresh, onSimulateEmergency, theme }: ControlPanelProps) {
   const { toast } = useToast();
 
   const simulateAlertMutation = useMutation({
@@ -250,38 +247,6 @@ export default function ControlPanel({ stats, alerts, routes, onRefresh, onSimul
         >
           Simulate Emergency
         </Button>
-        
-        {/* AI Fleet Management Tools */}
-        <div className="space-y-2">
-          <h4 className={`text-xs font-medium ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-            AI FLEET MANAGEMENT
-          </h4>
-          <Button
-            onClick={onShowRouteOptimizer}
-            variant="outline"
-            className={`w-full ${
-              theme === 'dark'
-                ? 'bg-green-600 hover:bg-green-700 text-white border-green-600'
-                : 'bg-green-500 hover:bg-green-600 text-white border-green-500'
-            }`}
-          >
-            <Navigation className="w-4 h-4 mr-2" />
-            Route Optimizer
-          </Button>
-          <Button
-            onClick={onShowPredictiveMaintenance}
-            variant="outline"
-            className={`w-full ${
-              theme === 'dark'
-                ? 'bg-purple-600 hover:bg-purple-700 text-white border-purple-600'
-                : 'bg-purple-500 hover:bg-purple-600 text-white border-purple-500'
-            }`}
-          >
-            <Wrench className="w-4 h-4 mr-2" />
-            Predictive Maintenance
-          </Button>
-        </div>
-        
         <Button
           onClick={onRefresh}
           variant="outline"
