@@ -898,8 +898,6 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
                 left: `${stationPixelX - 8}px` 
               }}
               onDoubleClick={() => onStationClick && onStationClick(station)}
-              onMouseEnter={() => onStationHover?.(station)}
-              onMouseLeave={() => onStationHover?.(null)}
             >
             {/* Bus Stop Icon - Unicode */}
             <div className="relative">
