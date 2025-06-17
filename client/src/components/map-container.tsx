@@ -873,19 +873,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
         })()}
         
         {/* Bus Stations - only show if stations visibility is enabled */}
-        {showStations && (() => {
-          // Show all stations if no routes are selected
-          if (selectedRoutes.length === 0) return stations;
-          
-          // Show only stations that belong to selected routes
-          if (routeStations.length > 0) {
-            const routeStationIds = new Set(routeStations.map((rs: any) => rs.stationId));
-            return stations.filter(station => routeStationIds.has(station.id));
-          }
-          
-          // Fallback: show all stations if route stations are still loading
-          return stations;
-        })().map((station) => {
+        {showStations && stations.map((station) => {
           const stationPixelX = station.x * mapWidth;
           const stationPixelY = station.y * mapHeight;
           
