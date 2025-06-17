@@ -65,10 +65,14 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
       "/attached_assets/Orderly_passengers_at_202506171852_bazkh_1750183379799.mp4",
       "/attached_assets/Orderly_professionally_dressed_202506171852_p_1750183379798.mp4",
       "/attached_assets/Orderly_professionally_dressed_202506171852_0_1750183379799.mp4"
+    ],
+    5: [ // Route 5 - General bus stop scenarios
+      "/attached_assets/Delayed Bus_Passenger At Bus Stop_1750009404917.mp4",
+      "/attached_assets/Passengers Queuing at BRT_Bus_Video_Generated_1750009404918.mp4"
     ]
   };
 
-  // Fallback videos for routes 5+ (original videos)
+  // Fallback videos for routes 6+ (original videos)
   const fallbackVideos = [
     "/attached_assets/Delayed Bus_Passenger At Bus Stop_1750009404917.mp4",
     "/attached_assets/Passengers Queuing at BRT_Bus_Video_Generated_1750009404918.mp4"
