@@ -263,7 +263,7 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                 <div className="flex items-center gap-2">
                   <Camera className="h-4 w-4" />
                   Live Video Feed
-                  <Badge variant="secondary" className="text-xs">Station CCTV</Badge>
+                  <Badge variant="secondary" className="text-xs">Bus Stand CCTV</Badge>
                 </div>
                 <a 
                   href={videoSrc} 
