@@ -97,15 +97,19 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
   const [diagnostics, setDiagnostics] = useState<BusDiagnostics[]>([]);
   const [maintenanceRecords, setMaintenanceRecords] = useState<MaintenanceRecord[]>([]);
 
-  // Generate realistic diagnostic data for buses
+  // Generate stable diagnostic data for buses (seeded by bus ID)
   const generateDiagnostics = (): BusDiagnostics[] => {
     return buses.map(bus => {
-      const baseHealth = Math.floor(Math.random() * 30) + 70; // 70-100
-      const mileage = Math.floor(Math.random() * 500000) + 50000; // 50k-550k km
+      // Use bus ID as seed for consistent values
+      const seed = bus.id * 1000;
+      const baseHealth = Math.floor((seed % 30)) + 70; // 70-100
+      const mileage = Math.floor((seed % 500000)) + 50000; // 50k-550k km
       const engineHours = Math.floor(mileage / 25); // Approximate engine hours
       
-      const generateComponentHealth = (baseScore: number, variance: number = 15): ComponentHealth => {
-        const healthScore = Math.max(0, Math.min(100, baseScore + (Math.random() - 0.5) * variance));
+      const generateComponentHealth = (baseScore: number, componentId: number, variance: number = 15): ComponentHealth => {
+        const componentSeed = seed + componentId * 100;
+        const randomValue = (componentSeed % 100) / 100 - 0.5; // Stable random between -0.5 and 0.5
+        const healthScore = Math.max(0, Math.min(100, baseScore + randomValue * variance));
         const wearLevel = 100 - healthScore;
         let status: ComponentHealth['status'];
         
@@ -115,11 +119,14 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
         else if (healthScore >= 40) status = 'poor';
         else status = 'critical';
         
+        const lastCheckedDays = (componentSeed % 30) + 1;
+        const nextCheckDays = (componentSeed % 30) + 30;
+        
         return {
           name: '',
           healthScore,
-          lastChecked: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
-          nextCheck: new Date(Date.now() + Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+          lastChecked: new Date(Date.now() - lastCheckedDays * 24 * 60 * 60 * 1000).toISOString(),
+          nextCheck: new Date(Date.now() + nextCheckDays * 24 * 60 * 60 * 1000).toISOString(),
           status,
           wearLevel,
           estimatedLifeRemaining: Math.floor((healthScore / 100) * 365) // Days based on health
@@ -127,14 +134,14 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
       };
 
       const components = {
-        engine: { ...generateComponentHealth(baseHealth), name: 'Engine' },
-        transmission: { ...generateComponentHealth(baseHealth), name: 'Transmission' },
-        brakes: { ...generateComponentHealth(baseHealth - 5), name: 'Brakes' },
-        suspension: { ...generateComponentHealth(baseHealth), name: 'Suspension' },
-        electrical: { ...generateComponentHealth(baseHealth + 5), name: 'Electrical' },
-        hvac: { ...generateComponentHealth(baseHealth), name: 'HVAC' },
-        doors: { ...generateComponentHealth(baseHealth - 3), name: 'Doors' },
-        tires: { ...generateComponentHealth(baseHealth - 10), name: 'Tires' }
+        engine: { ...generateComponentHealth(baseHealth, 1), name: 'Engine' },
+        transmission: { ...generateComponentHealth(baseHealth, 2), name: 'Transmission' },
+        brakes: { ...generateComponentHealth(baseHealth - 5, 3), name: 'Brakes' },
+        suspension: { ...generateComponentHealth(baseHealth, 4), name: 'Suspension' },
+        electrical: { ...generateComponentHealth(baseHealth + 5, 5), name: 'Electrical' },
+        hvac: { ...generateComponentHealth(baseHealth, 6), name: 'HVAC' },
+        doors: { ...generateComponentHealth(baseHealth - 3, 7), name: 'Doors' },
+        tires: { ...generateComponentHealth(baseHealth - 10, 8), name: 'Tires' }
       };
 
       // Generate predicted failures
@@ -204,28 +211,31 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
     });
   };
 
-  // Generate maintenance records
+  // Generate stable maintenance records
   const generateMaintenanceRecords = (): MaintenanceRecord[] => {
     const records: MaintenanceRecord[] = [];
     const maintenanceTypes = ['routine', 'preventive', 'corrective', 'emergency'] as const;
     const components = ['Engine', 'Brakes', 'Transmission', 'Tires', 'HVAC', 'Doors', 'Electrical'];
     
     buses.forEach(bus => {
-      // Generate 3-5 records per bus
-      const recordCount = Math.floor(Math.random() * 3) + 3;
+      // Use bus ID as seed for consistent records
+      const busBaseSeed = bus.id * 10000;
+      const recordCount = (busBaseSeed % 3) + 3; // 3-5 records per bus
       
       for (let i = 0; i < recordCount; i++) {
-        const type = maintenanceTypes[Math.floor(Math.random() * maintenanceTypes.length)];
-        const component = components[Math.floor(Math.random() * components.length)];
-        const scheduledDate = new Date(Date.now() + (Math.random() - 0.5) * 60 * 24 * 60 * 60 * 1000);
+        const recordSeed = busBaseSeed + i * 1000;
+        const type = maintenanceTypes[recordSeed % maintenanceTypes.length];
+        const component = components[recordSeed % components.length];
+        const dayOffset = ((recordSeed % 120) - 60); // -60 to +60 days
+        const scheduledDate = new Date(Date.now() + dayOffset * 24 * 60 * 60 * 1000);
         
         let status: MaintenanceRecord['status'];
         let priority: MaintenanceRecord['priority'];
         
         if (scheduledDate < new Date()) {
-          status = Math.random() > 0.3 ? 'completed' : 'overdue';
+          status = (recordSeed % 10) > 3 ? 'completed' : 'overdue';
         } else {
-          status = Math.random() > 0.8 ? 'in_progress' : 'scheduled';
+          status = (recordSeed % 10) > 8 ? 'in_progress' : 'scheduled';
         }
         
         if (type === 'emergency') priority = 'critical';
@@ -242,8 +252,8 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
           scheduledDate: scheduledDate.toISOString(),
           status,
           priority,
-          estimatedCost: Math.floor(Math.random() * 5000) + 500,
-          estimatedDuration: Math.floor(Math.random() * 8) + 2
+          estimatedCost: 0, // Remove cost display
+          estimatedDuration: (recordSeed % 8) + 2
         });
       }
     });
@@ -579,9 +589,6 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
                               <div className="flex items-center space-x-4 mt-1 text-xs">
                                 <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>
                                   {new Date(record.scheduledDate).toLocaleDateString()}
-                                </span>
-                                <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>
-                                  ${record.estimatedCost}
                                 </span>
                                 <span className={theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}>
                                   {record.estimatedDuration}h
