@@ -14,8 +14,9 @@ import AlertsManager from "@/components/alerts-manager";
 import AIInsightsPanel from "@/components/ai-insights-panel";
 import RouteOptimizer from "@/components/route-optimizer";
 import PredictiveMaintenance from "@/components/predictive-maintenance";
+import ManagementAnalyticsPanel from "@/components/management-analytics-panel";
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain, Navigation, Wrench } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain, Navigation, Wrench, BarChart3 } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
@@ -35,6 +36,7 @@ export default function BusMonitor() {
   const [showAIInsights, setShowAIInsights] = useState(false);
   const [showRouteOptimizer, setShowRouteOptimizer] = useState(false);
   const [showPredictiveMaintenance, setShowPredictiveMaintenance] = useState(false);
+  const [showAnalytics, setShowAnalytics] = useState(false);
 
   // Handle AI Insights close event
   useEffect(() => {
@@ -339,6 +341,18 @@ export default function BusMonitor() {
               AI Insights
             </Button>
 
+            {/* Management Analytics */}
+            <Button
+              onClick={() => setShowAnalytics(!showAnalytics)}
+              variant={showAnalytics ? "default" : "outline"}
+              size="sm"
+              className="h-8 px-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white border-0"
+              title="Management Analytics & KPIs"
+            >
+              <BarChart3 className="h-4 w-4 mr-1" />
+              Analytics
+            </Button>
+
 
 
             {/* Settings */}
@@ -548,6 +562,18 @@ export default function BusMonitor() {
           buses={buses || []}
           theme={theme}
           onClose={() => setShowPredictiveMaintenance(false)}
+        />
+      )}
+
+      {/* Management Analytics Panel */}
+      {showAnalytics && (
+        <ManagementAnalyticsPanel
+          buses={buses || []}
+          stations={stations || []}
+          alerts={alerts || []}
+          stats={stats || { totalBuses: 0, activeRoutes: 0, onTimePercentage: 0, onTimeBuses: 0, delayedBuses: 0, alertBuses: 0, avgCrowdDensity: 0, peakStations: 0 }}
+          theme={theme}
+          onClose={() => setShowAnalytics(false)}
         />
       )}
       </div>
