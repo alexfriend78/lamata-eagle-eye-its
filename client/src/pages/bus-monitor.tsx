@@ -339,29 +339,7 @@ export default function BusMonitor() {
               AI Insights
             </Button>
 
-            {/* Route Optimizer */}
-            <Button
-              onClick={() => setShowRouteOptimizer(!showRouteOptimizer)}
-              variant={showRouteOptimizer ? "default" : "outline"}
-              size="sm"
-              className="h-8 px-3 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-0"
-              title="Smart Route Optimizer"
-            >
-              <Navigation className="h-4 w-4 mr-1" />
-              Route Optimizer
-            </Button>
 
-            {/* Predictive Maintenance */}
-            <Button
-              onClick={() => setShowPredictiveMaintenance(!showPredictiveMaintenance)}
-              variant={showPredictiveMaintenance ? "default" : "outline"}
-              size="sm"
-              className="h-8 px-3 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white border-0"
-              title="Predictive Maintenance System"
-            >
-              <Wrench className="h-4 w-4 mr-1" />
-              Predictive Maintenance
-            </Button>
 
             {/* Settings */}
             <Button
@@ -428,6 +406,8 @@ export default function BusMonitor() {
               routes={routes || []}
               onRefresh={refetch}
               onSimulateEmergency={handleSimulateEmergency}
+              onShowRouteOptimizer={() => setShowRouteOptimizer(true)}
+              onShowPredictiveMaintenance={() => setShowPredictiveMaintenance(true)}
               theme={theme}
             />
           </div>
@@ -543,18 +523,20 @@ export default function BusMonitor() {
         />
       )}
 
-      {/* AI Insights Panel */}
-      {showAIInsights && (
-        <AIInsightsPanel
-          buses={buses || []}
-          stations={stations || []}
-          alerts={alerts || []}
-          stats={stats || { totalBuses: 0, activeRoutes: 0, onTimePercentage: 0, onTimeBuses: 0, delayedBuses: 0, alertBuses: 0, avgCrowdDensity: 0, peakStations: 0 }}
-          routes={routes || []}
-          theme={theme}
-          onClose={() => setShowAIInsights(false)}
-        />
-      )}
+        {/* AI Insights Side Panel */}
+        {showAIInsights && (
+          <div className={`w-80 ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-gray-100 border-gray-300'} border-l p-4 overflow-y-auto`}>
+            <AIInsightsPanel
+              buses={buses || []}
+              stations={stations || []}
+              alerts={alerts || []}
+              stats={stats || { totalBuses: 0, activeRoutes: 0, onTimePercentage: 0, onTimeBuses: 0, delayedBuses: 0, alertBuses: 0, avgCrowdDensity: 0, peakStations: 0 }}
+              routes={routes || []}
+              theme={theme}
+              onClose={() => setShowAIInsights(false)}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
