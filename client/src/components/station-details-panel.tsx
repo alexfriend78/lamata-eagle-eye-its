@@ -23,8 +23,6 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
   const [lastStationId, setLastStationId] = useState<number | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  if (!isOpen || !stationDetails) return null;
-
   // Sequential video system for routes 1-4
   const routeSpecificVideos: Record<number, string[]> = {
     1: [ // Route 1 - Secondary school passengers
@@ -115,6 +113,9 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
       setCurrentVideoSrc(routeVideos[videoIndex]);
     }
   }, []);
+
+  // Early return after all hooks are declared
+  if (!isOpen || !stationDetails) return null;
   
 
 
@@ -327,8 +328,8 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                   <AlertTriangle className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">Traffic condition</span>
                 </div>
-                <Badge className={`text-white ${getTrafficBadgeColor(stationDetails.trafficCondition)}`}>
-                  {stationDetails.trafficCondition}
+                <Badge className={`text-white ${getTrafficBadgeColor(stationDetails!.trafficCondition)}`}>
+                  {stationDetails!.trafficCondition}
                 </Badge>
               </div>
 
@@ -337,8 +338,8 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
                   <CheckCircle className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">Accessibility</span>
                 </div>
-                <Badge variant={stationDetails.accessibility ? "default" : "secondary"}>
-                  {stationDetails.accessibility ? "Accessible" : "Limited"}
+                <Badge variant={stationDetails!.accessibility ? "default" : "secondary"}>
+                  {stationDetails!.accessibility ? "Accessible" : "Limited"}
                 </Badge>
               </div>
 
