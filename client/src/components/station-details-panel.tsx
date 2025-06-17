@@ -23,25 +23,42 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
   const [lastStationId, setLastStationId] = useState<number | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Sequential video system for routes 1-4
+  // Sequential video system for routes 1-4 with expanded video collections
   const routeSpecificVideos: Record<number, string[]> = {
-    1: [ // Route 1 - Secondary school passengers
+    1: [ // Route 1 - General mix passengers
       "/attached_assets/Secondary_school_passengers_202506171853_cjhf_1750183379795.mp4",
       "/attached_assets/Secondary_school_passengers_202506171853_oofa_1750183379796.mp4",
       "/attached_assets/Secondary_school_passengers_202506171853_zbgw_1750183379796.mp4",
-      "/attached_assets/Secondary_school_passengers_202506171853_arnr_1750183379796.mp4"
+      "/attached_assets/Secondary_school_passengers_202506171853_arnr_1750183379796.mp4",
+      "/attached_assets/Random_mix_of_202506171853_rsy82_1750189040204.mp4",
+      "/attached_assets/Random_mix_of_202506171853_jlal2_1750189040204.mp4",
+      "/attached_assets/Random_mix_of_202506171853_zrvc7_1750189040204.mp4",
+      "/attached_assets/Random_mix_of_202506171853_vbvma_1750189040204.mp4"
     ],
     2: [ // Route 2 - Family passengers
       "/attached_assets/Family_passengers_at_202506171853_hynd6_1750183379797.mp4",
       "/attached_assets/Family_passengers_at_202506171853_gy3pu_1750183379797.mp4",
       "/attached_assets/Family_passengers_at_202506171852_qws2a_1750183379797.mp4",
-      "/attached_assets/Family_passengers_at_202506171852_vvrk4_1750183379797.mp4"
+      "/attached_assets/Family_passengers_at_202506171852_vvrk4_1750183379797.mp4",
+      "/attached_assets/Casually_dressed_family_202506172026_2iydu_1750189040202.mp4",
+      "/attached_assets/Casually_dressed_family_202506172026_j11u8_1750189040202.mp4",
+      "/attached_assets/Casually_dressed_family_202506172026_zbehd_1750189040202.mp4",
+      "/attached_assets/Casually_dressed_family_202506172026_4528l_1750189040203.mp4"
     ],
     3: [ // Route 3 - Professionally dressed passengers
       "/attached_assets/Professionally_dressed_male_202506171852_mifo_1750183379797.mp4",
       "/attached_assets/Professionally_dressed_male_202506171852_ox4f_1750183379797.mp4",
       "/attached_assets/Professionally_dressed_female_202506171852_qt_1750183379798.mp4",
-      "/attached_assets/Professionally_dressed_female_202506171852_05_1750183379798.mp4"
+      "/attached_assets/Professionally_dressed_female_202506171852_05_1750183379798.mp4",
+      "/attached_assets/Professionally_dressed_male_202506172027_n00c_1750189040201.mp4",
+      "/attached_assets/Professionally_dressed_male_202506172027_fpfg_1750189040201.mp4",
+      "/attached_assets/Professionally_dressed_male_202506172027_wzip_1750189040202.mp4",
+      "/attached_assets/Professionally_dressed_male_202506172027_f0yz_1750189040202.mp4",
+      "/attached_assets/Professionally_dressed_male_202506172027_2jk2_1750189040202.mp4",
+      "/attached_assets/Professionally_dressed_female_202506172026_ha_1750189040203.mp4",
+      "/attached_assets/Professionally_dressed_female_202506172026_wd_1750189040203.mp4",
+      "/attached_assets/Professionally_dressed_male_202506172026_k5kj_1750189040203.mp4",
+      "/attached_assets/Professionally_dressed_male_202506172026_acy3_1750189040203.mp4"
     ],
     4: [ // Route 4 - Orderly passengers
       "/attached_assets/Orderly_passengers_at_202506171851_6grag_1750183379799.mp4",
