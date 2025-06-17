@@ -68,7 +68,8 @@ export default function StationDetailsPanel({ stationDetails, isOpen, onClose }:
     ],
     5: [ // Route 5 - General bus stop scenarios
       "/attached_assets/Delayed Bus_Passenger At Bus Stop_1750009404917.mp4",
-      "/attached_assets/Passengers Queuing at BRT_Bus_Video_Generated_1750009404918.mp4"
+      "/attached_assets/Passengers Queuing at BRT_Bus_Video_Generated_1750009404918.mp4",
+      "/attached_assets/Professionally_dressed_male_202506172027_n00c_1750195641416.mp4"
     ]
   };
 
