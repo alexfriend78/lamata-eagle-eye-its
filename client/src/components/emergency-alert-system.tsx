@@ -412,7 +412,7 @@ export default function EmergencyAlertSystem({
                     if (alertBus && onBusSelect) {
                       console.log("Navigating to bus details for alert management - Bus:", alertBus.busNumber);
                       onBusSelect(alertBus);
-                      // Keep the alert active but dismiss the popup to show bus details
+                      // Close the popup but DON'T clear the alert - let bus details manage it
                       onAlertDismiss();
                     } else {
                       console.log("Bus not found or onBusSelect not provided");
