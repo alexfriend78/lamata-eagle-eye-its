@@ -77,7 +77,7 @@ export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayPr
     humidity: weather.humidity,
     windSpeed: weather.windSpeed,
     visibility: weather.visibility,
-    description: getWeatherDescription(weather.condition as WeatherCondition)
+    description: getWeatherDescription(weather.condition)
   };
   
   function getWeatherDescription(condition: string): string {
@@ -152,12 +152,11 @@ export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayPr
           particles.push(
             <div
               key={i}
-              className="absolute w-0.5 h-8 bg-blue-400 opacity-60 animate-pulse"
+              className="absolute w-0.5 h-8 bg-blue-400 opacity-60"
               style={{
                 left: `${left}%`,
                 top: '-10px',
                 animationDelay: `${animationDelay}s`,
-                animationDuration: `${animationDuration}s`,
                 transform: 'rotate(15deg)',
                 animation: `rainDrop ${animationDuration}s linear infinite`
               }}
@@ -177,6 +176,36 @@ export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayPr
               }}
             />
           );
+          break;
+        case 'windy':
+          particles.push(
+            <div
+              key={i}
+              className="absolute w-12 h-1 bg-teal-300 opacity-40"
+              style={{
+                left: `${left}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${animationDelay}s`,
+                animation: `windStreak ${animationDuration}s linear infinite`
+              }}
+            />
+          );
+          break;
+        case 'sunny':
+          if (i % 10 === 0) { // Less frequent sparkles for sunny weather
+            particles.push(
+              <div
+                key={i}
+                className="absolute w-2 h-2 bg-yellow-400 rounded-full opacity-60 animate-pulse"
+                style={{
+                  left: `${left}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${animationDelay}s`,
+                  animationDuration: `${animationDuration + 1}s`,
+                }}
+              />
+            );
+          }
           break;
       }
     }
@@ -198,6 +227,8 @@ export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayPr
         return 'bg-gradient-to-b from-purple-300/60 to-blue-200/30';
       case 'foggy':
         return 'bg-gradient-to-b from-gray-300/70 to-gray-200/40';
+      case 'windy':
+        return 'bg-gradient-to-b from-teal-100/30 to-transparent';
       default:
         return '';
     }
@@ -213,63 +244,64 @@ export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayPr
               {getWeatherIcon(currentWeather.condition)}
               <span className="text-lg">Lagos Weather</span>
             </div>
-            <Switch
-              checked={isVisible}
-              onCheckedChange={onToggle}
-              className="ml-2"
-            />
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500">Animations</span>
+              <Switch
+                checked={isVisible}
+                onCheckedChange={onToggle}
+                className="ml-2"
+              />
+            </div>
           </CardTitle>
         </CardHeader>
         
-        {isVisible && (
-          <CardContent className="space-y-4">
-            {/* Current Condition */}
-            <div className="flex items-center justify-between">
-              <Badge className={getConditionColor(currentWeather.condition)}>
-                {currentWeather.condition.toUpperCase()}
-              </Badge>
-              <span className="text-2xl font-bold">{currentWeather.temperature}°C</span>
+        <CardContent className="space-y-4">
+          {/* Current Condition */}
+          <div className="flex items-center justify-between">
+            <Badge className={getConditionColor(currentWeather.condition)}>
+              {currentWeather.condition.toUpperCase()}
+            </Badge>
+            <span className="text-2xl font-bold">{currentWeather.temperature}°C</span>
+          </div>
+
+          {/* Weather Description */}
+          <p className="text-sm text-gray-600 dark:text-gray-400 italic">
+            {currentWeather.description}
+          </p>
+
+          {/* Weather Details */}
+          <div className="grid grid-cols-2 gap-3 text-sm">
+            <div className="flex items-center gap-2">
+              <Thermometer className="w-4 h-4 text-red-500" />
+              <span>Humidity: {currentWeather.humidity}%</span>
             </div>
-
-            {/* Weather Description */}
-            <p className="text-sm text-gray-600 dark:text-gray-400 italic">
-              {currentWeather.description}
-            </p>
-
-            {/* Weather Details */}
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div className="flex items-center gap-2">
-                <Thermometer className="w-4 h-4 text-red-500" />
-                <span>Humidity: {currentWeather.humidity}%</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Wind className="w-4 h-4 text-blue-500" />
-                <span>Wind: {currentWeather.windSpeed} km/h</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Eye className="w-4 h-4 text-green-500" />
-                <span>Visibility: {currentWeather.visibility} km</span>
-              </div>
-              <div className="text-gray-500">
-                Intensity: {Math.round(weatherIntensity * 100)}%
-              </div>
+            <div className="flex items-center gap-2">
+              <Wind className="w-4 h-4 text-blue-500" />
+              <span>Wind: {currentWeather.windSpeed} km/h</span>
             </div>
-
-            {/* Weather Impact Alert */}
-            {(currentWeather.condition === 'rainy' || currentWeather.condition === 'stormy' || currentWeather.condition === 'foggy') && (
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
-                <p className="text-sm text-yellow-800 dark:text-yellow-200 font-medium">
-                  ⚠️ Weather Alert: Reduced visibility affecting bus operations
-                </p>
-              </div>
-            )}
-
-            {/* Weather Control Info */}
-            <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
-              Weather controlled from Weather Control Centre
+            <div className="flex items-center gap-2">
+              <Eye className="w-4 h-4 text-green-500" />
+              <span>Visibility: {currentWeather.visibility} km</span>
             </div>
-          </CardContent>
-        )}
+            <div className="text-gray-500">
+              Animations: {isVisible ? 'On' : 'Off'}
+            </div>
+          </div>
+
+          {/* Weather Impact Alert */}
+          {(currentWeather.condition === 'rainy' || currentWeather.condition === 'stormy' || currentWeather.condition === 'foggy' || currentWeather.condition === 'windy') && (
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+              <p className="text-sm text-yellow-800 dark:text-yellow-200 font-medium">
+                ⚠️ Weather Alert: {currentWeather.condition === 'windy' ? 'High winds' : 'Reduced visibility'} affecting bus operations
+              </p>
+            </div>
+          )}
+
+          {/* Weather Control Info */}
+          <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
+            Weather controlled from Weather Control Centre
+          </div>
+        </CardContent>
       </Card>
 
       {/* Weather Overlay Effects */}
@@ -285,7 +317,7 @@ export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayPr
         </>
       )}
 
-      {/* CSS Animation for Rain */}
+      {/* CSS Animations for Weather Effects */}
       <style dangerouslySetInnerHTML={{
         __html: `
           @keyframes rainDrop {
@@ -301,6 +333,23 @@ export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayPr
             }
             100% {
               transform: translateY(100vh) rotate(15deg);
+              opacity: 0;
+            }
+          }
+          
+          @keyframes windStreak {
+            0% {
+              transform: translateX(-100vw) translateY(0);
+              opacity: 0;
+            }
+            10% {
+              opacity: 1;
+            }
+            90% {
+              opacity: 1;
+            }
+            100% {
+              transform: translateX(100vw) translateY(-20px);
               opacity: 0;
             }
           }
