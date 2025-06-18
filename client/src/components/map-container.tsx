@@ -38,6 +38,11 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   // Weather integration
   const { weather } = useWeather();
   
+  // Debug weather changes
+  useEffect(() => {
+    console.log('🗺️ Map weather updated:', weather);
+  }, [weather]);
+  
   // Weather overlay effects for map
   const getMapWeatherEffects = () => {
     const effects = [];
