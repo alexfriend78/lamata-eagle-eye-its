@@ -50,7 +50,7 @@ export default function BusMonitor() {
   const [showWeatherAnimations, setShowWeatherAnimations] = useState(true);
   
   // Weather hook
-  const { weather } = useWeather();
+  const { weather, updateWeather } = useWeather();
   
   // Debug weather changes
   useEffect(() => {
@@ -354,6 +354,26 @@ export default function BusMonitor() {
             >
               <Cloud className="h-4 w-4 mr-1" />
               Weather
+            </Button>
+
+            {/* Test Weather Update Button */}
+            <Button
+              onClick={() => {
+                console.log('🔥 DASHBOARD TEST: Forcing stormy weather');
+                updateWeather({
+                  condition: 'stormy',
+                  temperature: 18,
+                  humidity: 95,
+                  windSpeed: 45,
+                  visibility: 2
+                });
+              }}
+              variant="outline"
+              size="sm"
+              className="h-8 px-3 text-xs bg-red-600 hover:bg-red-700 text-white"
+              title="Test Weather"
+            >
+              Test Storm
             </Button>
 
             {/* Theme Toggle */}
