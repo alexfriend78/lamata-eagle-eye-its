@@ -634,15 +634,18 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                     )}
                     
                     <div className="flex gap-3 flex-wrap">
-                      <Button
-                        onClick={() => acknowledgeAlertMutation.mutate(alert.id)}
-                        disabled={acknowledgeAlertMutation.isPending}
-                        className="bg-yellow-600 hover:bg-yellow-700 text-white flex items-center gap-2"
-                        size="sm"
-                      >
-                        <CheckCircle className="w-4 h-4" />
-                        {acknowledgeAlertMutation.isPending ? 'Acknowledging...' : 'Acknowledge'}
-                      </Button>
+                      {/* Only show acknowledge button if alert is not escalated */}
+                      {!escalatedAlerts.has(alert.id) && (
+                        <Button
+                          onClick={() => acknowledgeAlertMutation.mutate(alert.id)}
+                          disabled={acknowledgeAlertMutation.isPending}
+                          className="bg-yellow-600 hover:bg-yellow-700 text-white flex items-center gap-2"
+                          size="sm"
+                        >
+                          <CheckCircle className="w-4 h-4" />
+                          {acknowledgeAlertMutation.isPending ? 'Acknowledging...' : 'Acknowledge'}
+                        </Button>
+                      )}
                       
                       {/* Show escalate button only for P1 Security Emergency Alerts */}
                       {(alert.priority === "P1" && alert.type === "security") && (
