@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useRef } from 'react';
 
 interface WeatherData {
   condition: string;
@@ -15,6 +15,17 @@ interface WeatherContextType {
   updateWeather: (weather: WeatherData) => void;
 }
 
+// Global weather state for cross-component synchronization
+let globalWeatherState: WeatherData = {
+  condition: "sunny",
+  temperature: 28,
+  humidity: 65,
+  windSpeed: 12,
+  visibility: 10
+};
+
+const weatherListeners: Set<(weather: WeatherData) => void> = new Set();
+
 const WeatherContext = createContext<WeatherContextType | undefined>(undefined);
 
 export function WeatherProvider({ children }: { children: ReactNode }) {
@@ -24,51 +35,28 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
       const stored = localStorage.getItem('weather-state');
       if (stored) {
         try {
-          return JSON.parse(stored);
+          const parsed = JSON.parse(stored);
+          globalWeatherState = parsed;
+          return parsed;
         } catch (e) {
           console.warn('Failed to parse stored weather state');
         }
       }
     }
-    return {
-      condition: "sunny",
-      temperature: 28,
-      humidity: 65,
-      windSpeed: 12,
-      visibility: 10
-    };
+    return globalWeatherState;
   });
 
-  // Listen for storage changes from other tabs/components
+  // Register this component as a listener to global weather changes
   useEffect(() => {
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === 'weather-state' && e.newValue) {
-        try {
-          const newWeatherData = JSON.parse(e.newValue);
-          console.log('🌦️ Weather sync from storage:', newWeatherData);
-          setWeather(newWeatherData);
-        } catch (error) {
-          console.warn('Failed to parse weather data from storage');
-        }
-      }
+    const listener = (newWeather: WeatherData) => {
+      console.log('🌦️ Weather sync to component:', newWeather);
+      setWeather(newWeather);
     };
 
-    // Listen for custom weather change events
-    const handleWeatherChange = (e: CustomEvent) => {
-      console.log('🌦️ Weather sync from event:', e.detail);
-      setWeather(e.detail);
-    };
-
-    if (typeof window !== 'undefined') {
-      window.addEventListener('storage', handleStorageChange);
-      window.addEventListener('weather-change', handleWeatherChange as EventListener);
-    }
+    weatherListeners.add(listener);
 
     return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('storage', handleStorageChange);
-        window.removeEventListener('weather-change', handleWeatherChange as EventListener);
-      }
+      weatherListeners.delete(listener);
     };
   }, []);
 
@@ -78,18 +66,27 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
       lastUpdated: Date.now()
     };
     
-    console.log('🌦️ Updating weather:', updatedWeather);
+    console.log('🌦️ Updating global weather:', updatedWeather);
+    
+    // Update global state
+    globalWeatherState = updatedWeather;
+    
+    // Update local state
     setWeather(updatedWeather);
     
     // Persist to localStorage
     if (typeof window !== 'undefined') {
       localStorage.setItem('weather-state', JSON.stringify(updatedWeather));
-      
-      // Dispatch custom event for cross-component sync
-      window.dispatchEvent(new CustomEvent('weather-change', { 
-        detail: updatedWeather 
-      }));
     }
+    
+    // Notify all listeners
+    weatherListeners.forEach(listener => {
+      try {
+        listener(updatedWeather);
+      } catch (error) {
+        console.warn('Error notifying weather listener:', error);
+      }
+    });
   };
 
   return (
