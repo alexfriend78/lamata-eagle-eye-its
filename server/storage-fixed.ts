@@ -348,7 +348,28 @@ export class MemStorage implements IStorage {
       });
     });
 
-    // No automatic alerts - only user-created alerts will appear
+    // Add a P1 security alert for Bus 4 to test escalate functionality
+    const securityAlert = {
+      busId: 4,
+      routeId: 2,
+      type: "security",
+      priority: "P1",
+      severity: "high",
+      message: "Security Emergency: Suspicious activity detected on bus",
+      status: "acknowledged",
+      driverName: "Ngozi Okwu",
+      driverNumber: "+234-8056-789-012",
+      location: "Mile 12 - Ikorodu Road",
+      timestamp: new Date(),
+      createdAt: new Date(),
+      isActive: false // acknowledged but visible for escalation
+    };
+
+    const alertId = this.currentAlertId++;
+    this.alerts.set(alertId, {
+      id: alertId,
+      ...securityAlert
+    });
 
     // Start bus movement simulation
     setInterval(() => this.simulateBusMovement(), 5000);

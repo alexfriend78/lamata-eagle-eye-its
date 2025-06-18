@@ -129,7 +129,8 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
   // Mutation to escalate alert
   const escalateAlertMutation = useMutation({
     mutationFn: (alertId: number) => apiRequest("PATCH", `/api/alerts/${alertId}/escalate`),
-    onSuccess: () => {
+    onSuccess: (_, alertId) => {
+      setEscalatedAlerts(prev => new Set(prev.add(alertId)));
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
     }
@@ -623,15 +624,49 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                       
                       {/* Show escalate button only for P1 Security Emergency Alerts */}
                       {(alert.priority === "P1" && alert.type === "security") && (
-                        <Button
-                          onClick={() => escalateAlertMutation.mutate(alert.id)}
-                          disabled={escalateAlertMutation.isPending}
-                          className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
-                          size="sm"
-                        >
-                          <AlertOctagon className="w-4 h-4" />
-                          {escalateAlertMutation.isPending ? 'Escalating...' : 'Escalate'}
-                        </Button>
+                        <>
+                          {escalatedAlerts.has(alert.id) ? (
+                            <div className="bg-green-100 dark:bg-green-900/20 border border-green-300 dark:border-green-700 rounded-lg p-3">
+                              <p className="text-green-800 dark:text-green-200 font-medium text-sm mb-2">
+                                ✓ Security team alerted
+                              </p>
+                              <p className="text-green-700 dark:text-green-300 text-sm mb-3">
+                                Would you like to close this alert?
+                              </p>
+                              <div className="flex gap-2">
+                                <Button
+                                  onClick={() => closeAlertMutation.mutate(alert.id)}
+                                  disabled={closeAlertMutation.isPending}
+                                  className="bg-green-600 hover:bg-green-700 text-white"
+                                  size="sm"
+                                >
+                                  Yes, Close Alert
+                                </Button>
+                                <Button
+                                  onClick={() => setEscalatedAlerts(prev => {
+                                    const newSet = new Set(prev);
+                                    newSet.delete(alert.id);
+                                    return newSet;
+                                  })}
+                                  variant="outline"
+                                  size="sm"
+                                >
+                                  Keep Open
+                                </Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <Button
+                              onClick={() => escalateAlertMutation.mutate(alert.id)}
+                              disabled={escalateAlertMutation.isPending}
+                              className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
+                              size="sm"
+                            >
+                              <AlertOctagon className="w-4 h-4" />
+                              {escalateAlertMutation.isPending ? 'Escalating...' : 'Escalate'}
+                            </Button>
+                          )}
+                        </>
                       )}
 
                       
