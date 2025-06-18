@@ -80,7 +80,7 @@ export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayPr
     description: getWeatherDescription(weather.condition as WeatherCondition)
   };
   
-  function getWeatherDescription(condition: WeatherCondition): string {
+  function getWeatherDescription(condition: string): string {
     switch (condition) {
       case 'sunny':
         return 'Clear skies with high humidity typical of Lagos';
@@ -97,17 +97,6 @@ export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayPr
     }
   }
 
-  // Simulate weather changes every 30 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const randomCondition = lagosWeatherConditions[Math.floor(Math.random() * lagosWeatherConditions.length)];
-      setCurrentWeather(randomCondition);
-      setWeatherIntensity(Math.random() * 0.8 + 0.2); // 0.2 to 1.0
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   const getWeatherIcon = (condition: WeatherCondition) => {
     switch (condition) {
       case 'sunny':
@@ -120,6 +109,8 @@ export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayPr
         return <CloudRain className="w-6 h-6 text-purple-600" />;
       case 'foggy':
         return <CloudSnow className="w-6 h-6 text-gray-400" />;
+      case 'windy':
+        return <Wind className="w-6 h-6 text-teal-500" />;
       default:
         return <Sun className="w-6 h-6 text-yellow-500" />;
     }
@@ -137,6 +128,8 @@ export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayPr
         return 'bg-purple-100 text-purple-800 border-purple-300';
       case 'foggy':
         return 'bg-gray-100 text-gray-700 border-gray-300';
+      case 'windy':
+        return 'bg-teal-100 text-teal-800 border-teal-300';
       default:
         return 'bg-blue-100 text-blue-800 border-blue-300';
     }
@@ -271,19 +264,9 @@ export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayPr
               </div>
             )}
 
-            {/* Quick Weather Change Buttons */}
-            <div className="flex gap-2 flex-wrap">
-              {lagosWeatherConditions.map((weather) => (
-                <Button
-                  key={weather.condition}
-                  variant={currentWeather.condition === weather.condition ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setCurrentWeather(weather)}
-                  className="text-xs"
-                >
-                  {getWeatherIcon(weather.condition)}
-                </Button>
-              ))}
+            {/* Weather Control Info */}
+            <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
+              Weather controlled from Weather Control Centre
             </div>
           </CardContent>
         )}
