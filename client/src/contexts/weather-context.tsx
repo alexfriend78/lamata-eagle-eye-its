@@ -66,7 +66,8 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
       lastUpdated: Date.now()
     };
     
-    console.log('🌦️ Updating global weather:', updatedWeather);
+    console.log('🌦️ Context: Updating global weather:', updatedWeather);
+    console.log('🌦️ Context: Current listeners count:', weatherListeners.size);
     
     // Update global state
     globalWeatherState = updatedWeather;
@@ -77,16 +78,22 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
     // Persist to localStorage
     if (typeof window !== 'undefined') {
       localStorage.setItem('weather-state', JSON.stringify(updatedWeather));
+      console.log('🌦️ Context: Saved to localStorage');
     }
     
     // Notify all listeners
+    let notifiedCount = 0;
     weatherListeners.forEach(listener => {
       try {
         listener(updatedWeather);
+        notifiedCount++;
+        console.log('🌦️ Context: Notified listener', notifiedCount);
       } catch (error) {
         console.warn('Error notifying weather listener:', error);
       }
     });
+    
+    console.log('🌦️ Context: Total listeners notified:', notifiedCount);
   };
 
   return (

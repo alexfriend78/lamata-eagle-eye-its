@@ -63,14 +63,17 @@ export default function WeatherControl() {
   ];
 
   const handleWeatherChange = (preset: typeof weatherPresets[0]) => {
-    console.log('🌩️ Weather Control: Setting weather to', preset.name);
-    updateWeather({
+    console.log('🌩️ Weather Control: Setting weather to', preset.name, preset);
+    const newWeatherData = {
       condition: preset.condition,
       temperature: preset.temperature,
       humidity: preset.humidity,
       windSpeed: preset.windSpeed,
       visibility: preset.visibility
-    });
+    };
+    console.log('🌩️ Weather Control: Calling updateWeather with:', newWeatherData);
+    updateWeather(newWeatherData);
+    console.log('🌩️ Weather Control: updateWeather called successfully');
   };
 
   return (
@@ -166,6 +169,25 @@ export default function WeatherControl() {
                 </Button>
               );
             })}
+          </div>
+
+          {/* Test Button for Debugging */}
+          <div className="mt-6 space-y-2">
+            <Button
+              onClick={() => {
+                console.log('🔥 TEST: Forcing rainy weather update');
+                updateWeather({
+                  condition: 'rainy',
+                  temperature: 22,
+                  humidity: 85,
+                  windSpeed: 18,
+                  visibility: 5
+                });
+              }}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              TEST: Force Rainy Weather
+            </Button>
           </div>
 
           {/* Custom Weather Controls */}

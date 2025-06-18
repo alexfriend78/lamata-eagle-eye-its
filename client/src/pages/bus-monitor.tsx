@@ -55,7 +55,15 @@ export default function BusMonitor() {
   // Debug weather changes
   useEffect(() => {
     console.log('📊 Dashboard weather updated:', weather);
+    console.log('📊 Dashboard weather condition specifically:', weather.condition);
   }, [weather]);
+  
+  // Additional debug for weather panel state
+  useEffect(() => {
+    if (showWeatherPanel) {
+      console.log('📊 Weather panel is open, current weather:', weather);
+    }
+  }, [showWeatherPanel, weather]);
 
 
   // Handle AI Insights close event
