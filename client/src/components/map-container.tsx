@@ -5,6 +5,7 @@ import BusDetailsPanel from "./bus-details-panel";
 
 import { useRouteStations } from "@/hooks/use-route-stations";
 import { useQuery } from "@tanstack/react-query";
+import { useWeather } from "@/contexts/weather-context";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, X } from "lucide-react";
 

@@ -329,17 +329,7 @@ export default function BusMonitor() {
               <Cloud className={`h-4 w-4 ${showWeatherAnimations ? 'text-blue-500' : 'text-gray-400'}`} />
             </Button>
 
-            {/* Weather Control Centre Link */}
-            <Link href="/weather-control">
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 px-3 text-xs"
-                title="Weather Control Centre"
-              >
-                Weather
-              </Button>
-            </Link>
+
 
             {/* Theme Toggle */}
             <Button

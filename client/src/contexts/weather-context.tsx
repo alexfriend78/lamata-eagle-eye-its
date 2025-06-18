@@ -6,6 +6,8 @@ interface WeatherData {
   humidity: number;
   windSpeed: number;
   visibility: number;
+  description?: string;
+  lastUpdated?: number;
 }
 
 interface WeatherContextType {
@@ -25,7 +27,10 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
   });
 
   const updateWeather = (newWeather: WeatherData) => {
-    setWeather(newWeather);
+    setWeather({
+      ...newWeather,
+      lastUpdated: Date.now()
+    });
   };
 
   return (

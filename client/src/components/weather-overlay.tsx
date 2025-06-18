@@ -218,17 +218,17 @@ export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayPr
 
     switch (currentWeather.condition) {
       case 'sunny':
-        return 'bg-gradient-to-b from-yellow-100/20 to-transparent';
+        return 'bg-gradient-to-b from-yellow-100/30 to-orange-50/20 animate-pulse';
       case 'cloudy':
-        return 'bg-gradient-to-b from-gray-200/40 to-transparent';
+        return 'bg-gradient-to-b from-gray-200/50 to-gray-100/30';
       case 'rainy':
-        return 'bg-gradient-to-b from-blue-200/50 to-blue-100/20';
+        return 'bg-gradient-to-b from-blue-200/60 to-blue-100/40 animate-pulse';
       case 'stormy':
-        return 'bg-gradient-to-b from-purple-300/60 to-blue-200/30';
+        return 'bg-gradient-to-b from-purple-300/70 to-blue-200/50 animate-pulse';
       case 'foggy':
-        return 'bg-gradient-to-b from-gray-300/70 to-gray-200/40';
+        return 'bg-gradient-to-b from-gray-300/80 to-gray-200/60';
       case 'windy':
-        return 'bg-gradient-to-b from-teal-100/30 to-transparent';
+        return 'bg-gradient-to-b from-teal-100/40 to-cyan-50/20 animate-pulse';
       default:
         return '';
     }
@@ -299,7 +299,13 @@ export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayPr
 
           {/* Weather Control Info */}
           <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
-            Weather controlled from Weather Control Centre
+            Weather updates automatically from Weather Control Centre
+          </div>
+          
+          {/* Real-time Weather Status */}
+          <div className="flex items-center justify-center gap-2 text-xs text-green-600 dark:text-green-400">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span>Live Weather Data</span>
           </div>
         </CardContent>
       </Card>
