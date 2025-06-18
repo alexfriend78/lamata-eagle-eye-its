@@ -605,6 +605,11 @@ export default function BusMonitor() {
         />
       )}
 
+      {/* Weather Overlay for Dashboard */}
+      <WeatherOverlay 
+        isVisible={showWeatherAnimations}
+        onToggle={setShowWeatherAnimations}
+      />
 
       </div>
     </div>
