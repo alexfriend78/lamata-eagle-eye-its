@@ -34,6 +34,69 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   const [geofencingAlert, setGeofencingAlert] = useState<{busId: number, busNumber: string} | null>(null);
   const [dismissedAlerts, setDismissedAlerts] = useState<Set<number>>(new Set());
   const [showReturnDialog, setShowReturnDialog] = useState(false);
+  
+  // Weather integration
+  const { weather } = useWeather();
+  
+  // Weather overlay effects for map
+  const getMapWeatherEffects = () => {
+    const effects = [];
+    
+    // Add weather particles based on condition
+    if (weather.condition === 'rainy' || weather.condition === 'stormy') {
+      for (let i = 0; i < 100; i++) {
+        effects.push(
+          <div
+            key={`rain-${i}`}
+            className="absolute w-0.5 h-8 bg-blue-300 opacity-60 animate-bounce"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 2}s`,
+              animationDuration: '1s',
+            }}
+          />
+        );
+      }
+    }
+    
+    if (weather.condition === 'windy') {
+      for (let i = 0; i < 50; i++) {
+        effects.push(
+          <div
+            key={`wind-${i}`}
+            className="absolute w-2 h-0.5 bg-teal-200 opacity-40 animate-pulse"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              transform: `rotate(${Math.random() * 360}deg)`,
+              animationDelay: `${Math.random() * 3}s`,
+            }}
+          />
+        );
+      }
+    }
+    
+    return effects;
+  };
+  
+  // Weather overlay background
+  const getWeatherOverlay = () => {
+    switch (weather.condition) {
+      case 'sunny':
+        return 'bg-gradient-to-br from-yellow-100/20 to-orange-50/10';
+      case 'cloudy':
+        return 'bg-gradient-to-br from-gray-200/30 to-gray-100/20';
+      case 'rainy':
+        return 'bg-gradient-to-br from-blue-200/40 to-blue-100/30';
+      case 'stormy':
+        return 'bg-gradient-to-br from-purple-300/50 to-blue-200/40';
+      case 'windy':
+        return 'bg-gradient-to-br from-teal-100/30 to-cyan-50/20';
+      default:
+        return '';
+    }
+  };
 
 
   // Fetch active alerts to determine which buses have emergency alerts
@@ -453,6 +516,14 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   return (
     <div className="relative w-full h-full overflow-hidden bg-white dark:bg-gray-900"
          style={{ minWidth: mapWidth, minHeight: mapHeight }}>
+      
+      {/* Weather Overlay Effects */}
+      <div className={`absolute inset-0 pointer-events-none z-5 ${getWeatherOverlay()}`} />
+      
+      {/* Weather Particles */}
+      <div className="absolute inset-0 pointer-events-none z-6 overflow-hidden">
+        {getMapWeatherEffects()}
+      </div>
       
       {/* Flashing Geofencing Alert */}
       {geofencingAlert && (
