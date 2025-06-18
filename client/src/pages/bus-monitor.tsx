@@ -401,7 +401,7 @@ export default function BusMonitor() {
           <MapContainer 
             buses={buses || []}
             routes={routes || []}
-            stations={stations || []}
+            stations={selectedRoutes.length === 0 ? (stations || []) : (filteredStations || [])}
             selectedRoutes={selectedRoutes}
             theme={theme}
             selectedZone={selectedZone}
