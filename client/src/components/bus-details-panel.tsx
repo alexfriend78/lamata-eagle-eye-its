@@ -90,6 +90,16 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
 
   const queryClient = useQueryClient();
 
+  // Protected onClose function that prevents closure during escalation
+  const protectedOnClose = () => {
+    if (escalationMode) {
+      console.log("BLOCKED: onClose() called during escalation mode - ignoring");
+      return;
+    }
+    console.log("Allowing onClose() - escalation mode not active");
+    onClose();
+  };
+
   // Fetch active alerts for this bus
   const { data: alerts = [] } = useQuery<AlertWithDetails[]>({
     queryKey: ['/api/alerts'],
