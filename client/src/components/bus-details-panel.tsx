@@ -83,6 +83,7 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
   const [isDriverVideoMuted, setIsDriverVideoMuted] = useState(true);
   const [isPassengerVideoMuted, setIsPassengerVideoMuted] = useState(true);
   const [isEscalated, setIsEscalated] = useState(false);
+  const [escalatedAlerts, setEscalatedAlerts] = useState<Set<number>>(new Set());
 
   const queryClient = useQueryClient();
 
@@ -564,79 +565,7 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
             </div>
           )}
 
-          {/* Emergency Alerts Section */}
-          {hasEmergencyAlerts && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <AlertTriangle className="w-6 h-6 text-red-600" />
-                <h3 className="text-lg font-semibold text-red-800 dark:text-red-200">Emergency Alerts</h3>
-                <Badge variant="destructive" className="animate-pulse">
-                  {busAlerts.length} ACTIVE
-                </Badge>
-              </div>
-              
-              {busAlerts.map((alert, index) => (
-                <div key={alert.id} className="mb-4 last:mb-0">
-                  <div className="bg-white dark:bg-gray-800 border border-red-300 dark:border-red-700 rounded-lg p-4">
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <Badge 
-                          variant="destructive" 
-                          className={`
-                            ${alert.priority === 'critical' ? 'bg-red-600' : 
-                              alert.priority === 'high' ? 'bg-orange-600' : 
-                              alert.priority === 'medium' ? 'bg-yellow-600' : 'bg-blue-600'}
-                          `}
-                        >
-                          {alert.priority?.toUpperCase() || 'MEDIUM'} PRIORITY
-                        </Badge>
-                        <span className="text-sm text-gray-500">
-                          {new Date(alert.timestamp).toLocaleTimeString()}
-                        </span>
-                      </div>
-                    </div>
-                    
-                    <p className="text-gray-800 dark:text-gray-200 mb-3 font-medium">
-                      {alert.message}
-                    </p>
-                    
-                    {alert.driverName && (
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-                        Driver: {alert.driverName}
-                      </p>
-                    )}
-                    
-                    <div className="flex gap-3">
-                      <Button
-                        onClick={() => acknowledgeAlertMutation.mutate(alert.id)}
-                        disabled={acknowledgeAlertMutation.isPending}
-                        className="bg-yellow-600 hover:bg-yellow-700 text-white flex items-center gap-2"
-                      >
-                        <CheckCircle className="w-4 h-4" />
-                        {acknowledgeAlertMutation.isPending ? 'Acknowledging...' : 'Acknowledge'}
-                      </Button>
-                      <Button
-                        onClick={() => escalateAlertMutation.mutate(alert.id)}
-                        disabled={escalateAlertMutation.isPending}
-                        className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
-                      >
-                        <AlertOctagon className="w-4 h-4" />
-                        {escalateAlertMutation.isPending ? 'Escalating...' : 'Escalate'}
-                      </Button>
-                      <Button
-                        onClick={() => closeAlertMutation.mutate(alert.id)}
-                        disabled={closeAlertMutation.isPending}
-                        className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
-                      >
-                        <X className="w-4 h-4" />
-                        {closeAlertMutation.isPending ? 'Closing...' : 'Close'}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+
 
           {/* Alert Management Section - Show only if there are emergency alerts */}
           {hasEmergencyAlerts && (
@@ -659,10 +588,28 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                           {alert.message}
                         </p>
                         <p className="text-sm text-red-600 dark:text-red-400 mt-1">
-                          {new Date(alert.timestamp).toLocaleString()}
+                          {new Date(alert.createdAt || alert.timestamp).toLocaleString()}
                         </p>
                       </div>
                     </div>
+                    
+                    {/* Security Incident Video for security alerts */}
+                    {alert.type === 'security' && (
+                      <div className="mb-4">
+                        <p className="text-sm font-medium text-red-800 dark:text-red-200 mb-2">Security Incident Video:</p>
+                        <video 
+                          className="w-full h-48 bg-black rounded border"
+                          controls
+                          muted
+                          autoPlay
+                          loop
+                        >
+                          <source src="/attached_assets/BRT_Driver_s_Reckless_Behavior_Video_1750224476189.mp4" type="video/mp4" />
+                          Video not supported
+                        </video>
+                      </div>
+                    )}
+                    
                     <div className="flex gap-3 flex-wrap">
                       <Button
                         onClick={() => acknowledgeAlertMutation.mutate(alert.id)}
