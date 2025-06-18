@@ -350,37 +350,41 @@ export default function EmergencyAlertSystem({
             )}
             
             <div className="flex gap-4 justify-center">
-              <Button
-                onClick={() => {
-                  if (acknowledgeAlertMutation.isPending) return;
-                  console.log("Acknowledge button clicked for alert:", activeAlert.id);
-                  acknowledgeAlertMutation.mutate(activeAlert.id);
-                }}
-                variant="secondary"
-                size="lg"
-                className="bg-blue-600/80 text-white border-blue-400/30 hover:bg-blue-500/80 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={acknowledgeAlertMutation.isPending || acknowledgeAlertMutation.isSuccess}
-              >
-                {acknowledgeAlertMutation.isPending ? "Acknowledging..." : 
-                 acknowledgeAlertMutation.isSuccess ? "Acknowledged" : "Acknowledge"}
-              </Button>
+              {/* Only show acknowledge button for non-P1 security alerts */}
+              {!(activeAlert.priority === "P1" && activeAlert.type === "security") && (
+                <Button
+                  onClick={() => {
+                    if (acknowledgeAlertMutation.isPending) return;
+                    console.log("Acknowledge button clicked for alert:", activeAlert.id);
+                    acknowledgeAlertMutation.mutate(activeAlert.id);
+                  }}
+                  variant="secondary"
+                  size="lg"
+                  className="bg-blue-600/80 text-white border-blue-400/30 hover:bg-blue-500/80 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={acknowledgeAlertMutation.isPending || acknowledgeAlertMutation.isSuccess}
+                >
+                  {acknowledgeAlertMutation.isPending ? "Acknowledging..." : 
+                   acknowledgeAlertMutation.isSuccess ? "Acknowledged" : "Acknowledge"}
+                </Button>
+              )}
               
-
-              
-              <Button
-                onClick={() => {
-                  if (closeAlertMutation.isPending) return;
-                  console.log("Close Alert button clicked for alert:", activeAlert.id);
-                  closeAlertMutation.mutate(activeAlert.id);
-                }}
-                variant="secondary"
-                size="lg"
-                className="bg-white/20 text-white border-white/30 hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={closeAlertMutation.isPending || closeAlertMutation.isSuccess}
-              >
-                {closeAlertMutation.isPending ? "Closing..." : 
-                 closeAlertMutation.isSuccess ? "Closed" : "Close Alert"}
-              </Button>
+              {/* Only show close button for non-P1 security alerts */}
+              {!(activeAlert.priority === "P1" && activeAlert.type === "security") && (
+                <Button
+                  onClick={() => {
+                    if (closeAlertMutation.isPending) return;
+                    console.log("Close Alert button clicked for alert:", activeAlert.id);
+                    closeAlertMutation.mutate(activeAlert.id);
+                  }}
+                  variant="secondary"
+                  size="lg"
+                  className="bg-white/20 text-white border-white/30 hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={closeAlertMutation.isPending || closeAlertMutation.isSuccess}
+                >
+                  {closeAlertMutation.isPending ? "Closing..." : 
+                   closeAlertMutation.isSuccess ? "Closed" : "Close Alert"}
+                </Button>
+              )}
               
               <Button
                 onClick={() => setShowTriage(true)}
@@ -391,6 +395,19 @@ export default function EmergencyAlertSystem({
                 <Video className="w-4 h-4 mr-2" />
                 Triage Alert
               </Button>
+              
+              {/* For P1 security alerts, add a button to go to bus details for escalation */}
+              {(activeAlert.priority === "P1" && activeAlert.type === "security") && (
+                <Button
+                  onClick={() => onAlertDismiss()}
+                  variant="secondary"
+                  size="lg"
+                  className="bg-red-600/80 text-white border-red-400/30 hover:bg-red-500/80"
+                >
+                  <AlertTriangle className="w-4 h-4 mr-2" />
+                  Go to Bus Details for Escalation
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>
