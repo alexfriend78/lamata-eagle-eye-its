@@ -18,7 +18,8 @@ import PredictiveMaintenance from "@/components/predictive-maintenance";
 import ManagementAnalyticsPanel from "@/components/management-analytics-panel";
 
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain, Navigation, Wrench, BarChart3 } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain, Navigation, Wrench, BarChart3, Cloud } from "lucide-react";
+import { Link } from "wouter";
 import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
@@ -315,7 +316,17 @@ export default function BusMonitor() {
               <Map className="h-4 w-4" />
             </Button>
 
-
+            {/* Weather Control */}
+            <Link href="/weather-control">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 w-8 p-0"
+                title="Weather Control Center"
+              >
+                <Cloud className="h-4 w-4" />
+              </Button>
+            </Link>
 
             {/* Theme Toggle */}
             <Button

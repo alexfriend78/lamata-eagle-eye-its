@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/hooks/use-theme";
 import BusMonitor from "@/pages/bus-monitor";
 import AlertSimulator from "@/pages/alert-simulator";
+import WeatherControl from "@/pages/weather-control";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -13,6 +14,7 @@ function Router() {
     <Switch>
       <Route path="/" component={BusMonitor} />
       <Route path="/alert-simulator" component={AlertSimulator} />
+      <Route path="/weather-control" component={WeatherControl} />
       <Route component={NotFound} />
     </Switch>
   );
