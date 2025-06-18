@@ -63,6 +63,7 @@ export default function WeatherControl() {
   ];
 
   const handleWeatherChange = (preset: typeof weatherPresets[0]) => {
+    console.log('🌩️ Weather Control: Setting weather to', preset.name);
     updateWeather({
       condition: preset.condition,
       temperature: preset.temperature,

@@ -51,6 +51,11 @@ export default function BusMonitor() {
   
   // Weather hook
   const { weather } = useWeather();
+  
+  // Debug weather changes
+  useEffect(() => {
+    console.log('📊 Dashboard weather updated:', weather);
+  }, [weather]);
 
 
   // Handle AI Insights close event
