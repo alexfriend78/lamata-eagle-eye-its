@@ -16,6 +16,7 @@ import AIInsightsPanel from "@/components/ai-insights-panel";
 import RouteOptimizer from "@/components/route-optimizer";
 import PredictiveMaintenance from "@/components/predictive-maintenance";
 import ManagementAnalyticsPanel from "@/components/management-analytics-panel";
+import WeatherOverlay from "@/components/weather-overlay";
 
 import { Button } from "@/components/ui/button";
 import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain, Navigation, Wrench, BarChart3, Cloud } from "lucide-react";
@@ -40,6 +41,7 @@ export default function BusMonitor() {
   const [showRouteOptimizer, setShowRouteOptimizer] = useState(false);
   const [showPredictiveMaintenance, setShowPredictiveMaintenance] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
+  const [showWeatherAnimations, setShowWeatherAnimations] = useState(true);
 
 
   // Handle AI Insights close event
@@ -316,15 +318,26 @@ export default function BusMonitor() {
               <Map className="h-4 w-4" />
             </Button>
 
-            {/* Weather Control */}
+            {/* Weather Animations Toggle */}
+            <Button
+              onClick={() => setShowWeatherAnimations(!showWeatherAnimations)}
+              variant="outline"
+              size="sm"
+              className="h-8 w-8 p-0"
+              title={`${showWeatherAnimations ? 'Hide' : 'Show'} Weather Animations`}
+            >
+              <Cloud className={`h-4 w-4 ${showWeatherAnimations ? 'text-blue-500' : 'text-gray-400'}`} />
+            </Button>
+
+            {/* Weather Control Centre Link */}
             <Link href="/weather-control">
               <Button
                 variant="outline"
                 size="sm"
-                className="h-8 w-8 p-0"
-                title="Weather Control Center"
+                className="h-8 px-3 text-xs"
+                title="Weather Control Centre"
               >
-                <Cloud className="h-4 w-4" />
+                Weather
               </Button>
             </Link>
 
@@ -427,6 +440,12 @@ export default function BusMonitor() {
             showStations={showStations}
             showBuses={showBuses}
             showBackgroundMap={showBackgroundMap}
+          />
+          
+          {/* Weather Overlay */}
+          <WeatherOverlay 
+            isVisible={showWeatherAnimations}
+            onToggle={setShowWeatherAnimations}
           />
         </div>
 
