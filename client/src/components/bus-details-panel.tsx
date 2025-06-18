@@ -82,6 +82,8 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
   const [isPassengerVideoPlaying, setIsPassengerVideoPlaying] = useState(true);
   const [isDriverVideoMuted, setIsDriverVideoMuted] = useState(true);
   const [isPassengerVideoMuted, setIsPassengerVideoMuted] = useState(true);
+  const [escalatedAlertId, setEscalatedAlertId] = useState<number | null>(null);
+  const [showEscalateMessage, setShowEscalateMessage] = useState(false);
   const [isEscalated, setIsEscalated] = useState(false);
   const [escalatedAlerts, setEscalatedAlerts] = useState<Set<number>>(new Set());
 
@@ -130,9 +132,10 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
   const escalateAlertMutation = useMutation({
     mutationFn: (alertId: number) => apiRequest("PATCH", `/api/alerts/${alertId}/escalate`),
     onSuccess: (_, alertId) => {
-      setEscalatedAlerts(prev => new Set(prev.add(alertId)));
+      setEscalatedAlerts(prev => new Set([...prev, alertId]));
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
+      // Don't auto-close the view, let user decide
     }
   });
 
@@ -273,6 +276,24 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
     
     // For normal operations, always use the first driver video (no cycling)
     return driverVideo1;
+  };
+
+  // Array of security videos for sequential selection
+  const securityVideos = [
+    "/attached_assets/Kidnapping_on_Lagos_BRT_Bus_1750204355118.mp4",
+    "/attached_assets/knife_Lagos_Bus_CCTV_Video_Ready_1750007661394.mp4", 
+    "/attached_assets/Sword_Lagos_Bus_CCTV_Video_Ready (1)_1750007599619.mp4",
+    "/attached_assets/Bus_Fight_Video_Generated_1750007661396.mp4"
+  ];
+
+  // Get security video with sequential rotation based on alert ID
+  const getSecurityVideoSrc = () => {
+    const currentAlert = allBusAlerts.find(alert => alert.type === 'security');
+    if (currentAlert) {
+      const videoIndex = (currentAlert.id - 1) % securityVideos.length;
+      return securityVideos[videoIndex];
+    }
+    return securityVideos[0];
   };
 
   // Array of passenger videos for sequential selection
@@ -600,13 +621,13 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                       <div className="mb-4">
                         <p className="text-sm font-medium text-red-800 dark:text-red-200 mb-2">Security Incident Video:</p>
                         <video 
-                          className="w-full h-48 bg-black rounded border"
+                          className="w-full h-80 bg-black rounded border"
                           controls
                           muted
                           autoPlay
                           loop
                         >
-                          <source src="/attached_assets/Kidnapping_on_Lagos_BRT_Bus_1750204355118.mp4" type="video/mp4" />
+                          <source src={getSecurityVideoSrc()} type="video/mp4" />
                           Video not supported
                         </video>
                       </div>
