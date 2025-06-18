@@ -872,8 +872,10 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             ));
         })()}
         
-        {/* Bus Stations - only show if stations visibility is enabled */}
-        {showStations && stations.map((station) => {
+        {/* Bus Stations - only show if stations visibility is enabled and route is selected */}
+        {showStations && stations
+          .filter(station => selectedRoutes.length === 0 || selectedRoutes.includes(station.routeId))
+          .map((station) => {
           const stationPixelX = station.x * mapWidth;
           const stationPixelY = station.y * mapHeight;
           
