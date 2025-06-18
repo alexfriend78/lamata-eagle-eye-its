@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Cloud, CloudRain, Sun, Wind, Thermometer, Eye, CloudSnow } from "lucide-react";
+import { useWeather } from "@/contexts/weather-context";
 
 interface WeatherOverlayProps {
   isVisible: boolean;
   onToggle: (visible: boolean) => void;
 }
 
-type WeatherCondition = 'sunny' | 'cloudy' | 'rainy' | 'stormy' | 'foggy';
+type WeatherCondition = 'sunny' | 'cloudy' | 'rainy' | 'stormy' | 'foggy' | 'windy';
 
 interface WeatherData {
   condition: WeatherCondition;
@@ -66,8 +67,35 @@ const lagosWeatherConditions: WeatherData[] = [
 ];
 
 export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayProps) {
-  const [currentWeather, setCurrentWeather] = useState<WeatherData>(lagosWeatherConditions[0]);
+  const { weather } = useWeather();
   const [weatherIntensity, setWeatherIntensity] = useState(0.7);
+  
+  // Map weather context data to local WeatherData format
+  const currentWeather: WeatherData = {
+    condition: weather.condition as WeatherCondition,
+    temperature: weather.temperature,
+    humidity: weather.humidity,
+    windSpeed: weather.windSpeed,
+    visibility: weather.visibility,
+    description: getWeatherDescription(weather.condition as WeatherCondition)
+  };
+  
+  function getWeatherDescription(condition: WeatherCondition): string {
+    switch (condition) {
+      case 'sunny':
+        return 'Clear skies with high humidity typical of Lagos';
+      case 'cloudy':
+        return 'Overcast with high humidity - common during rainy season';
+      case 'rainy':
+        return 'Heavy tropical rainfall affecting visibility';
+      case 'stormy':
+        return 'Thunderstorm with strong winds - exercise caution';
+      case 'windy':
+        return 'Strong winds affecting bus operations';
+      default:
+        return 'Current weather conditions in Lagos';
+    }
+  }
 
   // Simulate weather changes every 30 seconds
   useEffect(() => {

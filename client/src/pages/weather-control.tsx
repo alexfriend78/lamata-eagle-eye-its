@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { useTheme } from "@/hooks/use-theme";
+import { useWeather } from "@/contexts/weather-context";
 import WeatherOverlay from "@/components/weather-overlay";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Cloud, Sun, CloudRain, CloudSnow, Wind } from "lucide-react";
@@ -7,13 +7,7 @@ import { Link } from "wouter";
 
 export default function WeatherControl() {
   const { theme } = useTheme();
-  const [currentWeather, setCurrentWeather] = useState({
-    condition: "sunny",
-    temperature: 28,
-    humidity: 65,
-    windSpeed: 12,
-    visibility: 10
-  });
+  const { weather: currentWeather, updateWeather } = useWeather();
 
   const weatherPresets = [
     {
@@ -69,7 +63,7 @@ export default function WeatherControl() {
   ];
 
   const handleWeatherChange = (preset: typeof weatherPresets[0]) => {
-    setCurrentWeather({
+    updateWeather({
       condition: preset.condition,
       temperature: preset.temperature,
       humidity: preset.humidity,
@@ -185,7 +179,7 @@ export default function WeatherControl() {
                   min="15"
                   max="40"
                   value={currentWeather.temperature}
-                  onChange={(e) => setCurrentWeather(prev => ({ ...prev, temperature: parseInt(e.target.value) }))}
+                  onChange={(e) => updateWeather({ ...currentWeather, temperature: parseInt(e.target.value) })}
                   className="w-full"
                 />
                 <span className="text-sm text-gray-500">{currentWeather.temperature}°C</span>
@@ -198,7 +192,7 @@ export default function WeatherControl() {
                   min="20"
                   max="100"
                   value={currentWeather.humidity}
-                  onChange={(e) => setCurrentWeather(prev => ({ ...prev, humidity: parseInt(e.target.value) }))}
+                  onChange={(e) => updateWeather({ ...currentWeather, humidity: parseInt(e.target.value) })}
                   className="w-full"
                 />
                 <span className="text-sm text-gray-500">{currentWeather.humidity}%</span>
@@ -211,7 +205,7 @@ export default function WeatherControl() {
                   min="0"
                   max="60"
                   value={currentWeather.windSpeed}
-                  onChange={(e) => setCurrentWeather(prev => ({ ...prev, windSpeed: parseInt(e.target.value) }))}
+                  onChange={(e) => updateWeather({ ...currentWeather, windSpeed: parseInt(e.target.value) })}
                   className="w-full"
                 />
                 <span className="text-sm text-gray-500">{currentWeather.windSpeed} km/h</span>
@@ -224,7 +218,7 @@ export default function WeatherControl() {
                   min="1"
                   max="20"
                   value={currentWeather.visibility}
-                  onChange={(e) => setCurrentWeather(prev => ({ ...prev, visibility: parseInt(e.target.value) }))}
+                  onChange={(e) => updateWeather({ ...currentWeather, visibility: parseInt(e.target.value) })}
                   className="w-full"
                 />
                 <span className="text-sm text-gray-500">{currentWeather.visibility} km</span>
