@@ -546,7 +546,7 @@ export default function BusMonitor() {
           if (highestPriorityAlert) {
             try {
               await fetch(`/api/alerts/${highestPriorityAlert.id}/clear`, {
-                method: 'POST',
+                method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' }
               });
               // Refetch alerts to update the UI

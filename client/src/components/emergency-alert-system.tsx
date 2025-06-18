@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
@@ -69,11 +69,16 @@ export default function EmergencyAlertSystem({
   const [isVideoMuted, setIsVideoMuted] = useState(true);
 
   const queryClient = useQueryClient();
+  
+  // Track the previous alert ID to prevent unnecessary resets
+  const prevAlertIdRef = useRef<number | null>(null);
 
   // Reset showTriage when a new alert arrives to ensure alerts show first
+  // Only reset if the alert ID changes, not on every activeAlert update
   useEffect(() => {
-    if (activeAlert) {
+    if (activeAlert && activeAlert.id !== prevAlertIdRef.current) {
       setShowTriage(false);
+      prevAlertIdRef.current = activeAlert.id;
     }
   }, [activeAlert]);
 
