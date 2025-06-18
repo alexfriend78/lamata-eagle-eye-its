@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,6 @@ interface EmergencyAlertSystemProps {
   activeAlert: AlertWithDetails | null;
   onAlertDismiss: () => void;
   onAlertCreate: (alert: AlertWithDetails) => void;
-  onBusSelect?: (bus: BusWithRoute) => void;
 }
 
 type Priority = "P1" | "P2" | "P3" | "P4" | "P5";
@@ -56,8 +55,7 @@ export default function EmergencyAlertSystem({
   stations, 
   activeAlert, 
   onAlertDismiss, 
-  onAlertCreate,
-  onBusSelect
+  onAlertCreate 
 }: EmergencyAlertSystemProps) {
   const [showSimulator, setShowSimulator] = useState(false);
   const [showTriage, setShowTriage] = useState(false);
@@ -69,16 +67,11 @@ export default function EmergencyAlertSystem({
   const [isVideoMuted, setIsVideoMuted] = useState(true);
 
   const queryClient = useQueryClient();
-  
-  // Track the previous alert ID to prevent unnecessary resets
-  const prevAlertIdRef = useRef<number | null>(null);
 
   // Reset showTriage when a new alert arrives to ensure alerts show first
-  // Only reset if the alert ID changes, not on every activeAlert update
   useEffect(() => {
-    if (activeAlert && activeAlert.id !== prevAlertIdRef.current) {
+    if (activeAlert) {
       setShowTriage(false);
-      prevAlertIdRef.current = activeAlert.id;
     }
   }, [activeAlert]);
 
@@ -357,41 +350,35 @@ export default function EmergencyAlertSystem({
             )}
             
             <div className="flex gap-4 justify-center">
-              {/* Only show acknowledge button for non-P1 security alerts */}
-              {!(activeAlert.priority === "P1" && activeAlert.type === "security") && (
-                <Button
-                  onClick={() => {
-                    if (acknowledgeAlertMutation.isPending) return;
-                    console.log("Acknowledge button clicked for alert:", activeAlert.id);
-                    acknowledgeAlertMutation.mutate(activeAlert.id);
-                  }}
-                  variant="secondary"
-                  size="lg"
-                  className="bg-blue-600/80 text-white border-blue-400/30 hover:bg-blue-500/80 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={acknowledgeAlertMutation.isPending || acknowledgeAlertMutation.isSuccess}
-                >
-                  {acknowledgeAlertMutation.isPending ? "Acknowledging..." : 
-                   acknowledgeAlertMutation.isSuccess ? "Acknowledged" : "Acknowledge"}
-                </Button>
-              )}
+              <Button
+                onClick={() => {
+                  if (acknowledgeAlertMutation.isPending) return;
+                  console.log("Acknowledge button clicked for alert:", activeAlert.id);
+                  acknowledgeAlertMutation.mutate(activeAlert.id);
+                }}
+                variant="secondary"
+                size="lg"
+                className="bg-blue-600/80 text-white border-blue-400/30 hover:bg-blue-500/80 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={acknowledgeAlertMutation.isPending || acknowledgeAlertMutation.isSuccess}
+              >
+                {acknowledgeAlertMutation.isPending ? "Acknowledging..." : 
+                 acknowledgeAlertMutation.isSuccess ? "Acknowledged" : "Acknowledge"}
+              </Button>
               
-              {/* Only show close button for non-P1 security alerts */}
-              {!(activeAlert.priority === "P1" && activeAlert.type === "security") && (
-                <Button
-                  onClick={() => {
-                    if (closeAlertMutation.isPending) return;
-                    console.log("Close Alert button clicked for alert:", activeAlert.id);
-                    closeAlertMutation.mutate(activeAlert.id);
-                  }}
-                  variant="secondary"
-                  size="lg"
-                  className="bg-white/20 text-white border-white/30 hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed"
-                  disabled={closeAlertMutation.isPending || closeAlertMutation.isSuccess}
-                >
-                  {closeAlertMutation.isPending ? "Closing..." : 
-                   closeAlertMutation.isSuccess ? "Closed" : "Close Alert"}
-                </Button>
-              )}
+              <Button
+                onClick={() => {
+                  if (closeAlertMutation.isPending) return;
+                  console.log("Close Alert button clicked for alert:", activeAlert.id);
+                  closeAlertMutation.mutate(activeAlert.id);
+                }}
+                variant="secondary"
+                size="lg"
+                className="bg-white/20 text-white border-white/30 hover:bg-white/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={closeAlertMutation.isPending || closeAlertMutation.isSuccess}
+              >
+                {closeAlertMutation.isPending ? "Closing..." : 
+                 closeAlertMutation.isSuccess ? "Closed" : "Close Alert"}
+              </Button>
               
               <Button
                 onClick={() => setShowTriage(true)}
@@ -402,31 +389,6 @@ export default function EmergencyAlertSystem({
                 <Video className="w-4 h-4 mr-2" />
                 Triage Alert
               </Button>
-              
-              {/* For P1 security alerts, add a button to go to bus details for alert management */}
-              {(activeAlert.priority === "P1" && activeAlert.type === "security") && (
-                <Button
-                  onClick={() => {
-                    // Navigate to bus details with alert management context
-                    const alertBus = buses.find(bus => bus.id === activeAlert.busId);
-                    if (alertBus && onBusSelect) {
-                      console.log("Navigating to bus details for alert management - Bus:", alertBus.busNumber);
-                      onBusSelect(alertBus);
-                      // Close the popup but DON'T clear the alert - let bus details manage it
-                      onAlertDismiss();
-                    } else {
-                      console.log("Bus not found or onBusSelect not provided");
-                      onAlertDismiss();
-                    }
-                  }}
-                  variant="secondary"
-                  size="lg"
-                  className="bg-red-600/80 text-white border-red-400/30 hover:bg-red-500/80"
-                >
-                  <AlertTriangle className="w-4 h-4 mr-2" />
-                  Go to Bus Details for Escalation
-                </Button>
-              )}
             </div>
           </CardContent>
         </Card>

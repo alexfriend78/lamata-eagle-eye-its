@@ -78,26 +78,13 @@ function getNextStopsForBus(bus: BusWithRoute) {
 }
 
 export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) {
-  const queryClient = useQueryClient();
   const [isDriverVideoPlaying, setIsDriverVideoPlaying] = useState(true);
   const [isPassengerVideoPlaying, setIsPassengerVideoPlaying] = useState(true);
   const [isDriverVideoMuted, setIsDriverVideoMuted] = useState(true);
   const [isPassengerVideoMuted, setIsPassengerVideoMuted] = useState(true);
-  const [escalatedAlertId, setEscalatedAlertId] = useState<number | null>(null);
-  const [showEscalateMessage, setShowEscalateMessage] = useState(false);
   const [isEscalated, setIsEscalated] = useState(false);
-  const [escalatedAlerts, setEscalatedAlerts] = useState<Set<number>>(new Set());
-  const [escalationMode, setEscalationMode] = useState(false);
 
-  // Protected onClose function that prevents closure during escalation
-  const protectedOnClose = () => {
-    if (escalationMode) {
-      console.log("BLOCKED: onClose() called during escalation mode - ignoring");
-      return;
-    }
-    console.log("Allowing onClose() - escalation mode not active");
-    onClose();
-  };
+  const queryClient = useQueryClient();
 
   // Fetch active alerts for this bus
   const { data: alerts = [] } = useQuery<AlertWithDetails[]>({
@@ -107,24 +94,7 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
 
   // Filter alerts for this specific bus
   const busAlerts = alerts.filter(alert => alert.busId === bus.id && alert.isActive);
-  
-  // Include P1 Security alerts even if acknowledged (for escalation purposes)
-  const p1SecurityAlerts = alerts.filter(alert => 
-    alert.busId === bus.id && 
-    alert.priority === "P1" && 
-    alert.type === "security" && 
-    alert.status !== "closed"
-  );
-  
-  // Combine active alerts with P1 security alerts for display
-  const allDisplayableAlerts = [...busAlerts];
-  p1SecurityAlerts.forEach(alert => {
-    if (!allDisplayableAlerts.find(a => a.id === alert.id)) {
-      allDisplayableAlerts.push(alert);
-    }
-  });
-  
-  const hasEmergencyAlerts = allDisplayableAlerts.length > 0;
+  const hasEmergencyAlerts = busAlerts.length > 0;
   
   // Check for driver misconduct alerts (including acknowledged ones)
   const allBusAlerts = alerts.filter(alert => alert.busId === bus.id);
@@ -141,43 +111,27 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
   // Mutation to escalate alert
   const escalateAlertMutation = useMutation({
     mutationFn: (alertId: number) => apiRequest("PATCH", `/api/alerts/${alertId}/escalate`),
-    onSuccess: (_, alertId) => {
-      console.log("Escalate mutation succeeded for alert:", alertId);
-      setEscalatedAlerts(prev => new Set([...prev, alertId]));
-      setEscalationMode(true); // Enable escalation mode to prevent auto-close
-      console.log("Escalation mode enabled - panel locked open");
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
-      console.log("Escalation complete - NOT calling onClose()");
-      // Don't auto-close the view, let user decide
     }
   });
 
-  // Mutation to acknowledge alert (does NOT close panel)
+  // Mutation to acknowledge alert
   const acknowledgeAlertMutation = useMutation({
     mutationFn: (alertId: number) => apiRequest("PATCH", `/api/alerts/${alertId}/acknowledge`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
-      // Never auto-close the panel for acknowledgment
     }
   });
 
-  // Mutation to close alert (closes panel)
+  // Mutation to close alert
   const closeAlertMutation = useMutation({
     mutationFn: (alertId: number) => apiRequest("PATCH", `/api/alerts/${alertId}/close`),
-    onSuccess: (_, alertId) => {
-      console.log("Close alert mutation succeeded - user chose to close");
-      setEscalationMode(false); // Disable escalation mode
-      setEscalatedAlerts(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(alertId);
-        return newSet;
-      });
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
-      // Only close when user explicitly chooses to close alert
-      onClose();
     }
   });
 
@@ -296,26 +250,9 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
       return recklessBehaviorVideoPath;
     }
     
-    // For normal operations, always use the first driver video (no cycling)
-    return driverVideo1;
-  };
-
-  // Array of security videos for sequential selection
-  const securityVideos = [
-    "/attached_assets/Kidnapping_on_Lagos_BRT_Bus_1750204355118.mp4",
-    "/attached_assets/knife_Lagos_Bus_CCTV_Video_Ready_1750007661394.mp4", 
-    "/attached_assets/Sword_Lagos_Bus_CCTV_Video_Ready (1)_1750007599619.mp4",
-    "/attached_assets/Bus_Fight_Video_Generated_1750007661396.mp4"
-  ];
-
-  // Get security video with sequential rotation based on alert ID
-  const getSecurityVideoSrc = () => {
-    const currentAlert = allBusAlerts.find(alert => alert.type === 'security');
-    if (currentAlert) {
-      const videoIndex = (currentAlert.id - 1) % securityVideos.length;
-      return securityVideos[videoIndex];
-    }
-    return securityVideos[0];
+    // For normal operations, use Lagos BRT driver videos sequentially based on bus ID
+    const videoIndex = (bus.id - 1) % driverVideos.length;
+    return driverVideos[videoIndex];
   };
 
   // Array of passenger videos for sequential selection
@@ -610,7 +547,79 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
             </div>
           )}
 
-
+          {/* Emergency Alerts Section */}
+          {hasEmergencyAlerts && (
+            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <AlertTriangle className="w-6 h-6 text-red-600" />
+                <h3 className="text-lg font-semibold text-red-800 dark:text-red-200">Emergency Alerts</h3>
+                <Badge variant="destructive" className="animate-pulse">
+                  {busAlerts.length} ACTIVE
+                </Badge>
+              </div>
+              
+              {busAlerts.map((alert, index) => (
+                <div key={alert.id} className="mb-4 last:mb-0">
+                  <div className="bg-white dark:bg-gray-800 border border-red-300 dark:border-red-700 rounded-lg p-4">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <Badge 
+                          variant="destructive" 
+                          className={`
+                            ${alert.priority === 'critical' ? 'bg-red-600' : 
+                              alert.priority === 'high' ? 'bg-orange-600' : 
+                              alert.priority === 'medium' ? 'bg-yellow-600' : 'bg-blue-600'}
+                          `}
+                        >
+                          {alert.priority?.toUpperCase() || 'MEDIUM'} PRIORITY
+                        </Badge>
+                        <span className="text-sm text-gray-500">
+                          {new Date(alert.timestamp).toLocaleTimeString()}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <p className="text-gray-800 dark:text-gray-200 mb-3 font-medium">
+                      {alert.message}
+                    </p>
+                    
+                    {alert.driverName && (
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        Driver: {alert.driverName}
+                      </p>
+                    )}
+                    
+                    <div className="flex gap-3">
+                      <Button
+                        onClick={() => acknowledgeAlertMutation.mutate(alert.id)}
+                        disabled={acknowledgeAlertMutation.isPending}
+                        className="bg-yellow-600 hover:bg-yellow-700 text-white flex items-center gap-2"
+                      >
+                        <CheckCircle className="w-4 h-4" />
+                        {acknowledgeAlertMutation.isPending ? 'Acknowledging...' : 'Acknowledge'}
+                      </Button>
+                      <Button
+                        onClick={() => escalateAlertMutation.mutate(alert.id)}
+                        disabled={escalateAlertMutation.isPending}
+                        className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
+                      >
+                        <AlertOctagon className="w-4 h-4" />
+                        {escalateAlertMutation.isPending ? 'Escalating...' : 'Escalate'}
+                      </Button>
+                      <Button
+                        onClick={() => closeAlertMutation.mutate(alert.id)}
+                        disabled={closeAlertMutation.isPending}
+                        className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
+                      >
+                        <X className="w-4 h-4" />
+                        {closeAlertMutation.isPending ? 'Closing...' : 'Close'}
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* Alert Management Section - Show only if there are emergency alerts */}
           {hasEmergencyAlerts && (
@@ -618,11 +627,11 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-red-800 dark:text-red-200">
                   <AlertTriangle className="w-5 h-5" />
-                  Alert Management - {allDisplayableAlerts.length} Alert{allDisplayableAlerts.length > 1 ? 's' : ''}
+                  Alert Management - {busAlerts.length} Active Alert{busAlerts.length > 1 ? 's' : ''}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {allDisplayableAlerts.map((alert) => (
+                {busAlerts.map((alert) => (
                   <div key={alert.id} className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-4 mb-4 last:mb-0">
                     <div className="flex items-start justify-between mb-3">
                       <div>
@@ -633,94 +642,29 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                           {alert.message}
                         </p>
                         <p className="text-sm text-red-600 dark:text-red-400 mt-1">
-                          {new Date(alert.createdAt || alert.timestamp).toLocaleString()}
+                          {new Date(alert.timestamp).toLocaleString()}
                         </p>
                       </div>
                     </div>
-                    
-                    {/* Security Incident Video for security alerts */}
-                    {alert.type === 'security' && (
-                      <div className="mb-4">
-                        <p className="text-sm font-medium text-red-800 dark:text-red-200 mb-2">Security Incident Video:</p>
-                        <video 
-                          className="w-full h-80 bg-black rounded border"
-                          controls
-                          muted
-                          autoPlay
-                          loop
-                        >
-                          <source src={getSecurityVideoSrc()} type="video/mp4" />
-                          Video not supported
-                        </video>
-                      </div>
-                    )}
-                    
                     <div className="flex gap-3 flex-wrap">
-                      {/* Only show acknowledge button if alert is not escalated */}
-                      {!escalatedAlerts.has(alert.id) && (
-                        <Button
-                          onClick={() => acknowledgeAlertMutation.mutate(alert.id)}
-                          disabled={acknowledgeAlertMutation.isPending}
-                          className="bg-yellow-600 hover:bg-yellow-700 text-white flex items-center gap-2"
-                          size="sm"
-                        >
-                          <CheckCircle className="w-4 h-4" />
-                          {acknowledgeAlertMutation.isPending ? 'Acknowledging...' : 'Acknowledge'}
-                        </Button>
-                      )}
-                      
-                      {/* Show escalate button only for P1 Security Emergency Alerts */}
-                      {(alert.priority === "P1" && alert.type === "security") && (
-                        <>
-                          {escalatedAlerts.has(alert.id) ? (
-                            <div className="bg-green-100 dark:bg-green-900/20 border border-green-300 dark:border-green-700 rounded-lg p-3">
-                              <p className="text-green-800 dark:text-green-200 font-medium text-sm mb-2">
-                                ✓ Security team alerted
-                              </p>
-                              <p className="text-green-700 dark:text-green-300 text-sm mb-3">
-                                Would you like to close this alert?
-                              </p>
-                              <div className="flex gap-2">
-                                <Button
-                                  onClick={() => closeAlertMutation.mutate(alert.id)}
-                                  disabled={closeAlertMutation.isPending}
-                                  className="bg-green-600 hover:bg-green-700 text-white"
-                                  size="sm"
-                                >
-                                  Yes, Close Alert
-                                </Button>
-                                <Button
-                                  onClick={() => {
-                                    console.log("Keep Open clicked - disabling escalation mode");
-                                    setEscalationMode(false);
-                                    setEscalatedAlerts(prev => {
-                                      const newSet = new Set(prev);
-                                      newSet.delete(alert.id);
-                                      return newSet;
-                                    });
-                                  }}
-                                  variant="outline"
-                                  size="sm"
-                                >
-                                  Keep Open
-                                </Button>
-                              </div>
-                            </div>
-                          ) : (
-                            <Button
-                              onClick={() => escalateAlertMutation.mutate(alert.id)}
-                              disabled={escalateAlertMutation.isPending}
-                              className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
-                              size="sm"
-                            >
-                              <AlertOctagon className="w-4 h-4" />
-                              {escalateAlertMutation.isPending ? 'Escalating...' : 'Escalate'}
-                            </Button>
-                          )}
-                        </>
-                      )}
-
-                      
+                      <Button
+                        onClick={() => acknowledgeAlertMutation.mutate(alert.id)}
+                        disabled={acknowledgeAlertMutation.isPending}
+                        className="bg-yellow-600 hover:bg-yellow-700 text-white flex items-center gap-2"
+                        size="sm"
+                      >
+                        <CheckCircle className="w-4 h-4" />
+                        {acknowledgeAlertMutation.isPending ? 'Acknowledging...' : 'Acknowledge'}
+                      </Button>
+                      <Button
+                        onClick={() => escalateAlertMutation.mutate(alert.id)}
+                        disabled={escalateAlertMutation.isPending}
+                        className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
+                        size="sm"
+                      >
+                        <AlertOctagon className="w-4 h-4" />
+                        {escalateAlertMutation.isPending ? 'Escalating...' : 'Escalate'}
+                      </Button>
                       <Button
                         onClick={() => closeAlertMutation.mutate(alert.id)}
                         disabled={closeAlertMutation.isPending}

@@ -26,10 +26,9 @@ interface MapContainerProps {
   showStations: boolean;
   showBuses: boolean;
   showBackgroundMap: boolean;
-  onBusSelect?: (bus: BusWithRoute) => void;
 }
 
-export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed, showRoutes, showStations, showBuses, showBackgroundMap, onBusSelect }: MapContainerProps) {
+export default function MapContainer({ buses, routes, stations, selectedRoutes, theme, selectedZone, onZoneSelect, showMap, showStationNames, onStationClick, onStationHover, onBusHover, showLiveFeed, showRoutes, showStations, showBuses, showBackgroundMap }: MapContainerProps) {
   const [selectedBus, setSelectedBus] = useState<BusWithRoute | null>(null);
   const [geofencingAlert, setGeofencingAlert] = useState<{busId: number, busNumber: string} | null>(null);
   const [dismissedAlerts, setDismissedAlerts] = useState<Set<number>>(new Set());
@@ -61,25 +60,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     if (geofencingAlert && geofencingAlert.busId === bus.id) {
       setGeofencingAlert(null);
     }
-    // Notify parent component about bus selection if callback provided
-    if (onBusSelect) {
-      onBusSelect(bus);
-    }
   };
-
-  // Effect to handle external bus selection from emergency alerts
-  useEffect(() => {
-    const handleExternalBusSelection = (event: CustomEvent) => {
-      const bus = event.detail;
-      console.log("MapContainer received external bus selection:", bus.busNumber);
-      setSelectedBus(bus);
-    };
-
-    window.addEventListener('selectBus', handleExternalBusSelection as EventListener);
-    return () => {
-      window.removeEventListener('selectBus', handleExternalBusSelection as EventListener);
-    };
-  }, []);
 
   // Handle closing bus details panel
   const handleCloseBusDetails = () => {

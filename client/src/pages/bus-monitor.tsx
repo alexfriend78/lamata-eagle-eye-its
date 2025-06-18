@@ -540,28 +540,8 @@ export default function BusMonitor() {
         buses={buses || []}
         stations={stations || []}
         activeAlert={highestPriorityAlert || null}
-        onAlertDismiss={async () => {
-          setActiveAlert(null);
-          // Also clear the alert from the backend if it exists
-          if (highestPriorityAlert) {
-            try {
-              await fetch(`/api/alerts/${highestPriorityAlert.id}/clear`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' }
-              });
-              // Refetch alerts to update the UI
-              refetch();
-            } catch (error) {
-              console.error('Failed to clear alert:', error);
-            }
-          }
-        }}
+        onAlertDismiss={() => setActiveAlert(null)}
         onAlertCreate={(alert) => setActiveAlert(alert)}
-        onBusSelect={(bus) => {
-          console.log("Emergency Alert System triggered bus selection:", bus.busNumber);
-          // Dispatch custom event for MapContainer to handle
-          window.dispatchEvent(new CustomEvent('selectBus', { detail: bus }));
-        }}
       />
 
       {/* Alerts Manager */}
