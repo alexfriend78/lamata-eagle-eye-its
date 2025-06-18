@@ -2,10 +2,9 @@ import { useState, useEffect } from "react";
 import { type BusWithRoute, type Route, type Station, type AlertWithDetails } from "@shared/schema";
 import BusIcon from "./bus-icon";
 import BusDetailsPanel from "./bus-details-panel";
-
+import WeatherOverlay from "./weather-overlay";
 import { useRouteStations } from "@/hooks/use-route-stations";
 import { useQuery } from "@tanstack/react-query";
-import { useWeather } from "@/contexts/weather-context";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, X } from "lucide-react";
 
@@ -34,142 +33,7 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   const [geofencingAlert, setGeofencingAlert] = useState<{busId: number, busNumber: string} | null>(null);
   const [dismissedAlerts, setDismissedAlerts] = useState<Set<number>>(new Set());
   const [showReturnDialog, setShowReturnDialog] = useState(false);
-  
-  // Weather integration
-  const { weather } = useWeather();
-  
-  // Debug weather changes
-  useEffect(() => {
-    console.log('🗺️ Map weather updated:', weather);
-  }, [weather]);
-  
-  // Weather overlay effects for map
-  const getMapWeatherEffects = () => {
-    const effects = [];
-    console.log('🌧️ Generating weather effects for:', weather.condition);
-    
-    // Add weather particles based on condition
-    if (weather.condition === 'rainy' || weather.condition === 'stormy') {
-      const particleCount = weather.condition === 'stormy' ? 200 : 120;
-      for (let i = 0; i < particleCount; i++) {
-        const left = Math.random() * 100;
-        const animationDelay = Math.random() * 3;
-        const duration = weather.condition === 'stormy' ? 0.5 + Math.random() * 0.5 : 1 + Math.random() * 1;
-        
-        effects.push(
-          <div
-            key={`rain-${i}`}
-            className="absolute w-1 h-16 bg-blue-300 opacity-80"
-            style={{
-              left: `${left}%`,
-              top: '-20px',
-              animationDelay: `${animationDelay}s`,
-              transform: `rotate(20deg)`,
-              animation: `rainFall ${duration}s linear infinite`,
-              background: weather.condition === 'stormy' 
-                ? 'linear-gradient(to bottom, #3b82f6, #1e40af)' 
-                : 'linear-gradient(to bottom, #60a5fa, #3b82f6)'
-            }}
-          />
-        );
-      }
-    }
-    
-    if (weather.condition === 'stormy') {
-      // Add lightning flashes
-      for (let i = 0; i < 3; i++) {
-        effects.push(
-          <div
-            key={`lightning-${i}`}
-            className="absolute w-1 h-32 bg-yellow-300 opacity-90 animate-pulse"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 60}%`,
-              animationDelay: `${Math.random() * 4}s`,
-              animationDuration: '0.2s',
-              boxShadow: '0 0 20px #fde047',
-            }}
-          />
-        );
-      }
-    }
-    
-    if (weather.condition === 'cloudy') {
-      for (let i = 0; i < 20; i++) {
-        effects.push(
-          <div
-            key={`cloud-${i}`}
-            className="absolute w-16 h-8 bg-gray-300 opacity-30 rounded-full animate-pulse"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 40}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: '3s',
-            }}
-          />
-        );
-      }
-    }
-    
-    if (weather.condition === 'windy') {
-      for (let i = 0; i < 80; i++) {
-        effects.push(
-          <div
-            key={`wind-${i}`}
-            className="absolute w-3 h-0.5 bg-teal-300 opacity-50 animate-pulse"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              transform: `rotate(${Math.random() * 360}deg)`,
-              animationDelay: `${Math.random() * 3}s`,
-              animationDuration: '2s',
-            }}
-          />
-        );
-      }
-    }
-    
-    if (weather.condition === 'sunny') {
-      // Add subtle sun rays
-      for (let i = 0; i < 12; i++) {
-        effects.push(
-          <div
-            key={`sunray-${i}`}
-            className="absolute w-1 h-20 bg-yellow-200 opacity-20 animate-pulse"
-            style={{
-              left: '90%',
-              top: '10%',
-              transformOrigin: 'bottom center',
-              transform: `rotate(${i * 30}deg)`,
-              animationDelay: `${i * 0.5}s`,
-              animationDuration: '4s',
-            }}
-          />
-        );
-      }
-    }
-    
-    return effects;
-  };
-  
-  // Weather overlay background
-  const getWeatherOverlay = () => {
-    switch (weather.condition) {
-      case 'sunny':
-        return 'bg-gradient-to-br from-yellow-200/30 to-orange-100/20';
-      case 'cloudy':
-        return 'bg-gradient-to-br from-gray-300/40 to-gray-200/30';
-      case 'rainy':
-        return 'bg-gradient-to-br from-blue-300/50 to-blue-200/40';
-      case 'stormy':
-        return 'bg-gradient-to-br from-purple-400/60 to-indigo-300/50';
-      case 'windy':
-        return 'bg-gradient-to-br from-teal-200/40 to-cyan-100/30';
-      default:
-        return '';
-    }
-  };
-
+  const [showWeather, setShowWeather] = useState(false);
 
   // Fetch active alerts to determine which buses have emergency alerts
   const { data: alerts = [] } = useQuery<AlertWithDetails[]>({
@@ -588,14 +452,6 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   return (
     <div className="relative w-full h-full overflow-hidden bg-white dark:bg-gray-900"
          style={{ minWidth: mapWidth, minHeight: mapHeight }}>
-      
-      {/* Weather Overlay Effects */}
-      <div className={`absolute inset-0 pointer-events-none z-5 ${getWeatherOverlay()}`} />
-      
-      {/* Weather Particles */}
-      <div className="absolute inset-0 pointer-events-none z-6 overflow-hidden">
-        {getMapWeatherEffects()}
-      </div>
       
       {/* Flashing Geofencing Alert */}
       {geofencingAlert && (
@@ -1166,7 +1022,11 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
           })}
       </div>
 
-
+      {/* Weather Overlay */}
+      <WeatherOverlay 
+        isVisible={showWeather}
+        onToggle={setShowWeather}
+      />
 
       {/* Bus Details Panel */}
       {selectedBus && (

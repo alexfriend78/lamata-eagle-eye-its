@@ -4,10 +4,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/hooks/use-theme";
-import { WeatherProvider } from "@/contexts/weather-context";
 import BusMonitor from "@/pages/bus-monitor";
 import AlertSimulator from "@/pages/alert-simulator";
-import WeatherControl from "@/pages/weather-control";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -15,7 +13,6 @@ function Router() {
     <Switch>
       <Route path="/" component={BusMonitor} />
       <Route path="/alert-simulator" component={AlertSimulator} />
-      <Route path="/weather-control" component={WeatherControl} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -25,12 +22,10 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="transit-monitor-theme">
-        <WeatherProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Router />
-          </TooltipProvider>
-        </WeatherProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+        </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

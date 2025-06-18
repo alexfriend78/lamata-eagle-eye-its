@@ -17,16 +17,9 @@ import RouteOptimizer from "@/components/route-optimizer";
 import PredictiveMaintenance from "@/components/predictive-maintenance";
 import ManagementAnalyticsPanel from "@/components/management-analytics-panel";
 
-
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain, Navigation, Wrench, BarChart3, Cloud } from "lucide-react";
-import { Link } from "wouter";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain, Navigation, Wrench, BarChart3 } from "lucide-react";
 import type { Station, StationDetails } from "@shared/schema";
-import { useWeather } from "@/contexts/weather-context";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { CloudRain, Thermometer, Wind, CloudSnow } from "lucide-react";
 
 export default function BusMonitor() {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -46,24 +39,6 @@ export default function BusMonitor() {
   const [showRouteOptimizer, setShowRouteOptimizer] = useState(false);
   const [showPredictiveMaintenance, setShowPredictiveMaintenance] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
-  const [showWeatherPanel, setShowWeatherPanel] = useState(false);
-  const [showWeatherAnimations, setShowWeatherAnimations] = useState(true);
-  
-  // Weather hook
-  const { weather, updateWeather } = useWeather();
-  
-  // Debug weather changes
-  useEffect(() => {
-    console.log('📊 Dashboard weather updated:', weather);
-    console.log('📊 Dashboard weather condition specifically:', weather.condition);
-  }, [weather]);
-  
-  // Additional debug for weather panel state
-  useEffect(() => {
-    if (showWeatherPanel) {
-      console.log('📊 Weather panel is open, current weather:', weather);
-    }
-  }, [showWeatherPanel, weather]);
 
 
   // Handle AI Insights close event
@@ -342,40 +317,6 @@ export default function BusMonitor() {
 
 
 
-
-
-            {/* Weather Panel Toggle */}
-            <Button
-              onClick={() => setShowWeatherPanel(!showWeatherPanel)}
-              variant={showWeatherPanel ? "default" : "outline"}
-              size="sm"
-              className="h-8 px-3 text-xs"
-              title="Weather Panel"
-            >
-              <Cloud className="h-4 w-4 mr-1" />
-              Weather
-            </Button>
-
-            {/* Test Weather Update Button */}
-            <Button
-              onClick={() => {
-                console.log('🔥 DASHBOARD TEST: Forcing stormy weather');
-                updateWeather({
-                  condition: 'stormy',
-                  temperature: 18,
-                  humidity: 95,
-                  windSpeed: 45,
-                  visibility: 2
-                });
-              }}
-              variant="outline"
-              size="sm"
-              className="h-8 px-3 text-xs bg-red-600 hover:bg-red-700 text-white"
-              title="Test Weather"
-            >
-              Test Storm
-            </Button>
-
             {/* Theme Toggle */}
             <Button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -476,8 +417,6 @@ export default function BusMonitor() {
             showBuses={showBuses}
             showBackgroundMap={showBackgroundMap}
           />
-          
-
         </div>
 
         {/* AI Insights Side Panel */}
@@ -646,133 +585,6 @@ export default function BusMonitor() {
         />
       )}
 
-      {/* Weather Control Panel - Mirrored from Weather Control Centre */}
-      {showWeatherPanel && (
-        <Card className="fixed top-20 right-4 z-50 w-80 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                {(() => {
-                  switch (weather.condition) {
-                    case 'sunny':
-                      return <Sun className="w-6 h-6 text-yellow-500" />;
-                    case 'cloudy':
-                      return <Cloud className="w-6 h-6 text-gray-500" />;
-                    case 'rainy':
-                      return <CloudRain className="w-6 h-6 text-blue-500" />;
-                    case 'stormy':
-                      return <CloudRain className="w-6 h-6 text-purple-600" />;
-                    case 'windy':
-                      return <Wind className="w-6 h-6 text-teal-500" />;
-                    default:
-                      return <Sun className="w-6 h-6 text-yellow-500" />;
-                  }
-                })()}
-                <span className="text-lg">Lagos Weather</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button
-                  onClick={() => setShowWeatherPanel(false)}
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 w-6 p-0"
-                >
-                  ×
-                </Button>
-              </div>
-            </CardTitle>
-          </CardHeader>
-          
-          <CardContent className="space-y-4">
-            {/* Animation Toggle */}
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-600 dark:text-gray-400">Weather Animations</span>
-              <Switch
-                checked={showWeatherAnimations}
-                onCheckedChange={setShowWeatherAnimations}
-              />
-            </div>
-            
-            {/* Current Condition */}
-            <div className="flex items-center justify-between">
-              <Badge className={(() => {
-                switch (weather.condition) {
-                  case 'sunny':
-                    return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-                  case 'cloudy':
-                    return 'bg-gray-100 text-gray-800 border-gray-300';
-                  case 'rainy':
-                    return 'bg-blue-100 text-blue-800 border-blue-300';
-                  case 'stormy':
-                    return 'bg-purple-100 text-purple-800 border-purple-300';
-                  case 'windy':
-                    return 'bg-teal-100 text-teal-800 border-teal-300';
-                  default:
-                    return 'bg-blue-100 text-blue-800 border-blue-300';
-                }
-              })()}>
-                {weather.condition.toUpperCase()}
-              </Badge>
-              <span className="text-2xl font-bold">{weather.temperature}°C</span>
-            </div>
-
-            {/* Weather Description */}
-            <p className="text-sm text-gray-600 dark:text-gray-400 italic">
-              {(() => {
-                switch (weather.condition) {
-                  case 'sunny':
-                    return 'Clear skies with high humidity typical of Lagos';
-                  case 'cloudy':
-                    return 'Overcast with high humidity - common during rainy season';
-                  case 'rainy':
-                    return 'Heavy tropical rainfall affecting visibility';
-                  case 'stormy':
-                    return 'Thunderstorm with strong winds - exercise caution';
-                  case 'windy':
-                    return 'Strong winds affecting bus operations';
-                  default:
-                    return 'Current weather conditions in Lagos';
-                }
-              })()}
-            </p>
-
-            {/* Weather Details */}
-            <div className="grid grid-cols-2 gap-3 text-sm">
-              <div className="flex items-center gap-2">
-                <Thermometer className="w-4 h-4 text-red-500" />
-                <span>Humidity: {weather.humidity}%</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Wind className="w-4 h-4 text-blue-500" />
-                <span>Wind: {weather.windSpeed} km/h</span>
-              </div>
-              <div className="text-gray-500 col-span-2 text-center">
-                Animations: {showWeatherAnimations ? 'On' : 'Off'}
-              </div>
-            </div>
-
-            {/* Weather Impact Alert */}
-            {(weather.condition === 'rainy' || weather.condition === 'stormy' || weather.condition === 'windy') && (
-              <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
-                <p className="text-sm text-yellow-800 dark:text-yellow-200 font-medium">
-                  ⚠️ Weather Alert: {weather.condition === 'windy' ? 'High winds' : 'Reduced visibility'} affecting bus operations
-                </p>
-              </div>
-            )}
-
-            {/* Weather Control Info */}
-            <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
-              Weather updates automatically from Weather Control Centre
-            </div>
-            
-            {/* Real-time Weather Status */}
-            <div className="flex items-center justify-center gap-2 text-xs text-green-600 dark:text-green-400">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span>Live Weather Data</span>
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       </div>
     </div>
