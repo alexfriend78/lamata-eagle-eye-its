@@ -49,16 +49,53 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     
     // Add weather particles based on condition
     if (weather.condition === 'rainy' || weather.condition === 'stormy') {
-      for (let i = 0; i < 100; i++) {
+      for (let i = 0; i < 150; i++) {
         effects.push(
           <div
             key={`rain-${i}`}
-            className="absolute w-0.5 h-8 bg-blue-300 opacity-60 animate-bounce"
+            className="absolute w-0.5 h-12 bg-blue-400 opacity-70 animate-bounce"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               animationDelay: `${Math.random() * 2}s`,
-              animationDuration: '1s',
+              animationDuration: '0.8s',
+              transform: `rotate(15deg)`,
+            }}
+          />
+        );
+      }
+    }
+    
+    if (weather.condition === 'stormy') {
+      // Add lightning flashes
+      for (let i = 0; i < 3; i++) {
+        effects.push(
+          <div
+            key={`lightning-${i}`}
+            className="absolute w-1 h-32 bg-yellow-300 opacity-90 animate-pulse"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 60}%`,
+              animationDelay: `${Math.random() * 4}s`,
+              animationDuration: '0.2s',
+              boxShadow: '0 0 20px #fde047',
+            }}
+          />
+        );
+      }
+    }
+    
+    if (weather.condition === 'cloudy') {
+      for (let i = 0; i < 20; i++) {
+        effects.push(
+          <div
+            key={`cloud-${i}`}
+            className="absolute w-16 h-8 bg-gray-300 opacity-30 rounded-full animate-pulse"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 40}%`,
+              animationDelay: `${Math.random() * 5}s`,
+              animationDuration: '3s',
             }}
           />
         );
@@ -66,16 +103,37 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     }
     
     if (weather.condition === 'windy') {
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 80; i++) {
         effects.push(
           <div
             key={`wind-${i}`}
-            className="absolute w-2 h-0.5 bg-teal-200 opacity-40 animate-pulse"
+            className="absolute w-3 h-0.5 bg-teal-300 opacity-50 animate-pulse"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
               transform: `rotate(${Math.random() * 360}deg)`,
               animationDelay: `${Math.random() * 3}s`,
+              animationDuration: '2s',
+            }}
+          />
+        );
+      }
+    }
+    
+    if (weather.condition === 'sunny') {
+      // Add subtle sun rays
+      for (let i = 0; i < 12; i++) {
+        effects.push(
+          <div
+            key={`sunray-${i}`}
+            className="absolute w-1 h-20 bg-yellow-200 opacity-20 animate-pulse"
+            style={{
+              left: '90%',
+              top: '10%',
+              transformOrigin: 'bottom center',
+              transform: `rotate(${i * 30}deg)`,
+              animationDelay: `${i * 0.5}s`,
+              animationDuration: '4s',
             }}
           />
         );
@@ -89,15 +147,15 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   const getWeatherOverlay = () => {
     switch (weather.condition) {
       case 'sunny':
-        return 'bg-gradient-to-br from-yellow-100/20 to-orange-50/10';
+        return 'bg-gradient-to-br from-yellow-200/30 to-orange-100/20';
       case 'cloudy':
-        return 'bg-gradient-to-br from-gray-200/30 to-gray-100/20';
+        return 'bg-gradient-to-br from-gray-300/40 to-gray-200/30';
       case 'rainy':
-        return 'bg-gradient-to-br from-blue-200/40 to-blue-100/30';
+        return 'bg-gradient-to-br from-blue-300/50 to-blue-200/40';
       case 'stormy':
-        return 'bg-gradient-to-br from-purple-300/50 to-blue-200/40';
+        return 'bg-gradient-to-br from-purple-400/60 to-indigo-300/50';
       case 'windy':
-        return 'bg-gradient-to-br from-teal-100/30 to-cyan-50/20';
+        return 'bg-gradient-to-br from-teal-200/40 to-cyan-100/30';
       default:
         return '';
     }
