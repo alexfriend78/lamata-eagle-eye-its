@@ -46,20 +46,29 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
   // Weather overlay effects for map
   const getMapWeatherEffects = () => {
     const effects = [];
+    console.log('🌧️ Generating weather effects for:', weather.condition);
     
     // Add weather particles based on condition
     if (weather.condition === 'rainy' || weather.condition === 'stormy') {
-      for (let i = 0; i < 150; i++) {
+      const particleCount = weather.condition === 'stormy' ? 200 : 120;
+      for (let i = 0; i < particleCount; i++) {
+        const left = Math.random() * 100;
+        const animationDelay = Math.random() * 3;
+        const duration = weather.condition === 'stormy' ? 0.5 + Math.random() * 0.5 : 1 + Math.random() * 1;
+        
         effects.push(
           <div
             key={`rain-${i}`}
-            className="absolute w-0.5 h-12 bg-blue-400 opacity-70 animate-bounce"
+            className="absolute w-1 h-16 bg-blue-300 opacity-80"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 2}s`,
-              animationDuration: '0.8s',
-              transform: `rotate(15deg)`,
+              left: `${left}%`,
+              top: '-20px',
+              animationDelay: `${animationDelay}s`,
+              transform: `rotate(20deg)`,
+              animation: `rainFall ${duration}s linear infinite`,
+              background: weather.condition === 'stormy' 
+                ? 'linear-gradient(to bottom, #3b82f6, #1e40af)' 
+                : 'linear-gradient(to bottom, #60a5fa, #3b82f6)'
             }}
           />
         );

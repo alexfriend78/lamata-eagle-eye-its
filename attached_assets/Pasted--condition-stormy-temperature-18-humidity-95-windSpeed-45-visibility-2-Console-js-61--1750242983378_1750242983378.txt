@@ -1,0 +1,147 @@
+{condition: 'stormy', temperature: 18, humidity: 95, windSpeed: 45, visibility: 2, …}
+Console.js:61 📊 Dashboard weather condition specifically: stormy
+_app-92b64e9c08fa1400.js:38 
+            
+            
+           POST https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820 net::ERR_TUNNEL_CONNECTION_FAILED
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+promise @ _app-92b64e9c08fa1400.js:6
+(anonymous) @ _app-92b64e9c08fa1400.js:6
+r.httpRequest @ _app-92b64e9c08fa1400.js:6
+t @ _app-92b64e9c08fa1400.js:6
+a.sendChunk @ _app-92b64e9c08fa1400.js:6
+a.sendEvents @ _app-92b64e9c08fa1400.js:6
+a.flush @ _app-92b64e9c08fa1400.js:6
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38Understand this error
+_app-92b64e9c08fa1400.js:38 
+            
+            
+           POST https://events.launchdarkly.com/events/bulk/62b35a865152ab14c5942820 net::ERR_TUNNEL_CONNECTION_FAILED
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+promise @ _app-92b64e9c08fa1400.js:6
+(anonymous) @ _app-92b64e9c08fa1400.js:6
+r.httpRequest @ _app-92b64e9c08fa1400.js:6
+t @ _app-92b64e9c08fa1400.js:6
+(anonymous) @ _app-92b64e9c08fa1400.js:6
+Promise.catch
+t @ _app-92b64e9c08fa1400.js:6
+a.sendChunk @ _app-92b64e9c08fa1400.js:6
+a.sendEvents @ _app-92b64e9c08fa1400.js:6
+a.flush @ _app-92b64e9c08fa1400.js:6
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38
+setTimeout
+(anonymous) @ _app-92b64e9c08fa1400.js:38
+e @ _app-92b64e9c08fa1400.js:6
+n @ _app-92b64e9c08fa1400.js:38Understand this error
+Console.js:61 🔥 DASHBOARD TEST: Forcing stormy weather
+Console.js:61 🌦️ Context: Updating global weather: {condition: 'stormy', temperature: 18, humidity: 95, windSpeed: 45, visibility: 2, …}
+Console.js:61 🌦️ Context: Current listeners count: 1
+Console.js:61 🌦️ Context: Saved to localStorage
+Console.js:61 🌦️ Weather sync from custom event: {condition: 'stormy', temperature: 18, humidity: 95, windSpeed: 45, visibility: 2, …}
+Console.js:61 🌦️ Weather sync from storage event: {condition: 'stormy', temperature: 18, humidity: 95, windSpeed: 45, visibility: 2, …}
+Console.js:61 🌦️ Weather sync to component: {condition: 'stormy', temperature: 18, humidity: 95, windSpeed: 45, visibility: 2, …}
+Console.js:61 🌦️ Context: Notified listener 1
+Console.js:61 🌦️ Context: Total listeners notified: 1
+Console.js:61 🗺️ Map weather updated: {condition: 'stormy', temperature: 18, humidity: 95, windSpeed: 45, visibility: 2, …}
+Console.js:61 📊 Dashboard weather updated: {condition: 'stormy', temperature: 18, humidity: 95, windSpeed: 45, visibility: 2, …}
+Console.js:61 📊 Dashboard weather condition specifically: stormy
+Console.js:61 🔥 DASHBOARD TEST: Forcing stormy weather
+Console.js:61 🌦️ Context: Updating global weather: {condition: 'stormy', temperature: 18, humidity: 95, windSpeed: 45, visibility: 2, …}
+Console.js:61 🌦️ Context: Current listeners count: 1
+Console.js:61 🌦️ Context: Saved to localStorage
+Console.js:61 🌦️ Weather sync from custom event: {condition: 'stormy', temperature: 18, humidity: 95, windSpeed: 45, visibility: 2, …}
+Console.js:61 🌦️ Weather sync from storage event: {condition: 'stormy', temperature: 18, humidity: 95, windSpeed: 45, visibility: 2, …}
+Console.js:61 🌦️ Weather sync to component: {condition: 'stormy', temperature: 18, humidity: 95, windSpeed: 45, visibility: 2, …}
+Console.js:61 🌦️ Context: Notified listener 1
+Console.js:61 🌦️ Context: Total listeners notified: 1
+Console.js:61 🗺️ Map weather updated: {condition: 'stormy', temperature: 18, humidity: 95, windSpeed: 45, visibility: 2, …}
+Console.js:61 📊 Dashboard weather updated: {condition: 'stormy', temperature: 18, humidity: 95, windSpeed: 45, visibility: 2, …}
+Console.js:61 📊 Dashboard weather condition specifically: stormy
