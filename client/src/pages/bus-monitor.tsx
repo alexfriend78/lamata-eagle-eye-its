@@ -42,6 +42,7 @@ export default function BusMonitor() {
   const [showPredictiveMaintenance, setShowPredictiveMaintenance] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [showWeatherAnimations, setShowWeatherAnimations] = useState(true);
+  const [showWeatherPanel, setShowWeatherPanel] = useState(true);
 
 
   // Handle AI Insights close event
@@ -316,6 +317,18 @@ export default function BusMonitor() {
               title="Toggle background map"
             >
               <Map className="h-4 w-4" />
+            </Button>
+
+            {/* Weather Panel Toggle */}
+            <Button
+              onClick={() => setShowWeatherPanel(!showWeatherPanel)}
+              variant={showWeatherPanel ? "default" : "outline"}
+              size="sm"
+              className="h-8 px-3 text-xs"
+              title={`${showWeatherPanel ? 'Hide' : 'Show'} Weather Panel`}
+            >
+              <Cloud className="h-4 w-4 mr-1" />
+              Weather
             </Button>
 
             {/* Weather Animations Toggle */}
@@ -606,10 +619,12 @@ export default function BusMonitor() {
       )}
 
       {/* Weather Overlay for Dashboard */}
-      <WeatherOverlay 
-        isVisible={showWeatherAnimations}
-        onToggle={setShowWeatherAnimations}
-      />
+      {showWeatherPanel && (
+        <WeatherOverlay 
+          isVisible={showWeatherAnimations}
+          onToggle={setShowWeatherAnimations}
+        />
+      )}
 
       </div>
     </div>

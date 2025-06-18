@@ -69,6 +69,13 @@ const lagosWeatherConditions: WeatherData[] = [
 export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayProps) {
   const { weather } = useWeather();
   const [weatherIntensity, setWeatherIntensity] = useState(0.7);
+  const [lastUpdated, setLastUpdated] = useState(Date.now());
+  
+  // Force re-render when weather changes
+  useEffect(() => {
+    console.log('🌤️ Weather changed:', weather);
+    setLastUpdated(Date.now());
+  }, [weather.condition, weather.temperature, weather.humidity, weather.windSpeed]);
   
   // Map weather context data to local WeatherData format
   const currentWeather: WeatherData = {
@@ -279,11 +286,7 @@ export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayPr
               <Wind className="w-4 h-4 text-blue-500" />
               <span>Wind: {currentWeather.windSpeed} km/h</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Eye className="w-4 h-4 text-green-500" />
-              <span>Visibility: {currentWeather.visibility} km</span>
-            </div>
-            <div className="text-gray-500">
+            <div className="text-gray-500 col-span-2 text-center">
               Animations: {isVisible ? 'On' : 'Off'}
             </div>
           </div>
