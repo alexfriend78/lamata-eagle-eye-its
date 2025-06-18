@@ -139,22 +139,23 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
     }
   });
 
-  // Mutation to acknowledge alert
+  // Mutation to acknowledge alert (does NOT close panel)
   const acknowledgeAlertMutation = useMutation({
     mutationFn: (alertId: number) => apiRequest("PATCH", `/api/alerts/${alertId}/acknowledge`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
+      // Never auto-close the panel for acknowledgment
     }
   });
 
-  // Mutation to close alert
+  // Mutation to close alert (closes panel)
   const closeAlertMutation = useMutation({
     mutationFn: (alertId: number) => apiRequest("PATCH", `/api/alerts/${alertId}/close`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
-      // Only close the view when explicitly clicking "Yes, Close Alert"
+      // Only close when user explicitly chooses to close alert
       onClose();
     }
   });
