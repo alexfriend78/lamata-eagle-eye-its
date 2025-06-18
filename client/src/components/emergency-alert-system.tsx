@@ -138,11 +138,34 @@ export default function EmergencyAlertSystem({
     },
   });
 
+  const escalateAlertMutation = useMutation({
+    mutationFn: async (alertId: number) => {
+      console.log("Making escalate alert API call for alert:", alertId);
+      const response = await fetch(`/api/alerts/${alertId}/escalate`, {
+        method: "PATCH",
+      });
+      const result = await response.json();
+      console.log("Escalate alert API response:", result);
+      return result;
+    },
+    onSuccess: (data) => {
+      console.log("Escalate alert mutation succeeded:", data);
+      queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
+      console.log("Alert escalated successfully");
+      onAlertDismiss();
+    },
+    onError: (error) => {
+      console.error("Escalate alert mutation failed:", error);
+    },
+  });
+
   // Reset mutation states when active alert changes
   useEffect(() => {
     if (activeAlert) {
       acknowledgeAlertMutation.reset();
       closeAlertMutation.reset();
+      escalateAlertMutation.reset();
     }
   }, [activeAlert?.id]);
 
@@ -364,6 +387,24 @@ export default function EmergencyAlertSystem({
                 {acknowledgeAlertMutation.isPending ? "Acknowledging..." : 
                  acknowledgeAlertMutation.isSuccess ? "Acknowledged" : "Acknowledge"}
               </Button>
+              
+              {/* Escalate button for P1 Security Emergency Alerts */}
+              {activeAlert.priority === "P1" && activeAlert.type === "security" && (
+                <Button
+                  onClick={() => {
+                    if (escalateAlertMutation.isPending) return;
+                    console.log("Escalate button clicked for alert:", activeAlert.id);
+                    escalateAlertMutation.mutate(activeAlert.id);
+                  }}
+                  variant="secondary"
+                  size="lg"
+                  className="bg-red-600/80 text-white border-red-400/30 hover:bg-red-500/80 disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={escalateAlertMutation.isPending || escalateAlertMutation.isSuccess}
+                >
+                  {escalateAlertMutation.isPending ? "Escalating..." : 
+                   escalateAlertMutation.isSuccess ? "Escalated" : "Escalate"}
+                </Button>
+              )}
               
               <Button
                 onClick={() => {
