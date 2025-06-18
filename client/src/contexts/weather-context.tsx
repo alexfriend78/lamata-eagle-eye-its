@@ -46,8 +46,25 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
     return globalWeatherState;
   });
 
-  // Register this component as a listener to global weather changes
+  // Initialize from localStorage on mount and register listener
   useEffect(() => {
+    // Load current state from localStorage on component mount
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('weather-state');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (parsed.lastUpdated !== weather.lastUpdated) {
+            console.log('🌦️ Loading weather from localStorage on mount:', parsed);
+            globalWeatherState = parsed;
+            setWeather(parsed);
+          }
+        } catch (e) {
+          console.warn('Failed to parse stored weather state on mount');
+        }
+      }
+    }
+
     const listener = (newWeather: WeatherData) => {
       console.log('🌦️ Weather sync to component:', newWeather);
       setWeather(newWeather);
@@ -55,9 +72,60 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
 
     weatherListeners.add(listener);
 
-    return () => {
-      weatherListeners.delete(listener);
+    // Listen for multiple types of weather sync events
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'weather-state' && e.newValue) {
+        try {
+          const newWeatherData = JSON.parse(e.newValue);
+          console.log('🌦️ Weather sync from storage event:', newWeatherData);
+          globalWeatherState = newWeatherData;
+          setWeather(newWeatherData);
+        } catch (error) {
+          console.warn('Failed to parse weather data from storage event');
+        }
+      }
     };
+
+    const handleCustomWeatherUpdate = (e: CustomEvent) => {
+      console.log('🌦️ Weather sync from custom event:', e.detail);
+      globalWeatherState = e.detail;
+      setWeather(e.detail);
+    };
+
+    // Poll localStorage for changes as backup
+    const pollForChanges = () => {
+      if (typeof window !== 'undefined') {
+        try {
+          const stored = localStorage.getItem('weather-state');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (parsed.lastUpdated !== globalWeatherState.lastUpdated) {
+              console.log('🌦️ Weather sync from polling:', parsed);
+              globalWeatherState = parsed;
+              setWeather(parsed);
+            }
+          }
+        } catch (error) {
+          console.warn('Error polling for weather changes');
+        }
+      }
+    };
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('storage', handleStorageChange);
+      window.addEventListener('weather-updated', handleCustomWeatherUpdate as EventListener);
+      
+      // Poll every 1 second for changes
+      const pollInterval = setInterval(pollForChanges, 1000);
+      
+      return () => {
+        weatherListeners.delete(listener);
+        window.removeEventListener('storage', handleStorageChange);
+        window.removeEventListener('weather-updated', handleCustomWeatherUpdate as EventListener);
+        clearInterval(pollInterval);
+      };
+    }
+
   }, []);
 
   const updateWeather = (newWeather: WeatherData) => {
@@ -79,6 +147,22 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
     if (typeof window !== 'undefined') {
       localStorage.setItem('weather-state', JSON.stringify(updatedWeather));
       console.log('🌦️ Context: Saved to localStorage');
+      
+      // Force a storage event by updating a secondary key
+      localStorage.setItem('weather-sync-trigger', Date.now().toString());
+      
+      // Dispatch multiple types of events for maximum compatibility
+      window.dispatchEvent(new CustomEvent('weather-updated', { 
+        detail: updatedWeather 
+      }));
+      
+      // Simulate storage event for same-page components
+      window.dispatchEvent(new StorageEvent('storage', {
+        key: 'weather-state',
+        newValue: JSON.stringify(updatedWeather),
+        oldValue: null,
+        storageArea: localStorage
+      }));
     }
     
     // Notify all listeners
