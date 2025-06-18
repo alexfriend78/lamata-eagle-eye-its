@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useBusData } from "@/hooks/use-bus-data";
 import { useTheme } from "@/hooks/use-theme";
+import { useRouteStations } from "@/hooks/use-route-stations";
 import MapContainer from "@/components/map-container";
 import ControlPanel from "@/components/control-panel";
 import EmergencyAlert from "@/components/emergency-alert";
@@ -54,6 +55,9 @@ export default function BusMonitor() {
   const [showBackgroundMap, setShowBackgroundMap] = useState(false);
   const { buses, routes, stations, alerts, stats, refetch } = useBusData();
   const { theme, setTheme } = useTheme();
+  
+  // Get filtered stations for selected routes
+  const { data: filteredStations = [] } = useRouteStations(selectedRoutes);
 
   // Fetch station details when a station is hovered or selected
   const activeStation = hoveredStation || selectedStation;
