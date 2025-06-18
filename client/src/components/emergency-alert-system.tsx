@@ -403,27 +403,21 @@ export default function EmergencyAlertSystem({
                 Triage Alert
               </Button>
               
-              {/* For P1 security alerts, add a button to go to bus details for escalation */}
+              {/* For P1 security alerts, add a button to go to alert management for escalation */}
               {(activeAlert.priority === "P1" && activeAlert.type === "security") && (
                 <Button
                   onClick={() => {
-                    // Find the bus associated with this alert
-                    const alertBus = buses.find(bus => bus.id === activeAlert.busId);
-                    if (alertBus && onBusSelect) {
-                      console.log("Navigating to bus details for escalation - Bus:", alertBus.busNumber);
-                      onBusSelect(alertBus);
-                      onAlertDismiss();
-                    } else {
-                      console.log("Bus not found or onBusSelect not provided");
-                      onAlertDismiss();
-                    }
+                    // Show the triage/alert management view instead of bus details
+                    console.log("Opening alert management for escalation - Alert:", activeAlert.id);
+                    setShowTriage(true);
+                    // Don't dismiss the alert - keep it active for management
                   }}
                   variant="secondary"
                   size="lg"
                   className="bg-red-600/80 text-white border-red-400/30 hover:bg-red-500/80"
                 >
                   <AlertTriangle className="w-4 h-4 mr-2" />
-                  Go to Bus Details for Escalation
+                  Escalate to Alert Management
                 </Button>
               )}
             </div>
