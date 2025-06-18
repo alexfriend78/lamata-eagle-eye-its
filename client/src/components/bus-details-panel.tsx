@@ -151,6 +151,8 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
+      // Close the bus detail view when alert is closed
+      onClose();
     }
   });
 
@@ -269,9 +271,8 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
       return recklessBehaviorVideoPath;
     }
     
-    // For normal operations, use Lagos BRT driver videos sequentially based on bus ID
-    const videoIndex = (bus.id - 1) % driverVideos.length;
-    return driverVideos[videoIndex];
+    // For normal operations, always use the first driver video (no cycling)
+    return driverVideo1;
   };
 
   // Array of passenger videos for sequential selection
@@ -605,7 +606,7 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                           autoPlay
                           loop
                         >
-                          <source src="/attached_assets/BRT_Driver_s_Reckless_Behavior_Video_1750224476189.mp4" type="video/mp4" />
+                          <source src="/attached_assets/Kidnapping_on_Lagos_BRT_Bus_1750204355118.mp4" type="video/mp4" />
                           Video not supported
                         </video>
                       </div>
