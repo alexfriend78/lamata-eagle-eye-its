@@ -15,6 +15,17 @@ import machineGunVideoPath from "@assets/BRT_Bus_with_Machine_Gun_1750007661395.
 import recklessBehaviorVideoPath from "@assets/BRT_Driver_s_Reckless_Behavior_Video_1750224476189.mp4";
 import driverMisconductVideoPath from "@assets/Brt_mass_transit_202506180631_u7rwu_1750224978374.mp4";
 
+// New Passenger Area CAM videos
+import passengerVideo1 from "@assets/Professionally_dressed_passengers_20250618064 (3)_1750225588419.mp4";
+import passengerVideo2 from "@assets/Professionally_dressed_passengers_20250618064 (2)_1750225588421.mp4";
+import passengerVideo3 from "@assets/Professionally_dressed_passengers_20250618064 (1)_1750225588421.mp4";
+import passengerVideo4 from "@assets/Professionally_dressed_passengers_20250618064_1750225588422.mp4";
+import passengerVideo5 from "@assets/Calm_passengers_on_202506180643_ja5r3_1750225588422.mp4";
+import passengerVideo6 from "@assets/Calm_passengers_on_202506180643_hilzc_1750225588422.mp4";
+import passengerVideo7 from "@assets/Calm_passengers_on_202506180643_upaxz_1750225588422.mp4";
+import passengerVideo8 from "@assets/Calm_passengers_on_202506180643_9a8wd_1750225588422.mp4";
+import passengerVideo9 from "@assets/Calm_passengers_on_202506180643_6a4zf_1750225588423.mp4";
+
 // New Lagos BRT Driver CAM videos
 import driverVideo1 from "@assets/Lagos_nigeria_brt_202506172239_nvi7d_1750223955235.mp4";
 import driverVideo2 from "@assets/Lagos_nigeria_brt_202506172237_9g5ph_1750223955237.mp4";
@@ -225,18 +236,7 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
     alert.type === 'driver_misconduct' && alert.priority === 'P2' && alert.status !== 'closed'
   );
 
-  // Debug logging for driver misconduct alerts
-  useEffect(() => {
-    if (allBusAlerts.length > 0) {
-      console.log(`Bus ${bus.id} alerts:`, allBusAlerts.map(alert => ({
-        type: alert.type,
-        priority: alert.priority,
-        status: alert.status,
-        isActive: alert.isActive
-      })));
-      console.log(`Has driver misconduct alert: ${hasDriverMisconductAlert}`);
-    }
-  }, [allBusAlerts, hasDriverMisconductAlert, bus.id]);
+
 
   // Select appropriate video feeds based on bus status and conditions
   const getDriverVideoSrc = () => {
@@ -255,14 +255,33 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
     return driverVideos[videoIndex];
   };
 
+  // Array of passenger videos for sequential selection
+  const passengerVideos = [
+    passengerVideo1,
+    passengerVideo2,
+    passengerVideo3,
+    passengerVideo4,
+    passengerVideo5,
+    passengerVideo6,
+    passengerVideo7,
+    passengerVideo8,
+    passengerVideo9
+  ];
+
   const getPassengerVideoSrc = () => {
+    // For overcrowded situations, show fight incident
     if (busData.passengerCount > 50) {
-      return passengersVideoPath; // Shows fight incident when crowded
+      return passengersVideoPath;
     }
+    
+    // For emergency alert situations, show emergency footage
     if (bus.status === "alert") {
-      return machineGunVideoPath; // Emergency situations
+      return machineGunVideoPath;
     }
-    return emergencyVideoPath; // Normal passenger activity
+    
+    // For normal operations, use passenger videos sequentially based on bus ID
+    const videoIndex = (bus.id - 1) % passengerVideos.length;
+    return passengerVideos[videoIndex];
   };
 
   // Get route points for the designed path
