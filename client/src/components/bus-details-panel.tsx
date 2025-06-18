@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -84,6 +84,9 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
   // Filter alerts for this specific bus
   const busAlerts = alerts.filter(alert => alert.busId === bus.id && alert.isActive);
   const hasEmergencyAlerts = busAlerts.length > 0;
+  
+  // Check for driver misconduct alerts (including acknowledged ones)
+  const allBusAlerts = alerts.filter(alert => alert.busId === bus.id);
 
   // Mutation to clear alert
   const clearAlertMutation = useMutation({
@@ -217,10 +220,23 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
     driverVideo6
   ];
 
-  // Check for specific driver misconduct alerts for this bus
-  const hasDriverMisconductAlert = busAlerts.some(alert => 
-    alert.type === 'driver_misconduct' && alert.priority === 'P2'
+  // Check for specific driver misconduct alerts for this bus (including acknowledged ones)
+  const hasDriverMisconductAlert = allBusAlerts.some(alert => 
+    alert.type === 'driver_misconduct' && alert.priority === 'P2' && alert.status !== 'closed'
   );
+
+  // Debug logging for driver misconduct alerts
+  useEffect(() => {
+    if (allBusAlerts.length > 0) {
+      console.log(`Bus ${bus.id} alerts:`, allBusAlerts.map(alert => ({
+        type: alert.type,
+        priority: alert.priority,
+        status: alert.status,
+        isActive: alert.isActive
+      })));
+      console.log(`Has driver misconduct alert: ${hasDriverMisconductAlert}`);
+    }
+  }, [allBusAlerts, hasDriverMisconductAlert, bus.id]);
 
   // Select appropriate video feeds based on bus status and conditions
   const getDriverVideoSrc = () => {
