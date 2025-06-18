@@ -656,15 +656,20 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                         <CheckCircle className="w-4 h-4" />
                         {acknowledgeAlertMutation.isPending ? 'Acknowledging...' : 'Acknowledge'}
                       </Button>
-                      <Button
-                        onClick={() => escalateAlertMutation.mutate(alert.id)}
-                        disabled={escalateAlertMutation.isPending}
-                        className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
-                        size="sm"
-                      >
-                        <AlertOctagon className="w-4 h-4" />
-                        {escalateAlertMutation.isPending ? 'Escalating...' : 'Escalate'}
-                      </Button>
+                      
+                      {/* Show escalate button only for P1 Security Emergency Alerts */}
+                      {alert.priority === "P1" && alert.type === "security" && (
+                        <Button
+                          onClick={() => escalateAlertMutation.mutate(alert.id)}
+                          disabled={escalateAlertMutation.isPending}
+                          className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"
+                          size="sm"
+                        >
+                          <AlertOctagon className="w-4 h-4" />
+                          {escalateAlertMutation.isPending ? 'Escalating...' : 'Escalate'}
+                        </Button>
+                      )}
+                      
                       <Button
                         onClick={() => closeAlertMutation.mutate(alert.id)}
                         disabled={closeAlertMutation.isPending}
