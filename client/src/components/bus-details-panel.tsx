@@ -94,7 +94,24 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
 
   // Filter alerts for this specific bus
   const busAlerts = alerts.filter(alert => alert.busId === bus.id && alert.isActive);
-  const hasEmergencyAlerts = busAlerts.length > 0;
+  
+  // Include P1 Security alerts even if acknowledged (for escalation purposes)
+  const p1SecurityAlerts = alerts.filter(alert => 
+    alert.busId === bus.id && 
+    alert.priority === "P1" && 
+    alert.type === "security" && 
+    alert.status !== "closed"
+  );
+  
+  // Combine active alerts with P1 security alerts for display
+  const allDisplayableAlerts = [...busAlerts];
+  p1SecurityAlerts.forEach(alert => {
+    if (!allDisplayableAlerts.find(a => a.id === alert.id)) {
+      allDisplayableAlerts.push(alert);
+    }
+  });
+  
+  const hasEmergencyAlerts = allDisplayableAlerts.length > 0;
   
   // Check for driver misconduct alerts (including acknowledged ones)
   const allBusAlerts = alerts.filter(alert => alert.busId === bus.id);
@@ -627,11 +644,11 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-red-800 dark:text-red-200">
                   <AlertTriangle className="w-5 h-5" />
-                  Alert Management - {busAlerts.length} Active Alert{busAlerts.length > 1 ? 's' : ''}
+                  Alert Management - {allDisplayableAlerts.length} Alert{allDisplayableAlerts.length > 1 ? 's' : ''}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                {busAlerts.map((alert) => (
+                {allDisplayableAlerts.map((alert) => (
                   <div key={alert.id} className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-4 mb-4 last:mb-0">
                     <div className="flex items-start justify-between mb-3">
                       <div>
@@ -658,7 +675,7 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                       </Button>
                       
                       {/* Show escalate button only for P1 Security Emergency Alerts */}
-                      {alert.priority === "P1" && alert.type === "security" && (
+                      {(alert.priority === "P1" && alert.type === "security") && (
                         <Button
                           onClick={() => escalateAlertMutation.mutate(alert.id)}
                           disabled={escalateAlertMutation.isPending}
@@ -669,6 +686,7 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                           {escalateAlertMutation.isPending ? 'Escalating...' : 'Escalate'}
                         </Button>
                       )}
+
                       
                       <Button
                         onClick={() => closeAlertMutation.mutate(alert.id)}
