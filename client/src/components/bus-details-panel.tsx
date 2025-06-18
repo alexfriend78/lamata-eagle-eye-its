@@ -275,16 +275,10 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
       return passengersVideoPath;
     }
     
-    // For emergency alert situations, show emergency footage
-    if (bus.status === "alert") {
-      console.log(`Bus ${bus.id} - Alert status, showing emergency video`);
-      return machineGunVideoPath;
-    }
-    
-    // For normal operations, use passenger videos sequentially based on bus ID
+    // Always use sequential passenger videos based on bus ID for normal viewing
     const videoIndex = (bus.id - 1) % passengerVideos.length;
     const selectedVideo = passengerVideos[videoIndex];
-    console.log(`Bus ${bus.id} - Normal operation, video index ${videoIndex}, selected: ${selectedVideo}`);
+    console.log(`Bus ${bus.id} - Sequential selection, video index ${videoIndex}, selected: ${selectedVideo}`);
     return selectedVideo;
   };
 
@@ -942,9 +936,9 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                       muted={isPassengerVideoMuted}
                       loop
                       controls={false}
-                      onLoadStart={() => console.log('Passenger video load started')}
-                      onLoadedMetadata={() => console.log('Passenger video metadata loaded')}
-                      onCanPlay={() => console.log('Passenger video can play')}
+                      onLoadStart={() => console.log(`Passenger video load started for Bus ${bus.id}`)}
+                      onLoadedMetadata={() => console.log(`Passenger video metadata loaded for Bus ${bus.id}`)}
+                      onCanPlay={() => console.log(`Passenger video can play for Bus ${bus.id}`)}
                     />
                     <div className="absolute bottom-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
                       CAM-02 • PASSENGERS
