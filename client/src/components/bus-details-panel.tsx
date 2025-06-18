@@ -154,7 +154,7 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
-      // Close the bus detail view when alert is closed
+      // Only close the view when explicitly clicking "Yes, Close Alert"
       onClose();
     }
   });
