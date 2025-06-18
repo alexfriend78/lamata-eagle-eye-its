@@ -544,8 +544,8 @@ export default function BusMonitor() {
         onAlertCreate={(alert) => setActiveAlert(alert)}
         onBusSelect={(bus) => {
           console.log("Emergency Alert System triggered bus selection:", bus.busNumber);
-          // This will trigger the map container to select the bus
-          // The MapContainer handles the selectedBus state internally
+          // Dispatch custom event for MapContainer to handle
+          window.dispatchEvent(new CustomEvent('selectBus', { detail: bus }));
         }}
       />
 

@@ -61,7 +61,25 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
     if (geofencingAlert && geofencingAlert.busId === bus.id) {
       setGeofencingAlert(null);
     }
+    // Notify parent component about bus selection if callback provided
+    if (onBusSelect) {
+      onBusSelect(bus);
+    }
   };
+
+  // Effect to handle external bus selection from emergency alerts
+  useEffect(() => {
+    const handleExternalBusSelection = (event: CustomEvent) => {
+      const bus = event.detail;
+      console.log("MapContainer received external bus selection:", bus.busNumber);
+      setSelectedBus(bus);
+    };
+
+    window.addEventListener('selectBus', handleExternalBusSelection as EventListener);
+    return () => {
+      window.removeEventListener('selectBus', handleExternalBusSelection as EventListener);
+    };
+  }, []);
 
   // Handle closing bus details panel
   const handleCloseBusDetails = () => {
