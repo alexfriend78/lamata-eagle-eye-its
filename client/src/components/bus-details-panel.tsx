@@ -12,7 +12,7 @@ import { apiRequest } from "@/lib/queryClient";
 import passengersVideoPath from "@assets/Bus_Fight_Video_Generated_1750007661396.mp4";
 import emergencyVideoPath from "@assets/Bus_Passenger_Medical_Emergency_Video_1750056149435.mp4";
 import machineGunVideoPath from "@assets/BRT_Bus_with_Machine_Gun_1750007661395.mp4";
-import erraticDriveVideoPath from "@assets/Lagos_Bus_Driver_s_Erratic_Drive_1750105118549.mp4";
+import recklessBehaviorVideoPath from "@assets/BRT_Driver_s_Reckless_Behavior_Video_1750224476189.mp4";
 
 // New Lagos BRT Driver CAM videos
 import driverVideo1 from "@assets/Lagos_nigeria_brt_202506172239_nvi7d_1750223955235.mp4";
@@ -218,9 +218,9 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
 
   // Select appropriate video feeds based on bus status and conditions
   const getDriverVideoSrc = () => {
-    // For off-route or high-speed situations, use erratic driving video
+    // For off-route or high-speed situations, use reckless behavior video
     if (bus.status === "off-route" || busData.currentSpeed > 55) {
-      return erraticDriveVideoPath;
+      return recklessBehaviorVideoPath;
     }
     
     // For normal operations, use Lagos BRT driver videos sequentially based on bus ID
