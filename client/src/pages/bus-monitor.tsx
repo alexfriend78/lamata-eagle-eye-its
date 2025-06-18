@@ -19,9 +19,10 @@ import ManagementAnalyticsPanel from "@/components/management-analytics-panel";
 
 
 import { Button } from "@/components/ui/button";
-import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain, Navigation, Wrench, BarChart3 } from "lucide-react";
+import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain, Navigation, Wrench, BarChart3, Cloud } from "lucide-react";
 import { Link } from "wouter";
 import type { Station, StationDetails } from "@shared/schema";
+import { useWeather } from "@/contexts/weather-context";
 
 export default function BusMonitor() {
   const [currentTime, setCurrentTime] = useState(new Date());
@@ -41,6 +42,10 @@ export default function BusMonitor() {
   const [showRouteOptimizer, setShowRouteOptimizer] = useState(false);
   const [showPredictiveMaintenance, setShowPredictiveMaintenance] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
+  const [showWeatherPanel, setShowWeatherPanel] = useState(false);
+  
+  // Weather hook
+  const { weather } = useWeather();
 
 
   // Handle AI Insights close event
@@ -321,6 +326,18 @@ export default function BusMonitor() {
 
 
 
+            {/* Weather Panel Toggle */}
+            <Button
+              onClick={() => setShowWeatherPanel(!showWeatherPanel)}
+              variant={showWeatherPanel ? "default" : "outline"}
+              size="sm"
+              className="h-8 px-3 text-xs"
+              title="Weather Panel"
+            >
+              <Cloud className="h-4 w-4 mr-1" />
+              Weather
+            </Button>
+
             {/* Theme Toggle */}
             <Button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -591,7 +608,100 @@ export default function BusMonitor() {
         />
       )}
 
+      {/* Weather Panel */}
+      {showWeatherPanel && (
+        <div className={`fixed top-20 right-4 w-80 max-h-96 overflow-y-auto z-50 ${
+          theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+        } border rounded-lg shadow-lg p-4`}>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+              Current Weather
+            </h2>
+            <Button
+              onClick={() => setShowWeatherPanel(false)}
+              variant="ghost"
+              size="sm"
+              className="h-6 w-6 p-0"
+            >
+              ×
+            </Button>
+          </div>
+          
+          <div className="space-y-3">
+            {/* Weather Condition */}
+            <div className={`p-3 rounded-lg ${
+              theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
+            }`}>
+              <div className="flex items-center justify-between">
+                <span className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                  Condition
+                </span>
+                <div className="flex items-center gap-2">
+                  <div className={`w-3 h-3 rounded-full ${
+                    weather.condition === 'sunny' ? 'bg-yellow-400' :
+                    weather.condition === 'cloudy' ? 'bg-gray-400' :
+                    weather.condition === 'rainy' ? 'bg-blue-400' :
+                    weather.condition === 'stormy' ? 'bg-purple-400' :
+                    weather.condition === 'windy' ? 'bg-teal-400' : 'bg-gray-400'
+                  }`} />
+                  <span className={`capitalize ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                    {weather.condition}
+                  </span>
+                </div>
+              </div>
+            </div>
 
+            {/* Temperature */}
+            <div className={`p-3 rounded-lg ${
+              theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
+            }`}>
+              <div className="flex items-center justify-between">
+                <span className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                  Temperature
+                </span>
+                <span className={`${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                  {weather.temperature}°C
+                </span>
+              </div>
+            </div>
+
+            {/* Humidity */}
+            <div className={`p-3 rounded-lg ${
+              theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
+            }`}>
+              <div className="flex items-center justify-between">
+                <span className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                  Humidity
+                </span>
+                <span className={`${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                  {weather.humidity}%
+                </span>
+              </div>
+            </div>
+
+            {/* Wind Speed */}
+            <div className={`p-3 rounded-lg ${
+              theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'
+            }`}>
+              <div className="flex items-center justify-between">
+                <span className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                  Wind Speed
+                </span>
+                <span className={`${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                  {weather.windSpeed} km/h
+                </span>
+              </div>
+            </div>
+
+            {/* Last Updated */}
+            {weather.lastUpdated && (
+              <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} text-center mt-3`}>
+                Last updated: {new Date(weather.lastUpdated).toLocaleTimeString()}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       </div>
     </div>
