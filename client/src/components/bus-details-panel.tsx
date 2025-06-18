@@ -78,6 +78,7 @@ function getNextStopsForBus(bus: BusWithRoute) {
 }
 
 export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) {
+  const queryClient = useQueryClient();
   const [isDriverVideoPlaying, setIsDriverVideoPlaying] = useState(true);
   const [isPassengerVideoPlaying, setIsPassengerVideoPlaying] = useState(true);
   const [isDriverVideoMuted, setIsDriverVideoMuted] = useState(true);
@@ -87,8 +88,6 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
   const [isEscalated, setIsEscalated] = useState(false);
   const [escalatedAlerts, setEscalatedAlerts] = useState<Set<number>>(new Set());
   const [escalationMode, setEscalationMode] = useState(false);
-
-  const queryClient = useQueryClient();
 
   // Protected onClose function that prevents closure during escalation
   const protectedOnClose = () => {
