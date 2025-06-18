@@ -9,11 +9,18 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 
 // Import CCTV video feeds for buses
-import driverVideoPath from "@assets/knife_Lagos_Bus_CCTV_Video_Ready_1750007661394.mp4";
 import passengersVideoPath from "@assets/Bus_Fight_Video_Generated_1750007661396.mp4";
 import emergencyVideoPath from "@assets/Bus_Passenger_Medical_Emergency_Video_1750056149435.mp4";
 import machineGunVideoPath from "@assets/BRT_Bus_with_Machine_Gun_1750007661395.mp4";
 import erraticDriveVideoPath from "@assets/Lagos_Bus_Driver_s_Erratic_Drive_1750105118549.mp4";
+
+// New Lagos BRT Driver CAM videos
+import driverVideo1 from "@assets/Lagos_nigeria_brt_202506172239_nvi7d_1750223955235.mp4";
+import driverVideo2 from "@assets/Lagos_nigeria_brt_202506172237_9g5ph_1750223955237.mp4";
+import driverVideo3 from "@assets/Lagos_nigeria_brt_202506172026_4luor_1750223955238.mp4";
+import driverVideo4 from "@assets/Lagos_nigeria_brt_202506172026_1uk53_1750223955238.mp4";
+import driverVideo5 from "@assets/Lagos_nigeria_brt_202506172026_irrqx_1750223955238.mp4";
+import driverVideo6 from "@assets/Lagos_nigeria_brt_202506172026_mgn4v_1750223955238.mp4";
 
 interface BusDetailsPanelProps {
   bus: BusWithRoute;
@@ -199,18 +206,26 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
     }
   };
 
+  // Array of driver videos for sequential selection
+  const driverVideos = [
+    driverVideo1,
+    driverVideo2, 
+    driverVideo3,
+    driverVideo4,
+    driverVideo5,
+    driverVideo6
+  ];
+
   // Select appropriate video feeds based on bus status and conditions
   const getDriverVideoSrc = () => {
-    if (bus.status === "off-route") {
-      return erraticDriveVideoPath; // Shows erratic driving behavior
+    // For off-route or high-speed situations, use erratic driving video
+    if (bus.status === "off-route" || busData.currentSpeed > 55) {
+      return erraticDriveVideoPath;
     }
-    if (bus.status === "alert") {
-      return driverVideoPath; // Shows knife incident
-    }
-    if (busData.currentSpeed > 55) {
-      return erraticDriveVideoPath; // Shows speeding/erratic driving
-    }
-    return emergencyVideoPath; // Normal operations
+    
+    // For normal operations, use Lagos BRT driver videos sequentially based on bus ID
+    const videoIndex = (bus.id - 1) % driverVideos.length;
+    return driverVideos[videoIndex];
   };
 
   const getPassengerVideoSrc = () => {
