@@ -271,17 +271,21 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
   const getPassengerVideoSrc = () => {
     // For overcrowded situations, show fight incident
     if (busData.passengerCount > 50) {
+      console.log(`Bus ${bus.id} - Overcrowded, showing fight video`);
       return passengersVideoPath;
     }
     
     // For emergency alert situations, show emergency footage
     if (bus.status === "alert") {
+      console.log(`Bus ${bus.id} - Alert status, showing emergency video`);
       return machineGunVideoPath;
     }
     
     // For normal operations, use passenger videos sequentially based on bus ID
     const videoIndex = (bus.id - 1) % passengerVideos.length;
-    return passengerVideos[videoIndex];
+    const selectedVideo = passengerVideos[videoIndex];
+    console.log(`Bus ${bus.id} - Normal operation, video index ${videoIndex}, selected: ${selectedVideo}`);
+    return selectedVideo;
   };
 
   // Get route points for the designed path
@@ -932,12 +936,15 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                   </div>
                   <div className="relative bg-black rounded-lg overflow-hidden">
                     <video
-                      src={hasEmergencyAlerts ? emergencyVideoPath : passengersVideoPath}
+                      src={getPassengerVideoSrc()}
                       className="w-full h-48 object-cover"
                       autoPlay={isPassengerVideoPlaying}
                       muted={isPassengerVideoMuted}
                       loop
                       controls={false}
+                      onLoadStart={() => console.log('Passenger video load started')}
+                      onLoadedMetadata={() => console.log('Passenger video metadata loaded')}
+                      onCanPlay={() => console.log('Passenger video can play')}
                     />
                     <div className="absolute bottom-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs">
                       CAM-02 • PASSENGERS
