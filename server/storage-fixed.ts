@@ -306,7 +306,7 @@ export class MemStorage implements IStorage {
       
       // Route 3 buses - positioned on updated Route 3 path
       { number: "BRT005", routeId: 3, status: "active", capacity: 70, direction: "Eastbound", currentX: 0.51, currentY: 0.21, driverName: "Folake Akinola", driverPhone: "+234-8078-901-234" },
-      { number: "BRT006", routeId: 3, status: "alert", capacity: 70, direction: "Westbound", currentX: 0.38, currentY: 0.30, driverName: "Emeka Nwosu", driverPhone: "+234-8089-012-345" },
+      { number: "BRT006", routeId: 3, status: "active", capacity: 70, direction: "Westbound", currentX: 0.38, currentY: 0.30, driverName: "Emeka Nwosu", driverPhone: "+234-8089-012-345" },
       { number: "BRT011", routeId: 3, status: "active", capacity: 70, direction: "Eastbound", currentX: 0.25, currentY: 0.56, driverName: "Aisha Bello", driverPhone: "+234-8090-123-456" },
       
       // Route 4 buses
