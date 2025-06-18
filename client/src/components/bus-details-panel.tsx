@@ -13,6 +13,7 @@ import passengersVideoPath from "@assets/Bus_Fight_Video_Generated_1750007661396
 import emergencyVideoPath from "@assets/Bus_Passenger_Medical_Emergency_Video_1750056149435.mp4";
 import machineGunVideoPath from "@assets/BRT_Bus_with_Machine_Gun_1750007661395.mp4";
 import recklessBehaviorVideoPath from "@assets/BRT_Driver_s_Reckless_Behavior_Video_1750224476189.mp4";
+import driverMisconductVideoPath from "@assets/Brt_mass_transit_202506180631_u7rwu_1750224978374.mp4";
 
 // New Lagos BRT Driver CAM videos
 import driverVideo1 from "@assets/Lagos_nigeria_brt_202506172239_nvi7d_1750223955235.mp4";
@@ -216,8 +217,18 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
     driverVideo6
   ];
 
+  // Check for specific driver misconduct alerts for this bus
+  const hasDriverMisconductAlert = busAlerts.some(alert => 
+    alert.type === 'driver_misconduct' && alert.priority === 'P2'
+  );
+
   // Select appropriate video feeds based on bus status and conditions
   const getDriverVideoSrc = () => {
+    // For driver misconduct P2 alerts, use specific misconduct video
+    if (hasDriverMisconductAlert) {
+      return driverMisconductVideoPath;
+    }
+    
     // For off-route or high-speed situations, use reckless behavior video
     if (bus.status === "off-route" || busData.currentSpeed > 55) {
       return recklessBehaviorVideoPath;
