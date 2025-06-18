@@ -406,33 +406,20 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
           Math.floor(offsetPoints.length * 0.3),
           Math.floor(offsetPoints.length * 0.7)
         ].map((pointIndex, labelIndex) => (
-          <g key={labelIndex}>
-            {/* Background circle for better visibility */}
-            <circle
-              cx={offsetPoints[pointIndex].x}
-              cy={offsetPoints[pointIndex].y - 8}
-              r="12"
-              fill={theme === 'dark' ? '#1f2937' : '#ffffff'}
-              stroke={route.color}
-              strokeWidth="2"
-              opacity="0.9"
-            />
-            <text
-              x={offsetPoints[pointIndex].x}
-              y={offsetPoints[pointIndex].y - 4}
-              fill={theme === 'dark' ? '#ffffff' : '#000000'}
-              fontSize="11"
-              fontWeight="bold"
-              textAnchor="middle"
-              style={{
-                filter: theme === 'dark' 
-                  ? "drop-shadow(0px 1px 2px rgba(0,0,0,0.8))" 
-                  : "drop-shadow(0px 1px 2px rgba(0,0,0,0.3))"
-              }}
-            >
-              {route.routeNumber}
-            </text>
-          </g>
+          <text
+            key={labelIndex}
+            x={offsetPoints[pointIndex].x}
+            y={offsetPoints[pointIndex].y - 8}
+            fill="white"
+            fontSize="11"
+            fontWeight="bold"
+            textAnchor="middle"
+            style={{
+              filter: "drop-shadow(0px 1px 3px rgba(0,0,0,0.9))"
+            }}
+          >
+            {route.routeNumber}
+          </text>
         ))}
       </svg>
     );
@@ -885,8 +872,10 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             ));
         })()}
         
-        {/* Bus Stations - only show if stations visibility is enabled */}
-        {showStations && stations.map((station) => {
+        {/* Bus Stations - only show if stations visibility is enabled and route is selected */}
+        {showStations && stations
+          .filter(station => selectedRoutes.length === 0 || selectedRoutes.includes(station.routeId))
+          .map((station) => {
           const stationPixelX = station.x * mapWidth;
           const stationPixelY = station.y * mapHeight;
           
@@ -936,18 +925,15 @@ export default function MapContainer({ buses, routes, stations, selectedRoutes, 
             {/* Station name label */}
             {showStationNames && (
               <div 
-                className={`absolute top-5 left-1/2 transform -translate-x-1/2 text-xs font-bold px-2 py-1 rounded shadow-lg ${
+                className={`absolute top-5 left-1/2 transform -translate-x-1/2 text-xs font-medium px-2 py-1 rounded ${
                   theme === 'dark' 
-                    ? 'bg-gray-900 text-white border-2 border-yellow-400' 
-                    : 'bg-white text-gray-900 border-2 border-blue-500'
+                    ? 'bg-gray-800 text-white border border-gray-600' 
+                    : 'bg-white text-gray-900 border border-gray-300'
                 }`}
                 style={{
                   whiteSpace: 'nowrap',
-                  fontSize: '11px',
-                  zIndex: 50,
-                  filter: theme === 'dark' 
-                    ? 'drop-shadow(0px 2px 4px rgba(0,0,0,0.8))'
-                    : 'drop-shadow(0px 2px 4px rgba(0,0,0,0.3))'
+                  fontSize: '10px',
+                  filter: 'drop-shadow(0px 1px 2px rgba(0,0,0,0.3))'
                 }}
               >
                 {station.name}
