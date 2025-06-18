@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/hooks/use-theme";
+import { WeatherProvider } from "@/contexts/weather-context";
 import BusMonitor from "@/pages/bus-monitor";
 import AlertSimulator from "@/pages/alert-simulator";
 import WeatherControl from "@/pages/weather-control";
@@ -24,10 +25,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="transit-monitor-theme">
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
+        <WeatherProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Router />
+          </TooltipProvider>
+        </WeatherProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
