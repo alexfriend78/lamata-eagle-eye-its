@@ -542,6 +542,11 @@ export default function BusMonitor() {
         activeAlert={highestPriorityAlert || null}
         onAlertDismiss={() => setActiveAlert(null)}
         onAlertCreate={(alert) => setActiveAlert(alert)}
+        onBusSelect={(bus) => {
+          console.log("Emergency Alert System triggered bus selection:", bus.busNumber);
+          // This will trigger the map container to select the bus
+          // The MapContainer handles the selectedBus state internally
+        }}
       />
 
       {/* Alerts Manager */}

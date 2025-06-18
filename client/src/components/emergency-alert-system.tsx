@@ -21,6 +21,7 @@ interface EmergencyAlertSystemProps {
   activeAlert: AlertWithDetails | null;
   onAlertDismiss: () => void;
   onAlertCreate: (alert: AlertWithDetails) => void;
+  onBusSelect?: (bus: BusWithRoute) => void;
 }
 
 type Priority = "P1" | "P2" | "P3" | "P4" | "P5";
@@ -55,7 +56,8 @@ export default function EmergencyAlertSystem({
   stations, 
   activeAlert, 
   onAlertDismiss, 
-  onAlertCreate 
+  onAlertCreate,
+  onBusSelect
 }: EmergencyAlertSystemProps) {
   const [showSimulator, setShowSimulator] = useState(false);
   const [showTriage, setShowTriage] = useState(false);
@@ -399,7 +401,18 @@ export default function EmergencyAlertSystem({
               {/* For P1 security alerts, add a button to go to bus details for escalation */}
               {(activeAlert.priority === "P1" && activeAlert.type === "security") && (
                 <Button
-                  onClick={() => onAlertDismiss()}
+                  onClick={() => {
+                    // Find the bus associated with this alert
+                    const alertBus = buses.find(bus => bus.id === activeAlert.busId);
+                    if (alertBus && onBusSelect) {
+                      console.log("Navigating to bus details for escalation - Bus:", alertBus.busNumber);
+                      onBusSelect(alertBus);
+                      onAlertDismiss();
+                    } else {
+                      console.log("Bus not found or onBusSelect not provided");
+                      onAlertDismiss();
+                    }
+                  }}
                   variant="secondary"
                   size="lg"
                   className="bg-red-600/80 text-white border-red-400/30 hover:bg-red-500/80"
