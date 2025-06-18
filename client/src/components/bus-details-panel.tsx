@@ -15,16 +15,16 @@ import machineGunVideoPath from "@assets/BRT_Bus_with_Machine_Gun_1750007661395.
 import recklessBehaviorVideoPath from "@assets/BRT_Driver_s_Reckless_Behavior_Video_1750224476189.mp4";
 import driverMisconductVideoPath from "@assets/Brt_mass_transit_202506180631_u7rwu_1750224978374.mp4";
 
-// New Passenger Area CAM videos
-import passengerVideo1 from "@assets/Professionally_dressed_passengers_20250618064 (3)_1750225588419.mp4";
-import passengerVideo2 from "@assets/Professionally_dressed_passengers_20250618064 (2)_1750225588421.mp4";
-import passengerVideo3 from "@assets/Professionally_dressed_passengers_20250618064 (1)_1750225588421.mp4";
-import passengerVideo4 from "@assets/Professionally_dressed_passengers_20250618064_1750225588422.mp4";
-import passengerVideo5 from "@assets/Calm_passengers_on_202506180643_ja5r3_1750225588422.mp4";
-import passengerVideo6 from "@assets/Calm_passengers_on_202506180643_hilzc_1750225588422.mp4";
-import passengerVideo7 from "@assets/Calm_passengers_on_202506180643_upaxz_1750225588422.mp4";
-import passengerVideo8 from "@assets/Calm_passengers_on_202506180643_9a8wd_1750225588422.mp4";
-import passengerVideo9 from "@assets/Calm_passengers_on_202506180643_6a4zf_1750225588423.mp4";
+// New Passenger Area CAM videos - using direct paths for files with special characters
+const passengerVideo1 = "/attached_assets/Professionally_dressed_passengers_20250618064 (3)_1750225588419.mp4";
+const passengerVideo2 = "/attached_assets/Professionally_dressed_passengers_20250618064 (2)_1750225588421.mp4";
+const passengerVideo3 = "/attached_assets/Professionally_dressed_passengers_20250618064 (1)_1750225588421.mp4";
+const passengerVideo4 = "/attached_assets/Professionally_dressed_passengers_20250618064_1750225588422.mp4";
+const passengerVideo5 = "/attached_assets/Calm_passengers_on_202506180643_ja5r3_1750225588422.mp4";
+const passengerVideo6 = "/attached_assets/Calm_passengers_on_202506180643_hilzc_1750225588422.mp4";
+const passengerVideo7 = "/attached_assets/Calm_passengers_on_202506180643_upaxz_1750225588422.mp4";
+const passengerVideo8 = "/attached_assets/Calm_passengers_on_202506180643_9a8wd_1750225588422.mp4";
+const passengerVideo9 = "/attached_assets/Calm_passengers_on_202506180643_6a4zf_1750225588423.mp4";
 
 // New Lagos BRT Driver CAM videos
 import driverVideo1 from "@assets/Lagos_nigeria_brt_202506172239_nvi7d_1750223955235.mp4";
