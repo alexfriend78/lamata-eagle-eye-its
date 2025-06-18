@@ -86,6 +86,7 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
   const [showEscalateMessage, setShowEscalateMessage] = useState(false);
   const [isEscalated, setIsEscalated] = useState(false);
   const [escalatedAlerts, setEscalatedAlerts] = useState<Set<number>>(new Set());
+  const [escalationMode, setEscalationMode] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -132,9 +133,13 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
   const escalateAlertMutation = useMutation({
     mutationFn: (alertId: number) => apiRequest("PATCH", `/api/alerts/${alertId}/escalate`),
     onSuccess: (_, alertId) => {
+      console.log("Escalate mutation succeeded for alert:", alertId);
       setEscalatedAlerts(prev => new Set([...prev, alertId]));
+      setEscalationMode(true); // Enable escalation mode to prevent auto-close
+      console.log("Escalation mode enabled - panel locked open");
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
+      console.log("Escalation complete - NOT calling onClose()");
       // Don't auto-close the view, let user decide
     }
   });
@@ -152,7 +157,14 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
   // Mutation to close alert (closes panel)
   const closeAlertMutation = useMutation({
     mutationFn: (alertId: number) => apiRequest("PATCH", `/api/alerts/${alertId}/close`),
-    onSuccess: () => {
+    onSuccess: (_, alertId) => {
+      console.log("Close alert mutation succeeded - user chose to close");
+      setEscalationMode(false); // Disable escalation mode
+      setEscalatedAlerts(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(alertId);
+        return newSet;
+      });
       queryClient.invalidateQueries({ queryKey: ['/api/alerts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/buses'] });
       // Only close when user explicitly chooses to close alert
@@ -669,11 +681,15 @@ export default function BusDetailsPanel({ bus, onClose }: BusDetailsPanelProps) 
                                   Yes, Close Alert
                                 </Button>
                                 <Button
-                                  onClick={() => setEscalatedAlerts(prev => {
-                                    const newSet = new Set(prev);
-                                    newSet.delete(alert.id);
-                                    return newSet;
-                                  })}
+                                  onClick={() => {
+                                    console.log("Keep Open clicked - disabling escalation mode");
+                                    setEscalationMode(false);
+                                    setEscalatedAlerts(prev => {
+                                      const newSet = new Set(prev);
+                                      newSet.delete(alert.id);
+                                      return newSet;
+                                    });
+                                  }}
                                   variant="outline"
                                   size="sm"
                                 >
