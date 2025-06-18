@@ -1,19 +1,17 @@
 import { useState } from "react";
 import { useTheme } from "@/hooks/use-theme";
-import WeatherOverlay from "@/components/weather-overlay";
+import { useWeather } from "@/hooks/use-weather";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Cloud, Sun, CloudRain, CloudSnow, Wind } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import { ArrowLeft, Cloud, Sun, CloudRain, CloudSnow, Wind, Thermometer, Eye } from "lucide-react";
 import { Link } from "wouter";
 
 export default function WeatherControl() {
   const { theme } = useTheme();
-  const [currentWeather, setCurrentWeather] = useState({
-    condition: "sunny",
-    temperature: 28,
-    humidity: 65,
-    windSpeed: 12,
-    visibility: 10
-  });
+  const { weather, intensity, isVisible, updateWeather, updateIntensity, updateVisibility, weatherConditions } = useWeather();
+  const [localIntensity, setLocalIntensity] = useState(intensity);
 
   const weatherPresets = [
     {

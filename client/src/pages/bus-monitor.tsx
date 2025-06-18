@@ -20,6 +20,7 @@ import ManagementAnalyticsPanel from "@/components/management-analytics-panel";
 import { Button } from "@/components/ui/button";
 import { Sun, Moon, Settings, Eye, Map, MapPin, Video, Type, Palette, Route, Bus, AlertTriangle, Brain, Navigation, Wrench, BarChart3, Cloud } from "lucide-react";
 import { Link } from "wouter";
+import WeatherDisplay from "@/components/weather-display";
 import type { Station, StationDetails } from "@shared/schema";
 
 export default function BusMonitor() {
