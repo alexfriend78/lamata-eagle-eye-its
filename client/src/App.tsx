@@ -19,12 +19,16 @@ function Router() {
 }
 
 function App() {
+  console.log('🚀 App component rendering');
+  
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="transit-monitor-theme">
         <TooltipProvider>
           <Toaster />
-          <Router />
+          <div className="min-h-screen bg-gray-900 text-white">
+            <Router />
+          </div>
         </TooltipProvider>
       </ThemeProvider>
     </QueryClientProvider>

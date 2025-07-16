@@ -40,6 +40,8 @@ export default function BusMonitor() {
   const [showPredictiveMaintenance, setShowPredictiveMaintenance] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
 
+  console.log('🚌 BusMonitor component rendering');
+
 
   // Handle AI Insights close event
   useEffect(() => {
@@ -53,7 +55,7 @@ export default function BusMonitor() {
   const [showStations, setShowStations] = useState(true);
   const [showBuses, setShowBuses] = useState(true);
   const [showBackgroundMap, setShowBackgroundMap] = useState(false);
-  const { buses, routes, stations, alerts, stats, refetch } = useBusData();
+  const { buses, routes, stations, alerts, stats, refetch, isLoading, error } = useBusData();
   const { theme, setTheme } = useTheme();
   
   // Get filtered stations for selected routes
@@ -164,6 +166,36 @@ export default function BusMonitor() {
       }
     }
   };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-900 text-white">
+        <div className="text-center">
+          <div className="text-2xl mb-4">🚌 Loading Lagos BRT System...</div>
+          <div className="text-sm">Initializing fleet monitoring dashboard</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-900 text-white">
+        <div className="text-center">
+          <div className="text-2xl mb-4">⚠️ System Error</div>
+          <div className="text-sm text-red-400">{error.message}</div>
+          <button 
+            onClick={() => refetch()} 
+            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Retry Connection
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'}`}>
