@@ -21,6 +21,21 @@ function Router() {
 function App() {
   console.log('🚀 App component rendering');
   
+  // Simple test render to check if React is working
+  const isSimpleTest = false; // Set to true for testing
+  
+  if (isSimpleTest) {
+    return (
+      <div className="min-h-screen bg-blue-900 text-white p-8">
+        <h1 className="text-4xl font-bold mb-4">🚌 Lagos BRT System</h1>
+        <p className="text-xl">Simple test - React is working!</p>
+        <div className="mt-4 p-4 bg-green-800 rounded">
+          <p>If you can see this, the basic app structure is working.</p>
+        </div>
+      </div>
+    );
+  }
+  
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="dark" storageKey="transit-monitor-theme">
