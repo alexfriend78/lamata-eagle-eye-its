@@ -3,7 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import { Cloud, CloudRain, Sun, Wind, Thermometer, Eye, CloudSnow } from "lucide-react";
+import { Cloud, CloudRain, Sun, Wind, Thermometer, Eye, CloudSnow, Leaf } from "lucide-react";
+import { aiPredictor } from "@/lib/ai-predictor"; // New AI helper for predictions
 
 interface WeatherOverlayProps {
   isVisible: boolean;
@@ -19,9 +20,10 @@ interface WeatherData {
   windSpeed: number;
   visibility: number;
   description: string;
+  ecoImpact: string; // New sustainability impact
 }
 
-// Lagos-specific weather patterns
+// Lagos-specific weather patterns with eco-impact
 const lagosWeatherConditions: WeatherData[] = [
   {
     condition: 'sunny',
@@ -29,7 +31,8 @@ const lagosWeatherConditions: WeatherData[] = [
     humidity: 75,
     windSpeed: 12,
     visibility: 10,
-    description: 'Clear skies with high humidity typical of Lagos'
+    description: 'Clear skies with high humidity typical of Lagos',
+    ecoImpact: 'Optimal for solar charging - low emissions'
   },
   {
     condition: 'cloudy',
@@ -37,7 +40,8 @@ const lagosWeatherConditions: WeatherData[] = [
     humidity: 85,
     windSpeed: 8,
     visibility: 8,
-    description: 'Overcast with high humidity - common during rainy season'
+    description: 'Overcast with high humidity - common during rainy season',
+    ecoImpact: 'Moderate energy use - consider route optimization'
   },
   {
     condition: 'rainy',
@@ -45,7 +49,8 @@ const lagosWeatherConditions: WeatherData[] = [
     humidity: 95,
     windSpeed: 15,
     visibility: 3,
-    description: 'Heavy tropical rainfall affecting visibility'
+    description: 'Heavy tropical rainfall affecting visibility',
+    ecoImpact: 'High water risk - increase electric bus efficiency checks'
   },
   {
     condition: 'stormy',
@@ -53,7 +58,8 @@ const lagosWeatherConditions: WeatherData[] = [
     humidity: 98,
     windSpeed: 25,
     visibility: 2,
-    description: 'Thunderstorm with strong winds - exercise caution'
+    description: 'Thunderstorm with strong winds - exercise caution',
+    ecoImpact: 'Severe weather - potential delays increasing fuel use'
   },
   {
     condition: 'foggy',
@@ -61,20 +67,24 @@ const lagosWeatherConditions: WeatherData[] = [
     humidity: 90,
     windSpeed: 5,
     visibility: 1,
-    description: 'Dense harmattan fog reducing visibility significantly'
+    description: 'Dense harmattan fog reducing visibility significantly',
+    ecoImpact: 'Reduced visibility - AI rerouting recommended for safety'
   }
 ];
 
 export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayProps) {
   const [currentWeather, setCurrentWeather] = useState<WeatherData>(lagosWeatherConditions[0]);
   const [weatherIntensity, setWeatherIntensity] = useState(0.7);
+  const [aiWeatherPrediction, setAiWeatherPrediction] = useState<string>('');
 
-  // Simulate weather changes every 30 seconds
+  // Simulate weather changes every 30 seconds with AI prediction
   useEffect(() => {
     const interval = setInterval(() => {
       const randomCondition = lagosWeatherConditions[Math.floor(Math.random() * lagosWeatherConditions.length)];
       setCurrentWeather(randomCondition);
       setWeatherIntensity(Math.random() * 0.8 + 0.2); // 0.2 to 1.0
+      // Simulate AI prediction (e.g., integrate with external API in production)
+      setAiWeatherPrediction(aiPredictor.predictWeatherImpact(randomCondition.condition));
     }, 30000);
 
     return () => clearInterval(interval);
@@ -190,7 +200,7 @@ export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayPr
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               {getWeatherIcon(currentWeather.condition)}
-              <span className="text-lg">Lagos Weather</span>
+              <span className="text-lg">Lagos Weather (AI Enhanced)</span>
             </div>
             <Switch
               checked={isVisible}
@@ -232,6 +242,19 @@ export default function WeatherOverlay({ isVisible, onToggle }: WeatherOverlayPr
               <div className="text-gray-500">
                 Intensity: {Math.round(weatherIntensity * 100)}%
               </div>
+            </div>
+
+            {/* Sustainability Impact */}
+            <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
+              <Leaf className="w-4 h-4" />
+              <span>{currentWeather.ecoImpact}</span>
+            </div>
+
+            {/* AI Weather Prediction */}
+            <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-3">
+              <p className="text-sm text-purple-800 dark:text-purple-200 font-medium">
+                AI Prediction: {aiWeatherPrediction}
+              </p>
             </div>
 
             {/* Weather Impact Alert */}

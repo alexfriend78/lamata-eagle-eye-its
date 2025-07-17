@@ -16,6 +16,9 @@ export const routes = pgTable("routes", {
   animation: text("animation").notNull().default("none"), // none, flow, pulse, glow
   glowColor: text("glow_color"), // optional glow effect color
   gradientEnd: text("gradient_end"), // optional gradient end color
+  // New sustainability fields
+  carbonFootprint: real("carbon_footprint").default(0.0), // kg CO2 per km
+  ecoRating: integer("eco_rating").default(5), // 1-10 rating
 });
 
 export const stations = pgTable("stations", {
@@ -42,6 +45,8 @@ export const buses = pgTable("buses", {
   driverName: text("driver_name"),
   driverPhone: text("driver_phone"),
   lastUpdated: timestamp("last_updated").notNull().defaultNow(),
+  // New AI fields
+  aiHealthScore: real("ai_health_score").default(100.0), // 0-100 from ML model
 });
 
 export const alerts = pgTable("alerts", {
@@ -116,6 +121,18 @@ export const historicalPatterns = pgTable("historical_patterns", {
   lastUpdated: timestamp("last_updated").notNull().defaultNow(),
 });
 
+// New table for AI predictive maintenance
+export const aiPredictions = pgTable("ai_predictions", {
+  id: serial("id").primaryKey(),
+  busId: integer("bus_id").notNull().references(() => buses.id),
+  component: text("component").notNull(),
+  failureProbability: real("failure_probability").notNull(), // 0.0-1.0
+  estimatedDate: timestamp("estimated_date").notNull(),
+  confidence: real("confidence").notNull().default(0.8), // ML confidence score
+  recommendedAction: text("recommended_action"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
 // Insert schemas
 export const insertRouteSchema = createInsertSchema(routes).omit({ id: true });
 export const insertStationSchema = createInsertSchema(stations).omit({ id: true });
@@ -126,6 +143,7 @@ export const insertBusArrivalSchema = createInsertSchema(busArrivals).omit({ id:
 export const insertCrowdDensityReadingSchema = createInsertSchema(crowdDensityReadings).omit({ id: true, timestamp: true });
 export const insertCrowdPredictionSchema = createInsertSchema(crowdPredictions).omit({ id: true, createdAt: true });
 export const insertHistoricalPatternSchema = createInsertSchema(historicalPatterns).omit({ id: true, lastUpdated: true });
+export const insertAiPredictionSchema = createInsertSchema(aiPredictions).omit({ id: true, createdAt: true });
 
 // Types
 export type Route = typeof routes.$inferSelect;
@@ -137,6 +155,7 @@ export type BusArrival = typeof busArrivals.$inferSelect;
 export type CrowdDensityReading = typeof crowdDensityReadings.$inferSelect;
 export type CrowdPrediction = typeof crowdPredictions.$inferSelect;
 export type HistoricalPattern = typeof historicalPatterns.$inferSelect;
+export type AiPrediction = typeof aiPredictions.$inferSelect;
 
 export type InsertRoute = z.infer<typeof insertRouteSchema>;
 export type InsertStation = z.infer<typeof insertStationSchema>;
@@ -147,6 +166,7 @@ export type InsertBusArrival = z.infer<typeof insertBusArrivalSchema>;
 export type InsertCrowdDensityReading = z.infer<typeof insertCrowdDensityReadingSchema>;
 export type InsertCrowdPrediction = z.infer<typeof insertCrowdPredictionSchema>;
 export type InsertHistoricalPattern = z.infer<typeof insertHistoricalPatternSchema>;
+export type InsertAiPrediction = z.infer<typeof insertAiPredictionSchema>;
 
 // Extended types for API responses
 export type BusWithRoute = Bus & { route: Route };
@@ -171,6 +191,8 @@ export type SystemStats = {
   alertBuses: number;
   avgCrowdDensity: number;
   peakStations: number;
+  // New stats
+  avgEcoRating: number;
 };
 
 export type CrowdAnalytics = {

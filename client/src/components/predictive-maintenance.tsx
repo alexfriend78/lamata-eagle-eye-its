@@ -21,9 +21,12 @@ import {
   Calendar,
   BarChart3,
   Shield,
-  X
+  X,
+  Brain
 } from "lucide-react";
-import type { Bus } from "@shared/schema";
+import type { Bus, AiPrediction } from "@shared/schema";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'; // Assuming Recharts is installed
+import { aiPredictor } from "@/lib/ai-predictor"; // New AI helper
 
 interface MaintenanceRecord {
   id: number;
@@ -58,6 +61,7 @@ interface BusDiagnostics {
   };
   predictedFailures: PredictedFailure[];
   maintenanceAlerts: MaintenanceAlert[];
+  aiRecommendations: string[]; // New AI-powered autonomous recommendations
 }
 
 interface ComponentHealth {
@@ -97,8 +101,20 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
   const [diagnostics, setDiagnostics] = useState<BusDiagnostics[]>([]);
   const [maintenanceRecords, setMaintenanceRecords] = useState<MaintenanceRecord[]>([]);
 
-  // Generate stable diagnostic data for buses (seeded by bus ID)
-  const generateDiagnostics = (): BusDiagnostics[] => {
+  // Fetch AI predictions using React Query
+  const { data: aiPredictions } = useQuery<AiPrediction[]>({
+    queryKey: ['aiPredictions', selectedBus],
+    queryFn: async () => {
+      if (!selectedBus) return [];
+      const response = await fetch(`/api/buses/${selectedBus}/ai-predictions`);
+      if (!response.ok) throw new Error('Failed to fetch AI predictions');
+      return response.json();
+    },
+    enabled: !!selectedBus,
+  });
+
+  // Generate diagnostics with AI integration
+  const generateDiagnostics = (aiData: AiPrediction[]): BusDiagnostics[] => {
     return buses.map(bus => {
       // Use bus ID as seed for consistent values
       const seed = bus.id * 1000;
@@ -144,27 +160,18 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
         tires: { ...generateComponentHealth(baseHealth - 10, 8), name: 'Tires' }
       };
 
-      // Generate predicted failures
-      const predictedFailures: PredictedFailure[] = [];
-      Object.entries(components).forEach(([key, component]) => {
-        if (component.healthScore < 70) {
-          const probability = Math.max(10, 100 - component.healthScore);
-          const daysUntilFailure = Math.floor((component.healthScore / 100) * 90);
-          
-          predictedFailures.push({
-            component: component.name,
-            probability,
-            estimatedDate: new Date(Date.now() + daysUntilFailure * 24 * 60 * 60 * 1000).toISOString(),
-            severity: component.healthScore < 40 ? 'critical' : 
-                     component.healthScore < 55 ? 'high' : 'medium',
-            recommendedAction: component.healthScore < 40 ? 
-              `Immediate replacement required for ${component.name}` :
-              `Schedule preventive maintenance for ${component.name}`
-          });
-        }
-      });
+      // Integrate real AI predictions
+      const predictedFailures: PredictedFailure[] = aiData
+        .filter(pred => pred.busId === bus.id)
+        .map(pred => ({
+          component: pred.component,
+          probability: pred.failureProbability * 100,
+          estimatedDate: pred.estimatedDate.toISOString(),
+          severity: pred.confidence > 0.9 ? 'critical' : pred.confidence > 0.7 ? 'high' : 'medium',
+          recommendedAction: pred.recommendedAction || 'Schedule inspection'
+        }));
 
-      // Generate maintenance alerts
+      // Generate maintenance alerts with AI
       const maintenanceAlerts: MaintenanceAlert[] = [];
       const daysSinceLastService = Math.floor((Date.now() - new Date(components.engine.lastChecked).getTime()) / (1000 * 60 * 60 * 24));
       
@@ -196,6 +203,9 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
         }
       });
 
+      // AI recommendations using helper
+      const aiRecommendations = aiPredictor.generateRecommendations(predictedFailures, components);
+
       return {
         busId: bus.id,
         busNumber: bus.busNumber,
@@ -206,7 +216,8 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
         nextService: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
         components,
         predictedFailures,
-        maintenanceAlerts
+        maintenanceAlerts,
+        aiRecommendations
       };
     });
   };
@@ -262,9 +273,10 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
   };
 
   useEffect(() => {
-    setDiagnostics(generateDiagnostics());
+    const generatedDiagnostics = generateDiagnostics(aiPredictions || []);
+    setDiagnostics(generatedDiagnostics);
     setMaintenanceRecords(generateMaintenanceRecords());
-  }, [buses]);
+  }, [buses, aiPredictions]);
 
   const getHealthColor = (score: number) => {
     if (score >= 90) return 'text-green-600';
@@ -309,6 +321,12 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
   ).length;
   const overdueMaintenance = maintenanceRecords.filter(r => r.status === 'overdue').length;
 
+  // Chart data for predictions
+  const chartData = diagnostics.flatMap(d => d.predictedFailures.map(f => ({
+    name: f.component,
+    probability: f.probability,
+  })));
+
   return (
     <div className={`fixed inset-0 z-50 ${theme === 'dark' ? 'bg-black/80' : 'bg-white/80'} backdrop-blur-sm`}>
       <div className={`fixed right-0 top-0 h-full w-[1000px] ${theme === 'dark' ? 'bg-gray-900 border-gray-700' : 'bg-white border-gray-300'} border-l shadow-2xl overflow-y-auto`}>
@@ -322,10 +340,10 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
               </div>
               <div>
                 <h2 className={`text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                  Predictive Maintenance
+                  AI Predictive Maintenance
                 </h2>
                 <p className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
-                  AI-powered fleet health monitoring and maintenance optimization
+                  Autonomous fleet health with ML-powered predictions
                 </p>
               </div>
             </div>
@@ -421,7 +439,7 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
               <TabsTrigger value="overview">Fleet Overview</TabsTrigger>
               <TabsTrigger value="diagnostics">Diagnostics</TabsTrigger>
               <TabsTrigger value="maintenance">Maintenance</TabsTrigger>
-              <TabsTrigger value="predictions">Predictions</TabsTrigger>
+              <TabsTrigger value="predictions">AI Predictions</TabsTrigger>
             </TabsList>
 
             {/* Fleet Overview Tab */}
@@ -618,8 +636,8 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
                 <Card key={diagnostic.busId} className={theme === 'dark' ? 'bg-gray-800 border-gray-700' : ''}>
                   <CardHeader>
                     <CardTitle className={`flex items-center ${theme === 'dark' ? 'text-white' : ''}`}>
-                      <BarChart3 className="w-5 h-5 mr-2" />
-                      {diagnostic.busNumber} - Predicted Failures
+                      <Brain className="w-5 h-5 mr-2 text-purple-500" />
+                      {diagnostic.busNumber} - AI Predictions
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-3">
@@ -641,6 +659,23 @@ export default function PredictiveMaintenance({ buses, theme, onClose }: Predict
                         </div>
                       </div>
                     ))}
+                    {/* AI Recommendations */}
+                    <div className="mt-4">
+                      <h4 className={`text-sm font-medium mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Autonomous Recommendations:</h4>
+                      {diagnostic.aiRecommendations.map((rec, idx) => (
+                        <p key={idx} className={`text-sm ${theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>{rec}</p>
+                      ))}
+                    </div>
+                    {/* Prediction Chart */}
+                    <ResponsiveContainer width="100%" height={200}>
+                      <AreaChart data={chartData}>
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Area type="monotone" dataKey="probability" stroke="#8884d8" fill="#8884d8" />
+                      </AreaChart>
+                    </ResponsiveContainer>
                   </CardContent>
                 </Card>
               ))}

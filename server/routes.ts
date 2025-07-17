@@ -1,7 +1,7 @@
 import type { Express, Request, Response } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage-fixed";
-import { insertAlertSchema, insertBusSchema } from "@shared/schema";
+import { insertAlertSchema, insertBusSchema, insertAiPredictionSchema } from "@shared/schema";
 import { z } from "zod";
 import path from "path";
 import fs from "fs";
@@ -421,6 +421,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error returning bus to route:', error);
       res.status(500).json({ error: "Failed to return bus to route" });
+    }
+  });
+
+  // New endpoint: Get AI predictive maintenance for a bus
+  app.get("/api/buses/:id/ai-predictions", async (req, res) => {
+    try {
+      const busId = parseInt(req.params.id);
+      const predictions = await storage.getAiPredictions(busId); // Assume storage method added
+      res.json(predictions);
+    } catch (error) {
+      console.error('Error fetching AI predictions:', error);
+      res.status(500).json({ error: "Failed to fetch AI predictions" });
+    }
+  });
+
+  // New endpoint: Generate AI predictions
+  app.post("/api/ai-predictions", async (req, res) => {
+    try {
+      const predictionData = insertAiPredictionSchema.parse(req.body);
+      const prediction = await storage.createAiPrediction(predictionData); // Assume storage method added
+      res.status(201).json(prediction);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ error: "Invalid prediction data", details: error.errors });
+      } else {
+        res.status(500).json({ error: "Failed to create AI prediction" });
+      }
+    }
+  });
+
+  // New endpoint: Get sustainability metrics for a route
+  app.get("/api/routes/:id/sustainability", async (req, res) => {
+    try {
+      const routeId = parseInt(req.params.id);
+      const metrics = await storage.getRouteSustainability(routeId); // Assume storage method added
+      res.json(metrics);
+    } catch (error) {
+      console.error('Error fetching sustainability metrics:', error);
+      res.status(500).json({ error: "Failed to fetch sustainability metrics" });
     }
   });
 
