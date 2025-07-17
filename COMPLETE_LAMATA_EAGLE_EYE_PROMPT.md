@@ -313,6 +313,35 @@ CREATE TABLE crowd_predictions (
   model_version TEXT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+CREATE TABLE weather_data (
+  id SERIAL PRIMARY KEY,
+  temperature REAL NOT NULL,
+  humidity REAL NOT NULL,
+  pressure REAL NOT NULL,
+  wind_speed REAL NOT NULL,
+  wind_direction INTEGER NOT NULL,
+  weather_condition TEXT NOT NULL,
+  visibility REAL NOT NULL,
+  uv_index REAL NOT NULL,
+  precipitation REAL NOT NULL DEFAULT 0,
+  air_quality_index INTEGER NOT NULL DEFAULT 50,
+  location TEXT NOT NULL DEFAULT 'Lagos, Nigeria',
+  timestamp TIMESTAMP NOT NULL DEFAULT NOW(),
+  last_updated TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE weather_alerts (
+  id SERIAL PRIMARY KEY,
+  alert_type TEXT NOT NULL,
+  severity TEXT NOT NULL,
+  message TEXT NOT NULL,
+  start_time TIMESTAMP NOT NULL,
+  end_time TIMESTAMP,
+  affected_routes TEXT[] DEFAULT ARRAY[]::TEXT[],
+  is_active BOOLEAN NOT NULL DEFAULT true,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
 ```
 
 ### 4. EXACT VISUAL DESIGN & COLORS
