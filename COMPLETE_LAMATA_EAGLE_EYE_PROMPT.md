@@ -476,10 +476,11 @@ CREATE TABLE weather_alerts (
    - Accessibility enhancements
 
 7. **Weather & Environmental Intelligence**
-   - Weather impact analysis
-   - Service adjustments
-   - Environmental monitoring
-   - Climate adaptation
+   - Real-time weather overlay on map
+   - Weather impact analysis on routes
+   - Service adjustments for adverse conditions
+   - Environmental monitoring (air quality, visibility)
+   - Climate adaptation recommendations
 
 8. **Operational Analytics**
    - KPI tracking and analysis
@@ -497,16 +498,97 @@ CREATE TABLE weather_alerts (
 - Specific actionable recommendations
 
 #### Emergency Alert System
-**Alert Types & Videos:**
-- P1 Passenger Panic: Use 'Kidnapping_on_Lagos_BRT_Bus_1750204355118.mp4'
-- P2 Driver Misconduct: Use 'Brt_mass_transit_202506180631_u7rwu_1750224978374.mp4'
-- Reckless Driving: Use 'BRT_Driver_s_Reckless_Behavior_Video_1750224476189.mp4'
+**Complete Alert Types & Priorities:**
+- **P1 (Critical)**: Medical emergencies, security threats, passenger panic, armed incidents
+- **P2 (High)**: Driver misconduct, geofencing violations, major breakdowns
+- **P3 (Medium)**: Minor security incidents, traffic delays, passenger disturbances
+- **P4 (Low)**: Minor breakdowns, routine maintenance issues
+- **P5 (Info)**: System notifications, general updates
 
-**Video Integration:**
-- Passenger Area CAM: Cycle through 9 passenger videos sequentially
-- Driver CAM: Rotate through 6 Lagos BRT videos
-- Range request streaming support
-- Video controls with full-screen option
+**Specific Alert Triggers & Video Mappings:**
+1. **P1 Passenger Panic**: 
+   - Trigger: Emergency button activation, passenger reports via mobile app
+   - Video: 'Kidnapping_on_Lagos_BRT_Bus_1750204355118.mp4'
+   - Auto-escalation: Immediate police dispatch, ambulance if needed
+
+2. **P1 Medical Emergency**:
+   - Trigger: Driver medical alert, passenger medical emergency button
+   - Videos: 'Video_Ready_Lagos_BRT_Heart_Attack_1750056149432.mp4', 'Bus_Passenger_Medical_Emergency_Video_1750056149435.mp4'
+   - Auto-response: Ambulance dispatch, route diversion
+
+3. **P1 Security Emergency**:
+   - Trigger: Violence detection, weapon alerts, armed incidents
+   - Videos: 'Sword_Lagos_Bus_CCTV_Video_Ready (1)_1750007599619.mp4', 'knife_Lagos_Bus_CCTV_Video_Ready_1750007661394.mp4', 'BRT_Bus_with_Machine_Gun_1750007661395.mp4', 'Bus_Fight_Video_Generated_1750007661396.mp4'
+   - Auto-response: Police dispatch, bus lockdown protocol
+
+4. **P2 Driver Misconduct**:
+   - Trigger: Passenger reports via mobile app, supervisory complaints, erratic driving patterns
+   - Video: 'Brt_mass_transit_202506180631_u7rwu_1750224978374.mp4'
+   - Response: Supervisor notification, driver performance review
+
+5. **P2 Geofencing Alert**:
+   - Trigger: Bus deviation from designated route beyond 50m threshold
+   - Video: 'BRT_Driver_s_Reckless_Behavior_Video_1750224476189.mp4'
+   - Auto-response: Route correction notification, supervisor alert
+
+**Alert Simulation System:**
+```typescript
+// Quick Alert Triggers
+const EMERGENCY_TRIGGERS = {
+  'P1_MEDICAL': {
+    type: 'medical',
+    priority: 'P1',
+    message: 'URGENT: Medical emergency - ambulance dispatched',
+    autoResponse: ['ambulance_dispatch', 'route_diversion']
+  },
+  'P1_SECURITY': {
+    type: 'security', 
+    priority: 'P1',
+    message: 'CRITICAL: Security threat - armed incident reported',
+    autoResponse: ['police_dispatch', 'bus_lockdown']
+  },
+  'P2_GEOFENCING': {
+    type: 'geofencing',
+    priority: 'P2', 
+    message: 'GEOFENCING ALERT: Bus has deviated from designated route',
+    autoResponse: ['supervisor_notification', 'route_correction']
+  },
+  'P2_DRIVER_MISCONDUCT': {
+    type: 'driver_misconduct',
+    priority: 'P2',
+    message: 'PASSENGER REPORT: Suspicious or unprofessional driver behavior reported via mobile app',
+    autoResponse: ['supervisor_alert', 'performance_review']
+  }
+};
+```
+
+**Video Integration System:**
+- **Driver CAM**: Rotates through 6 Lagos BRT videos sequentially:
+  - 'Lagos_nigeria_brt_202506172026_1uk53_1750223955238.mp4'
+  - 'Lagos_nigeria_brt_202506172026_4luor_1750223955238.mp4'
+  - 'Lagos_nigeria_brt_202506172026_irrqx_1750223955238.mp4'
+  - 'Lagos_nigeria_brt_202506172026_mgn4v_1750223955238.mp4'
+  - 'Lagos_nigeria_brt_202506172237_9g5ph_1750223955237.mp4'
+  - 'Lagos_nigeria_brt_202506172239_nvi7d_1750223955235.mp4'
+
+- **Passenger Area CAM**: Cycles through 9 passenger videos:
+  - 'Calm_passengers_on_202506180643_6a4zf_1750225588423.mp4'
+  - 'Calm_passengers_on_202506180643_9a8wd_1750225588422.mp4'
+  - 'Calm_passengers_on_202506180643_hilzc_1750225588422.mp4'
+  - 'Calm_passengers_on_202506180643_ja5r3_1750225588422.mp4'
+  - 'Calm_passengers_on_202506180643_upaxz_1750225588422.mp4'
+  - 'Professionally_dressed_passengers_20250618064 (1)_1750225588421.mp4'
+  - 'Professionally_dressed_passengers_20250618064 (2)_1750225588421.mp4'
+  - 'Professionally_dressed_passengers_20250618064 (3)_1750225588419.mp4'
+  - 'Professionally_dressed_passengers_20250618064_1750225588422.mp4'
+
+**Alert Management Features:**
+- Range request video streaming with <2s latency
+- Full-screen video controls with play/pause/mute
+- Real-time alert acknowledgment and escalation
+- Automatic alert routing to appropriate responders
+- Alert triage system with priority-based handling
+- Historical alert tracking and analytics
 
 #### System Monitoring Tools
 **Route Optimizer:**
@@ -578,7 +660,65 @@ GET /api/ai-insights/:category - Fetch AI recommendations by category
 - Station hover tooltips
 - Bus movement animations
 - Traffic condition overlays
-- Weather integration
+- **Real-time Weather Overlay System**
+
+#### Weather Overlay System
+**Weather Data Integration:**
+```typescript
+interface WeatherData {
+  temperature: number;        // Celsius
+  humidity: number;          // Percentage
+  pressure: number;          // hPa
+  windSpeed: number;         // km/h
+  windDirection: number;     // Degrees (0-359)
+  weatherCondition: string;  // sunny, cloudy, rainy, stormy
+  visibility: number;        // km
+  uvIndex: number;          // 0-11 scale
+  precipitation: number;     // mm/hour
+  airQualityIndex: number;  // 0-500 AQI scale
+  location: string;         // "Lagos, Nigeria"
+}
+```
+
+**Weather Overlay Components:**
+1. **Weather Info Panel** (Top-right corner):
+   - Current temperature with icon
+   - Weather condition (sunny/cloudy/rainy/stormy)
+   - Wind speed and direction
+   - Humidity and visibility
+   - Air Quality Index with color coding
+   - UV Index warnings
+
+2. **Weather Impact Indicators**:
+   - Route weather warnings (rain/storm icons on affected routes)
+   - Station weather conditions (color-coded station markers)
+   - Traffic impact from weather (delay indicators)
+   - Visibility warnings for drivers
+
+3. **Weather Alert System**:
+   - Severe weather warnings (storms, heavy rain, extreme heat)
+   - Service adjustment notifications
+   - Route diversions due to weather
+   - Safety recommendations for passengers
+
+**Weather API Integration:**
+```typescript
+// Simulated weather data with realistic Lagos patterns
+const LAGOS_WEATHER_PATTERNS = {
+  'sunny': { temp: 28-32, humidity: 65-75, pressure: 1013, windSpeed: 5-15 },
+  'cloudy': { temp: 26-30, humidity: 70-80, pressure: 1010, windSpeed: 10-20 },
+  'rainy': { temp: 22-26, humidity: 85-95, pressure: 1008, windSpeed: 15-25 },
+  'stormy': { temp: 20-24, humidity: 90-100, pressure: 1005, windSpeed: 25-40 }
+};
+```
+
+**Weather Overlay Visual Elements:**
+- Animated weather icons (rain drops, sun rays, wind indicators)
+- Color-coded temperature zones on map
+- Precipitation overlay with opacity
+- Wind direction arrows
+- UV index color gradients
+- Air quality heatmap overlay
 
 #### Emergency Response System
 - P1-P5 priority alert levels
