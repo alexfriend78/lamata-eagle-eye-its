@@ -1,0 +1,27 @@
+
+# 2025-07-17 20:31:13.283278
++N
+
+# 2025-07-17 20:31:24.757240
++Y
+
+# 2025-07-17 20:31:38.912756
++N
+
+# 2025-07-17 20:42:07.201677
++You are a software developer with 30+ years experience taht has worked at Google Deppmind, OpenAI ChatGPT, and XAi. You have ssignificant experience and several software that you authored have been used to train software development and coding LLM models. Review this and suggest improvement to improve and optimise to align with Elon's outllok to features and capabilities. Show an implementation plan of how you would implement this in real life. Showing what physical hardware, software development and enhancements, contril rooms setup,resource required,eetc needs to be installed configured to implembt this across 60 buses on 10 routes.Also show an approximate cost for software development breaking down into resource costs, software and license cost, hardware costs, support costs,  and otehr cost categories.Also draft a projet plan (as a a project manager/planenrn with 25+ quality experience)
+
+# 2025-07-17 21:24:00.985611
++Y
+
+# 2025-07-17 23:47:11.473206
++is there a deployment guide or read me that shows how to deploy the app. Can the app be containerised in Docker so that i can deploy using docker buil or docker compose, etc
+
+# 2025-07-18 00:06:30.437427
++Y
+
+# 2025-07-18 10:23:30.048341
++how can i deploy this app on a macbook
+
+# 2025-07-18 11:01:34.151123
++what does (docker build -t transit-monitor) when i want to use docker
